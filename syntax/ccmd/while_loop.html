@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:ccmd:while_loop</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,ccmd,while_loop"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/ccmd/while_loop?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:ccmd"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/ccmd/while_loop"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/ccmd/while_loop"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/ccmd/while_loop"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:ccmd';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:ccmd:while_loop","namespace":"syntax:ccmd","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_while-loop">The while-loop</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_while-loop">The while-loop</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The while-loop&quot;,&quot;hid&quot;:&quot;the_while-loop&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-30&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">while &lt;LIST1&gt; ; do
+  &lt;LIST2&gt;
+done</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;31-101&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The while-loop is relatively simple in what it does: it executes the <a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> command list</a> <code>&lt;LIST1&gt;</code> and if the exit code of it was 0 (TRUE) it executes <code>&lt;LIST2&gt;</code>. This happens again and again until <code>&lt;LIST1&gt;</code> returns FALSE.
+</p>
+
+<p>
+This is exactly the opposite of the <a href="/syntax/ccmd/until_loop" class="wikilink1" title="syntax:ccmd:until_loop"> until loop</a>.
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Like all loops (both <code>for</code>-loops, <code>while</code> and <code>until</code>), this loop can be
+</p>
+<ul>
+<li class="level1"><div class="li"> terminated (broken) by the <code>break</code> command, optionally as <code>break N</code> to break <code>N</code> levels of nested loops</div>
+</li>
+<li class="level1"><div class="li"> forced to immediately do the next iteration using the <code>continue</code> command, optionally as <code>continue N</code> analog to <code>break N</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;102-786&quot;} -->
+<h3 class="sectionedit4" id="return_status">Return status</h3>
+<div class="level3">
+
+<p>
+The return status is the one of the last command executed in <code>&lt;LIST2&gt;</code>, or <code>0</code> (<code>TRUE</code>) if none was executed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;787-928&quot;} -->
+<h2 class="sectionedit5" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;929-951&quot;} -->
+<h2 class="sectionedit6" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;952-992&quot;} -->
+<h2 class="sectionedit7" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/until_loop" class="wikilink1" title="syntax:ccmd:until_loop"> The until loop</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/commands/builtin/read#code_examples" class="wikilink1" title="commands:builtin:read">code examples of the read builtin command</a> to see how you can loop over lines</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:7,&quot;range&quot;:&quot;993-&quot;} --></div>
+</body>
+</html>

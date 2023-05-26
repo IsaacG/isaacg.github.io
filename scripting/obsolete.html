@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:obsolete</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,obsolete,bash,shell,scripting,obsolete,deprecated,outdated"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/obsolete?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/obsolete"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/obsolete"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/obsolete"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:obsolete","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="obsolete_and_deprecated_syntax">Obsolete and deprecated syntax</h1>
+<div class="level1">
+
+<p>
+This (incomplete) page describes some syntax and commands considered obsolete by some measure. A thorough discussion of the rationale is beyond the scope of this page. See the <a href="/scripting/nonportable" class="wikilink1" title="scripting:nonportable"> portability page</a> for a discussion on portability issues.
+</p>
+
+<p>
+This first table lists syntax that is tolerated by Bash but has few if any legitimate uses. These features exist mostly for Bourne, csh, or some other backward compatibility with obsolete shells, or were Bash-specific features considered failed experiments and deprecated or replaced with a better alternative. These should be irrelevant to most everyone except maybe code golfers. New scripts should never use them. None of the items on this list are specified by the most current version of POSIX, and some may be incompatible with POSIX.
+</p>
+<div class="table sectionedit2"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Syntax  </th><th class="col1 centeralign">  Replacement  </th><th class="col2 centeralign">  Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>&amp;&gt;FILE</code> and <code>&gt;&amp;FILE</code>  </td><td class="col1 leftalign"><code>&gt;FILE 2&gt;&amp;1</code>  </td><td class="col2">This redirection syntax is short for <code>&gt;FILE 2&gt;&amp;1</code> and originates in the C Shell. The latter form is especially uncommon and should never be used, and the explicit form using separate redirections is preferred over both. These shortcuts contribute to confusion about the copy descriptor because the syntax is unclear. They also introduce parsing ambiguity, and conflict with POSIX. Shells without this feature treat <code>cmd1 &amp;&gt;file cmd2</code> as: &quot;background <code>cmd1</code> and then execute <code>cmd2</code> with its stdout redirected to <code>file</code>&quot;, which is the correct interpretation of this expression. See: <a href="/syntax/redirection" class="wikilink1" title="syntax:redirection"> redirection</a><pre class="code bash"> $ <span class="br0">&#123;</span> <span class="kw2">bash</span>; <span class="kw2">dash</span> <span class="sy0">&lt;/</span>dev<span class="sy0">/</span>fd<span class="sy0">/</span><span class="nu0">0</span>; <span class="br0">&#125;</span> <span class="sy0">&lt;&lt;&lt;</span><span class="st_h">'echo foo&gt;/dev/null&amp;&gt;/dev/fd/2 echo bar'</span>
+foo <span class="kw3">echo</span> bar
+bar</pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>$[EXPRESSION]</code>  </td><td class="col1 leftalign"><code>$((EXPRESSION))</code>  </td><td class="col2">This undocumented syntax is completely replaced by the POSIX-conforming arithmetic expansion <code>$((EXPRESSION))</code>. It is unimplemented almost everywhere except Bash and Zsh. See <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> arithmetic expansion</a>. <a href="http://lists.gnu.org/archive/html/bug-bash/2012-04/msg00034.html" class="urlextern" title="http://lists.gnu.org/archive/html/bug-bash/2012-04/msg00034.html" rel="nofollow"> Some discussion</a>.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>COMMAND |&amp; COMMAND</code>  </td><td class="col1 leftalign"><code>COMMAND 2&gt;&amp;1 | COMMAND</code>  </td><td class="col2">This is an alternate pipeline operator derived from Zsh. Officially, it is not considered deprecated by Bash, but I highly discourage it. It conflicts with the list operator used for <a href="/syntax/keywords/coproc" class="wikilink1" title="syntax:keywords:coproc"> coprocess</a> creation in most Korn shells. It also has confusing behavior. The stdout is redirected first like an ordinary pipe, while the stderr is actually redirected last – after other redirects preceding the pipe operator. Overall, it&#039;s pointless syntax bloat. Use an explicit redirect instead.</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"><code>function NAME() COMPOUND-CMD</code>  </td><td class="col1 leftalign"><code>NAME() COMPOUND-CMD</code> or <code>function NAME { CMDS; }</code>  </td><td class="col2">This is an amalgamation between the Korn and POSIX style function definitions - using both the <code>function</code> keyword and parentheses. It has no useful purpose and no historical basis or reason to exist. It is not specified by POSIX. It is accepted by Bash, mksh, zsh, and perhaps some other Korn shells, where it is treated as identical to the POSIX-style function. It is not accepted by AT&amp;T ksh. It should never be used. See the next table for the <code>function</code> keyword. Bash doesn&#039;t have this feature documented as expressly deprecated.</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"><code>for x; { …;}</code>  </td><td class="col1 leftalign"><code>do</code>, <code>done</code>, <code>in</code>, <code>esac</code>, etc.  </td><td class="col2">This undocumented syntax replaces the <code>do</code> and <code>done</code> reserved words with braces. Many Korn shells support various permutations on this syntax for certain compound commands like <code>for</code>, <code>case</code>, and <code>while</code>. Which ones and certain details like whether a newline or semicolon are required vary. Only <code>for</code> works in Bash. Needless to say, don&#039;t use it.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;915-3769&quot;} -->
+<p>
+This table lists syntax that is specified by POSIX (unless otherwise specified below), but has been superseded by superior alternatives (either in POSIX, Bash, or both), or is highly discouraged for other reasons such as encouraging bad practices or dangerous code. Those that are specified by POSIX may be badly designed and unchangeable for historical reasons.
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Syntax  </th><th class="col1 centeralign">  Replacement  </th><th class="col2 centeralign">  Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">Unquoted expansions, <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit">Word splitting</a>, and <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs">Pathname expansion (globbing)</a>  </td><td class="col1 leftalign"><a href="http://mywiki.wooledge.org/Quotes" class="urlextern" title="http://mywiki.wooledge.org/Quotes" rel="nofollow"> Proper quoting</a>, Ksh/Bash-style <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays"> arrays</a>, The &quot;$@&quot; expansion, <a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read">The read builtin command</a>  </td><td class="col2"><em>Quoting errors</em> are a broad category of common mistakes brought about by a few unintuitive features carried over from the Bourne shell due to complaints of broken scripts and changes in previously documented behavior. Most of the important expansions are performed at the same time from left to right. However, a few expansions, most notably word-splitting and globbing, and in shells other than Bash, <a href="/syntax/expansion/brace" class="wikilink1" title="syntax:expansion:brace"> brace expansion</a>, are performed <strong>on the results of previous expansions, by default, unless they are quoted.</strong> This means that the act of expanding an unquoted variable in an ordinary argument context, depending on the value of the variable, can yield different results depending on possibly uncontrolled side-effects like the value of <code>IFS</code>, and the names of files in the current working directory. You can&#039;t get globbing without word-splitting, or vice versa (without <code>set -f</code>). <a href="http://mywiki.wooledge.org/BashFAQ/050" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/050" rel="nofollow"> You can&#039;t store a command or character-delimited list in a variable and safely evaluate it with unquoted expansion</a>. If possible, always choose a shell that supports Korn shell arrays such as Bash. They are a vital but non-standard feature for writing clean, safe scripts. Well-written scripts don&#039;t use word-splitting. A few exceptions are listed on the <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> word splitting page</a>. A significant proportion of the issues on the famous <a href="http://mywiki.wooledge.org/BashPitfalls" class="urlextern" title="http://mywiki.wooledge.org/BashPitfalls" rel="nofollow"> Pitfalls list</a> fall under this category. See also: <em><a href="http://mywiki.wooledge.org/DontReadLinesWithFor" class="urlextern" title="http://mywiki.wooledge.org/DontReadLinesWithFor" rel="nofollow"> Don&#039;t read lines with for!</a></em> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>`COMMANDS`</code>  </td><td class="col1 leftalign"><code>$(COMMANDS)</code>  </td><td class="col2">This is the older Bourne-compatible form of the <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> command substitution</a>. Both the <code>`COMMANDS`</code> and <code>$(COMMANDS)</code> syntaxes are specified by POSIX, but the latter is <em class="u">greatly</em> preferred, though the former is unfortunately still very prevalent in scripts. New-style command substitutions are widely implemented by every modern shell (and then some). The only reason for using backticks is for compatibility with a real Bourne shell (like Heirloom). Backtick command substitutions require special escaping when nested, and examples found in the wild are improperly quoted more often than not. See: <em><a href="http://mywiki.wooledge.org/BashFAQ/082" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/082" rel="nofollow"> Why is $(...) preferred over `...` (backticks)?</a></em>.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>[ EXPRESSION ]</code> and <code>test EXPRESSION</code>  </td><td class="col1 leftalign"><code>[[ EXPRESSION ]]</code>  </td><td class="col2"><code>test</code> and <code>[</code> are the Bourne/POSIX commands for evaluating test expressions (they are almost identical, and <code>[</code> is somewhat more common). The expressions consist of regular arguments, unlike the Ksh/Bash <code>[[</code> command. While the issue is analogous to <code>let</code> vs <code>((</code>, the advantages of <code>[[</code> vs <code>[</code> are even more important because the arguments/expansions aren&#039;t just concatenated into one expression. With the classic <code>[</code> command, the number of arguments is significant. If at all possible, use the <a href="/syntax/ccmd/conditional_expression" class="wikilink1" title="syntax:ccmd:conditional_expression"> conditional expression</a> (&quot;new test command&quot;) <code>[[ EXPRESSION ]]</code>. Unless there is a need for POSIX compatibility, there are only a few reasons to use <code>[</code>. <code>[[</code> is one of the most portable and consistent non-POSIX ksh extensions available. See: <a href="/syntax/ccmd/conditional_expression" class="wikilink1" title="syntax:ccmd:conditional_expression">The conditional expression</a> and <em><a href="http://mywiki.wooledge.org/BashFAQ/031" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/031" rel="nofollow"> What is the difference between test, [ and [[ ?</a></em> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"><code>set -e</code>, <code>set -o errexit</code><br/>
+and the <code>ERR</code> trap  </td><td class="col1 leftalign">proper control flow and error handling  </td><td class="col2"><code>set -e</code> causes untested non-zero exit statuses to be fatal. It is a debugging feature intended for use only during development and should not be used in production code, especially init scripts and other high-availability scripts. Do not be tempted to think of this as &quot;error handling&quot;; it&#039;s not, it&#039;s just a way to find the place you&#039;ve <em>forgotten</em> to put error handling.<br/>
+Think of it as akin to <code>use strict</code> in Perl or <code>throws</code> in C++: tough love that makes you write better code. Many guides recommend avoiding it entirely because of the apparently-complex rules for when non-zero statuses cause the script to abort. Conversely, large software projects with experienced coders may recommend or even mandate its use.<br/>
+Because it provides no notification of the location of the error, it&#039;s more useful combined with <code>set -x</code> or the <code>DEBUG</code> trap and other Bash debug features, and both flags are normally better set on the command line rather than within the script itself.<br/>
+Most of this also applies to the <code>ERR</code> trap, though I&#039;ve seen it used in a few places in shells that lack <code>pipefail</code> or <code>PIPESTATUS</code>. The <code>ERR</code> trap is not POSIX, but <code>set -e</code> is. <code>failglob</code> is another Bash feature that falls into this category (mainly useful for debugging).<br/>
+<strong>The <code>set -e</code> feature generates more questions and false bug reports on the Bash mailing list than all other features combined!</strong> Please do not rely on <code>set -e</code> for logic in scripts. If you still refuse to take this advice, make sure you understand <strong>exactly</strong> how it works. See: <em><a href="http://mywiki.wooledge.org/BashFAQ/105" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/105" rel="nofollow"> Why doesn&#039;t set -e (or set -o errexit, or trap ERR) do what I expected?</a></em> and <a href="http://www.fvue.nl/wiki/Bash:_Error_handling" class="urlextern" title="http://www.fvue.nl/wiki/Bash:_Error_handling" rel="nofollow">http://www.fvue.nl/wiki/Bash:_Error_handling</a> </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"><code>set -u</code> or <code>set -o nounset</code>  </td><td class="col1 leftalign">Proper control flow and error handling  </td><td class="col2"><code>set -u</code> causes attempts to expand unset variables or parameters as fatal errors. Like <code>set -e</code>, it bypasses control flow and exits immediately from the current shell environment. Like non-zero statuses, unset variables are a normal part of most non-trivial shell scripts. Living with <code>set -u</code> requires hacks like <code>${1+&quot;$1&quot;}</code> for each expansion that might possibly be unset. Only very current shells guarantee that expanding <code>@</code> or <code>*</code> won&#039;t trigger an error when no parameters are set (<a href="http://austingroupbugs.net/view.php?id=155" class="urlextern" title="http://austingroupbugs.net/view.php?id=155" rel="nofollow">http://austingroupbugs.net/view.php?id=155</a>, <a href="http://www.in-ulm.de/~mascheck/various/bourne_args/" class="urlextern" title="http://www.in-ulm.de/~mascheck/various/bourne_args/" rel="nofollow">http://www.in-ulm.de/~mascheck/various/bourne_args/</a>). Apparently some find it useful for debugging. See <em><a href="http://mywiki.wooledge.org/BashFAQ/083" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/083" rel="nofollow"> How do I determine whether a variable is already defined? Or a function?</a></em> for how to properly test for defined variables. Don&#039;t use <code>set -u</code>. </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"><code>${var?msg}</code> or <code>${var:?msg}</code>  </td><td class="col1 leftalign">Proper control flow and error handling  </td><td class="col2 leftalign">Like <code>set -u</code>, this expansion causes a fatal error which immediately exits the current shell environment if the given parameter is unset or is null. It prints the error message given, to the right of the operator. If a value is expected and you&#039;d like to create an assertion or cause errors, it&#039;s better to test for undefined variables using one of <a href="http://mywiki.wooledge.org/BashFAQ/083" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/083" rel="nofollow"> these techniques</a> and handle the error manually, or call a <code>die</code> function. This expansion is defined by POSIX. It&#039;s better than <code>set -u</code>, because it&#039;s explicit, but not by much. It also allows you to accidentally construct hilariously deceptive error messages: <pre class="code">bash -c &#039;f() { definitely_not_printf &quot;${printf:?&quot;$1&quot; - No such option}&quot;; }; f -v&#039;
+bash: printf: -v - No such option</pre>
+  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;4135-11561&quot;} -->
+<p>
+This table lists features that are used only if you have a specific reason to prefer it over another alternative. These have some legitimate uses if you know what you&#039;re doing, such as for those with specific portability requirements, or in order to make use of some subtle behavioral differences. These are frequently (mis)used for no reason. Writing portable scripts that go outside of POSIX features requires knowing how to account for many (often undocumented) differences across many shells. If you do happen to know what you&#039;re doing, don&#039;t be too surprised if you run across someone telling you not to use these.
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  Syntax  </th><th class="col1 centeralign">  Replacement  </th><th class="col2 centeralign">  Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>function NAME { CMDS; }</code>  </td><td class="col1 leftalign"><code>NAME() COMPOUND-CMD</code>  </td><td class="col2">This is the ksh form of function definition created to extend the Bourne and POSIX form with modified behaviors and additional features like local variables. The idea was for new-style functions to be analogous to regular builtins with their own environment and scope, while POSIX-style functions are more like special builtins. <code>function</code> is supported by almost every ksh-derived shell including Bash and Zsh, but isn&#039;t specified by POSIX. Bash treats all function styles the same, but this is unusual. <code>function</code> has some preferable characteristics in many ksh variants, making it more portable for scripts that use non-POSIX extensions by some measures. If you&#039;re going to use the <code>function</code> keyword, it implies that you&#039;re either targeting Ksh specifically, or that you have detailed knowledge of how to compensate for differences across shells. It should always be used consistently with <code>typeset</code>, but never used with <code>declare</code> or <code>local</code>. Also in ksh93, the braces are not a <a href="/syntax/ccmd/grouping_plain" class="wikilink1" title="syntax:ccmd:grouping_plain"> command group</a>, but a required part of the syntax (unlike Bash and others). See <a href="/syntax/basicgrammar#shell_function_definitions" class="wikilink1" title="syntax:basicgrammar"> shell function definitions</a> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>typeset</code>  </td><td class="col1 leftalign"><code>declare</code>, <code>local</code>, <code>export</code>, <code>readonly</code>  </td><td class="col2">This is closely related to the above, and should often be used together. <code>typeset</code> exists primarily for <code>ksh</code> compatibility, but is marked as &quot;deprecated&quot; in Bash (though I don&#039;t entirely agree with this). This makes some sense, because future compatibility can&#039;t be guaranteed, and any compatibility at all, requires understanding the non-POSIX features of other shells and their differences. Using <code>declare</code> instead of <code>typeset</code> emphasizes your intention to be &quot;Bash-only&quot;, and definitely breaks everywhere else (except possibly zsh if you&#039;re lucky). The issue is further complicated by Dash and the <a href="http://www.debian.org/doc/debian-policy/ch-files.html#s-scripts" class="urlextern" title="http://www.debian.org/doc/debian-policy/ch-files.html#s-scripts" rel="nofollow"> Debian policy</a> requirement for a <code>local</code> builtin, which is itself not entirely compatible with Bash and other shells. </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>let &#039;EXPR&#039; </code>  </td><td class="col1 leftalign"><code>((EXPR))</code> or <code>[ $((EXPR)) -ne 0 ]</code>  </td><td class="col2"><code>let</code> is the &quot;simple command&quot; variant of arithmetic evaluation command, which takes regular arguments. Both <code>let</code> and <code>((expr))</code> were present in ksh88, and everything that supports one should support the other. Neither are POSIX. The compound variant is preferable because it doesn&#039;t take regular arguments for <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> wordsplitting</a> and <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> globbing</a>, which makes it safer and clearer. It is also usually faster, especially in Bash, where compound commands are typically significantly faster. Some of the (few) reasons for using <code>let</code> are detailed on the <a href="/commands/builtin/let" class="wikilink1" title="commands:builtin:let"> let</a> page. See <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic evaluation compound command</a> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"><code>eval</code>  </td><td class="col1 leftalign">Depends. Often code can be restructured to use better alternatives.  </td><td class="col2"><code>eval</code> is thrown in here for good measure, as sadly it is so often misused that any use of <code>eval</code> (even the rare clever one) is immediately dismissed as wrong by experts, and among the most immediate solutions abused by beginners. In reality, there are correct ways to use <code>eval</code>, and even cases in which it&#039;s necessary, even in sophisticated shells like Bash and Ksh. <code>eval</code> is unusual in that it is less frequently appropriate in more feature-rich shells than in more minimal shells like Dash, where it is used to compensate for more limitations. If you find yourself needing <code>eval</code> too frequently, it might be a sign that you&#039;re either better off using a different language entirely, or trying to borrow an idiom from some other paradigm that isn&#039;t well suited to the shell language. By the same token, there are some cases in which working too hard to avoid <code>eval</code> ends up adding a lot of complexity and sacrificing all portability. Don&#039;t substitute a clever <code>eval</code> for something that&#039;s a bit &quot;too clever&quot;, just to avoid the <code>eval</code>, yet, take reasonable measures to avoid it where it is sensible to do so. See: <a href="/commands/builtin/eval" class="wikilink1" title="commands:builtin:eval">The eval builtin command</a> and <a href="http://mywiki.wooledge.org/BashFAQ/048" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/048" rel="nofollow"> Eval command and security issues</a>. </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;12184-16512&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Obsolete and deprecated syntax&quot;,&quot;hid&quot;:&quot;obsolete_and_deprecated_syntax&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-16513&quot;} -->
+<h2 class="sectionedit5" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/scripting/nonportable" class="wikilink1" title="scripting:nonportable"> Non-portable syntax and command uses</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/scripting/bashchanges" class="wikilink1" title="scripting:bashchanges">Bash changes</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/061" class="interwiki iw_bashfaq" title="http://mywiki.wooledge.org/BashFAQ/061"> Greg&#039;s BashFAQ 061: List of essential features added (with the Bash version tag)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/Bashism" class="urlextern" title="http://mywiki.wooledge.org/Bashism" rel="nofollow"> Bash &lt;-&gt; POSIX Portability guide with a focus on Dash</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashPitfalls" class="urlextern" title="http://mywiki.wooledge.org/BashPitfalls" rel="nofollow">http://mywiki.wooledge.org/BashPitfalls</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;16514-&quot;} --></div>
+</body>
+</html>

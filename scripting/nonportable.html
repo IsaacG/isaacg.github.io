@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:nonportable</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,nonportable,bash,shell,scripting,portability,POSIX,portable"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/nonportable?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/nonportable"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/nonportable"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/nonportable"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:nonportable","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#portability_talk">Portability talk</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#portability_rationale">Portability rationale</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#environment_exported_variables">Environment (exported) variables</a></div></li>
+<li class="level3"><div class="li"><a href="#arithmetics">Arithmetics</a></div></li>
+<li class="level3"><div class="li"><a href="#echo_command">echo command</a></div></li>
+<li class="level3"><div class="li"><a href="#parameter_expansions">Parameter expansions</a></div></li>
+<li class="level3"><div class="li"><a href="#special_variables">Special variables</a></div></li>
+<li class="level3"><div class="li"><a href="#check_for_a_command_in_path">Check for a command in PATH</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="portability_talk">Portability talk</h1>
+<div class="level1">
+
+<p>
+The script programming language of BASH is based on the Bourne Shell syntax, with some extensions and derivations.
+</p>
+
+<p>
+If scripts need to be portable, some of the BASH-specific syntax elements should be avoided. Others should be avoided for all scripts, e.g. if there is a corresponding POSIX®-compatible syntax (see <a href="/scripting/obsolete" class="wikilink1" title="scripting:obsolete">Obsolete and deprecated syntax</a>).
+</p>
+
+<p>
+Some syntax elements have a BASH-specific, and a portable<sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup> pendant. In these cases the portable syntax should be preferred.
+</p>
+<div class="table sectionedit2"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 centeralign">  construct  </th><th class="col1 centeralign">  portable equivalent  </th><th class="col2 centeralign">  Description  </th><th class="col3 centeralign">  Portability  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>source FILE</code></td><td class="col1"><code>. FILE</code></td><td class="col2">include a script file</td><td class="col3">Bourne shell (bash, ksh, POSIX®, zsh, …)</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>declare</code> keyword</td><td class="col1"><code>typeset</code> keyword</td><td class="col2">define local variables (or variables with special attributes)</td><td class="col3">ksh, zsh, …, <strong>not POSIX!</strong></td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>command &lt;&lt;&lt; WORD</code></td><td class="col1"><code>command &lt;&lt;MARKER<br/>
+WORD<br/>
+MARKER</code></td><td class="col2">a here-string, a special form of the here-document, avoid it in portable scripts!</td><td class="col3">POSIX®</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>export VAR=VALUE</code></td><td class="col1"><code>VAR=VALUE<br/>
+export VAR</code></td><td class="col2">Though POSIX® allows it, some shells don&#039;t want the assignment and the exporting in one command</td><td class="col3">POSIX®, zsh, ksh, …</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>(( MATH ))</code></td><td class="col1"><code>: $(( MATH ))</code></td><td class="col2">POSIX® does&#039;t define an arithmetic compund command, many shells don&#039;t know it. Using the pseudo-command <code>:</code> and the arithmetic expansion <code>$(( ))</code> is a kind of workaround here. <strong>Attention:</strong> Not all shell support assignment like <code>$(( a = 1 + 1 ))</code>! Also see below for a probably more portable solution.</td><td class="col3">all POSIX® compatible shells</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>[[ EXPRESSION ]]</code></td><td class="col1"><code>[ EXPRESSION ]</code><br/>
+or <br/>
+<code>test EXPRESSION</code></td><td class="col2">The Bashish test keyword is reserved by POSIX®, but not defined. Use the old fashioned way with the <code>test</code> command. See <a href="/commands/classictest" class="wikilink1" title="commands:classictest"> the classic test command</a></td><td class="col3">POSIX® and others</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>COMMAND &lt; &lt;( …INPUTCOMMANDS… )</code></td><td class="col1"><code>INPUTCOMMANDS &gt; TEMPFILE<br/>
+COMMAND &lt; TEMPFILE</code></td><td class="col2">Process substitution (here used with redirection); use the old fashioned way (tempfiles)</td><td class="col3">POSIX® and others</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"><code>((echo X);(echo Y))</code>  </td><td class="col1 leftalign"><code>( (echo X); (echo Y) )</code>  </td><td class="col2 leftalign"> Nested subshells (separate the inner <code>()</code> from the outer <code>()</code> by spaces, to not confuse the shell regarding arithmetic control operators)  </td><td class="col3 leftalign">POSIX® and others  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;705-2563&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability talk&quot;,&quot;hid&quot;:&quot;portability_talk&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-2564&quot;} -->
+<h2 class="sectionedit3" id="portability_rationale">Portability rationale</h2>
+<div class="level2">
+
+<p>
+Here is some assorted portability information. Take it as a small guide to make your scripts a bit more portable. It&#039;s not complete (it never will be!) and it&#039;s not very detailed (e.g. you won&#039;t find information about how which shell technically forks off which subshell). It&#039;s just an assorted small set of portability guidelines. <em>-Thebonsai</em>
+</p>
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> UNIX shell gurus out there, please be patient with a newbie like me and give comments and hints instead of flames.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability rationale&quot;,&quot;hid&quot;:&quot;portability_rationale&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;2565-3069&quot;} -->
+<h3 class="sectionedit4" id="environment_exported_variables">Environment (exported) variables</h3>
+<div class="level3">
+
+<p>
+When a new value is assigned to an <strong>existing environment variable</strong>, there are two possibilities:
+</p>
+
+<p>
+The <em>new value</em> is seen by subsequent programs
+</p>
+<ul>
+<li class="level1"><div class="li"> without any special action (e.g. Bash)</div>
+</li>
+<li class="level1"><div class="li"> only after an explicit export with <code>export VARIABLE</code> (e.g. Sun&#039;s <code>/bin/sh</code>)</div>
+</li>
+</ul>
+
+<p>
+Since an extra <code>export</code> doesn&#039;t hurt, the safest and most portable way is to always (re-)export a changed variable if you want it to be seen by subsequent processes.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Environment (exported) variables&quot;,&quot;hid&quot;:&quot;environment_exported_variables&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;3070-3559&quot;} -->
+<h3 class="sectionedit5" id="arithmetics">Arithmetics</h3>
+<div class="level3">
+
+<p>
+Bash has a special compound command to do arithmetic without expansion. However, POSIX has no such command. In the table at the top, there&#039;s the <code>: $((MATH))</code> construct mentioned as possible alternative. Regarding the exit code, a 100% equivalent construct would be:
+<pre class="code"># Bash (or others) compound command
+if ((MATH)); then
+...
+
+# portable equivalent command
+if [ &quot;$((MATH))&quot; -ne 0 ]; then
+...</pre>
+
+</p>
+
+<p>
+Quotes around the arithmetic expansion <code>$((MATH))</code> should not be necessary as per POSIX, but Bash and AT&amp;T-KSH perform word-splitting on aritrhmetic expansions, so the most portable is <em>with quotes</em>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Arithmetics&quot;,&quot;hid&quot;:&quot;arithmetics&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;3560-4230&quot;} -->
+<h3 class="sectionedit6" id="echo_command">echo command</h3>
+<div class="level3">
+
+<p>
+The overall problem with <code>echo</code> is, that there are 2 (maybe more) mainstream flavours around. The only case where you may safely use an <code>echo</code> on all systems is: Echoing non-variable arguments that don&#039;t start with a <code>-</code> (dash) and don&#039;t contain a <code>\</code> (backslash).
+</p>
+
+<p>
+Why? (list of known behaviours)
+</p>
+<ul>
+<li class="level1"><div class="li"> may or may not automatically interpret backslash escpape codes in the strings</div>
+</li>
+<li class="level1"><div class="li"> may or may not automatically interpret switches (like <code>-n</code>)</div>
+</li>
+<li class="level1"><div class="li"> may or may not ignore &quot;end of options&quot; tag (<code>--</code>)</div>
+</li>
+<li class="level1"><div class="li"> <code>echo -n</code> and <code>echo -e</code> are neither portable nor standard (<strong>even within the same shell</strong>, depending on the version or environment variables or the build options, especially KSH93 and Bash)</div>
+</li>
+</ul>
+
+<p>
+For these, and possibly other, reasons, POSIX (SUS) standardized the existance of <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf"> the &#039;&#039;printf&#039;&#039; command</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;echo command&quot;,&quot;hid&quot;:&quot;echo_command&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;4231-5118&quot;} -->
+<h3 class="sectionedit7" id="parameter_expansions">Parameter expansions</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <code>${var:x:x}</code> is KSH93/Bash specific</div>
+</li>
+<li class="level1"><div class="li"> <code>${var/../..}</code> and <code>${var//../..}</code> are KSH93/Bash specific</div>
+</li>
+<li class="level1"><div class="li"> <code>var=$*</code> and <code>var=$@</code> are not handled the same in all shells if the first char of IFS is not &quot; &quot; (space). <code>var=&quot;$*&quot;</code> should work (except the Bourne shell always joins the expansions with space)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Parameter expansions&quot;,&quot;hid&quot;:&quot;parameter_expansions&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:7,&quot;range&quot;:&quot;5119-5481&quot;} -->
+<h3 class="sectionedit8" id="special_variables">Special variables</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="pwd">PWD</h4>
+<div class="level4">
+
+<p>
+<a href="/syntax/shellvars#pwd" class="wikilink1" title="syntax:shellvars">PWD</a> is POSIX but not Bourne. Most shells are <em>not POSIX</em> in that they don&#039;t ignore the value of the <code>PWD</code> environment variable. Workaround to fix the value of <code>PWD</code> at the start of your script:
+<pre class="code">pwd -P &gt; dev/null</pre>
+
+</p>
+
+</div>
+
+<h4 id="random">RANDOM</h4>
+<div class="level4">
+
+<p>
+<a href="/syntax/shellvars#random" class="wikilink1" title="syntax:shellvars">RANDOM</a> is Bash/KSH/ZSH specific variable that will give you a random number up to 32767 (2^15-1). Among many other available external options, you can use awk to generate a random number.  There are multiple implementations of awk and which version your system uses will depend.  Most modern systems will call &#039;gawk&#039; (i.e. GNU awk) or &#039;nawk&#039;.  &#039;oawk&#039; (i.e. Original/Old awk) does not have the rand() or srand() functions, so is best avoided.
+</p>
+
+<p>
+<pre class="code"># &#039;gawk&#039; can produce random numbers using srand().  In this example, 10 integers between 1 and 500:
+randpm=$(gawk -v min=1 -v max=500 -v nNum=10 &#039;BEGIN { srand(systime() + PROCINFO[&quot;pid&quot;]); for (i = 0; i &lt; nNum; ++i) {print int(min + rand() * (max - min)} }&#039;)
+
+# &#039;nawk&#039; and &#039;mawk&#039; does the same, but needs a seed to be provided for its rand() function.  In this example we use $(date)
+randpm=$(mawk -v min=1 -v max=500 -v nNum=10 -v seed=&quot;$(date +%Y%M%d%H%M%S)&quot; &#039;BEGIN { srand(seed); for (i = 0; i &lt; nNum; ++i) {print int(min + rand() * (max - min)} }&#039;)</pre>
+
+<em>Yes, I&#039;m not an <code>awk</code> expert, so please correct it, rather than complaining about possible stupid code!</em>
+</p>
+
+<p>
+<pre class="code"># Well, seeing how this //is// BASH-hackers.org I kinda missed the bash way of doing the above ;-) 
+# print a number between 0 and 500 :-)
+ printf $((  500 *  RANDOM  / 32767   ))
+
+# Or print 30 random  numbers between 0 and 10 ;)
+ X=0; while (( X++ &lt; 30 )); do echo $((  10 *  RANDOM  / 32767   )); done</pre>
+
+</p>
+
+</div>
+
+<h4 id="seconds">SECONDS</h4>
+<div class="level4">
+
+<p>
+<a href="/syntax/shellvars#seconds" class="wikilink1" title="syntax:shellvars">SECONDS</a> is KSH/ZSH/Bash specific. Avoid it. Find another method.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Special variables&quot;,&quot;hid&quot;:&quot;special_variables&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:8,&quot;range&quot;:&quot;5482-7385&quot;} -->
+<h3 class="sectionedit9" id="check_for_a_command_in_path">Check for a command in PATH</h3>
+<div class="level3">
+
+<p>
+The <a href="/syntax/shellvars#path" class="wikilink1" title="syntax:shellvars">PATH</a> variable is a colon-delimited list of directory names, so it&#039;s basically possible to run a loop and check every <code>PATH</code> component for the command you&#039;re looking for and for executability.
+</p>
+
+<p>
+However, this method doesn&#039;t look nice. There are other ways of doing this, using commands that are <em>not directly</em> related to this task.
+</p>
+
+</div>
+
+<h4 id="hash">hash</h4>
+<div class="level4">
+
+<p>
+The <code>hash</code> command is used to make the shell store the full pathname of a command in a lookup-table (to avoid re-scanning the <code>PATH</code> on every command execution attempt). Since it has to do a <code>PATH</code> search, it can be used for this check.
+</p>
+
+<p>
+For example, to check if the command <code>ls</code> is available in a location accessible by <code>PATH</code>:
+<pre class="code">if hash ls &gt;/dev/null 2&gt;&amp;1; then
+  echo &quot;ls is available&quot;
+fi</pre>
+
+</p>
+
+<p>
+Somewhat of a mass-check:
+<pre class="code">for name in ls grep sed awk; do
+  if ! hash &quot;$name&quot; &gt;/dev/null 2&gt;&amp;1; then
+    echo &quot;FAIL: Missing command &#039;$name&#039;&quot;
+    exit 1
+  fi
+done</pre>
+
+</p>
+
+<p>
+Here (bash 3), <code>hash</code> also respects builtin commands. I don&#039;t know if this works everywhere, but it seems logical.
+</p>
+
+</div>
+
+<h4 id="command">command</h4>
+<div class="level4">
+
+<p>
+The <code>command</code> command is used to explicitly call an external command, rather than a builtin with the same name. For exactly this reason, it has to do a <code>PATH</code> search, and can be used for this check.
+</p>
+
+<p>
+For example, to check if the command <code>sed</code> is available in a location accessible by <code>PATH</code>:
+<pre class="code">if command -v sed &gt;/dev/null 2&gt;&amp;1; then
+  echo &quot;sed is available&quot;
+fi</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Check for a command in PATH&quot;,&quot;hid&quot;:&quot;check_for_a_command_in_path&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:9,&quot;range&quot;:&quot;7386-&quot;} --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<div class="content">&quot;portable&quot; doesn&#039;t necessarily mean it&#039;s POSIX, it can also mean it&#039;s &quot;widely used and accepted&quot;, and thus maybe more portable than POSIX®</div></div>
+</div>
+</div>
+</body>
+</html>

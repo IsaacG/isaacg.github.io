@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:arith_expr</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,arith_expr,bash,shell,scripting,math,arithmetic,C,calculation,integer"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/arith_expr?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/arith_expr"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/arith_expr"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/arith_expr"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:arith_expr","namespace":"syntax","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#arithmetic_expressions">Arithmetic expressions</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#constants">Constants</a></div></li>
+<li class="level2"><div class="li"><a href="#different_bases">Different bases</a></div></li>
+<li class="level2"><div class="li"><a href="#shell_variables">Shell variables</a></div></li>
+<li class="level2"><div class="li"><a href="#truth">Truth</a></div></li>
+<li class="level2"><div class="li"><a href="#operators">Operators</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#assignment">Assignment</a></div></li>
+<li class="level3"><div class="li"><a href="#calculations">Calculations</a></div></li>
+<li class="level3"><div class="li"><a href="#comparisons">Comparisons</a></div></li>
+<li class="level3"><div class="li"><a href="#bit_operations">Bit operations</a></div></li>
+<li class="level3"><div class="li"><a href="#logical">Logical</a></div></li>
+<li class="level3"><div class="li"><a href="#misc">Misc</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#precedence">Precedence</a></div></li>
+<li class="level2"><div class="li"><a href="#arithmetic_expressions_and_return_codes">Arithmetic expressions and return codes</a></div></li>
+<li class="level2"><div class="li"><a href="#arithmetic_expressions_in_bash">Arithmetic expressions in Bash</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="arithmetic_expressions">Arithmetic expressions</h1>
+<div class="level1">
+
+<p>
+Arithmetic expressions are used in several situations:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic evaluation command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> arithmetic expansion</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/pe#substring_expansion" class="wikilink1" title="syntax:pe"> substring parameter expansion</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/builtin/let" class="wikilink1" title="commands:builtin:let"> the &#039;&#039;let&#039;&#039; builtin command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/c_for" class="wikilink1" title="syntax:ccmd:c_for"> C-style for loop</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays"> array indexing</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/conditional_expression" class="wikilink1" title="syntax:ccmd:conditional_expression"> conditional expressions</a></div>
+</li>
+<li class="level1"><div class="li"> Assignment statements, and arguments to declaration commands of variables with the integer attribute.</div>
+</li>
+</ul>
+
+<p>
+These expressions are evaluated following some rules described below. The operators and rules of arithmetic expressions are mainly derived from the C programming language.
+</p>
+
+<p>
+This article describes the theory of the used syntax and the behaviour. To get practical examples without big explanations, see <a href="http://mywiki.wooledge.org/BashGuide/CompoundCommands#Arithmetic_Evaluation" class="urlextern" title="http://mywiki.wooledge.org/BashGuide/CompoundCommands#Arithmetic_Evaluation" rel="nofollow"> this page on Greg&#039;s wiki</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Arithmetic expressions&quot;,&quot;hid&quot;:&quot;arithmetic_expressions&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1087&quot;} -->
+<h2 class="sectionedit2" id="constants">Constants</h2>
+<div class="level2">
+
+<p>
+Mathematical constants are simply fixed values you write: <code>1</code>, <code>3567</code>, or <code>4326</code>. Bash interprets some notations specially:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>0…</code> (leading zero) is interpreted as an <strong>octal</strong> value</div>
+</li>
+<li class="level1"><div class="li"> <code>0x…</code> is interpreted as a <strong>hex</strong> value</div>
+</li>
+<li class="level1"><div class="li"> <code>0X…</code> also interpreted as a <strong>hex</strong></div>
+</li>
+<li class="level1"><div class="li"> <code>&lt;BASE&gt;#…</code> is interpreted as a number according to the <strong>specified base</strong> <code>&lt;BASE&gt;</code>, e.g., <code>2#00111011</code> (see below)</div>
+</li>
+</ul>
+
+<p>
+If you have a constant set in a variable, like,
+<pre class="code">x=03254</pre>
+
+this is interpreted as an octal value. If you want it to be interpreted as a decimal value, you need to expand the parameter and specify base 10:
+<pre class="code"># this is interpreted as a decimal:
+echo $(( 10#$x ))
+
+# this is interpreted as an octal:
+echo $(( x ))
+
+# this is an invalid digit for base 10 (the &quot;x&quot;)...:
+echo $(( 10#x ))</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Constants&quot;,&quot;hid&quot;:&quot;constants&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;1088-1932&quot;} -->
+<h2 class="sectionedit3" id="different_bases">Different bases</h2>
+<div class="level2">
+
+<p>
+For a constant, the base can be specified using the form
+<pre class="code">&lt;BASE&gt;#&lt;DIGITS...&gt;</pre>
+
+</p>
+
+<p>
+Regardless of the specified base, the arithmetic expressions will, if ever displayed, be <strong>displayed in decimal</strong>!
+</p>
+
+<p>
+When no base is specified, the base 10 (decimal) is assumed, except when the prefixes as mentioned above (octals, hexadecimals) are present. The specified base can range from 2 to 64. To represent digits in a specified base greater than 10, characters other than 0 to 9 are needed (in this order, low ⇒ high):
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>0 … 9</code></div>
+</li>
+<li class="level1"><div class="li"> <code>a … z</code></div>
+</li>
+<li class="level1"><div class="li"> <code>A … Z</code></div>
+</li>
+<li class="level1"><div class="li"> <code>@</code></div>
+</li>
+<li class="level1"><div class="li"> <code>_</code></div>
+</li>
+</ul>
+
+<p>
+Let&#039;s quickly invent a new number system with base 43 to show what I mean:
+<pre class="code">$ echo $((43#1))
+1
+
+$ echo $((43#a))
+10
+
+$echo $((43#A))
+36
+
+$ echo $((43#G))
+42
+
+$ echo $((43#H))
+bash: 43#H: value too great for base (error token is &quot;43#H&quot;)</pre>
+
+</p>
+
+<p>
+If you have no clue what a base is and why there might be other bases, and what numbers are and how they are built, then you don&#039;t need different bases.
+</p>
+
+<p>
+If you want to convert between the usual bases (octal, decimal, hex), use <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf"> the printf command</a> and its format strings.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Different bases&quot;,&quot;hid&quot;:&quot;different_bases&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;1933-3102&quot;} -->
+<h2 class="sectionedit4" id="shell_variables">Shell variables</h2>
+<div class="level2">
+
+<p>
+Shell variables can of course be used as operands, even when the integer attribute is not turned on (by <code>declare -i &lt;NAME&gt;</code>). If the variable is empty (null) or unset, its reference evaluates to 0. If the variable doesn&#039;t hold a value that looks like a valid expression (numbers or operations), the expression is re-used to reference, for example, the named parameters, e.g.:
+<pre class="code">test=string
+string=3
+
+echo $((test))
+# will output &quot;3&quot;!</pre>
+
+Of course, in the end, when it finally evaluates to something that is <strong>not</strong> a valid arithmetic expression (newlines, ordinary text, …) then you&#039;ll get an error.
+</p>
+
+<p>
+When variables are referenced, the notation <code>1 + $X</code> is equivalent to the notation <code>1 + X</code>, both are allowed.
+</p>
+
+<p>
+When variables are referenced like <code>$X</code>, the rules of <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansion</a> apply and are performed <strong>before</strong> the expression is evaluated. Thus, a construct like <code>${MYSTRING:4:3}</code> is valid inside an arithmetic expression.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Shell variables&quot;,&quot;hid&quot;:&quot;shell_variables&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;3103-4103&quot;} -->
+<h2 class="sectionedit5" id="truth">Truth</h2>
+<div class="level2">
+
+<p>
+Unlike command exit and return codes, arithmetic expressions evaluate to logical &quot;true&quot; when they are not 0. When they are 0, they evaluate to &quot;false&quot;. The <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic evaluation compound command</a> reverses the &quot;truth&quot; of an arithmetic expression to match the &quot;truth&quot; of command exit codes:
+</p>
+<ul>
+<li class="level1"><div class="li"> if the arithmetic expression brings up a value not 0 (arithmetic true), it returns 0 (shell true)</div>
+</li>
+<li class="level1"><div class="li"> if the arithmetic expression evaluates to 0 (arithmetic false), it returns 1 (shell false)</div>
+</li>
+</ul>
+
+<p>
+That means, the following <code>if</code>-clause will execute the <code>else</code>-thread:
+<pre class="code">if ((0)); then
+  echo &quot;true&quot;
+else
+  echo &quot;false&quot;
+fi</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Truth&quot;,&quot;hid&quot;:&quot;truth&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:5,&quot;range&quot;:&quot;4104-4783&quot;} -->
+<h2 class="sectionedit6" id="operators">Operators</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Operators&quot;,&quot;hid&quot;:&quot;operators&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:6,&quot;range&quot;:&quot;4784-4806&quot;} -->
+<h3 class="sectionedit7" id="assignment">Assignment</h3>
+<div class="level3">
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Operator</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>&lt;ID&gt; = &lt;EXPR&gt;</code></td><td class="col1">normal assignment</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>&lt;ID&gt; *= &lt;EXPR&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; * &lt;EXPR&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#calculations" class="wikilink1" title="syntax:arith_expr"> calculation operators</a></span></td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>&lt;ID&gt; /= &lt;EXPR&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; / &lt;EXPR&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#calculations" class="wikilink1" title="syntax:arith_expr"> calculation operators</a></span></td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>&lt;ID&gt; %= &lt;EXPR&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; % &lt;EXPR&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#calculations" class="wikilink1" title="syntax:arith_expr"> calculation operators</a></span></td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>&lt;ID&gt; += &lt;EXPR&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; + &lt;EXPR&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#calculations" class="wikilink1" title="syntax:arith_expr"> calculation operators</a></span></td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>&lt;ID&gt; -= &lt;EXPR&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; - &lt;EXPR&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#calculations" class="wikilink1" title="syntax:arith_expr"> calculation operators</a></span></td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>&lt;ID&gt; &lt;&lt;= &lt;NUMBER&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; &lt;&lt; &lt;NUMBER&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#bit_operations" class="wikilink1" title="syntax:arith_expr"> bit operations</a></span></td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><code>&lt;ID&gt; &gt;&gt;= &lt;NUMBER&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; &gt;&gt; &lt;NUMBER&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#bit_operations" class="wikilink1" title="syntax:arith_expr"> bit operations</a></span></td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"><code>&lt;ID&gt; &amp;= &lt;EXPR&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; &amp; &lt;EXPR&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#bit_operations" class="wikilink1" title="syntax:arith_expr"> bit operations</a></span></td>
+	</tr>
+	<tr class="row10">
+		<td class="col0"><code>&lt;ID&gt; ^= &lt;EXPR&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; ^ &lt;EXPR&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#bit_operations" class="wikilink1" title="syntax:arith_expr"> bit operations</a></span></td>
+	</tr>
+	<tr class="row11">
+		<td class="col0"><code>&lt;ID&gt; |= &lt;EXPR&gt;</code></td><td class="col1">equivalent to <code>&lt;ID&gt; = &lt;ID&gt; | &lt;EXPR&gt;</code>, see <span class="curid"><a href="/syntax/arith_expr#bit_operations" class="wikilink1" title="syntax:arith_expr"> bit operations</a></span></td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;4829-6218&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Assignment&quot;,&quot;hid&quot;:&quot;assignment&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:7,&quot;range&quot;:&quot;4807-6219&quot;} -->
+<h3 class="sectionedit9" id="calculations">Calculations</h3>
+<div class="level3">
+<div class="table sectionedit10"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Operator</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>*</code></td><td class="col1">multiplication</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>/</code></td><td class="col1">division</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>%</code></td><td class="col1">remainder (modulo)</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>+</code></td><td class="col1">addition</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>-</code></td><td class="col1">subtraction</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>**</code></td><td class="col1">exponentiation</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:10,&quot;range&quot;:&quot;6244-6411&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Calculations&quot;,&quot;hid&quot;:&quot;calculations&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:9,&quot;range&quot;:&quot;6220-6412&quot;} -->
+<h3 class="sectionedit11" id="comparisons">Comparisons</h3>
+<div class="level3">
+<div class="table sectionedit12"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Operator</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>&lt;</code></td><td class="col1">comparison: less than</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>&gt;</code></td><td class="col1">comparison: greater than</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>&lt;=</code></td><td class="col1">comparison: less than or equal</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>&gt;=</code></td><td class="col1">comparison: greater than or equal</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>==</code></td><td class="col1">equality</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>!=</code></td><td class="col1">inequality</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:12,&quot;range&quot;:&quot;6436-6693&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Comparisons&quot;,&quot;hid&quot;:&quot;comparisons&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:11,&quot;range&quot;:&quot;6413-6694&quot;} -->
+<h3 class="sectionedit13" id="bit_operations">Bit operations</h3>
+<div class="level3">
+<div class="table sectionedit14"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Operator</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>~</code></td><td class="col1">bitwise negation</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>&lt;&lt;</code></td><td class="col1">bitwise shifting (left)</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>&gt;&gt;</code></td><td class="col1">bitwise shifting (right)</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>&amp;</code></td><td class="col1">bitwise AND</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>^</code></td><td class="col1">bitwise exclusive OR (XOR)</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>|</code></td><td class="col1">bitwise OR</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:14,&quot;range&quot;:&quot;6721-6943&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bit operations&quot;,&quot;hid&quot;:&quot;bit_operations&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:13,&quot;range&quot;:&quot;6695-6944&quot;} -->
+<h3 class="sectionedit15" id="logical">Logical</h3>
+<div class="level3">
+<div class="table sectionedit16"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Operator</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>!</code></td><td class="col1">logical negation</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>&amp;&amp;</code></td><td class="col1">logical AND</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>||</code></td><td class="col1">logical OR</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table4&quot;,&quot;secid&quot;:16,&quot;range&quot;:&quot;6964-7086&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Logical&quot;,&quot;hid&quot;:&quot;logical&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:15,&quot;range&quot;:&quot;6945-7087&quot;} -->
+<h3 class="sectionedit17" id="misc">Misc</h3>
+<div class="level3">
+<div class="table sectionedit18"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Operator                      </th><th class="col1 leftalign"> Description                                                                           </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>id++</code>                      </td><td class="col1 leftalign"> <strong>post-increment</strong> of the variable <code>id</code> (not required by POSIX®)                  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>id--</code>                  </td><td class="col1 leftalign"> <strong>post-decrement</strong> of the variable <code>id</code> (not required by POSIX®)                  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>++id</code>                      </td><td class="col1 leftalign"> <strong>pre-increment</strong> of the variable <code>id</code> (not required by POSIX®)                   </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>--id</code>                  </td><td class="col1 leftalign"> <strong>pre-decrement</strong> of the variable <code>id</code> (not required by POSIX®)                   </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>+</code>                         </td><td class="col1 leftalign"> unary plus                                                                            </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>-</code>                         </td><td class="col1 leftalign"> unary minus                                                                           </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>&lt;EXPR&gt; ? &lt;EXPR&gt; : &lt;EXPR&gt;</code>  </td><td class="col1 leftalign"> conditional (ternary) operator <br/>
+&lt;condition&gt; ? &lt;result-if-true&gt; : &lt;result-if-false&gt;  </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>&lt;EXPR&gt; , &lt;EXPR&gt;</code>           </td><td class="col1 leftalign"> expression list                                                                       </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> <code>( &lt;EXPR&gt; )</code>                </td><td class="col1 leftalign"> subexpression (to force precedence)                                                   </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table5&quot;,&quot;secid&quot;:18,&quot;range&quot;:&quot;7104-8323&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Misc&quot;,&quot;hid&quot;:&quot;misc&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:17,&quot;range&quot;:&quot;7088-8325&quot;} -->
+<h2 class="sectionedit19" id="precedence">Precedence</h2>
+<div class="level2">
+
+<p>
+The operator precedence is as follows (highest → lowest):
+</p>
+<ul>
+<li class="level1"><div class="li"> Postfix (<code>id++</code>, <code>id--</code>)</div>
+</li>
+<li class="level1"><div class="li"> Prefix (<code>++id</code>, <code>--id</code>)</div>
+</li>
+<li class="level1"><div class="li"> Unary minus and plus (<code>-</code>, <code>+</code>)</div>
+</li>
+<li class="level1"><div class="li"> Logical and bitwise negation (<code>!</code>, <code>~</code>)</div>
+</li>
+<li class="level1"><div class="li"> Exponentiation (<code>**</code>)</div>
+</li>
+<li class="level1"><div class="li"> Multiplication, division, remainder (<code>*</code>, <code>/</code>, <code>%</code>)</div>
+</li>
+<li class="level1"><div class="li"> Addition, subtraction (<code>+</code>, <code>-</code>)</div>
+</li>
+<li class="level1"><div class="li"> Bitwise shifts (<code>&lt;&lt;</code>, <code>&gt;&gt;</code>)</div>
+</li>
+<li class="level1"><div class="li"> Comparison (<code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>)</div>
+</li>
+<li class="level1"><div class="li"> (In-)equality (<code>==</code>, <code>!=</code>)</div>
+</li>
+<li class="level1"><div class="li"> Bitwise AND (<code>&amp;</code>)</div>
+</li>
+<li class="level1"><div class="li"> Bitwise XOR (<code>^</code>)</div>
+</li>
+<li class="level1"><div class="li"> Bitwise OR (<code>|</code>)</div>
+</li>
+<li class="level1"><div class="li"> Logical AND (<code>&amp;&amp;</code>)</div>
+</li>
+<li class="level1"><div class="li"> Logical OR (<code>||</code>)</div>
+</li>
+<li class="level1"><div class="li"> Ternary operator (<code>&lt;EXPR&gt; ? &lt;EXPR&gt; : &lt;EXPR&gt;</code>)</div>
+</li>
+<li class="level1"><div class="li"> Assignments (<code>=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code>, <code>+=</code>, <code>-=</code>, <code>&lt;&lt;=</code>, <code>&gt;&gt;=</code>, <code>&amp;=</code>, <code>^=</code>, <code>|=</code>)</div>
+</li>
+<li class="level1"><div class="li"> Expression list operator (<code>&lt;EXPR&gt; , &lt;EXPR&gt;</code>)</div>
+</li>
+</ul>
+
+<p>
+The precedence can be adjusted using subexpressions of the form <code>( &lt;EXPR&gt; )</code> at any time. These subexpressions are always evaluated first.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Precedence&quot;,&quot;hid&quot;:&quot;precedence&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:19,&quot;range&quot;:&quot;8326-9486&quot;} -->
+<h2 class="sectionedit20" id="arithmetic_expressions_and_return_codes">Arithmetic expressions and return codes</h2>
+<div class="level2">
+
+<p>
+Bash&#039;s overall language construct is based on exit codes or return codes of commands or functions to be executed. <code>if</code> statements, <code>while</code> loops, etc., they all take the return codes of commands as conditions.
+</p>
+
+<p>
+Now the problem is: The return codes (0 means &quot;TRUE&quot; or &quot;SUCCESS&quot;, not 0 means &quot;FALSE&quot; or &quot;FAILURE&quot;) don&#039;t correspond to the meaning of the result of an arithmetic expression (0 means &quot;FALSE&quot;, not 0 means &quot;TRUE&quot;).
+</p>
+
+<p>
+That&#039;s why all commands and keywords that do arithmetic operations attempt to <strong>translate</strong> the arithmetical meaning into an equivalent return code. This simply means:
+</p>
+<ul>
+<li class="level1"><div class="li"> if the arithmetic operation evaluates to 0 (&quot;FALSE&quot;), the return code is not 0 (&quot;FAILURE&quot;)</div>
+</li>
+<li class="level1"><div class="li"> if the arithmetic operation evaluates to 1 (&quot;TRUE&quot;), the return code is 0 (&quot;SUCCESS&quot;)</div>
+</li>
+</ul>
+
+<p>
+This way, you can easily use arithmetic expressions (along with the commands or keywords that operate them) as conditions for <code>if</code>, <code>while</code> and all the others, including <code>set -e</code> for autoexit on error:
+<pre class="code bash"><span class="re2">MY_TEST_FLAG</span>=<span class="nu0">0</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>MY_TEST_FLAG<span class="br0">&#41;</span><span class="br0">&#41;</span>; <span class="kw1">then</span>
+  <span class="kw3">echo</span> <span class="st0">&quot;MY_TEST_FLAG is ON&quot;</span>
+<span class="kw1">else</span>
+  <span class="kw3">echo</span> <span class="st0">&quot;MY_TEST_FLAG is OFF&quot;</span>
+<span class="kw1">fi</span></pre>
+
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:21,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_center wrap_round wrap_important plugin_wrap">
+<p>
+Beware that <code>set -e</code> can change the runtime behavior of scripts.  For example,
+</p>
+
+<p>
+This non-equivalence of code behavior deserves some attention.
+Consider what happens if v happens to be zero in the expression below:
+</p>
+
+<p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="br0">&#40;</span>v += <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw3">echo</span> <span class="re4">$?</span></pre>
+
+1
+</p>
+
+<p>
+(&quot;FAILURE&quot;)
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">v</span>=$<span class="br0">&#40;</span><span class="br0">&#40;</span>v + <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw3">echo</span> <span class="re4">$?</span></pre>
+
+0
+</p>
+
+<p>
+(&quot;SUCCESS&quot;)
+</p>
+
+<p>
+The return code behavior is not equivalent to the arithmetic behavior, as has been noted.
+</p>
+
+<p>
+A workaround is to use a list operation that returns True, or use the second assignment style.
+<pre class="code bash"><span class="br0">&#40;</span><span class="br0">&#40;</span>v += <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">||</span> :
+<span class="kw3">echo</span> <span class="re4">$?</span></pre>
+
+0
+</p>
+
+<p>
+(&quot;SUCCESS&quot;)
+</p>
+
+<p>
+This change in code behavior was discovered once the script was run under set -e.
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:22,&quot;range&quot;:&quot;0-&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Arithmetic expressions and return codes&quot;,&quot;hid&quot;:&quot;arithmetic_expressions_and_return_codes&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:20,&quot;range&quot;:&quot;9487-11347&quot;} -->
+<h2 class="sectionedit23" id="arithmetic_expressions_in_bash">Arithmetic expressions in Bash</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/c_for" class="wikilink1" title="syntax:ccmd:c_for"> The C-style for-loop</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> Arithmetic expansion</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> Arithmetic evaluation compound command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/builtin/let" class="wikilink1" title="commands:builtin:let"> The &quot;let&quot; builtin command</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Arithmetic expressions in Bash&quot;,&quot;hid&quot;:&quot;arithmetic_expressions_in_bash&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:23,&quot;range&quot;:&quot;11348-&quot;} --></div>
+</body>
+</html>

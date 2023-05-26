@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:set</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,set"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/set?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/set"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/set"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/set"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:set","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_set_builtin_command">The set builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#attributes">Attributes</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_set_builtin_command">The set builtin command</h1>
+<div class="level1">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> incomplete - text, examples, maybe extended description
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The set builtin command&quot;,&quot;hid&quot;:&quot;the_set_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-102&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">set [--abefhkmnptuvxBCHP] &lt;-o OPTIONNAME&gt; [-][--] &lt;POSPARAMS&gt;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;103-202&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+<code>set</code> is primarily made to
+</p>
+<ul>
+<li class="level1"><div class="li"> set the positional parameters (see <a href="/scripting/posparams" class="wikilink1" title="scripting:posparams"> handling positional parameters</a>) to <code>&lt;POSPARAMS&gt;</code></div>
+</li>
+<li class="level1"><div class="li"> set shell attributes with short options (see below)</div>
+</li>
+<li class="level1"><div class="li"> set shell attributes with long option names (see below)</div>
+</li>
+</ul>
+
+<p>
+Without any options, <code>set</code> displays all shell- and environment-variables (only is POSIX-mode) in a re-usable format <code>NAME=VALUE</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;203-624&quot;} -->
+<h3 class="sectionedit4" id="attributes">Attributes</h3>
+<div class="level3">
+
+<p>
+All attributes below can be switched on using <code>-X</code> and switched off using <code>+X</code>. This is done because of the historical meaning of the <code>-</code> to set flags (true for most commands on UNIX®).
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Flag</th><th class="col1">Optionname</th><th class="col2">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>-a</code></td><td class="col1"><code>allexport</code></td><td class="col2">Automatically mark new and altered variables to be exported to subsequent environments.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>-b</code></td><td class="col1"><code>notify</code></td><td class="col2">Don&#039;t wait for the next prompt to print when showing the reports for a terminated background job (only with job control)</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>-e</code></td><td class="col1"><code>errexit</code></td><td class="col2">When set, the shell exits when a simple command in a command list exits non-zero (<code>FALSE</code>). This is not done in situations, where the exit code is already checked (<code>if</code>, <code>while</code>, <code>until</code>, <code>||</code>, <code>&amp;&amp;</code>)</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>-f</code></td><td class="col1"><code>noglob</code></td><td class="col2">Disable <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> pathname expansion</a> (globbing)</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>-h</code></td><td class="col1"><code>hashall</code></td><td class="col2">Remembers the location of commands when they&#039;re called (hashing). Enabled by default.</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>-k</code></td><td class="col1"><code>keyword</code></td><td class="col2">Allows to place environment-assignments everywhere in the commandline, not only infront of the called command.</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>-m</code></td><td class="col1"><code>monitor</code></td><td class="col2"><strong>Monitor mode</strong>. With job control, a short descriptive line is printed when a backgroud job ends. Default is &quot;on&quot; for interactive shells (with job control).</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><code>-n</code></td><td class="col1"><code>noexec</code></td><td class="col2">Read and parse but <strong>do not execute commands</strong> - useful for checking scripts for syntax errors. Ignored by interactive shells.</td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"><code>-o</code></td><td class="col1"> </td><td class="col2">Set/unset attributes with long option names, e.g. <code>set -o noglob</code>. The long option names are in the second column of this table. If no option name is given, all options are printed with their current status.</td>
+	</tr>
+	<tr class="row10">
+		<td class="col0"><code>-p</code></td><td class="col1"><code>privileged</code></td><td class="col2">Turn on privileged mode.</td>
+	</tr>
+	<tr class="row11">
+		<td class="col0"><code>-t</code></td><td class="col1"><code>onecmd</code></td><td class="col2">Exit after reading and executing <strong>one</strong> command.</td>
+	</tr>
+	<tr class="row12">
+		<td class="col0"><code>-u</code></td><td class="col1"><code>nounset</code></td><td class="col2">Treat unset variables as an error when performing parameter expansion. Non-interactive shells exit on this error.</td>
+	</tr>
+	<tr class="row13">
+		<td class="col0"><code>-v</code></td><td class="col1"><code>verbose</code></td><td class="col2">Print shell input lines as they are read - useful for debugging.</td>
+	</tr>
+	<tr class="row14">
+		<td class="col0"><code>-x</code></td><td class="col1"><code>xtrace</code></td><td class="col2">Print commands just before execution - with all expansions and substitutions done, and words marked - useful for debugging.</td>
+	</tr>
+	<tr class="row15">
+		<td class="col0"><code>-B</code></td><td class="col1"><code>braceexpand</code></td><td class="col2">The shell performs <a href="/syntax/expansion/brace" class="wikilink1" title="syntax:expansion:brace"> brace expansion</a> This is on by default.</td>
+	</tr>
+	<tr class="row16">
+		<td class="col0"><code>-C</code></td><td class="col1"><a name="tag_noclobber"></a><code>noclobber</code></td><td class="col2">Don&#039;t overwrite files on redirection operations. You can override that by specifying the <code>&gt;|</code> redirection operator when needed. See <a href="/syntax/redirection" class="wikilink1" title="syntax:redirection"> redirection</a></td>
+	</tr>
+	<tr class="row17">
+		<td class="col0"><code>-E</code></td><td class="col1"><code>errtrace</code></td><td class="col2"><code>ERR</code>-traps are inherited by by shell functions, command substitutions, and commands executed in a subshell environment.</td>
+	</tr>
+	<tr class="row18">
+		<td class="col0"><code>-H</code></td><td class="col1"><code>histexpand</code></td><td class="col2">Enable <code>!</code>-style history expansion. Defaults to <code>on</code> for interactive shells.</td>
+	</tr>
+	<tr class="row19">
+		<td class="col0"><code>-P</code></td><td class="col1"><code>physical</code></td><td class="col2">Don&#039;t follow symlinks when changing directories - use the physical filesystem structure.</td>
+	</tr>
+	<tr class="row20">
+		<td class="col0"><code>-T</code></td><td class="col1"><code>functrace</code></td><td class="col2"><code>DEBUG</code>- and <code>RETURN</code>-traps are inherited by subsequent environments, like <code>-E</code> for <code>ERR</code> trap.</td>
+	</tr>
+	<tr class="row21">
+		<td class="col0"><code>-</code></td><td class="col1"> </td><td class="col2">&quot;End of options&quot; - all following arguments are assigned to the positional parameters, even when they begin with a dash. <code>-x</code> and <code>-v</code> options are turned off. Positional parameters are unchanged (unlike using <code>--</code>!) when no further arguments are given.</td>
+	</tr>
+	<tr class="row22">
+		<td class="col0"><code>--</code></td><td class="col1"> </td><td class="col2">If no arguments follow, the positional parameters are unset. With arguments, the positional parameters are set, even if the strings begin with a <code>-</code> (dash) like an option.</td>
+	</tr>
+	<tr class="row23">
+		<th class="col0" colspan="2">Long options usable with <code>-o</code> without a short equivalent </th>
+	</tr>
+	<tr class="row24">
+		<td class="col0"> </td><td class="col1"><code>emacs</code></td><td class="col2">Use an emacs-style command line editing interface. This is enabled by default when the shell is interactive, unless the shell is started with <code>–noediting</code> option.</td>
+	</tr>
+	<tr class="row25">
+		<td class="col0"> </td><td class="col1"><code>history</code></td><td class="col2">If set, command historization is done (enabled by default on interactive shells)</td>
+	</tr>
+	<tr class="row26">
+		<td class="col0"> </td><td class="col1"><code>ignoreeof</code></td><td class="col2">The effect is as if the shell command <code>IGNOREEOF=10</code> had been executed. See <a href="/syntax/shellvars" class="wikilink1" title="syntax:shellvars"> shell variables</a>.</td>
+	</tr>
+	<tr class="row27">
+		<td class="col0"> </td><td class="col1"><code>nolog</code></td><td class="col2"><strong>(currently ignored)</strong></td>
+	</tr>
+	<tr class="row28">
+		<td class="col0"> </td><td class="col1"><code>pipefail</code></td><td class="col2">If set, the exit code from a pipeline is different from the normal (&quot;last command in pipeline&quot;) behaviour: <code>TRUE</code> when no command failed, <code>FALSE</code> when something failed (code of the rightmost command that failed)</td>
+	</tr>
+	<tr class="row29">
+		<td class="col0"> </td><td class="col1"><code>posix</code></td><td class="col2">When set, Bash runs in POSIX mode.</td>
+	</tr>
+	<tr class="row30">
+		<td class="col0"> </td><td class="col1"><code>vi</code></td><td class="col2">Enables a <code>vi</code>-style command line editing interface.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;842-4915&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Attributes&quot;,&quot;hid&quot;:&quot;attributes&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;625-4916&quot;} -->
+<h2 class="sectionedit6" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+Tag a part of a shell script to output debugging information (<code>-x</code>):
+<pre class="code bash"><span class="co0">#!/bin/bash</span>
+...
+<span class="kw1">set</span> <span class="re5">-x</span> <span class="co0"># on</span>
+...
+<span class="kw1">set</span> +x <span class="co0"># off</span>
+...</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;4917-5079&quot;} -->
+<h2 class="sectionedit7" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+
+<p>
+<code>set</code> and its basic behaviour and options are specified by POSIX®. However, options that influence Bash-specific things are not portable, naturally.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:7,&quot;range&quot;:&quot;5080-5273&quot;} -->
+<h2 class="sectionedit8" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/commands/builtin/shopt" class="wikilink1" title="commands:builtin:shopt"> The shopt builtin command</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;5274-&quot;} --></div>
+</body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>howto:edit-ed</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="howto,edit-ed,bash,shell,scripting,arguments,file,editor,edit,ed,sed"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/howto/edit-ed?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=howto"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/howto/edit-ed"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/howto/edit-ed"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/howto/edit-ed"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='howto';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"howto:edit-ed","namespace":"howto","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#editing_files_via_scripts_with_ed">Editing files via scripts with ed</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#why_ed">Why ed?</a></div></li>
+<li class="level2"><div class="li"><a href="#commanding_ed">Commanding ed</a></div></li>
+<li class="level2"><div class="li"><a href="#the_basic_interface">The basic interface</a></div></li>
+<li class="level2"><div class="li"><a href="#debugging_your_ed_scripts">Debugging your ed scripts</a></div></li>
+<li class="level2"><div class="li"><a href="#editing_your_files">Editing your files</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#simple_word_substitutions">Simple word substitutions</a></div></li>
+<li class="level3"><div class="li"><a href="#block_operations">Block operations</a></div></li>
+<li class="level3"><div class="li"><a href="#file_operations">File operations</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#pitfalls">Pitfalls</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#ed_is_not_sed">ed is not sed</a></div></li>
+<li class="level3"><div class="li"><a href="#here_documents">here documents</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#simulate_other_commands">Simulate other commands</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#a_simple_grep">A simple grep</a></div></li>
+<li class="level3"><div class="li"><a href="#wc_-l">wc -l</a></div></li>
+<li class="level3"><div class="li"><a href="#cat">cat</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#links">Links</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="editing_files_via_scripts_with_ed">Editing files via scripts with ed</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Editing files via scripts with ed&quot;,&quot;hid&quot;:&quot;editing_files_via_scripts_with_ed&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-118&quot;} -->
+<h2 class="sectionedit2" id="why_ed">Why ed?</h2>
+<div class="level2">
+
+<p>
+Like <code>sed</code>, <code>ed</code> is a line editor. However, if you try to change file contents with <code>sed</code>, and the file is open elsewhere and read by some process, you will find out that GNU <code>sed</code> and its <code>-i</code> option will not allow you to edit the file. There are circumstances where you may need that, e.g. editing active and open files, the lack of GNU, or other <code>sed</code>, with &quot;in-place&quot; option available.
+</p>
+
+<p>
+Why <code>ed</code>?
+</p>
+<ul>
+<li class="level1"><div class="li"> maybe your <code>sed</code> doesn&#039;t support in-place edit</div>
+</li>
+<li class="level1"><div class="li"> maybe you need to be as portable as possible</div>
+</li>
+<li class="level1"><div class="li"> maybe you need to really edit in-file (and not create a new file like GNU <code>sed</code>)</div>
+</li>
+<li class="level1"><div class="li"> last but not least: standard <code>ed</code> has very good editing and addressing possibilities, compared to standard <code>sed</code></div>
+</li>
+</ul>
+
+<p>
+Don&#039;t get me wrong, this is <strong>not</strong> meant as anti-<code>sed</code> article! It&#039;s just meant to show you another way to do the job.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Why ed?&quot;,&quot;hid&quot;:&quot;why_ed&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;119-991&quot;} -->
+<h2 class="sectionedit3" id="commanding_ed">Commanding ed</h2>
+<div class="level2">
+
+<p>
+Since <code>ed</code> is an interactive text editor, it reads and executes commands that come from <code>stdin</code>. There are several ways to feed our commands to ed:
+</p>
+
+<p>
+<strong><em class="u">Pipelines</em></strong>
+<pre class="code">echo &#039;&lt;ED-COMMANDS&gt;&#039; | ed &lt;FILE&gt;</pre>
+
+</p>
+
+<p>
+To inject the needed newlines, etc. it may be easier to use the builtin command, <code>printf</code> (&quot;help printf&quot;). Shown here as an example Bash function to prefix text to file content:
+<pre class="code">
+# insertHead &quot;$text&quot; &quot;$file&quot;
+
+insertHead() {
+  printf &#039;%s\n&#039; H 1i &quot;$1&quot; . w | ed -s &quot;$2&quot;
+}</pre>
+
+</p>
+
+<p>
+<strong><em class="u">Here-strings</em></strong>
+<pre class="code">ed &lt;FILE&gt; &lt;&lt;&lt; &#039;&lt;ED-COMMANDS&gt;&#039;</pre>
+
+</p>
+
+<p>
+<strong><em class="u">Here-documents</em></strong>
+<pre class="code">ed &lt;FILE&gt; &lt;&lt;EOF
+&lt;ED-COMMANDS&gt;
+EOF</pre>
+
+</p>
+
+<p>
+Which one you prefer is your choice. I will use the here-strings, since it looks best here <abbr title="In my humble opinion">IMHO</abbr>.
+</p>
+
+<p>
+There are other ways to provide input to <code>ed</code>. For example, process substitution. But these should be enough for daily needs.
+</p>
+
+<p>
+Since <code>ed</code> wants commands separated by newlines, I&#039;ll use a special Bash quoting method, the C-like strings <code>$&#039;TEXT&#039;</code>, as it can interpret a set of various escape sequences and special characters. I&#039;ll use the <code>-s</code> option to make it less verbose.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Commanding ed&quot;,&quot;hid&quot;:&quot;commanding_ed&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;992-2165&quot;} -->
+<h2 class="sectionedit4" id="the_basic_interface">The basic interface</h2>
+<div class="level2">
+
+<p>
+Check the <code>ed</code> manpage for details
+</p>
+
+<p>
+Similar to <code>vi</code> or <code>vim</code>, <code>ed</code> has a &quot;command mode&quot; and an &quot;interactive mode&quot;. For non-interactive use, the command mode is the usual choice.
+</p>
+
+<p>
+Commands to <code>ed</code> have a simple and regular structure: zero, one, or two addresses followed by a single-character command, possibly followed by parameters to that command. These addresses specify one or more lines in the text buffer. Every command that requires addresses has default addresses, so the addresses can often be omitted.
+</p>
+
+<p>
+The line addressing is relative to the <em>current line</em>. If the edit buffer is not empty, the initial value for the <em>current line</em> shall be the last line in the edit buffer, otherwise zero. Generally, the <em>current line</em> is the last line affected by a command. All addresses can only address single lines, not blocks of lines!
+</p>
+
+<p>
+Line addresses or commands using <em>regular expressions</em> interpret POSIX Basic Regular Expressions (BRE). A null BRE is used to reference the most recently used BRE. Since <code>ed</code> addressing is only for single lines, no RE can ever match a newline.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The basic interface&quot;,&quot;hid&quot;:&quot;the_basic_interface&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;2166-3303&quot;} -->
+<h2 class="sectionedit5" id="debugging_your_ed_scripts">Debugging your ed scripts</h2>
+<div class="level2">
+
+<p>
+By default, <code>ed</code> is not very talkative and will simply print a &quot;?&quot; when an error occurs. Interactively you can use the <code>h</code> command to get a short message explaining the last error. You can also turn on a mode that makes <code>ed</code> automatically print this message with the <code>H</code> command. It is a good idea to always add this command at the beginning of your ed scripts:
+</p>
+
+<p>
+<pre class="code">bash &gt; ed -s file &lt;&lt;&lt; $&#039;H\n,df&#039;
+?
+script, line 2: Invalid command suffix</pre>
+
+</p>
+
+<p>
+While working on your script, you might make errors and destroy your file, you might be tempted to try your script doing something like:
+<pre class="code"># Works, but there is better
+
+# copy my original file
+cp file file.test
+
+# try my script on the file
+ed -s file.test &lt;&lt;&lt; $&#039;H\n&lt;ed commands&gt;\nw&#039;
+
+# see the results
+cat file.test</pre>
+
+There is a much better way though, you can use the ed command <code>p</code> to print the file, now your testing would look like:
+</p>
+
+<p>
+<pre class="code">ed -s file &lt;&lt;&lt; $&#039;H\n&lt;ed commands&gt;\n,p&#039;</pre>
+
+the <code>,</code> (comma) in front of the <code>p</code> command is a shortcut for <code>1,$</code> which defines an address range for the first to the last line, <code>,p</code> thus means print the whole file, after it has been modified. When your script runs sucessfully, you only have to replace the <code>,p</code> by a <code>w</code>.
+</p>
+
+<p>
+Of course, even if the file is not modified by the <code>p</code> command, <strong>it&#039;s always a good idea to have a backup copy!</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Debugging your ed scripts&quot;,&quot;hid&quot;:&quot;debugging_your_ed_scripts&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;3304-4716&quot;} -->
+<h2 class="sectionedit6" id="editing_your_files">Editing your files</h2>
+<div class="level2">
+
+<p>
+Most of these things can be done with <code>sed</code>. But there are also things that can&#039;t be done in <code>sed</code> or can only be done with very complex code.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Editing your files&quot;,&quot;hid&quot;:&quot;editing_your_files&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:6,&quot;range&quot;:&quot;4717-4901&quot;} -->
+<h3 class="sectionedit7" id="simple_word_substitutions">Simple word substitutions</h3>
+<div class="level3">
+
+<p>
+Like <code>sed</code>, <code>ed</code> also knows the common <code>s/FROM/TO/</code> command, and it can also take line-addresses. <strong>If no substitution is made on the addressed lines, it&#039;s considered an error.</strong>
+</p>
+
+</div>
+
+<h4 id="substitutions_through_the_whole_file">Substitutions through the whole file</h4>
+<div class="level4">
+
+<p>
+<pre class="code">ed -s test.txt &lt;&lt;&lt; $&#039;,s/Windows(R)-compatible/POSIX-conform/g\nw&#039;</pre>
+
+</p>
+
+<p>
+<em class="u">Note:</em> The comma as single address operator is an alias for <code>1,$</code> (&quot;all lines&quot;).
+</p>
+
+</div>
+
+<h4 id="substitutions_in_specific_lines">Substitutions in specific lines</h4>
+<div class="level4">
+
+<p>
+On a line containing <code>fruits</code>, do the substitution:
+<pre class="code">ed -s test.txt &lt;&lt;&lt; $&#039;/fruits/s/apple/banana/g\nw&#039;</pre>
+
+</p>
+
+<p>
+On the 5th line after the line containing <code>fruits</code>, do the substitution:
+<pre class="code">ed -s test.txt &lt;&lt;&lt; $&#039;/fruits/+5s/apple/banana/g\nw&#039;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple word substitutions&quot;,&quot;hid&quot;:&quot;simple_word_substitutions&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:7,&quot;range&quot;:&quot;4902-5643&quot;} -->
+<h3 class="sectionedit8" id="block_operations">Block operations</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="delete_a_block_of_text">Delete a block of text</h4>
+<div class="level4">
+
+<p>
+The simple one is a well-known (by position) block of text:
+<pre class="code"># delete lines number 2 to 4 (2, 3, 4)
+ed -s test.txt &lt;&lt;&lt; $&#039;2,5d\nw&#039;</pre>
+
+</p>
+
+<p>
+This deletes all lines matching a specific regular expression:
+<pre class="code"># delete all lines matching foobar
+ed -s test.txt &lt;&lt;&lt; $&#039;g/foobar/d\nw&#039;</pre>
+
+g/regexp/ applies the command following it to all the lines matching the regexp
+</p>
+
+</div>
+
+<h4 id="move_a_block_of_text">Move a block of text</h4>
+<div class="level4">
+
+<p>
+…using the <code>m</code> command: <code>&lt;ADDRESS&gt; m &lt;TARGET-ADDRESS&gt;</code>
+</p>
+
+<p>
+This is definitely something that can&#039;t be done easily with sed.
+</p>
+
+<p>
+<pre class="code"># moving lines 5-9 to the end of the file
+ed -s test.txt &lt;&lt;&lt; $&#039;5,9m$\nw&#039;
+
+# moving lines 5-9 to line 3
+ed -s test.txt &lt;&lt;&lt; $&#039;5,9m3\nw&#039;</pre>
+
+</p>
+
+</div>
+
+<h4 id="copy_a_block_of_text">Copy a block of text</h4>
+<div class="level4">
+
+<p>
+…using the <code>t</code> command: <code>&lt;ADDRESS&gt; t &lt;TARGET-ADDRESS&gt;</code>
+</p>
+
+<p>
+You use the <code>t</code> command just like you use the <code>m</code> (move) command.
+</p>
+
+<p>
+<pre class="code"># make a copy of lines 5-9 and place it at the end of the file
+ed -s test.txt &lt;&lt;&lt; $&#039;5,9t$\nw&#039;
+
+# make a copy of lines 5-9 and place it at line 3
+ed -s test.txt &lt;&lt;&lt; $&#039;5,9t3\nw&#039;</pre>
+
+</p>
+
+</div>
+
+<h4 id="join_all_lines">Join all lines</h4>
+<div class="level4">
+
+<p>
+…but leave the final newline intact. This is done by an extra command: <code>j</code> (join).
+</p>
+
+<p>
+<pre class="code">ed -s file &lt;&lt;&lt; $&#039;1,$j\nw&#039;</pre>
+
+</p>
+
+<p>
+Compared with two other methods (using <code>tr</code> or <code>sed</code>), you don&#039;t have to delete all newlines and manually add one at the end.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Block operations&quot;,&quot;hid&quot;:&quot;block_operations&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:8,&quot;range&quot;:&quot;5644-7025&quot;} -->
+<h3 class="sectionedit9" id="file_operations">File operations</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="insert_another_file">Insert another file</h4>
+<div class="level4">
+
+<p>
+How do you insert another file? As with <code>sed</code>, you use the <code>r</code> (read) command. That inserts another file at the line before the last line (and prints the result to stdout - <code>,p</code>):
+<pre class="code">ed -s FILE1 &lt;&lt;&lt; $&#039;$-1 r FILE2\n,p&#039;</pre>
+
+</p>
+
+<p>
+To compare, here&#039;s a possible <code>sed</code> solution which must use Bash arithmetic and the external program <code>wc</code>:
+<pre class="code">sed &quot;$(($(wc -l &lt; FILE1)-1))r FILE2&quot; FILE1
+
+# UPDATE here&#039;s one which uses GNU sed&#039;s &quot;e&quot; parameter for the s-command
+#   it executes the commands found in pattern space. I&#039;ll take that as a
+#   security risk, but well, sometimes GNU &gt; security, you know...
+sed &#039;${h;s/.*/cat FILE2/e;G}&#039; FILE1</pre>
+
+</p>
+
+<p>
+Another approach, in two invocations of sed, that avoids the use of external commands completely:
+</p>
+
+<p>
+<pre class="code">sed $&#039;${s/$/\\n-||-/;r FILE2\n}&#039; FILE1 | sed &#039;0,/-||-/{//!h;N;//D};$G&#039;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;File operations&quot;,&quot;hid&quot;:&quot;file_operations&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:9,&quot;range&quot;:&quot;7026-7924&quot;} -->
+<h2 class="sectionedit10" id="pitfalls">Pitfalls</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Pitfalls&quot;,&quot;hid&quot;:&quot;pitfalls&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:10,&quot;range&quot;:&quot;7925-7948&quot;} -->
+<h3 class="sectionedit11" id="ed_is_not_sed">ed is not sed</h3>
+<div class="level3">
+
+<p>
+ed and sed might look similar, but the same command(s) might act differently:
+</p>
+
+<p>
+<strong><em class="u"> /foo/d </em></strong>
+</p>
+
+<p>
+In sed /foo/d will delete all lines matching foo, in ed the commands are not repeated 
+on each line so this command will search the next line matching foo and delete it.
+If you want to delete all lines matching foo, or do a subsitution on all lines matching foo
+you have to tell ed about it with the g (global) command:
+</p>
+
+<p>
+<pre class="code">echo $&#039;1\n1\n3&#039; &gt; file
+
+#replace all lines matching 1 by &quot;replacement&quot;
+ed -s file &lt;&lt;&lt; $&#039;g/1/s/1/replacement/\n,p&#039; 
+
+#replace the first line matching 1 by &quot;replacement&quot;
+#(because it starts searching from the last line)
+ed -s file &lt;&lt;&lt; $&#039;s/1/replacement/\n,p&#039;</pre>
+
+</p>
+
+<p>
+<strong><em class="u"> an error stops the script </em></strong>
+</p>
+
+<p>
+You might think that it&#039;s not a problem and that the same thing happens with sed and you&#039;re right, with the exception that if ed
+does not find a pattern it&#039;s an error, while sed just continues with the next line.
+For instance, let&#039;s say that you want to change foo to bar on the first line of the file and add something after the next line,
+ed will stop if it cannot find foo on the first line, sed will continue.
+</p>
+
+<p>
+<pre class="code">#Gnu sed version
+sed -e &#039;1s/foo/bar/&#039; -e &#039;$a\something&#039; file
+
+#First ed version, does nothing if foo is not found on the first line:
+ed -s file &lt;&lt;&lt; $&#039;H\n1s/foo/bar/\na\nsomething\n.\nw&#039;</pre>
+
+</p>
+
+<p>
+If you want the same behaviour you can use g/foo/ to trick ed. g/foo/ will apply the command on all lines matching foo,
+thus the substitution will succeed and ed will not produce an error when foo is not found:
+</p>
+
+<p>
+<pre class="code">#Second version will add the line with &quot;something&quot; even if foo is not found
+ed -s file &lt;&lt;&lt; $&#039;H\n1g/foo/s/foo/bar/\na\nsomething\n.\nw&#039;</pre>
+
+</p>
+
+<p>
+In fact, even a substitution that fails after a g/ / command does not seem to cause an error, i.e. you can 
+use a trick like g/./s/foo/bar/ to attempt the substitution on all non blank lines  
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ed is not sed&quot;,&quot;hid&quot;:&quot;ed_is_not_sed&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:11,&quot;range&quot;:&quot;7949-9874&quot;} -->
+<h3 class="sectionedit12" id="here_documents">here documents</h3>
+<div class="level3">
+
+<p>
+<strong><em class="u"> shell parameters are expanded </em></strong>
+</p>
+
+<p>
+If you don&#039;t quote the delimiter, $ has a special meaning. This sounds obvious but it&#039;s
+easy to forget this fact when you use addresses like $-1 or commands like $a. Either quote the $ or the delimiter:
+<pre class="code">#fails
+ed -s file &lt;&lt; EOF
+$a
+last line
+.
+w
+EOF 
+
+#ok
+ed -s file &lt;&lt; EOF
+\$a
+last line
+.
+w
+EOF 
+
+#ok again
+ed -s file &lt;&lt; &#039;EOF&#039;
+$a
+last line
+.
+w
+EOF </pre>
+
+</p>
+
+<p>
+<strong><em class="u"> &quot;.&quot; is not a command </em></strong>
+</p>
+
+<p>
+The . used to terminate the command &quot;a&quot; must be the only thing on the line.
+take care if you indent the commands:
+</p>
+
+<p>
+<pre class="code">#ed doesn&#039;t care about the spaces before the commands, but the . must be the only thing on the line:
+ed -s file &lt;&lt; EOF
+    a
+my content
+.
+    w
+EOF</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;here documents&quot;,&quot;hid&quot;:&quot;here_documents&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:12,&quot;range&quot;:&quot;9875-10618&quot;} -->
+<h2 class="sectionedit13" id="simulate_other_commands">Simulate other commands</h2>
+<div class="level2">
+
+<p>
+Keep in mind that in all the examples below, the entire file will be read into memory.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simulate other commands&quot;,&quot;hid&quot;:&quot;simulate_other_commands&quot;,&quot;codeblockOffset&quot;:23,&quot;secid&quot;:13,&quot;range&quot;:&quot;10619-10743&quot;} -->
+<h3 class="sectionedit14" id="a_simple_grep">A simple grep</h3>
+<div class="level3">
+
+<p>
+<pre class="code">ed -s file &lt;&lt;&lt; &#039;g/foo/p&#039;
+
+# equivalent
+ed -s file &lt;&lt;&lt; &#039;g/foo/&#039;</pre>
+
+</p>
+
+<p>
+The name <code>grep</code> is derived from the notaion <code>g/RE/p</code> (global ⇒ regular expression ⇒ print).
+ref <a href="http://www.catb.org/~esr/jargon/html/G/grep.html" class="urlextern" title="http://www.catb.org/~esr/jargon/html/G/grep.html" rel="nofollow">http://www.catb.org/~esr/jargon/html/G/grep.html</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;A simple grep&quot;,&quot;hid&quot;:&quot;a_simple_grep&quot;,&quot;codeblockOffset&quot;:23,&quot;secid&quot;:14,&quot;range&quot;:&quot;10744-11001&quot;} -->
+<h3 class="sectionedit15" id="wc_-l">wc -l</h3>
+<div class="level3">
+
+<p>
+Since the default for the <code>ed</code> &quot;print line number&quot; command is the last line, a simple <code>=</code> (equal sign) will print this line number and thus the number of lines of the file:
+</p>
+
+<p>
+<pre class="code">ed -s file &lt;&lt;&lt; &#039;=&#039;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;wc -l&quot;,&quot;hid&quot;:&quot;wc_-l&quot;,&quot;codeblockOffset&quot;:24,&quot;secid&quot;:15,&quot;range&quot;:&quot;11002-11232&quot;} -->
+<h3 class="sectionedit16" id="cat">cat</h3>
+<div class="level3">
+
+<p>
+Yea, it&#039;s a joke…
+</p>
+
+<p>
+<pre class="code">ed -s file &lt;&lt;&lt; $&#039;,p&#039;</pre>
+
+</p>
+
+<p>
+…but a similar thing to <code>cat</code> showing line-endings and escapes can be done with the <code>list</code> command (l):
+</p>
+
+<p>
+<pre class="code">ed -s file &lt;&lt;&lt; $&#039;,l&#039;</pre>
+
+</p>
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> to be continued
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;cat&quot;,&quot;hid&quot;:&quot;cat&quot;,&quot;codeblockOffset&quot;:25,&quot;secid&quot;:16,&quot;range&quot;:&quot;11233-11476&quot;} -->
+<h2 class="sectionedit17" id="links">Links</h2>
+<div class="level2">
+
+<p>
+Reference:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.gnu.org/software/ed/manual/ed_manual.html" class="urlextern" title="http://www.gnu.org/software/ed/manual/ed_manual.html" rel="nofollow"> Gnu ed</a> - if we had to guess, you&#039;re probably using this one.</div>
+</li>
+<li class="level1"><div class="li"> POSIX <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/ed.html#tag_20_38" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/ed.html#tag_20_38" rel="nofollow"> ed</a>, <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/ex.html#tag_20_40" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/ex.html#tag_20_40" rel="nofollow"> ex </a>, and <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/vi.html#tag_20_152" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/vi.html#tag_20_152" rel="nofollow"> vi </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://sdf.lonestar.org/index.cgi?tutorials/ed" class="urlextern" title="http://sdf.lonestar.org/index.cgi?tutorials/ed" rel="nofollow">http://sdf.lonestar.org/index.cgi?tutorials/ed</a> - ed cheatsheet on sdf.org</div>
+</li>
+</ul>
+
+<p>
+Misc info / tutorials:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/021" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/021" rel="nofollow"> How can I replace a string with another string in a variable, a stream, a file, or in all the files in a directory? </a> - BashFAQ</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://wolfram.schneider.org/bsd/7thEdManVol2/edtut/edtut.pdf" class="urlextern" title="http://wolfram.schneider.org/bsd/7thEdManVol2/edtut/edtut.pdf" rel="nofollow">http://wolfram.schneider.org/bsd/7thEdManVol2/edtut/edtut.pdf</a> - Old but still relevant ed tutorial.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Links&quot;,&quot;hid&quot;:&quot;links&quot;,&quot;codeblockOffset&quot;:27,&quot;secid&quot;:17,&quot;range&quot;:&quot;11477-&quot;} --></div>
+</body>
+</html>

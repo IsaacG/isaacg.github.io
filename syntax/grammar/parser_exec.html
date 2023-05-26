@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:grammar:parser_exec</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,grammar,parser_exec,bash,shell,scripting,syntax,language,behaviour,executing,execution"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/grammar/parser_exec?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:grammar"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/grammar/parser_exec"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/grammar/parser_exec"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/grammar/parser_exec"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:grammar';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:grammar:parser_exec","namespace":"syntax:grammar","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#parsing_and_execution">Parsing and execution</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#simple_command_expansion">Simple command expansion</a></div></li>
+<li class="level2"><div class="li"><a href="#simple_command_execution">Simple command execution</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> work in progress…
+</p>
+
+<h1 class="sectionedit1" id="parsing_and_execution">Parsing and execution</h1>
+<div class="level1">
+
+<p>
+Nearly everything in <a href="/syntax/basicgrammar" class="wikilink1" title="syntax:basicgrammar"> Bash grammar</a> can be broken down to a &quot;simple command&quot;. The only thing Bash has to expand, evaluate and execute is the simple command.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Parsing and execution&quot;,&quot;hid&quot;:&quot;parsing_and_execution&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;28-328&quot;} -->
+<h2 class="sectionedit2" id="simple_command_expansion">Simple command expansion</h2>
+<div class="level2">
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_center wrap_round wrap_info plugin_wrap" style="width: 60%;"><ul>
+<li class="level1"><div class="li"> <a href="http://lists.gnu.org/archive/html/bug-bash/2013-01/msg00040.html" class="urlextern" title="http://lists.gnu.org/archive/html/bug-bash/2013-01/msg00040.html" rel="nofollow">http://lists.gnu.org/archive/html/bug-bash/2013-01/msg00040.html</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lists.research.att.com/pipermail/ast-developers/2013q2/002456.html" class="urlextern" title="http://lists.research.att.com/pipermail/ast-developers/2013q2/002456.html" rel="nofollow">http://lists.research.att.com/pipermail/ast-developers/2013q2/002456.html</a></div>
+</li>
+</ul>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+This step happens after the initial command line splitting.
+</p>
+
+<p>
+The expansion of a simple command is done in four steps (interpreting the simple command <strong>from left to right</strong>):
+</p>
+<ol>
+<li class="level1 node"><div class="li"> The words the parser has marked as <strong>variable assignments</strong> and <strong>redirections</strong> are saved for later processing.</div>
+<ul>
+<li class="level2"><div class="li"> variable assignments precede the command name and have the form <code>WORD=WORD</code></div>
+</li>
+<li class="level2"><div class="li"> redirections can appear anywhere in the simple command</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> The rest of the words are <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> expanded</a>. If any words remain after expansion, the first word is taken to be the <strong>name of the command</strong> and the remaining words are the <strong>arguments</strong>.</div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/redirection" class="wikilink1" title="syntax:redirection"> Redirections</a> are performed.</div>
+</li>
+<li class="level1"><div class="li"> The text after the <code>=</code> in each variable assignment undergoes <a href="/syntax/expansion/tilde" class="wikilink1" title="syntax:expansion:tilde"> tilde expansion</a>, <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansion</a>, <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> command substitution</a>, <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> arithmetic expansion</a>, and quote removal before being assigned to the variable.</div>
+</li>
+</ol>
+
+<p>
+If <strong>no command name</strong> results after expansion:
+</p>
+<ul>
+<li class="level1 node"><div class="li"> The variable assignments affect the <strong>current shell</strong> environment.</div>
+<ul>
+<li class="level2"><div class="li"> This is what happens when you enter only a variable assignment at the command prompt.</div>
+</li>
+<li class="level2"><div class="li"> Assignment to readonly variables causes an error and the command exits non-zero.</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Redirections are performed, but do not affect the current shell environment.</div>
+<ul>
+<li class="level2"><div class="li"> that means, a <code>&gt; FILE</code> without any command <strong>will</strong> be performed: the <code>FILE</code> will be created!</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> The command exits</div>
+<ul>
+<li class="level2"><div class="li"> with an exit code indicating the redirection error, if any</div>
+</li>
+<li class="level2"><div class="li"> with the exit code of the last command-substitution parsed, if any</div>
+</li>
+<li class="level2"><div class="li"> with exit code 0 (zero) if no redirection error happened and no command substitution was done</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Otherwise, if a command name results:
+</p>
+<ul>
+<li class="level1 node"><div class="li"> The variables saved and parsed are added to the environment of the executed command (and thus do not affect the current environment)</div>
+<ul>
+<li class="level2"><div class="li"> Assignment to readonly variables causes an error and the command exits with a non-zero error code.</div>
+</li>
+<li class="level2"><div class="li"> <strong>Assignment errors</strong> in non-POSIX modes cause the <em>enclosing commands (e.g. loops) to completely terminate</em></div>
+</li>
+<li class="level2"><div class="li"> <strong>Assignment errors</strong> in (non-interactive) POSIX mode cause <em>the entire script to terminate</em></div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+The behavior regarding the variable assignment errors can be tested:
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_center wrap_round wrap_info plugin_wrap" style="width: 60%;">
+<p>
+<a href="http://lists.gnu.org/archive/html/bug-bash/2013-01/msg00054.html" class="urlextern" title="http://lists.gnu.org/archive/html/bug-bash/2013-01/msg00054.html" rel="nofollow">http://lists.gnu.org/archive/html/bug-bash/2013-01/msg00054.html</a>
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+<strong><em class="u">This one exits the script completely</em></strong>
+<pre class="code">#!/bin/sh
+# This shell runs in POSIX mode!
+
+echo PRE
+
+# The following is an assignment error, since there is no digit &#039;9&#039;
+# for a base eight number!
+foo=$((8#9))
+
+echo POST</pre>
+
+</p>
+
+<p>
+<strong><em class="u">This one terminates only the enclosing compound command (the <code>{ …; }</code>):</em></strong>
+<pre class="code">#!/bin/bash
+# This shell runs in native Bash-mode!
+
+echo PRE
+
+# The following is an assignment error!
+# The &quot;echo TEST&quot; won&#039;t be executed, since the { ...; } is terminated
+{ foo=$((8#9)); echo TEST; }
+
+echo POST
+</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple command expansion&quot;,&quot;hid&quot;:&quot;simple_command_expansion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;329-3524&quot;} -->
+<h2 class="sectionedit7" id="simple_command_execution">Simple command execution</h2>
+<div class="level2">
+
+<p>
+If a parsed simple command contains no slashes, the shell attempts to locate and execute it:
+</p>
+<ul>
+<li class="level1"><div class="li"> shell functions</div>
+</li>
+<li class="level1"><div class="li"> shell builtin commands</div>
+</li>
+<li class="level1"><div class="li"> check own hash table</div>
+</li>
+<li class="level1"><div class="li"> search along <code>PATH</code></div>
+</li>
+</ul>
+
+<p>
+As of Bash Version 4, when a command search fails, the shell executes a shell function named <code>command_not_found_handle()</code> using the failed command as arguments. This can be used to provide user friendly messages or install software packages etc. Since this function runs in a separate execution environment, you can&#039;t really influence the main shell with it (changing directory, setting variables).
+</p>
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> to be continued
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple command execution&quot;,&quot;hid&quot;:&quot;simple_command_execution&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:7,&quot;range&quot;:&quot;3525-4180&quot;} -->
+<h2 class="sectionedit8" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/redirection" class="wikilink1" title="syntax:redirection"> Redirection</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansions and substitutions</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;4181-&quot;} --></div>
+</body>
+</html>

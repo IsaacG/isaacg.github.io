@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:style</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,style"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/style?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/style"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/style"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/style"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:style","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#scripting_with_style">Scripting with style</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#indentation_guidelines">Indentation guidelines</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#breaking_up_lines">Breaking up lines</a></div></li>
+<li class="level3"><div class="li"><a href="#breaking_compound_commands">Breaking compound commands</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#syntax_and_coding_guidelines">Syntax and coding guidelines</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#cryptic_constructs">Cryptic constructs</a></div></li>
+<li class="level3"><div class="li"><a href="#variable_names">Variable names</a></div></li>
+<li class="level3"><div class="li"><a href="#variable_initialization">Variable initialization</a></div></li>
+<li class="level3"><div class="li"><a href="#parameter_expansion">Parameter expansion</a></div></li>
+<li class="level3"><div class="li"><a href="#function_names">Function names</a></div></li>
+<li class="level3"><div class="li"><a href="#command_substitution">Command substitution</a></div></li>
+<li class="level3"><div class="li"><a href="#eval">Eval</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#basic_structure">Basic structure</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#the_shebang">The shebang</a></div></li>
+<li class="level3"><div class="li"><a href="#configuration_variables">Configuration variables</a></div></li>
+<li class="level3"><div class="li"><a href="#function_definitions">Function definitions</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#behaviour_and_robustness">Behaviour and robustness</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#fail_early">Fail early</a></div></li>
+<li class="level3"><div class="li"><a href="#availability_of_commands">Availability of commands</a></div></li>
+<li class="level3"><div class="li"><a href="#exit_meaningfully">Exit meaningfully</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#misc">Misc</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#output_and_appearance">Output and appearance</a></div></li>
+<li class="level3"><div class="li"><a href="#input">Input</a></div></li>
+<li class="level3"><div class="li"><a href="#tooling">Tooling</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="scripting_with_style">Scripting with style</h1>
+<div class="level1">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> continue
+</p>
+
+<p>
+These are some coding guidelines that helped me to read and understand my own code over the years. They also will help to produce code that will be a bit more robust than &quot;if something breaks, I know how to fix it&quot;.
+</p>
+
+<p>
+This is not a bible, of course. But I have seen so much ugly and terrible code (not only in shell) during all the years, that I&#039;m 100% convinced there needs to be <em>some</em> code layout and style. No matter which one you use, use it throughout your code (at least don&#039;t change it within the same shellscript file); don&#039;t change your code layout with your mood.
+</p>
+
+<p>
+Some good code layout helps you to read your own code after a while. And of course it helps others to read the code.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Scripting with style&quot;,&quot;hid&quot;:&quot;scripting_with_style&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-747&quot;} -->
+<h2 class="sectionedit2" id="indentation_guidelines">Indentation guidelines</h2>
+<div class="level2">
+
+<p>
+Indentation is nothing that technically influences a script, it&#039;s only for us humans.
+</p>
+
+<p>
+I&#039;m used to seeing/using indentation of <em>two space characters</em> (though many may prefer 4 spaces, see below in the discussion section):
+</p>
+<ul>
+<li class="level1"><div class="li"> it&#039;s easy and fast to type</div>
+</li>
+<li class="level1"><div class="li"> it&#039;s not a hard-tab that&#039;s displayed differently in different environments</div>
+</li>
+<li class="level1"><div class="li"> it&#039;s wide enough to give a visual break and small enough to not waste too much space on the line</div>
+</li>
+</ul>
+
+<p>
+Speaking of hard-tabs: Avoid them if possible. They only make trouble. I can imagine one case where they&#039;re useful: Indenting <a href="/syntax/redirection#here_documents" class="wikilink1" title="syntax:redirection"> here-documents</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Indentation guidelines&quot;,&quot;hid&quot;:&quot;indentation_guidelines&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;748-1402&quot;} -->
+<h3 class="sectionedit3" id="breaking_up_lines">Breaking up lines</h3>
+<div class="level3">
+
+<p>
+Whenever you need to break lines of long code, you should follow one of these two rules:
+</p>
+
+<p>
+<em class="u"><strong>Indention using command width:</strong></em>
+<pre class="code">activate some_very_long_option \
+         some_other_option</pre>
+
+</p>
+
+<p>
+<em class="u"><strong>Indention using two spaces:</strong></em>
+<pre class="code">activate some_very_long_option \
+  some_other_option</pre>
+
+</p>
+
+<p>
+Personally, with some exceptions, I prefer the first form because it supports the visual impression of &quot;these belong together&quot;.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Breaking up lines&quot;,&quot;hid&quot;:&quot;breaking_up_lines&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1403-1870&quot;} -->
+<h3 class="sectionedit4" id="breaking_compound_commands">Breaking compound commands</h3>
+<div class="level3">
+
+<p>
+<a href="/syntax/ccmd/intro" class="wikilink1" title="syntax:ccmd:intro"> Compound commands</a> form the structures that make a shell script different from a stupid enumeration of commands. Usually they contain a kind of &quot;head&quot; and a &quot;body&quot; that contains command lists. This type of compound command is relatively easy to indent.
+</p>
+
+<p>
+I&#039;m used to (not all points apply to all compound commands, just pick the basic idea):
+</p>
+<ul>
+<li class="level1"><div class="li"> put the introducing keyword and the initial command list or parameters on one line (&quot;head&quot;)</div>
+</li>
+<li class="level1"><div class="li"> put the &quot;body-introducing&quot; keyword on the same line</div>
+</li>
+<li class="level1"><div class="li"> the command list of the &quot;body&quot; on separate lines, indented by two spaces</div>
+</li>
+<li class="level1"><div class="li"> put the closing keyword on a separated line, indented like the initial introducing keyword</div>
+</li>
+</ul>
+
+<p>
+What?! Well, here again:
+</p>
+
+</div>
+
+<h5 id="symbolic">Symbolic</h5>
+<div class="level5">
+
+<p>
+<pre class="code">HEAD_KEYWORD parameters; BODY_BEGIN
+  BODY_COMMANDS
+BODY_END</pre>
+
+</p>
+
+</div>
+
+<h5 id="ifthenelifelse">if/then/elif/else</h5>
+<div class="level5">
+
+<p>
+This construct is a bit special, because it has keywords (<code>elif</code>, <code>else</code>) &quot;in the middle&quot;. The visually appealing way is to indent them like this:
+</p>
+
+<p>
+<pre class="code">if ...; then
+  ...
+elif ...; then
+  ...
+else
+  ...
+fi</pre>
+
+</p>
+
+</div>
+
+<h5 id="for">for</h5>
+<div class="level5">
+
+<p>
+<pre class="code">for f in /etc/*; do
+  ...
+done</pre>
+
+</p>
+
+</div>
+
+<h5 id="whileuntil">while/until</h5>
+<div class="level5">
+
+<p>
+<pre class="code">while [[ $answer != [YyNn] ]]; do
+  ...
+done</pre>
+
+</p>
+
+</div>
+
+<h5 id="the_case_construct">The case construct</h5>
+<div class="level5">
+
+<p>
+The <code>case</code> construct might need a bit more discussion here, since its structure is a bit more complex.
+</p>
+
+<p>
+In general, every new &quot;layer&quot; gets a new indentation level:
+<pre class="code">case $input in
+  hello)
+    echo &quot;You said hello&quot;
+  ;;
+  bye)
+    echo &quot;You said bye&quot;
+    if foo; then
+      bar
+    fi
+  ;;
+  *)
+    echo &quot;You said something weird...&quot;
+  ;;
+esac</pre>
+
+</p>
+
+<p>
+Some notes:
+</p>
+<ul>
+<li class="level1"><div class="li"> if not 100% needed, the optional left parenthesis on the pattern is not used</div>
+</li>
+<li class="level1"><div class="li"> the patterns (<code>hello)</code>) and the corresponding action terminator (<code>;;</code>) are indented at the same level</div>
+</li>
+<li class="level1"><div class="li"> the action command lists are indented one more level (and continue to have their own indentation, if needed)</div>
+</li>
+<li class="level1"><div class="li"> though optional, the very last action terminator is given</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Breaking compound commands&quot;,&quot;hid&quot;:&quot;breaking_compound_commands&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;1871-3862&quot;} -->
+<h2 class="sectionedit5" id="syntax_and_coding_guidelines">Syntax and coding guidelines</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Syntax and coding guidelines&quot;,&quot;hid&quot;:&quot;syntax_and_coding_guidelines&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:5,&quot;range&quot;:&quot;3863-3904&quot;} -->
+<h3 class="sectionedit6" id="cryptic_constructs">Cryptic constructs</h3>
+<div class="level3">
+
+<p>
+Cryptic constructs, we all know them, we all love them. If they are not 100% needed, avoid them, since nobody except you may be able to decipher them.
+</p>
+
+<p>
+It&#039;s - just like in C - the middle ground between smart, efficient and readable.
+</p>
+
+<p>
+If you need to use a cryptic construct, include a comment that explains what your &quot;monster&quot; does.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Cryptic constructs&quot;,&quot;hid&quot;:&quot;cryptic_constructs&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:6,&quot;range&quot;:&quot;3905-4267&quot;} -->
+<h3 class="sectionedit7" id="variable_names">Variable names</h3>
+<div class="level3">
+
+<p>
+Since all reserved variables are <code>UPPERCASE</code>, the safest way is to only use <code>lowercase</code> variable names. This is true for reading user input, loop counting variables, etc., … (in the example: <code>file</code>)
+</p>
+<ul>
+<li class="level1"><div class="li"> prefer <code>lowercase</code> variables</div>
+</li>
+<li class="level1"><div class="li"> if you use <code>UPPERCASE</code> names, <strong>do not use reserved variable names</strong> (see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap08.html#tag_08" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap08.html#tag_08" rel="nofollow">SUS</a> for an incomplete list)</div>
+</li>
+<li class="level1"><div class="li"> if you use <code>UPPERCASE</code> names, prepend the name with a unique prefix (<code>MY_</code> in the example below)</div>
+</li>
+</ul>
+
+<p>
+<pre class="code">#!/bin/bash
+
+# the prefix &#039;MY_&#039;
+MY_LOG_DIRECTORY=/var/adm/
+
+for file in &quot;$MY_LOG_DIRECTORY&quot;/*; do
+  echo &quot;Found Logfile: $file&quot;
+done</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Variable names&quot;,&quot;hid&quot;:&quot;variable_names&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:7,&quot;range&quot;:&quot;4268-4982&quot;} -->
+<h3 class="sectionedit8" id="variable_initialization">Variable initialization</h3>
+<div class="level3">
+
+<p>
+As in C, it&#039;s always a good idea to initialize your variables, though, the shell will initialize fresh variables itself (better: Unset variables will generally behave like variables containing a null string).
+</p>
+
+<p>
+It&#039;s no problem to pass an <strong>environment variable</strong> to the script. If you blindly assume that all variables you use for the first time are <strong>empty</strong>, anybody can <strong>inject</strong> content into a variable by passing it via the environment.
+</p>
+
+<p>
+The solution is simple and effective: <strong>Initialize them</strong>
+<pre class="code">my_input=&quot;&quot;
+my_array=()
+my_number=0</pre>
+
+</p>
+
+<p>
+If you do that for every variable you use, then you also have some in-code documentation for them.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Variable initialization&quot;,&quot;hid&quot;:&quot;variable_initialization&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:8,&quot;range&quot;:&quot;4983-5670&quot;} -->
+<h3 class="sectionedit9" id="parameter_expansion">Parameter expansion</h3>
+<div class="level3">
+
+<p>
+Unless you are really sure what you&#039;re doing, <strong>quote every parameter expansion</strong>.
+</p>
+
+<p>
+There are some cases where this isn&#039;t needed from a technical point of view, e.g.
+</p>
+<ul>
+<li class="level1"><div class="li"> inside <code>[[ ... ]]</code> (other than the RHS of the <code>==</code>, <code>!=</code>, and <code>=~</code> operators)</div>
+</li>
+<li class="level1"><div class="li"> the parameter (<code>WORD</code>) in <code>case $WORD in ….</code></div>
+</li>
+<li class="level1"><div class="li"> variable assignment: <code>VAR=$WORD</code></div>
+</li>
+</ul>
+
+<p>
+But quoting these is never a mistake. If you quote every parameter expansion, you&#039;ll be safe.
+</p>
+
+<p>
+If you need to parse a parameter as a list of words, you can&#039;t quote, of course, e.g.
+<pre class="code">list=&quot;one two three&quot;
+
+# you MUST NOT quote $list here
+for word in $list; do
+  ...
+done</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Parameter expansion&quot;,&quot;hid&quot;:&quot;parameter_expansion&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:9,&quot;range&quot;:&quot;5671-6353&quot;} -->
+<h3 class="sectionedit10" id="function_names">Function names</h3>
+<div class="level3">
+
+<p>
+Function names should be all <code>lowercase</code> and meaningful. The function names should be human readable. A function named <code>f1</code> may be easy and quick to write down, but for debugging and especially for other people, it reveals nothing. Good names help document your code without using extra comments.
+</p>
+
+<p>
+<strong>do not use command names for your functions</strong>. e.g. naming a script or function <code>test</code>, will collide with the UNIX <code>test</code> command.
+</p>
+
+<p>
+Unless absolutely necessary, only use alphanumeric characters and the underscore for function names. <code>/bin/ls</code> is a valid function name in Bash, but is not a good idea.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Function names&quot;,&quot;hid&quot;:&quot;function_names&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:10,&quot;range&quot;:&quot;6354-6992&quot;} -->
+<h3 class="sectionedit11" id="command_substitution">Command substitution</h3>
+<div class="level3">
+
+<p>
+As noted in <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> the article about command substitution</a>, you should use the <code>$( … )</code> form.
+</p>
+
+<p>
+If portability is a concern, use the backquoted form <code>` … `</code>.
+</p>
+
+<p>
+In any case, if other expansions and word splitting are not wanted, you should quote the command substitution!
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Command substitution&quot;,&quot;hid&quot;:&quot;command_substitution&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:11,&quot;range&quot;:&quot;6993-7326&quot;} -->
+<h3 class="sectionedit12" id="eval">Eval</h3>
+<div class="level3">
+
+<p>
+Well, like Greg says: <strong>&quot;If eval is the answer, surely you are asking the wrong question.&quot;</strong>
+</p>
+
+<p>
+Avoid it, unless absolutely neccesary:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>eval</code> can be your neckshot</div>
+</li>
+<li class="level1"><div class="li"> there are most likely other ways to achieve what you want</div>
+</li>
+<li class="level1"><div class="li"> if possible, re-think the way your script works, if it seems you can&#039;t avoid <code>eval</code> with your current method</div>
+</li>
+<li class="level1"><div class="li"> if you really, really, have to use it, then take care, and be sure about what you&#039;re doing</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Eval&quot;,&quot;hid&quot;:&quot;eval&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:12,&quot;range&quot;:&quot;7327-7782&quot;} -->
+<h2 class="sectionedit13" id="basic_structure">Basic structure</h2>
+<div class="level2">
+
+<p>
+The basic structure of a script simply reads:
+</p>
+
+<p>
+<pre class="code">#!SHEBANG
+
+CONFIGURATION_VARIABLES
+
+FUNCTION_DEFINITIONS
+
+MAIN_CODE</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Basic structure&quot;,&quot;hid&quot;:&quot;basic_structure&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:13,&quot;range&quot;:&quot;7783-7942&quot;} -->
+<h3 class="sectionedit14" id="the_shebang">The shebang</h3>
+<div class="level3">
+
+<p>
+If possible (I know it&#039;s not always possible!), use <a href="/dict/terms/shebang" class="wikilink1" title="dict:terms:shebang"> a shebang</a>.
+</p>
+
+<p>
+Be careful with <code>/bin/sh</code>: The argument that &quot;on Linux <code>/bin/sh</code> is Bash&quot; <strong>is a lie</strong> (and technically irrelevant)
+</p>
+
+<p>
+The shebang serves two purposes for me:
+</p>
+<ul>
+<li class="level1"><div class="li"> it specifies the interpreter to be used when the script file is called directly: If you code for Bash, specify <code>bash</code>!</div>
+</li>
+<li class="level1"><div class="li"> it documents the desired interpreter (so: use <code>bash</code> when you write a Bash-script, use <code>sh</code> when you write a general Bourne/POSIX script, …)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The shebang&quot;,&quot;hid&quot;:&quot;the_shebang&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:14,&quot;range&quot;:&quot;7943-8493&quot;} -->
+<h3 class="sectionedit15" id="configuration_variables">Configuration variables</h3>
+<div class="level3">
+
+<p>
+I call variables that are meant to be changed by the user &quot;configuration variables&quot; here.
+</p>
+
+<p>
+Make them easy to find (directly at the top of the script), give them meaningful names and maybe a short comment. As noted above, use <code>UPPERCASE</code> for them only when you&#039;re sure about what you&#039;re doing. <code>lowercase</code> will be the safest.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Configuration variables&quot;,&quot;hid&quot;:&quot;configuration_variables&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:15,&quot;range&quot;:&quot;8494-8859&quot;} -->
+<h3 class="sectionedit16" id="function_definitions">Function definitions</h3>
+<div class="level3">
+
+<p>
+Unless there are reasons not to, all function definitions should be declared before the main script code runs. This gives a far better overview and ensures that all function names are known before they are used.
+</p>
+
+<p>
+Since a function isn&#039;t parsed before it is executed, you usually don&#039;t have to ensure they&#039;re in a specific order.
+</p>
+
+<p>
+The portable form of the function definition should be used, without the <code>function</code> keyword (here using the <a href="/syntax/ccmd/grouping_plain" class="wikilink1" title="syntax:ccmd:grouping_plain"> grouping compound command</a>):
+<pre class="code">getargs() {
+  ...
+}</pre>
+
+</p>
+
+<p>
+Speaking about the command grouping in function definitions using <code>{ …; }</code>: If you don&#039;t have a good reason to use another compound command directly, you should always use this one.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Function definitions&quot;,&quot;hid&quot;:&quot;function_definitions&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:16,&quot;range&quot;:&quot;8860-9614&quot;} -->
+<h2 class="sectionedit17" id="behaviour_and_robustness">Behaviour and robustness</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Behaviour and robustness&quot;,&quot;hid&quot;:&quot;behaviour_and_robustness&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:17,&quot;range&quot;:&quot;9615-9652&quot;} -->
+<h3 class="sectionedit18" id="fail_early">Fail early</h3>
+<div class="level3">
+
+<p>
+<strong>Fail early</strong>, this sounds bad, but usually is good. Failing early means to error out as early as possible when checks indicate an error or unmet condition. Failing early means to error out <strong>before</strong> your script begins its work in a potentially broken state.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Fail early&quot;,&quot;hid&quot;:&quot;fail_early&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:18,&quot;range&quot;:&quot;9653-9936&quot;} -->
+<h3 class="sectionedit19" id="availability_of_commands">Availability of commands</h3>
+<div class="level3">
+
+<p>
+If you use external commands that may not be present on the path, or not installed, check for their availability, then tell the user they&#039;re missing.
+</p>
+
+<p>
+Example:
+<pre class="code">my_needed_commands=&quot;sed awk lsof who&quot;
+
+missing_counter=0
+for needed_command in $my_needed_commands; do
+  if ! hash &quot;$needed_command&quot; &gt;/dev/null 2&gt;&amp;1; then
+    printf &quot;Command not found in PATH: %s\n&quot; &quot;$needed_command&quot; &gt;&amp;2
+    ((missing_counter++))
+  fi
+done
+
+if ((missing_counter &gt; 0)); then
+  printf &quot;Minimum %d commands are missing in PATH, aborting\n&quot; &quot;$missing_counter&quot; &gt;&amp;2
+  exit 1
+fi</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Availability of commands&quot;,&quot;hid&quot;:&quot;availability_of_commands&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:19,&quot;range&quot;:&quot;9937-10538&quot;} -->
+<h3 class="sectionedit20" id="exit_meaningfully">Exit meaningfully</h3>
+<div class="level3">
+
+<p>
+The <a href="/dict/terms/exit_status" class="wikilink1" title="dict:terms:exit_status"> exit code</a> is your only way to directly communicate with the calling process without any special provisions.
+</p>
+
+<p>
+If your script exits, provide a meaningful exit code. That minimally means:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>exit 0</code> (zero) if everything is okay</div>
+</li>
+<li class="level1"><div class="li"> <code>exit 1</code> - in general non-zero - if there was an error</div>
+</li>
+</ul>
+
+<p>
+This, <strong>and only this</strong>, will enable the calling component to check the operation status of your script.
+</p>
+
+<p>
+You know:
+<strong>&quot;One of the main causes of the fall of the Roman Empire was that, lacking zero, they had no way to indicate successful termination of their C programs.&quot;</strong> <em>– Robert Firth</em>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Exit meaningfully&quot;,&quot;hid&quot;:&quot;exit_meaningfully&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:20,&quot;range&quot;:&quot;10539-11185&quot;} -->
+<h2 class="sectionedit21" id="misc">Misc</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Misc&quot;,&quot;hid&quot;:&quot;misc&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:21,&quot;range&quot;:&quot;11186-11203&quot;} -->
+<h3 class="sectionedit22" id="output_and_appearance">Output and appearance</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> if the script is interactive, if it works for you and if you think this is a nice feature, you can try to <a href="/snipplets/screen_saverestore" class="wikilink1" title="snipplets:screen_saverestore"> save the terminal content and restore it</a> after execution</div>
+</li>
+<li class="level1"><div class="li"> output clean and understandable screen messages</div>
+</li>
+<li class="level1 node"><div class="li"> if applicable, you can use colors or specific prefixes to tag error and warning messages</div>
+<ul>
+<li class="level2"><div class="li"> make it easy for the user to identify those messages</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> write normal output to <code>STDOUT</code>. write error, warning and diagnostic messages to <code>STDERR</code></div>
+<ul>
+<li class="level2"><div class="li"> enables message filtering</div>
+</li>
+<li class="level2"><div class="li"> keeps the script from mixing output data with diagnostic, or error messages</div>
+</li>
+<li class="level2"><div class="li"> if the script gives syntax help (<code>-?</code> or <code>-h</code> or <code>–help</code> arguments), it should go to <code>STDOUT</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> if applicable, write error/diagnostic messages to a logfile</div>
+<ul>
+<li class="level2"><div class="li"> avoids screen clutter</div>
+</li>
+<li class="level2"><div class="li"> messages are available for diagnostic use</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Output and appearance&quot;,&quot;hid&quot;:&quot;output_and_appearance&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:22,&quot;range&quot;:&quot;11204-12104&quot;} -->
+<h3 class="sectionedit23" id="input">Input</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> never blindly assume anything. If you want the user to input a number, <strong>check for numeric input, leading zeros</strong>, etc. If you have specific format or content needs, <strong>always validate the input!</strong></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Input&quot;,&quot;hid&quot;:&quot;input&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:23,&quot;range&quot;:&quot;12105-12323&quot;} -->
+<h3 class="sectionedit24" id="tooling">Tooling</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> some of these guidelines, such as indentation, positioning of &quot;body-introducing&quot; keywords, and portable function declarations, can be enforced by <a href="https://github.com/mvdan/sh" class="urlextern" title="https://github.com/mvdan/sh" rel="nofollow">shfmt</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Tooling&quot;,&quot;hid&quot;:&quot;tooling&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:24,&quot;range&quot;:&quot;12324-&quot;} --></div>
+</body>
+</html>

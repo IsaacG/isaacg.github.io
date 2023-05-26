@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:words</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,words,bash,shell,scripting,token,words,split,splitting,recognition"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/words?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/words"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/words"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/words"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:words","namespace":"syntax","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#words">Words...</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#splitting_the_commandline">Splitting the commandline</a></div></li>
+<li class="level2"><div class="li"><a href="#word_splitting">Word splitting</a></div></li>
+<li class="level2"><div class="li"><a href="#example">Example</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="words">Words...</h1>
+<div class="level1">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> This article needs a review, it covers two topics (command line splitting and word splitting) and mixes both a bit too much. But in general, it&#039;s still usable to help understand this behaviour, it&#039;s &quot;wrong but not wrong&quot;.
+</p>
+
+<p>
+One fundamental principle of Bash is to recognize words entered at the command prompt, or under other circumstances like variable-expansion.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Words...&quot;,&quot;hid&quot;:&quot;words&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-471&quot;} -->
+<h2 class="sectionedit2" id="splitting_the_commandline">Splitting the commandline</h2>
+<div class="level2">
+
+<p>
+Bash scans the command line and splits it into words, usually to put the parameters you enter for a command into the right C-memory (the <code>argv</code> vector) to later correctly call the command. These words are recognized by splitting the command line at the special character position, <strong>Space</strong> or <strong>Tab</strong> (the manual defines them as <strong>blanks</strong>).
+For example, take the echo program. It displays all its parameters separated by a space. When you enter an echo command at the Bash prompt, Bash will look for those special characters, and use them to separate the parameters.
+</p>
+
+<p>
+You don&#039;t know what I&#039;m talking about? I&#039;m talking about this:
+<pre class="code">$ echo Hello little world
+Hello little world</pre>
+
+</p>
+
+<p>
+In other words, something you do (and Bash does) everyday. The characters where Bash splits the command line (SPACE, TAB i.e. blanks) are recognized as delimiters.
+There is no null argument generated when you have 2 or more blanks in the command line. <strong>A sequence of more blank characters is treated as a single blank.</strong>
+Here&#039;s an example:
+</p>
+
+<p>
+<pre class="code">$ echo Hello                little                  world
+Hello little world</pre>
+
+</p>
+
+<p>
+Bash splits the command line at the blanks into words, then it calls echo with <strong>each word as an argument</strong>. In this example, echo is called with three arguments: &quot;<code>Hello</code>&quot;, &quot;<code>little</code>&quot; and &quot;<code>world</code>&quot;!
+</p>
+
+<p>
+<em class="u">Does that mean we can&#039;t echo more than one Space?</em> Of course not!
+Bash treats blanks as special characters, but there are two ways to tell Bash not to treat them special: <strong>Escaping</strong> and <strong>quoting</strong>.
+</p>
+
+<p>
+Escaping a character means, to <strong>take away its special meaning</strong>. Bash will use an escaped character as text, even if it&#039;s a special one. Escaping is done by preceeding the character with a backslash:
+</p>
+
+<p>
+<pre class="code">$ echo Hello\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ little \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ world
+Hello                little                  world</pre>
+
+</p>
+
+<p>
+None of the escaped spaces will be used to perform word splitting. Thus, echo is called with one argument: &quot;<code>Hello                little            world</code>&quot;.
+</p>
+
+<p>
+Bash has a mechanism to &quot;escape&quot; an entire string: <strong>Quoting</strong>.
+In the context of command-splitting, which this section is about, it doesn&#039;t matter which kind of quoting you use: weak quoting or strong quoting, both cause Bash to not treat spaces as special characters:
+</p>
+
+<p>
+<pre class="code">$ echo &quot;Hello                little                  world&quot;
+Hello                little                  world</pre>
+
+<pre class="code">$ echo &#039;Hello                little                  world&#039;
+Hello                little                  world</pre>
+
+</p>
+
+<p>
+<em class="u">What is it all about now?</em> Well, for example imagine a program that expects a filename as an argument, like cat. Filenames can have spaces in them:
+</p>
+
+<p>
+<pre class="code">$ ls -l
+total 4
+-rw-r--r-- 1 bonsai bonsai 5 Apr 18 18:16 test file
+
+$ cat test file
+cat: test: No such file or directory
+cat: file: No such file or directory
+
+$ cat test\ file
+m00!
+
+$ cat &quot;test file&quot;
+m00!</pre>
+
+</p>
+
+<p>
+If you enter that on the command line with Tab completion, that will take care of the spaces. But Bash also does another type of splitting.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Splitting the commandline&quot;,&quot;hid&quot;:&quot;splitting_the_commandline&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;472-3611&quot;} -->
+<h2 class="sectionedit3" id="word_splitting">Word splitting</h2>
+<div class="level2">
+
+<p>
+For a more technical description, please read the <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> article about word splitting</a>!
+</p>
+
+<p>
+The first kind of splitting is done to parse the command line into separate tokens. This is what was described above, it&#039;s a pure <strong>command line parsing</strong>.
+</p>
+
+<p>
+After the command line has been split into words, Bash will perform expansion, if needed - variables that occur in the command line need to be expanded (substituted by their value), for example. This is where the second type of word splitting comes in - several expansions undergo <strong>word splitting</strong> (but others do not).
+</p>
+
+<p>
+Imagine you have a filename stored in a variable:
+</p>
+
+<p>
+<pre class="code">MYFILE=&quot;test file&quot;</pre>
+
+</p>
+
+<p>
+When this variable is used, its occurance will be replaced by its content.
+</p>
+
+<p>
+<pre class="code">$ cat $MYFILE
+cat: test: No such file or directory
+cat: file: No such file or directory</pre>
+
+</p>
+
+<p>
+Though this is another step where spaces make things difficult, <strong>quoting</strong> is used to work around the difficulty. Quotes also affect word splitting:
+</p>
+
+<p>
+<pre class="code">$ cat &quot;$MYFILE&quot;
+m00!</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Word splitting&quot;,&quot;hid&quot;:&quot;word_splitting&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:3,&quot;range&quot;:&quot;3612-4693&quot;} -->
+<h2 class="sectionedit4" id="example">Example</h2>
+<div class="level2">
+
+<p>
+Let&#039;s follow an unquoted command through these steps, assuming that the variable is set:
+<pre class="code">MYFILE=&quot;THE FILE.TXT&quot;</pre>
+
+and the first review is:
+<pre class="code">echo The file is named $MYFILE</pre>
+
+</p>
+
+<p>
+The parser will scan for blanks and mark the relevant words (&quot;splitting the command line&quot;):
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0" colspan="6">Initial command line splitting:</th>
+	</tr>
+	<tr class="row1">
+		<th class="col0">Word 1</th><th class="col1">Word 2</th><th class="col2">Word 3</th><th class="col3">Word 4</th><th class="col4">Word 5</th><th class="col5">Word 6</th>
+	</tr>
+	</thead>
+	<tr class="row2">
+		<td class="col0"><code>echo</code></td><td class="col1"><code>The</code></td><td class="col2"><code>file</code></td><td class="col3"><code>is</code></td><td class="col4"><code>named</code></td><td class="col5"><code>$MYFILE</code></td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;5006-5145&quot;} -->
+<p>
+A <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter/variable expansion</a> is part of that command line, Bash will perform the substitution, and the <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> word splitting</a> on the results:
+</p>
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0" colspan="7">Word splitting after substitution:</th>
+	</tr>
+	<tr class="row1">
+		<th class="col0">Word 1</th><th class="col1">Word 2</th><th class="col2">Word 3</th><th class="col3">Word 4</th><th class="col4">Word 5</th><th class="col5">Word 6</th><th class="col6">Word 7</th>
+	</tr>
+	</thead>
+	<tr class="row2">
+		<td class="col0"><code>echo</code></td><td class="col1"><code>The</code></td><td class="col2"><code>file</code></td><td class="col3"><code>is</code></td><td class="col4"><code>named</code></td><td class="col5"><code>THE</code></td><td class="col6"><code>FILE.TXT</code></td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;5333-5492&quot;} -->
+<p>
+Now let&#039;s imagine we quoted <code>$MYFILE</code>, the command line now looks like:
+<pre class="code">echo The file is named &quot;$MYFILE&quot;</pre>
+
+</p>
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0" colspan="6">Word splitting after substitution (quoted!):</th>
+	</tr>
+	<tr class="row1">
+		<th class="col0">Word 1</th><th class="col1">Word 2</th><th class="col2">Word 3</th><th class="col3">Word 4</th><th class="col4">Word 5</th><th class="col5">Word 6</th>
+	</tr>
+	</thead>
+	<tr class="row2">
+		<td class="col0"><code>echo</code></td><td class="col1"><code>The</code></td><td class="col2"><code>file</code></td><td class="col3"><code>is</code></td><td class="col4"><code>named</code></td><td class="col5"><code>THE FILE.TXT</code></td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;5617-5774&quot;} -->
+<p>
+<strong><em>Bold Text</em>72i love this world</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Example&quot;,&quot;hid&quot;:&quot;example&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:4,&quot;range&quot;:&quot;4694-5811&quot;} -->
+<h2 class="sectionedit8" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/quoting" class="wikilink1" title="syntax:quoting"> Quoting and character escaping</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> Word splitting</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansions and substitutions</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> External: <a href="http://www.grymoire.com/Unix/Quote.html" class="urlextern" title="http://www.grymoire.com/Unix/Quote.html" rel="nofollow"> Grymore: Shellquoting</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:8,&quot;range&quot;:&quot;5812-&quot;} --></div>
+</body>
+</html>

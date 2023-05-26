@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>user:ben_bash:bash:invocation</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="user,ben_bash,bash,invocation"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/user/ben_bash/bash/invocation?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=user:ben_bash:bash"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/user/ben_bash/bash/invocation"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/user/ben_bash/bash/invocation"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/user/ben_bash/bash/invocation"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='user:ben_bash:bash';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"user:ben_bash:bash:invocation","namespace":"user:ben_bash:bash","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#bash_invocation">Bash Invocation</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#invocation_modes">Invocation Modes</a></div></li>
+<li class="level2"><div class="li"><a href="#invocation_options">Invocation Options</a></div></li>
+<li class="level2"><div class="li"><a href="#invocation_environment">Invocation Environment</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#login_shell">Login Shell</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="bash_invocation">Bash Invocation</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <span class="curid"><a href="/user/ben_bash/bash/invocation#invocation_modes" class="wikilink1" title="user:ben_bash:bash:invocation">Invocation Modes</a></span></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="/user/ben_bash/bash/invocation#invocation_options" class="wikilink1" title="user:ben_bash:bash:invocation">Invocation Options</a></span></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="/user/ben_bash/bash/invocation#invocation_environment" class="wikilink1" title="user:ben_bash:bash:invocation">Invocation Environment</a></span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash Invocation&quot;,&quot;hid&quot;:&quot;bash_invocation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-205&quot;} -->
+<h2 class="sectionedit2" id="invocation_modes">Invocation Modes</h2>
+<div class="level2">
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 rightalign">                                                Mode </th><th class="col1 leftalign"> Bash Invocation                                                                                                                                                                                                                                                                    </th><th class="col2 leftalign"> POSIX Shell Invocation                  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<th class="col0 rightalign">                          <span class="curid"><a href="/user/ben_bash/bash/invocation#login_shell" class="wikilink1" title="user:ben_bash:bash:invocation">Login Shell</a></span> </th><td class="col1 leftalign"> <code><span class="curid"><a href="/user/ben_bash/bash/invocation#login_shell" class="wikilink1" title="user:ben_bash:bash:invocation">-bash</a></span></code><br/>
+<code><span class="curid"><a href="/user/ben_bash/bash/invocation#login_shell" class="wikilink1" title="user:ben_bash:bash:invocation">bash</a></span> <span class="curid"><a href="/user/ben_bash/bash/invocation#opt_l" class="wikilink1" title="user:ben_bash:bash:invocation">-l</a></span> [</code><code><span class="curid"><a href="/user/ben_bash/bash/invocation#invocation_options" class="wikilink1" title="user:ben_bash:bash:invocation">Options</a></span></code><code>]</code><br/>
+<code><span class="curid"><a href="/user/ben_bash/bash/invocation#login_shell" class="wikilink1" title="user:ben_bash:bash:invocation">bash</a></span> <span class="curid"><a href="/user/ben_bash/bash/invocation#opt_login" class="wikilink1" title="user:ben_bash:bash:invocation">--login</a></span> [</code><code><span class="curid"><a href="/user/ben_bash/bash/invocation#invocation_options" class="wikilink1" title="user:ben_bash:bash:invocation">Options</a></span></code><code>]</code>  </td><td class="col2 leftalign"> <code>-sh</code><br/>
+<code><a href="/user/ben_bash/bash/bash_--posix_--login" class="wikilink2" title="user:ben_bash:bash:bash_--posix_--login" rel="nofollow">bash --posix --login</a></code>  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 rightalign">        <span class="curid"><a href="/user/ben_bash/bash/invocation#command_string" class="wikilink1" title="user:ben_bash:bash:invocation">Command String</a></span> </th><td class="col1 leftalign"> <code><a href="/user/ben_bash/bash/bash" class="wikilink2" title="user:ben_bash:bash:bash" rel="nofollow">bash</a></code> <code><a href="/user/ben_bash/bash/c_cmd_string" class="wikilink2" title="user:ben_bash:bash:c_cmd_string" rel="nofollow">-c CMD_STRING</a></code> <code><a href="/user/ben_bash/bash/shell" class="wikilink2" title="user:ben_bash:bash:shell" rel="nofollow">SHELL</a></code> <code><a href="/user/ben_bash/bash/args" class="wikilink2" title="user:ben_bash:bash:args" rel="nofollow">ARGS</a></code>                                                                                                                                                                                                                      </td><td class="col2 leftalign"> sh -c                                   </td>
+	</tr>
+	<tr class="row3">
+		<th class="col0 rightalign">  <span class="curid"><a href="/user/ben_bash/bash/invocation#interactive_shell" class="wikilink1" title="user:ben_bash:bash:invocation">Interactive Shell</a></span> </th><td class="col1 leftalign"> <code>bash [options]</code>                                                                                                                                                                                                                                                                 </td><td class="col2 leftalign"> <code>sh</code>                                  </td>
+	</tr>
+	<tr class="row4">
+		<th class="col0 rightalign">                        <span class="curid"><a href="/user/ben_bash/bash/invocation#script" class="wikilink1" title="user:ben_bash:bash:invocation">Script</a></span> </th><td class="col1 leftalign"> <code>#!/bin/bash [single word options]</code>                                                                                                                                                                                                                                              </td><td class="col2 leftalign"> <code>#!/bin/sh []</code>                        </td>
+	</tr>
+	<tr class="row5">
+		<th class="col0 rightalign">            <span class="curid"><a href="/user/ben_bash/bash/invocation#command_file" class="wikilink1" title="user:ben_bash:bash:invocation">Command File</a></span> </th><td class="col1 leftalign"> <code>bash [options] file [args]</code>                                                                                                                                                                                                                                                     </td><td class="col2 leftalign"> <code>sh [options] file [args]</code>            </td>
+	</tr>
+	<tr class="row6">
+		<th class="col0 rightalign">        <span class="curid"><a href="/user/ben_bash/bash/invocation#command_stream" class="wikilink1" title="user:ben_bash:bash:invocation">Command Stream</a></span> </th><td class="col1 leftalign"> <code>bash [options] -s [ SHELL [args…]]</code>                                                                                                                                                                                                                                           </td><td class="col2 leftalign"> <code>sh [options] file [args]</code>            </td>
+	</tr>
+	<tr class="row7">
+		<th class="col0 rightalign">    <span class="curid"><a href="/user/ben_bash/bash/invocation#restricted_shell" class="wikilink1" title="user:ben_bash:bash:invocation">Restricted Shell</a></span> </th><td class="col1 leftalign"> <code>bash -p </code><br/>
+<code>rbash [options]</code>                                                                                                                                                                                                                                                 </td><td class="col2 leftalign"> <code>sh -p</code>                               </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;235-3234&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Invocation Modes&quot;,&quot;hid&quot;:&quot;invocation_modes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;206-3235&quot;} -->
+<h2 class="sectionedit4" id="invocation_options">Invocation Options</h2>
+<div class="level2">
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;0-&quot;} --><div class="group plugin_wrap"><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_half wrap_column wrap_center plugin_wrap">
+<h4 id="login_options">Login Options</h4>
+<div class="table sectionedit9"><table class="inline">
+	<tr class="row0">
+		<td class="col0 rightalign">                <span class="wrap_box " id="opt_l"><code><span class="curid"><a href="/user/ben_bash/bash/invocation" class="wikilink1" title="user:ben_bash:bash:invocation">-l</a></span></code></span><br/>
+<span class="wrap_box " id="opt_login"><code><span class="curid"><a href="/user/ben_bash/bash/invocation" class="wikilink1" title="user:ben_bash:bash:invocation">--login</a></span></code></span> </td><td class="col1 leftalign"> Act as a <span class="curid"><a href="/user/ben_bash/bash/invocation#login_shell" class="wikilink1" title="user:ben_bash:bash:invocation">login shell</a></span>.                                                                                                                                         </td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 rightalign">  <code><span class="curid"><a href="/user/ben_bash/bash/invocation#opt_oo" class="wikilink1" title="user:ben_bash:bash:invocation">-O</a></span> <span class="curid"><a href="/user/ben_bash/bash/invocation#shopt_login_shell" class="wikilink1" title="user:ben_bash:bash:invocation">login_shell</a></span></code><br/>
+<code><a href="/user/ben_bash/bash/bashopts" class="wikilink2" title="user:ben_bash:bash:bashopts" rel="nofollow">BASHOPTS</a></code><code>==</code><code><a href="/user/ben_bash/bash/ogin_shell" class="wikilink2" title="user:ben_bash:bash:ogin_shell" rel="nofollow">ogin_shell</a></code> </td><td class="col1 leftalign"> This option is ignored by bash.  Use <code><span class="curid"><a href="/user/ben_bash/bash/invocation#opt_login" class="wikilink1" title="user:ben_bash:bash:invocation">--login</a></span></code>.                                                                                                               </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 rightalign">                                                                                                   <code><a href="/user/ben_bash/bash/noprofile" class="wikilink2" title="user:ben_bash:bash:noprofile" rel="nofollow">--noprofile</a></code> </td><td class="col1 leftalign"> Do not read the system-wide startup file <code><a href="/user/ben_bash/bash/foo" class="wikilink2" title="user:ben_bash:bash:foo" rel="nofollow">/etc/profile</a></code><br/>
+Do not read any personal initialization files <code><a href="/bash_profile" class="wikilink2" title="bash_profile" rel="nofollow">.bash_profile</a></code>, <code><a href="/bash_login" class="wikilink2" title="bash_login" rel="nofollow">.bash_login</a></code>, or <code><a href="/profile" class="wikilink2" title="profile" rel="nofollow">.profile</a></code>  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;3328-4254&quot;} -->
+<p>
+<em><strong>Test2</strong></em>
+</p>
+<ol>
+<li class="level1"><div class="li">a allexport  -B braceexpand -b notify  -C noclobber  -c  -e errexit -E errtrace -D -f noglob -h hashall -H histexpand -k keyword -m monitor -n noexec -o OPTION -p privileged -P physical -t onecmd -T functrace -u nounset -v verbose -x xtrace </div>
+</li>
+</ol>
+
+<p>
+autocd
+cdable_vars
+cdspell
+checkhash
+checkjobs
+checkwinsize
+cmdhist
+compat31
+compat32
+compat40
+compat41
+compat42
+compat43
+complete_fullquote
+direxpand
+dirspell
+dotglob
+execfail
+expand_aliases
+extdebug
+extglob
+extquote
+failglob
+force_fignore
+globasciiranges
+globstar
+gnu_errfmt
+histappend
+histreedit
+histverify
+hostcomplete
+huponexit
+inherit_errexit
+interactive_comments
+lastpipe
+lithist
+</p>
+
+<p>
+mailwarn
+no_empty_cmd_completion
+nocaseglob
+nocasematch
+nullglob
+progcomp
+promptvars
+restricted_shell
+shift_verbose
+sourcepath
+xpg_echo
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:10,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_half wrap_column plugin_wrap">
+<p>
+<em><strong>Test3</strong></em>
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:11,&quot;range&quot;:&quot;0-&quot;} --></div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;0-&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Invocation Options&quot;,&quot;hid&quot;:&quot;invocation_options&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;3236-5098&quot;} -->
+<h2 class="sectionedit12" id="invocation_environment">Invocation Environment</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Invocation Environment&quot;,&quot;hid&quot;:&quot;invocation_environment&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:12,&quot;range&quot;:&quot;5099-5134&quot;} -->
+<h3 class="sectionedit13" id="login_shell">Login Shell</h3>
+<div class="level3">
+
+<p>
+A login shell is started either by:
+</p>
+<ul>
+<li class="level1"><div class="li"> setting argument <code>0</code>&#039;s first character to <code>-</code> as done by <code>login(1)</code> or <code><a href="/user/ben_bash/bash/exec_-l" class="wikilink2" title="user:ben_bash:bash:exec_-l" rel="nofollow">exec -l</a></code></div>
+</li>
+<li class="level1"><div class="li"> providing the <code><a href="/user/ben_bash/bash/l" class="wikilink2" title="user:ben_bash:bash:l" rel="nofollow">-l</a></code> or <code><a href="/user/ben_bash/bash/login" class="wikilink2" title="user:ben_bash:bash:login" rel="nofollow">--login</a></code> <a href="/user/ben_bash/bash/option" class="wikilink2" title="user:ben_bash:bash:option" rel="nofollow">option</a></div>
+</li>
+</ul>
+
+<p>
+A login shell need not be interactive.
+A login shell will:
+</p>
+<ol>
+<li class="level1"><div class="li"> Set the <a href="/user/ben_bash/bash/shell_option" class="wikilink2" title="user:ben_bash:bash:shell_option" rel="nofollow">Shell Option</a> <code><a href="/user/ben_bash/bash/login_shell" class="wikilink2" title="user:ben_bash:bash:login_shell" rel="nofollow">login_shell</a></code> in <code><a href="/user/ben_bash/bash/bashopts" class="wikilink2" title="user:ben_bash:bash:bashopts" rel="nofollow">BASHOPTS</a></code> which may not be unset via the <code><a href="/user/ben_bash/bash/shopt" class="wikilink2" title="user:ben_bash:bash:shopt" rel="nofollow">shopt</a></code> <code><a href="/user/ben_bash/bash/builtin" class="wikilink2" title="user:ben_bash:bash:builtin" rel="nofollow">builtin</a></code> </div>
+</li>
+<li class="level1"><div class="li"> Read &amp; execute commands from <code><a href="/etc/profile" class="wikilink2" title="etc:profile" rel="nofollow">profile</a></code> if it is readable (need not be executable)</div>
+</li>
+<li class="level1 node"><div class="li"> Read &amp; execute the first user profile found (searched in the order):</div>
+<ol>
+<li class="level2"><div class="li"> <code><a href="/bash_profile" class="wikilink2" title="bash_profile" rel="nofollow">.bash_profile</a></code></div>
+</li>
+<li class="level2"><div class="li"> <code><a href="/bash_login" class="wikilink2" title="bash_login" rel="nofollow">.bash_login</a></code></div>
+</li>
+<li class="level2"><div class="li"> <code><a href="/profile" class="wikilink2" title="profile" rel="nofollow">.profile</a></code></div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> <a href="/user/ben_bash/bash/shell_option" class="wikilink2" title="user:ben_bash:bash:shell_option" rel="nofollow">Shell Option</a> <code><a href="/user/ben_bash/bash/noprofile" class="wikilink2" title="user:ben_bash:bash:noprofile" rel="nofollow">--noprofile</a></code> may be used to suppress this behavior</div>
+</li>
+<li class="level1"><div class="li"> <a href="/user/ben_bash/bash/process_commands" class="wikilink2" title="user:ben_bash:bash:process_commands" rel="nofollow">PROCESS COMMANDS</a></div>
+</li>
+<li class="level1 node"><div class="li"> exit via:</div>
+<ul>
+<li class="level2"><div class="li"> the <code><a href="/user/ben_bash/bash/exit" class="wikilink2" title="user:ben_bash:bash:exit" rel="nofollow">exit</a></code> <a href="/user/ben_bash/bash/builtin" class="wikilink2" title="user:ben_bash:bash:builtin" rel="nofollow">builtin</a></div>
+</li>
+<li class="level2"><div class="li"> the <code><a href="/user/ben_bash/bash/logout" class="wikilink2" title="user:ben_bash:bash:logout" rel="nofollow">logout</a></code> <a href="/user/ben_bash/bash/builtin" class="wikilink2" title="user:ben_bash:bash:builtin" rel="nofollow">builtin</a></div>
+</li>
+<li class="level2"><div class="li"> <code><a href="/user/ben_bash/bash/eof" class="wikilink2" title="user:ben_bash:bash:eof" rel="nofollow">EOF</a></code> on <code><a href="/user/ben_bash/bash/stdin" class="wikilink2" title="user:ben_bash:bash:stdin" rel="nofollow">stdin</a></code></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> If the <code><a href="/user/ben_bash/bash/huponexit" class="wikilink2" title="user:ben_bash:bash:huponexit" rel="nofollow">huponexit</a></code> <a href="/user/ben_bash/bash/shell_option" class="wikilink2" title="user:ben_bash:bash:shell_option" rel="nofollow">Shell Option</a> was set in <code><a href="/user/ben_bash/bash/bashopts" class="wikilink2" title="user:ben_bash:bash:bashopts" rel="nofollow">BASHOPTS</a></code>, then bash sends <code>SIGHUP</code> to all jobs in an interactive shell.</div>
+</li>
+<li class="level1"><div class="li"> Read &amp; execute commands from the readable file <code><a href="/bash_logout" class="wikilink2" title="bash_logout" rel="nofollow">.bash_logout</a></code></div>
+</li>
+</ol>
+<div class="plugin_note noteclassic">The <code><a href="/user/ben_bash/bash/suspend" class="wikilink2" title="user:ben_bash:bash:suspend" rel="nofollow">suspend</a></code> <code><a href="/user/ben_bash/bash/builtin" class="wikilink2" title="user:ben_bash:bash:builtin" rel="nofollow">builtin</a></code> requires the <code>-f</code> &quot;force&quot; option in a login shell.
+</div>
+</div>
+
+<h4 id="posix_login_shell">POSIX Login Shell</h4>
+<div class="level4">
+
+</div>
+
+<h4 id="restricted_shell">RESTRICTED SHELL</h4>
+<div class="level4">
+
+<p>
+A restricted shell is used to set up an environment more controlled than the standard shell.
+It behaves identically to bash with the exception that the following are disallowed or not performed:
+</p>
+<ul>
+<li class="level1"><div class="li"> changing directories with cd</div>
+</li>
+<li class="level1"><div class="li"> setting or unsetting the values of SHELL, PATH, ENV, or BASH_ENV</div>
+</li>
+<li class="level1"><div class="li"> specifying command names containing /</div>
+</li>
+<li class="level1"><div class="li"> specifying a filename containing a / as an argument to the . builtin command</div>
+</li>
+<li class="level1"><div class="li"> specifying a filename containing a slash as an argument to the -p option to the hash builtin command</div>
+</li>
+<li class="level1"><div class="li"> importing function definitions from the shell environment at startup</div>
+</li>
+<li class="level1"><div class="li"> parsing the value of SHELLOPTS from the shell environment at startup</div>
+</li>
+<li class="level1"><div class="li"> redirecting output using the &gt;, &gt;|, &lt;&gt;, &gt;&amp;, &amp;&gt;, and » redirection operators</div>
+</li>
+<li class="level1"><div class="li"> using the exec builtin command to replace the shell with another command</div>
+</li>
+<li class="level1"><div class="li"> adding or deleting builtin commands with the -f and -d options to the enable builtin command</div>
+</li>
+<li class="level1"><div class="li"> using the enable builtin command to enable disabled shell builtins</div>
+</li>
+<li class="level1"><div class="li"> specifying the -p option to the command builtin command</div>
+</li>
+<li class="level1"><div class="li"> turning off restricted mode with set +r or set +o restricted.</div>
+</li>
+</ul>
+
+<p>
+These restrictions are enforced after any startup files are read.
+</p>
+
+<p>
+When a command that is found to be a shell script is executed (see COMMAND EXECUTION above), 
+rbash turns off any restrictions in the shell spawned to execute the script.
+</p>
+
+<p>
+-r        If the -r option is present, the shell becomes restricted
+</p>
+<pre class="code">               (see RESTRICTED SHELL below).
+               
+   --restricted
+            The shell becomes restricted (see RESTRICTED SHELL below).</pre>
+
+<p>
+enable [-a] [-dnps] [-f filename] [name …]
+readonly
+restricted_shell
+</p>
+<pre class="code">                    The shell sets this option if it is started in
+                    restricted mode (see RESTRICTED SHELL below).  The
+                    value may not be changed.  This is not reset when the
+                    startup files are executed, allowing the startup files
+                    to discover whether or not a shell is restricted.</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Login Shell&quot;,&quot;hid&quot;:&quot;login_shell&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:13,&quot;range&quot;:&quot;5135-&quot;} --></div>
+</body>
+</html>

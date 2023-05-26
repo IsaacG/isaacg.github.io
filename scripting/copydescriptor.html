@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:copydescriptor</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,copydescriptor,bash,shell,scripting,tutorial,redirection,redirect,copy,file,descriptor"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/copydescriptor?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/copydescriptor"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/copydescriptor"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/copydescriptor"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:copydescriptor","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#making_sense_of_the_copy_descriptor_operator">Making sense of the copy descriptor operator</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#ls_2_1_1_moo">ls 2&gt;&amp;1 1&gt;moo</a></div></li>
+<li class="level2"><div class="li"><a href="#ls_1_moo_2_1">ls 1&gt;moo 2&gt;&amp;1</a></div></li>
+<li class="level2"><div class="li"><a href="#read_more">Read more</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="making_sense_of_the_copy_descriptor_operator">Making sense of the copy descriptor operator</h1>
+<div class="level1">
+
+<p>
+Take the example of a user running the command <code>ls &gt;moo 2&gt;&amp;1</code> or <code>ls 2&gt;&amp;1 1&gt;moo</code> while he is on his terminal (term). (Note that the 1 is implicit.  <code>1&gt;moo</code> is identical to <code>&gt;moo</code>.)
+</p>
+
+<p>
+Firstly, understand that <code>x&gt;&amp;y</code> means: &quot;Make output to x go wherever output to y is going right now.&quot;
+</p>
+
+<p>
+Knowing that, let&#039;s draw a table of what happens at each step of a redirection.  Redirections are read from left to right.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Making sense of the copy descriptor operator&quot;,&quot;hid&quot;:&quot;making_sense_of_the_copy_descriptor_operator&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-567&quot;} -->
+<h2 class="sectionedit2" id="ls_2_1_1_moo">ls 2&gt;&amp;1 1&gt;moo</h2>
+<div class="level2">
+
+<p>
+Make output to 2 go wherever output to 1 is going, which is the terminal.  Then, make output to 1 go to <code>moo</code>.
+</p>
+<pre class="code">fd |  ls  | 2&gt;&amp;1  | 1&gt;moo |
+   |------|-------|-------|
+1  | term | term  | &gt;moo  |
+   |    \         |       |
+   |     \        |       |
+   |      \       |       |
+2  | term | &gt;term | term  |</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ls 2&gt;&amp;1 1&gt;moo&quot;,&quot;hid&quot;:&quot;ls_2_1_1_moo&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;568-922&quot;} -->
+<h2 class="sectionedit3" id="ls_1_moo_2_1">ls 1&gt;moo 2&gt;&amp;1</h2>
+<div class="level2">
+
+<p>
+Make output to 1 go to <code>moo</code>.  Then make output to 2 go wherever output to 1 is going, which is <code>moo</code>.
+</p>
+<pre class="code">fd |  ls  | 1&gt;moo | 2&gt;&amp;1 |
+   |------|-------|------|
+1  | term | &gt;moo  |  moo |
+   |      |     \        |
+   |      |      \       |
+   |      |       \      |
+2  | term | term  | &gt;moo |</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ls 1&gt;moo 2&gt;&amp;1&quot;,&quot;hid&quot;:&quot;ls_1_moo_2_1&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;923-1263&quot;} -->
+<h2 class="sectionedit4" id="read_more">Read more</h2>
+<div class="level2">
+
+<p>
+You should also read the more in-depth tutorial about redirection in general: <a href="/howto/redirection_tutorial" class="wikilink1" title="howto:redirection_tutorial">Illustrated Redirection Tutorial</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Read more&quot;,&quot;hid&quot;:&quot;read_more&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1264-&quot;} --></div>
+</body>
+</html>

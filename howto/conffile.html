@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>howto:conffile</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="howto,conffile,bash,shell,scripting,config,files,include,configuration"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/howto/conffile?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=howto"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/howto/conffile"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/howto/conffile"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/howto/conffile"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='howto';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"howto:conffile","namespace":"howto","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#config_files_for_your_script">Config files for your script</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#general">General</a></div></li>
+<li class="level2"><div class="li"><a href="#per-user_configs">Per-user configs</a></div></li>
+<li class="level2"><div class="li"><a href="#secure_it">Secure it</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="config_files_for_your_script">Config files for your script</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Config files for your script&quot;,&quot;hid&quot;:&quot;config_files_for_your_script&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-114&quot;} -->
+<h2 class="sectionedit2" id="general">General</h2>
+<div class="level2">
+
+<p>
+For this task, you don&#039;t have to write large parser routines (unless you want it 100% secure or you want a special file syntax) - you can use the Bash source command. The file to be sourced should be formated in key=&quot;value&quot; format, otherwise bash will try to interpret commands:
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+echo &quot;Reading config....&quot; &gt;&amp;2
+source /etc/cool.cfg
+echo &quot;Config for the username: $cool_username&quot; &gt;&amp;2
+echo &quot;Config for the target host: $cool_host&quot; &gt;&amp;2</pre>
+
+</p>
+
+<p>
+So, where do these variables come from? If everything works fine, they are defined in /etc/cool.cfg which is a file that&#039;s sourced into the current script or shell. Note: this is <strong>not</strong> the same as executing this file as a script!
+The sourced file most likely contains something like:
+</p>
+
+<p>
+<pre class="code">cool_username=&quot;guest&quot;
+cool_host=&quot;foo.example.com&quot;</pre>
+
+</p>
+
+<p>
+These are normal statements understood by Bash, nothing special. Of course (and, a big disadvantage under normal circumstances) the sourced file can contain <strong>everything</strong> that Bash understands, including malicious code!
+</p>
+
+<p>
+The <code>source</code> command also is available under the name <code>.</code> (dot). The usage of the dot is identical:
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+echo &quot;Reading config....&quot; &gt;&amp;2
+. /etc/cool.cfg #note the space between the dot and the leading slash of /etc.cfg
+echo &quot;Config for the username: $cool_username&quot; &gt;&amp;2
+echo &quot;Config for the target host: $cool_host&quot; &gt;&amp;2</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;General&quot;,&quot;hid&quot;:&quot;general&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;115-1516&quot;} -->
+<h2 class="sectionedit3" id="per-user_configs">Per-user configs</h2>
+<div class="level2">
+
+<p>
+There&#039;s also a way to provide a system-wide config file in /etc and a custom config in ~/(user&#039;s home) to override system-wide defaults. In the following example, the if/then construct is used to check for the existance of a user-specific config:
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+echo &quot;Reading system-wide config....&quot; &gt;&amp;2
+. /etc/cool.cfg
+if [ -r ~/.coolrc ]; then
+  echo &quot;Reading user config....&quot; &gt;&amp;2
+  . ~/.coolrc
+fi</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Per-user configs&quot;,&quot;hid&quot;:&quot;per-user_configs&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:3,&quot;range&quot;:&quot;1517-1962&quot;} -->
+<h2 class="sectionedit4" id="secure_it">Secure it</h2>
+<div class="level2">
+
+<p>
+As mentioned earlier, the sourced file can contain anything a Bash script can. Essentially, it <strong>is</strong> an included Bash script. That creates security issues. A malicicios person can &quot;execute&quot; arbitrary code when your script is sourcing its config file.
+You might want to allow only constructs in the form <code>NAME=VALUE</code> in that file (variable assignment syntax) and maybe comments (though technically, comments are unimportant).
+Imagine the following &quot;config file&quot;, containing some malicious code:
+</p>
+
+<p>
+<pre class="code"># cool config file for my even cooler script
+username=god_only_knows
+hostname=www.example.com
+password=secret ; echo rm -rf ~/*
+parameter=foobar &amp;&amp; echo &quot;You&#039;ve bene pwned!&quot;;
+# hey look, weird code follows...
+echo &quot;I am the skull virus...&quot;
+echo rm -fr ~/*
+mailto=netadmin@example.com</pre>
+
+</p>
+
+<p>
+You don&#039;t want these <code>echo</code>-commands (which could be any other commands!) to be executed. One way to be a bit safer is to filter only the constructs you want, write the filtered results to a new file and source the new file. We also need to be sure something nefarious hasn&#039;t been added to the end of one of our name=value parameters, perhaps using ; or &amp;&amp; command separators. In those cases, perhaps it is simplest to just ignore the line entirely. Egrep (<code>grep -E</code>) will help us here, it filters by description:
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+configfile=&#039;/etc/cool.cfg&#039;
+configfile_secured=&#039;/tmp/cool.cfg&#039;
+
+# check if the file contains something we don&#039;t want
+if egrep -q -v &#039;^#|^[^ ]*=[^;]*&#039; &quot;$configfile&quot;; then
+  echo &quot;Config file is unclean, cleaning it...&quot; &gt;&amp;2
+  # filter the original to a new file
+  egrep &#039;^#|^[^ ]*=[^;&amp;]*&#039;  &quot;$configfile&quot; &gt; &quot;$configfile_secured&quot;
+  configfile=&quot;$configfile_secured&quot;
+fi
+
+# now source it, either the original or the filtered variant
+source &quot;$configfile&quot;</pre>
+
+<strong><em class="u">To make clear what it does:</em></strong> egrep checks if the file contains something we don&#039;t want, if yes, egrep filters the file and writes the filtered contents to a new file. If done, the original file name is changed to the name stored in the variable <code>configfile</code>. The file named by that variable is sourced, as if it were the original file.
+</p>
+
+<p>
+This filter allows only <code>NAME=VALUE</code> and comments in the file, but it doesn&#039;t prevent all methods of code execution. I will address that later.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Secure it&quot;,&quot;hid&quot;:&quot;secure_it&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;1963-&quot;} --></div>
+</body>
+</html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:posparams</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,posparams,bash,shell,scripting,arguments,positional,parameters,options"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/posparams?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/posparams"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/posparams"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/posparams"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:posparams","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#handling_positional_parameters">Handling positional parameters</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#intro">Intro</a></div></li>
+<li class="level2"><div class="li"><a href="#the_first_argument">The first argument</a></div></li>
+<li class="level2"><div class="li"><a href="#shifting">Shifting</a></div></li>
+<li class="level2"><div class="li"><a href="#using_them">Using them</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#one_by_one">One by one</a></div></li>
+<li class="level3"><div class="li"><a href="#loops">Loops</a></div></li>
+<li class="level3"><div class="li"><a href="#getopts">Getopts</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#mass_usage">Mass usage</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#all_positional_parameters">All Positional Parameters</a></div></li>
+<li class="level3"><div class="li"><a href="#range_of_positional_parameters">Range Of Positional Parameters</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#setting_positional_parameters">Setting Positional Parameters</a></div></li>
+<li class="level2"><div class="li"><a href="#production_examples">Production examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#using_a_while_loop">Using a while loop</a></div></li>
+<li class="level3"><div class="li"><a href="#filter_unwanted_options_with_a_wrapper_script">Filter unwanted options with a wrapper script</a></div></li>
+<li class="level3"><div class="li"><a href="#using_getopts">Using getopts</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="handling_positional_parameters">Handling positional parameters</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Handling positional parameters&quot;,&quot;hid&quot;:&quot;handling_positional_parameters&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-122&quot;} -->
+<h2 class="sectionedit2" id="intro">Intro</h2>
+<div class="level2">
+
+<p>
+The day will come when you want to give arguments to your scripts. These arguments are known as <strong>positional parameters</strong>. Some relevant special parameters are described below:
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Parameter(s)</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>$0</code></td><td class="col1">the first positional parameter, equivalent to <code>argv[0]</code> in C, see <span class="curid"><a href="/scripting/posparams#the_first_argument" class="wikilink1" title="scripting:posparams"> the first argument</a></span></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>$FUNCNAME</code></td><td class="col1"> the function name (<em class="u"><strong>attention</strong></em>: inside a function, <code>$0</code> is still the <code>$0</code> of the shell, <strong>not</strong> the function name)</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>$1 … $9</code></td><td class="col1">the argument list elements from 1 to 9</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>${10} … ${N}</code></td><td class="col1">the argument list elements beyond 9 (note the <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansion</a> syntax!)</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>$*</code></td><td class="col1">all positional parameters except <code>$0</code>, see <span class="curid"><a href="/scripting/posparams#mass_usage" class="wikilink1" title="scripting:posparams"> mass usage</a></span></td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>$@</code></td><td class="col1">all positional parameters except <code>$0</code>, see <span class="curid"><a href="/scripting/posparams#mass_usage" class="wikilink1" title="scripting:posparams"> mass usage</a></span></td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>$#</code></td><td class="col1">the number of arguments, not counting <code>$0</code></td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;319-1053&quot;} -->
+<p>
+These positional parameters reflect exactly what was given to the
+script when it was called.
+</p>
+
+<p>
+Option-switch parsing (e.g. <code>-h</code> for displaying help) is not performed at
+this point.
+</p>
+
+<p>
+See also <a href="/dict/terms/parameter" class="wikilink1" title="dict:terms:parameter"> the dictionary entry for &quot;parameter&quot;</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Intro&quot;,&quot;hid&quot;:&quot;intro&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;123-1314&quot;} -->
+<h2 class="sectionedit4" id="the_first_argument">The first argument</h2>
+<div class="level2">
+
+<p>
+The very first argument you can access is referenced as <code>$0</code>. It
+is usually set to the script&#039;s name exactly as called, and it&#039;s
+set on shell initialization:
+</p>
+
+<p>
+<em class="u">Testscript</em> - it just echos <code>$0</code>:
+<pre class="code">#!/bin/bash
+echo &quot;$0&quot;</pre>
+
+You see, <code>$0</code> is always set to the name the script is called with (<code>&gt;</code> is the prompt…):
+<pre class="code">&gt; ./testscript 
+./testscript</pre>
+
+<pre class="code">&gt; /usr/bin/testscript
+/usr/bin/testscript</pre>
+
+</p>
+
+<p>
+However, this isn&#039;t true for login shells:
+<pre class="code">&gt; echo &quot;$0&quot;
+-bash</pre>
+
+</p>
+
+<p>
+In other terms, <code>$0</code> is not a positional parameter, it&#039;s a
+special parameter independent from the positional parameter list. It
+can be set to anything. In the <strong>ideal</strong> case it&#039;s the pathname
+of the script, but since this gets set on invocation, the invoking
+program can easily influence it (the <code>login</code> program does that for
+login shells, by prefixing a dash, for example).
+</p>
+
+<p>
+Inside a function, <code>$0</code> still behaves as described above. To
+get the function name, use <code>$FUNCNAME</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The first argument&quot;,&quot;hid&quot;:&quot;the_first_argument&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1315-2342&quot;} -->
+<h2 class="sectionedit5" id="shifting">Shifting</h2>
+<div class="level2">
+
+<p>
+The builtin command <code>shift</code> is used to change the positional parameter values:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>$1</code> will be discarded</div>
+</li>
+<li class="level1"><div class="li"> <code>$2</code> will become <code>$1</code></div>
+</li>
+<li class="level1"><div class="li"> <code>$3</code> will become <code>$2</code></div>
+</li>
+<li class="level1"><div class="li"> …</div>
+</li>
+<li class="level1"><div class="li"> in general: <code>$N</code> will become <code>$N-1</code></div>
+</li>
+</ul>
+
+<p>
+The command can take a number as argument: Number of positions to shift.
+ e.g. <code>shift 4</code> shifts <code>$5</code> to <code>$1</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Shifting&quot;,&quot;hid&quot;:&quot;shifting&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;2343-2704&quot;} -->
+<h2 class="sectionedit6" id="using_them">Using them</h2>
+<div class="level2">
+
+<p>
+Enough theory, you want to access your script-arguments. Well, here we go.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using them&quot;,&quot;hid&quot;:&quot;using_them&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;2705-2804&quot;} -->
+<h3 class="sectionedit7" id="one_by_one">One by one</h3>
+<div class="level3">
+
+<p>
+One way is to access specific parameters:
+<pre class="code">#!/bin/bash
+echo &quot;Total number of arguments: $#&quot;
+echo &quot;Argument 1: $1&quot;
+echo &quot;Argument 2: $2&quot;
+echo &quot;Argument 3: $3&quot;
+echo &quot;Argument 4: $4&quot;
+echo &quot;Argument 5: $5&quot;</pre>
+
+</p>
+
+<p>
+While useful in another situation, this way is lacks flexibility.
+The maximum number of arguments is a fixedvalue
+- which is a bad idea if you write a script that takes many filenames
+as arguments.
+</p>
+
+<p>
+⇒ forget that one
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;One by one&quot;,&quot;hid&quot;:&quot;one_by_one&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;2805-3262&quot;} -->
+<h3 class="sectionedit8" id="loops">Loops</h3>
+<div class="level3">
+
+<p>
+There are several ways to loop through the positional parameters.
+</p>
+<hr />
+
+<p>
+You can code a <a href="/syntax/ccmd/c_for" class="wikilink1" title="syntax:ccmd:c_for"> C-style for-loop</a> using <code>$#</code>
+as the end value. On every iteration, the <code>shift</code>-command is used to
+shift the argument list:
+</p>
+
+<p>
+<pre class="code">numargs=$#
+for ((i=1 ; i &lt;= numargs ; i++))
+do
+    echo &quot;$1&quot;
+    shift
+done</pre>
+
+</p>
+
+<p>
+Not very stylish, but usable. The <code>numargs</code> variable is used
+to store the initial value of <code>$#</code> because the shift command
+will change it as the script runs.
+</p>
+<hr />
+
+<p>
+Another way to iterate one argument at a time is the <code>for</code> loop
+without a given wordlist. The loop uses the positional parameters as a wordlist:
+</p>
+
+<p>
+<pre class="code">for arg
+do
+    echo &quot;$arg&quot;
+done</pre>
+
+<em class="u">Advantage:</em> The positional parameters will be preserved
+</p>
+<hr />
+
+<p>
+The next method is similar to the first example (the <code>for</code> loop), but
+it doesn&#039;t test for reaching <code>$#</code>. It shifts and checks if <code>$1</code>
+still expands to something, using the <a href="/commands/classictest" class="wikilink1" title="commands:classictest"> test command</a>:
+</p>
+
+<p>
+<pre class="code">while [ &quot;$1&quot; ]
+do
+    echo &quot;$1&quot;
+    shift
+done</pre>
+
+</p>
+
+<p>
+Looks nice, but has the disadvantage of stopping when <code>$1</code> is empty
+(null-string). Let&#039;s modify it to run as long as <code>$1</code> is defined
+(but may be null), using <a href="/syntax/pe#use_an_alternate_value" class="wikilink1" title="syntax:pe"> parameter expansion for an alternate value</a>:
+</p>
+
+<p>
+<pre class="code">while [ &quot;${1+defined}&quot; ]; do
+  echo &quot;$1&quot;
+  shift
+done</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Loops&quot;,&quot;hid&quot;:&quot;loops&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;3263-4638&quot;} -->
+<h3 class="sectionedit9" id="getopts">Getopts</h3>
+<div class="level3">
+
+<p>
+There is a <a href="/howto/getopts_tutorial" class="wikilink1" title="howto:getopts_tutorial">small tutorial dedicated to &#039;&#039;getopts&#039;&#039;</a> (<em>under construction</em>).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Getopts&quot;,&quot;hid&quot;:&quot;getopts&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:9,&quot;range&quot;:&quot;4639-4762&quot;} -->
+<h2 class="sectionedit10" id="mass_usage">Mass usage</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Mass usage&quot;,&quot;hid&quot;:&quot;mass_usage&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:10,&quot;range&quot;:&quot;4763-4786&quot;} -->
+<h3 class="sectionedit11" id="all_positional_parameters">All Positional Parameters</h3>
+<div class="level3">
+
+<p>
+Sometimes it&#039;s necessary to just &quot;relay&quot; or &quot;pass&quot; given
+arguments to another program. It&#039;s very inefficient to do that in one
+of these loops, as you will destroy integrity, most likely
+(spaces!).
+</p>
+
+<p>
+The shell developers created <code>$*</code> and <code>$@</code> for this purpose.
+</p>
+
+<p>
+As overview:
+</p>
+<div class="table sectionedit12"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Syntax      </th><th class="col1 leftalign">Effective result                 </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 centeralign">  <code>$*</code>    </td><td class="col1 centeralign">  <code>$1 $2 $3 … ${N}</code>          </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 centeralign">  <code>$@</code>    </td><td class="col1 centeralign">  <code>$1 $2 $3 … ${N}</code>          </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 centeralign">  <code>&quot;$*&quot;</code>  </td><td class="col1 centeralign">  <code>&quot;$1c$2c$3c…c${N}&quot;</code>        </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 centeralign">  <code>&quot;$@&quot;</code>  </td><td class="col1 centeralign">  <code>&quot;$1&quot; &quot;$2&quot; &quot;$3&quot; … &quot;${N}&quot;</code>  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:12,&quot;range&quot;:&quot;5102-5346&quot;} -->
+<p>
+Without being quoted (double quotes), both have the same
+effect: All positional parameters from <code>$1</code> to the last one used are
+expanded without any special handling.
+</p>
+
+<p>
+When the <code>$*</code> special parameter is double quoted, it expands to the
+equivalent of: <code>&quot;$1c$2c$3c$4c……..$N&quot;</code>, where &#039;c&#039; is the first
+character of <code>IFS</code>.
+</p>
+
+<p>
+But when the <code>$@</code> special parameter is used inside double quotes, it
+expands to the equivanent of…
+</p>
+
+<p>
+<code>&quot;$1&quot; &quot;$2&quot; &quot;$3&quot; &quot;$4&quot; ….. &quot;$N&quot;</code>
+</p>
+
+<p>
+…which <strong>reflects all positional parameters as they were
+set initially</strong> and passed to the script or function. If you want
+to re-use your positional parameters to <strong>call another program</strong> (for
+example in a wrapper-script), then this is the choice for you, use
+double quoted <code>&quot;$@&quot;</code>.
+</p>
+
+<p>
+Well, let&#039;s just say: <strong>You almost always want a quoted <code>&quot;$@&quot;</code>!</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;All Positional Parameters&quot;,&quot;hid&quot;:&quot;all_positional_parameters&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:11,&quot;range&quot;:&quot;4787-6172&quot;} -->
+<h3 class="sectionedit13" id="range_of_positional_parameters">Range Of Positional Parameters</h3>
+<div class="level3">
+
+<p>
+Another way to mass expand the positional parameters is similar to
+what is possible for a range of characters using
+<a href="/syntax/pe#substring_expansion" class="wikilink1" title="syntax:pe"> substring expansion</a> on normal
+parameters and the mass expansion range of <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays"> arrays</a>.
+</p>
+
+<p>
+<code>${@:START:COUNT}</code>
+</p>
+
+<p>
+<code>${*:START:COUNT}</code>
+</p>
+
+<p>
+<code>&quot;${@:START:COUNT}&quot;</code>
+</p>
+
+<p>
+<code>&quot;${*:START:COUNT}&quot;</code>
+</p>
+
+<p>
+The rules for using <code>@</code> or <code>*</code> and quoting are the same as
+above. This will expand <code>COUNT</code> number of positional parameters
+beginning at <code>START</code>. <code>COUNT</code> can be omitted (<code>${@:START}</code>), in
+which case, all positional parameters beginning at <code>START</code> are
+expanded.
+</p>
+
+<p>
+If <code>START</code> is negative, the positional parameters are numbered in reverse
+starting with the last one.
+</p>
+
+<p>
+<code>COUNT</code> may not be negative, i.e. the element count may not be decremented.
+</p>
+
+<p>
+<em class="u"><strong>Example:</strong></em>
+START at the last positional parameter:
+<pre class="code">echo &quot;${@: -1}&quot;</pre>
+
+</p>
+
+<p>
+<em class="u"><strong>Attention</strong></em>: As of Bash 4, a <code>START</code> of <code>0</code> includes the special parameter <code>$0</code>, i.e. the shell name or whatever $0 is set to, when the positional parameters are in use. A <code>START</code> of <code>1</code> begins at <code>$1</code>. In Bash 3 and older, both <code>0</code> and <code>1</code> began at <code>$1</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Range Of Positional Parameters&quot;,&quot;hid&quot;:&quot;range_of_positional_parameters&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:13,&quot;range&quot;:&quot;6173-7389&quot;} -->
+<h2 class="sectionedit14" id="setting_positional_parameters">Setting Positional Parameters</h2>
+<div class="level2">
+
+<p>
+Setting positional parameters with command line arguments,
+is not the only way to set them.
+The <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> builtin command, set </a>
+may be used to &quot;artificially&quot; change the positional parameters from
+inside the script or function:
+</p>
+
+<p>
+<pre class="code">set &quot;This is&quot; my new &quot;set of&quot; positional parameters
+
+# RESULTS IN
+# $1: This is
+# $2: my
+# $3: new
+# $4: set of
+# $5: positional
+# $6: parameters</pre>
+
+</p>
+
+<p>
+It&#039;s wise to signal &quot;end of options&quot; when setting positional
+parameters this way. If not, the dashes might be interpreted as an option switch
+by <code>set</code> itself:
+</p>
+
+<p>
+<pre class="code"># both ways work, but behave differently. See the article about the set command!
+set -- ...
+set - ...</pre>
+
+</p>
+
+<p>
+Alternately this will also preserve any verbose (-v) or tracing (-x) flags, which may otherwise be reset by <code>set</code>
+<pre class="code">set -$- ...</pre>
+
+</p>
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> continue
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Setting Positional Parameters&quot;,&quot;hid&quot;:&quot;setting_positional_parameters&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:14,&quot;range&quot;:&quot;7390-8280&quot;} -->
+<h2 class="sectionedit15" id="production_examples">Production examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Production examples&quot;,&quot;hid&quot;:&quot;production_examples&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:15,&quot;range&quot;:&quot;8281-8313&quot;} -->
+<h3 class="sectionedit16" id="using_a_while_loop">Using a while loop</h3>
+<div class="level3">
+
+<p>
+To make your program accept options as standard command syntax:
+</p>
+
+<p>
+<code>COMMAND [options] &lt;params&gt;</code>  # Like &#039;cat -A file.txt&#039;
+</p>
+
+<p>
+See simple option parsing code below. It&#039;s not that flexible. It
+doesn&#039;t auto-interpret combined options (-fu USER) but it works and is
+a good rudimentary way to parse your arguments.
+</p>
+
+<p>
+<pre class="code">#!/bin/sh
+# Keeping options in alphabetical order makes it easy to add more.
+
+while :
+do
+    case &quot;$1&quot; in
+      -f | --file)
+	  file=&quot;$2&quot;   # You may want to check validity of $2
+	  shift 2
+	  ;;
+      -h | --help)
+	  display_help  # Call your function
+	  # no shifting needed here, we&#039;re done.
+	  exit 0
+	  ;;
+      -u | --user)
+	  username=&quot;$2&quot; # You may want to check validity of $2
+	  shift 2
+	  ;;
+      -v | --verbose)
+          #  It&#039;s better to assign a string, than a number like &quot;verbose=1&quot;
+	  #  because if you&#039;re debugging the script with &quot;bash -x&quot; code like this:
+	  #
+	  #    if [ &quot;$verbose&quot; ] ...
+	  #
+	  #  You will see:
+	  #
+	  #    if [ &quot;verbose&quot; ] ...
+	  #
+          #  Instead of cryptic
+	  #
+	  #    if [ &quot;1&quot; ] ...
+	  #
+	  verbose=&quot;verbose&quot;
+	  shift
+	  ;;
+      --) # End of all options
+	  shift
+	  break;
+      -*)
+	  echo &quot;Error: Unknown option: $1&quot; &gt;&amp;2
+	  exit 1
+	  ;;
+      *)  # No more options
+	  break
+	  ;;
+    esac
+done
+
+# End of file</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using a while loop&quot;,&quot;hid&quot;:&quot;using_a_while_loop&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:16,&quot;range&quot;:&quot;8314-9632&quot;} -->
+<h3 class="sectionedit17" id="filter_unwanted_options_with_a_wrapper_script">Filter unwanted options with a wrapper script</h3>
+<div class="level3">
+
+<p>
+This simple wrapper enables filtering unwanted options (here: <code>-a</code>
+and <code>–all</code> for <code>ls</code>) out of the command line. It reads the
+positional parameters and builds a filtered array consisting of them, then
+calls <code>ls</code> with the new option set. It also respects the <code>–</code>
+as &quot;end of options&quot; for <code>ls</code> and doesn&#039;t change anything after it:
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+
+# simple ls(1) wrapper that doesn&#039;t allow the -a option
+
+options=()  # the buffer array for the parameters
+eoo=0       # end of options reached
+
+while [[ $1 ]]
+do
+    if ! ((eoo)); then
+	case &quot;$1&quot; in
+	  -a)
+	      shift
+	      ;;
+	  --all)
+	      shift
+	      ;;
+	  -[^-]*a*|-a?*)
+	      options+=(&quot;${1//a}&quot;)
+	      shift
+	      ;;
+	  --)
+	      eoo=1
+	      options+=(&quot;$1&quot;)
+	      shift
+	      ;;
+	  *)
+	      options+=(&quot;$1&quot;)
+	      shift
+	      ;;
+	esac
+    else
+	options+=(&quot;$1&quot;)
+
+	# Another (worse) way of doing the same thing:
+	# options=(&quot;${options[@]}&quot; &quot;$1&quot;)
+	shift
+    fi
+done
+
+/bin/ls &quot;${options[@]}&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Filter unwanted options with a wrapper script&quot;,&quot;hid&quot;:&quot;filter_unwanted_options_with_a_wrapper_script&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:17,&quot;range&quot;:&quot;9633-10671&quot;} -->
+<h3 class="sectionedit18" id="using_getopts">Using getopts</h3>
+<div class="level3">
+
+<p>
+There is a <a href="/howto/getopts_tutorial" class="wikilink1" title="howto:getopts_tutorial">small tutorial dedicated to &#039;&#039;getopts&#039;&#039;</a> (<em>under construction</em>).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using getopts&quot;,&quot;hid&quot;:&quot;using_getopts&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:18,&quot;range&quot;:&quot;10672-10801&quot;} -->
+<h2 class="sectionedit19" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/howto/getopts_tutorial" class="wikilink1" title="howto:getopts_tutorial">Small getopts tutorial</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/while_loop" class="wikilink1" title="syntax:ccmd:while_loop">The while-loop</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/c_for" class="wikilink1" title="syntax:ccmd:c_for">The C-style for-loop</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">Arrays</a> (for equivalent syntax for mass-expansion)</div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/pe#substring_expansion" class="wikilink1" title="syntax:pe"> Substring expansion on a parameter</a>  (for equivalent syntax for mass-expansion)</div>
+</li>
+<li class="level1"><div class="li"> Dictionary, internal: <a href="/dict/terms/parameter" class="wikilink1" title="dict:terms:parameter">Parameter</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:19,&quot;range&quot;:&quot;10802-&quot;} --></div>
+</body>
+</html>

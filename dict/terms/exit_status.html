@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>dict:terms:exit_status</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="dict,terms,exit_status"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/dict/terms/exit_status?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=dict:terms"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/dict/terms/exit_status"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/dict/terms/exit_status"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/dict/terms/exit_status"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='dict:terms';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"dict:terms:exit_status","namespace":"dict:terms","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#exit_status">Exit Status</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#purpose">Purpose</a></div></li>
+<li class="level2"><div class="li"><a href="#values">Values</a></div></li>
+<li class="level2"><div class="li"><a href="#portability">Portability</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#misc">Misc</a></div></li>
+<li class="level3"><div class="li"><a href="#functions">functions</a></div></li>
+<li class="level3"><div class="li"><a href="#caseesac">case..esac</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="exit_status">Exit Status</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> exit code</div>
+</li>
+<li class="level1"><div class="li"> return status</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Exit Status&quot;,&quot;hid&quot;:&quot;exit_status&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-60&quot;} -->
+<h2 class="sectionedit2" id="purpose">Purpose</h2>
+<div class="level2">
+
+<p>
+The exit status is a numeric value that is returned by a program to the calling program or shell. In C programs, this is represented by the return value of the <code>main()</code> function or the value you give to <code>exit(3)</code>. The only part of the number that matters are the least significant 8 bits, which means there are only values from 0 to 255.
+</p>
+
+<p>
+In the shell, every operation generates an exit status (return status), even if no program is called. An example for such an operation is a redirection.
+</p>
+
+<p>
+The parameter to the
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>exit</code> (exit the shell/script)</div>
+</li>
+<li class="level1"><div class="li"> <code>return</code> (return from a function)</div>
+</li>
+</ul>
+
+<p>
+builtin commands serve the purpose of giving the exit status to the calling component.
+</p>
+
+<p>
+This - and only this - makes it possible to determinate the success or failure of an operation. For scripting, always set exit codes.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Purpose&quot;,&quot;hid&quot;:&quot;purpose&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;61-899&quot;} -->
+<h2 class="sectionedit3" id="values">Values</h2>
+<div class="level2">
+
+<p>
+The code is a number between 0 and 255, where the part from 126 to 255 is reserved to be used by the Bash shell directly or for special purposes, like reporting a termination by a signal:
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Code     </th><th class="col1 leftalign"> Description                                                                                                                                               </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> 0        </td><td class="col1 leftalign"> success                                                                                                                                                   </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> 1-255    </td><td class="col1 leftalign"> failure (in general)                                                                                                                                      </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> 126      </td><td class="col1 leftalign"> the requested command (file) can&#039;t be executed (but was found)                                                                                            </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> 127      </td><td class="col1 leftalign"> command (file) not found                                                                                                                                  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> 128      </td><td class="col1 leftalign"> according to ABS it&#039;s used to report an invalid argument to the exit builtin, but I wasn&#039;t able to verify that in the source code of Bash (see code 255)  </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> 128 + N  </td><td class="col1 leftalign"> the shell was terminated by the signal N (also used like this by various other programs)                                                                  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> 255      </td><td class="col1 leftalign"> wrong argument to the exit builtin (see code 128)                                                                                                         </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;1109-2460&quot;} -->
+<p>
+The lower codes 0 to 125 are not reserved and may be used for whatever the program likes to report. A value of <strong>0 means successful</strong> termination, a value <strong>not 0 means unsuccessful</strong> termination. This behavior (== 0, != 0) is also what Bash reacts on in some code flow control statements like <code>if</code> or <code>while</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Values&quot;,&quot;hid&quot;:&quot;values&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;900-2777&quot;} -->
+<h2 class="sectionedit5" id="portability">Portability</h2>
+<div class="level2">
+
+<p>
+Tables of shell behavior involving non-portable side-effects or common bugs with exit statuses. Note heirloom doesn&#039;t support pipeline negation (<code>! pipeline</code>).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability&quot;,&quot;hid&quot;:&quot;portability&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2778-2965&quot;} -->
+<h3 class="sectionedit6" id="misc">Misc</h3>
+<div class="level3">
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> test </th><th class="col1"> bash<br/>
+4.2.45 </th><th class="col2"> bash<br/>
+(POSIX) </th><th class="col3"> zsh 5.0.2<br/>
+(emulate ksh) </th><th class="col4"> ksh93<br/>
+93v- 2013-03-18 </th><th class="col5"> mksh<br/>
+R44 2013/02/24 </th><th class="col6"> posh<br/>
+0.11 </th><th class="col7"> dash<br/>
+0.5.7.3 </th><th class="col8"> busybox<br/>
+1.2.1 </th><th class="col9"> heirloom<br/>
+050706 </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> <pre class="code">:; : `false` `echo $? &gt;&amp;2`</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 1 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 1 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <pre class="code">false; eval; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 0 </td><td class="col4"> 0 </td><td class="col5"> 0 </td><td class="col6"> 1 </td><td class="col7"> 0 </td><td class="col8"> 1 </td><td class="col9"> 0 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <pre class="code">x=`false` eval echo \$?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 1 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 1 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> <pre class="code">eval echo \$? &lt;&amp;0`false`</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 1 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 1 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> <pre class="code">while :; do ! break; done; echo $?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 1 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 1 </td><td class="col8"> 1 </td><td class="col9"> - </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> <a href="https://lists.gnu.org/archive/html/bug-bash/2010-09/msg00009.html" class="urlextern" title="https://lists.gnu.org/archive/html/bug-bash/2010-09/msg00009.html" rel="nofollow"> discussion</a><pre class="code">false; : | echo $?</pre>
+</td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 0 </td><td class="col5"> 1 </td><td class="col6"> 1 </td><td class="col7"> 1 </td><td class="col8"> 1 </td><td class="col9"> 0 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> <pre class="code">(exit 2); for x in &quot;`exit 3`&quot;; do echo $?; done</pre>
+ </td><td class="col1"> 3 </td><td class="col2"> 3 </td><td class="col3"> 3 </td><td class="col4"> 3 </td><td class="col5"> 2 </td><td class="col6"> 2 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 3 </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;2982-3821&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Misc&quot;,&quot;hid&quot;:&quot;misc&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;2966-3822&quot;} -->
+<h3 class="sectionedit8" id="functions">functions</h3>
+<div class="level3">
+
+<p>
+Measuring side-effects during the function call, during return, and transparency of the return builtin.
+</p>
+<div class="table sectionedit9"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> test </th><th class="col1"> bash </th><th class="col2"> bash<br/>
+(POSIX) </th><th class="col3"> zsh<br/>
+(emulate ksh) </th><th class="col4"> ksh93 </th><th class="col5"> mksh </th><th class="col6"> posh </th><th class="col7"> dash </th><th class="col8"> busybox </th><th class="col9"> heirloom </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> <pre class="code">f() { echo $?; }; :; f `false`</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 1 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 1 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <pre class="code">f() { return; }; false; f; echo $?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 0 </td><td class="col5"> 1 </td><td class="col6"> 1 </td><td class="col7"> 1 </td><td class="col8"> 1 </td><td class="col9"> 1 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <pre class="code">f() { return $?; }; false; f; echo $?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 1 </td><td class="col5"> 1 </td><td class="col6"> 1 </td><td class="col7"> 1 </td><td class="col8"> 1 </td><td class="col9"> 1 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> <pre class="code">f() { ! return; }; f; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 1 </td><td class="col4"> 0 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 1 </td><td class="col8"> 1 </td><td class="col9"> - </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> <pre class="code">f() { ! return; }; false; f; echo $?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 0 </td><td class="col4"> 0 </td><td class="col5"> 1 </td><td class="col6"> 1 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> - </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> <pre class="code">f() { return; }; x=`false` f; echo $?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 1 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 0 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> <pre class="code">f() { return; }; f &lt;&amp;0`false`; echo $?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 1 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 1 </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"> <pre class="code">f() { x=`false` return; }; f; echo $?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 0 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 1 </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"> <pre class="code">f() { return &lt;&amp;0`false`; }; f; echo $?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 0 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 1 </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0"> <pre class="code">f() { x=`false` return &lt;&amp;0`false`; }; f; echo $?</pre>
+ </td><td class="col1"> 1 </td><td class="col2"> 1 </td><td class="col3"> 1 </td><td class="col4"> 1 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 1 </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;3948-4956&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;functions&quot;,&quot;hid&quot;:&quot;functions&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:8,&quot;range&quot;:&quot;3823-4956&quot;} -->
+<h3 class="sectionedit10" id="caseesac">case..esac</h3>
+<div class="level3">
+
+<p>
+Statuses measured within the command and after, with matching and non-matching patterns.
+</p>
+<div class="table sectionedit11"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> test </th><th class="col1"> bash </th><th class="col2"> bash<br/>
+(POSIX) </th><th class="col3"> zsh<br/>
+(emulate ksh) </th><th class="col4"> ksh93 </th><th class="col5"> mksh </th><th class="col6"> posh </th><th class="col7"> dash </th><th class="col8"> busybox </th><th class="col9"> heirloom </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> <pre class="code">(exit 2); case x in x) echo $?;; esac</pre>
+ </td><td class="col1"> 2 </td><td class="col2"> 2 </td><td class="col3"> 0 </td><td class="col4"> 2 </td><td class="col5"> 2 </td><td class="col6"> 2 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 2 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <pre class="code">(exit 2); case `exit 3`x in x) echo $?;; esac</pre>
+ </td><td class="col1"> 3 </td><td class="col2"> 3 </td><td class="col3"> 0 </td><td class="col4"> 3 </td><td class="col5"> 2 </td><td class="col6"> 2 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 3 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <pre class="code">(exit 2); case x in `exit 4`x) echo $?;; esac</pre>
+ </td><td class="col1"> 4 </td><td class="col2"> 4 </td><td class="col3"> 4 </td><td class="col4"> 4 </td><td class="col5"> 2 </td><td class="col6"> 2 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 4 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> <pre class="code">(exit 2); case `exit 3`x in `exit 4`x) echo $?;; esac</pre>
+ </td><td class="col1"> 4 </td><td class="col2"> 4 </td><td class="col3"> 4 </td><td class="col4"> 4 </td><td class="col5"> 2 </td><td class="col6"> 2 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 4 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> <pre class="code">(exit 2); case x in x);; esac; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 0 </td><td class="col4"> 0 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 2 </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> <pre class="code">(exit 2); case x in &quot;&quot;);; esac; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 0 </td><td class="col4"> 0 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 2 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> <pre class="code">(exit 2); case `exit 3`x in x);; esac; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 0 </td><td class="col4"> 3 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 3 </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"> <pre class="code">(exit 2); case `exit 3`x in &quot;&quot;);; esac; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 0 </td><td class="col4"> 3 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 3 </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"> <pre class="code">(exit 2); case x in `exit 4`x);; esac; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 0 </td><td class="col4"> 4 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 4 </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0"> <pre class="code">(exit 2); case x in `exit 4`);; esac; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 4 </td><td class="col4"> 4 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 4 </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0"> <pre class="code">(exit 2); case `exit 3`x in `exit 4`);; esac; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 4 </td><td class="col4"> 4 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 4 </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0"> <pre class="code">(exit 2); case `exit 3`x in `exit 4`x);; esac; echo $?</pre>
+ </td><td class="col1"> 0 </td><td class="col2"> 0 </td><td class="col3"> 0 </td><td class="col4"> 4 </td><td class="col5"> 0 </td><td class="col6"> 0 </td><td class="col7"> 0 </td><td class="col8"> 0 </td><td class="col9"> 4 </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:11,&quot;range&quot;:&quot;5068-6368&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;case..esac&quot;,&quot;hid&quot;:&quot;caseesac&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:10,&quot;range&quot;:&quot;4957-&quot;} --></div>
+</body>
+</html>

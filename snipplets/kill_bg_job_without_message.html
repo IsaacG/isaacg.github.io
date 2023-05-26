@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>snipplets:kill_bg_job_without_message</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="snipplets,kill_bg_job_without_message"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/snipplets/kill_bg_job_without_message?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=snipplets"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/snipplets/kill_bg_job_without_message"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/snipplets/kill_bg_job_without_message"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/snipplets/kill_bg_job_without_message"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='snipplets';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"snipplets:kill_bg_job_without_message","namespace":"snipplets","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="kill_a_background_job_without_a_message">Kill a background job without a message</h1>
+<div class="level1">
+<div class="inline dataplugin_entry snipplet sectionedit2"><dl><dt class="snipplet">snipplet<span class="sep">: </span></dt><dd class="snipplet"><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dkill" title="Show pages matching 'kill'" class="wikilink1">kill</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dprocess%20management" title="Show pages matching 'process management'" class="wikilink1">process management</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Djobs" title="Show pages matching 'jobs'" class="wikilink1">jobs</a></dd><dt class="lastupdate">LastUpdate<span class="sep">: </span></dt><dd class="lastupdate">2010-07-31</dd><dt class="contributor">Contributor<span class="sep">: </span></dt><dd class="contributor">Jan Schampera</dd><dt class="type">type<span class="sep">: </span></dt><dd class="type">snipplet</dd></dl></div><!-- EDIT{&quot;target&quot;:&quot;plugin_data&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;56-204&quot;} -->
+<p>
+When you start background jobs from within a script (non-interactive shell) and kill it afterwards, you will get a message from the shell that the process was terminated.
+</p>
+
+<p>
+Example:
+<pre class="code">#!/bin/bash
+
+# example background process
+sleep 300 &amp;
+
+# get the PID
+BG_PID=$!
+
+# kill it, hard and mercyless
+kill -9 $BG_PID
+
+echo &quot;Yes, we killed it&quot;</pre>
+
+</p>
+
+<p>
+You will get something like this:
+<pre class="code">$ ./bg_kill1.sh
+./bg_kill1.sh: line 11:  3413 Killed                  sleep 300
+Yes, we killed it</pre>
+
+</p>
+
+<p>
+This is more or less a normal message. And it can&#039;t be easily redirected since it&#039;s the shell itself that yells this message, not the command <code>kill</code> or something else. You would have to redirect the whole script&#039;s output.
+</p>
+
+<p>
+It&#039;s also useless to temporarily redirect <code>stderr</code> when you call the <code>kill</code> command, since the successful termination of the job, the termination of the <code>kill</code> command and the message from the shell may not happen at the same time. And a blind <code>sleep</code> after the <code>kill</code> would be just a workaround.
+</p>
+
+<p>
+The solution is relatively easy: The shell spits that message because it controls the background job, and when it terminates, the shell will tell you whenever possible. Now you just need to tell your shell that it is no longer responsible for that background process. This is done by the <code>disown</code> command, which can take an internal shell job number (like <code>%1</code>) or a process ID as argument.
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+
+# example background process
+sleep 300 &amp;
+
+# get the PID
+BG_PID=$!
+
+### HERE, YOU TELL THE SHELL TO NOT CARE ANY MORE ###
+disown $BG_PID
+###
+
+
+# kill it, hard and mercyless, now without a trace
+kill -9 $BG_PID
+
+echo &quot;Yes, we killed it&quot;</pre>
+
+</p>
+
+<p>
+That way, you can run and kill background processes without disturbing messages.
+</p>
+
+</div>
+</div>
+</body>
+</html>

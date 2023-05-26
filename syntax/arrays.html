@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:arrays</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,arrays"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/arrays?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/arrays"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/arrays"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/arrays"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:arrays","namespace":"syntax","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#arrays">Arrays</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#purpose">Purpose</a></div></li>
+<li class="level2"><div class="li"><a href="#indexing">Indexing</a></div></li>
+<li class="level2"><div class="li"><a href="#syntax">Syntax</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#referencing">Referencing</a></div></li>
+<li class="level3"><div class="li"><a href="#declaration">Declaration</a></div></li>
+<li class="level3"><div class="li"><a href="#storing_values">Storing values</a></div></li>
+<li class="level3"><div class="li"><a href="#getting_values">Getting values</a></div></li>
+<li class="level3"><div class="li"><a href="#metadata">Metadata</a></div></li>
+<li class="level3"><div class="li"><a href="#destruction">Destruction</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#usage">Usage</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#numerical_index">Numerical Index</a></div></li>
+<li class="level3"><div class="li"><a href="#associative_bash_4">Associative (Bash 4)</a></div></li>
+<li class="level3"><div class="li"><a href="#integer_arrays">Integer arrays</a></div></li>
+<li class="level3"><div class="li"><a href="#indirection">Indirection</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#bugs_and_portability_considerations">Bugs and Portability Considerations</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#bugs">Bugs</a></div></li>
+<li class="level3"><div class="li"><a href="#evaluation_order">Evaluation order</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="arrays">Arrays</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Arrays&quot;,&quot;hid&quot;:&quot;arrays&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-22&quot;} -->
+<h2 class="sectionedit2" id="purpose">Purpose</h2>
+<div class="level2">
+
+<p>
+An array is a parameter that holds mappings from keys to values. Arrays are used to store a collection of parameters into a parameter. Arrays (in any programming language) are a useful and common composite data structure, and one of the most important scripting features in Bash and other shells.
+</p>
+
+<p>
+Here is an <strong>abstract</strong> representation of an array named <code>NAMES</code>. The indexes go from 0 to 3.
+<pre class="code">NAMES
+ 0: Peter
+ 1: Anna
+ 2: Greg
+ 3: Jan</pre>
+
+</p>
+
+<p>
+Instead of using 4 separate variables, multiple related variables are grouped grouped together into <em>elements</em> of the array, accessible by their <em>key</em>. If you want the second name, ask for index 1 of the array <code>NAMES</code>. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Purpose&quot;,&quot;hid&quot;:&quot;purpose&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;23-722&quot;} -->
+<h2 class="sectionedit3" id="indexing">Indexing</h2>
+<div class="level2">
+
+<p>
+Bash supports two different types of ksh-like one-dimensional arrays. <strong>Multidimensional arrays are not implemented</strong>.
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>Indexed arrays</em> use positive integer numbers as keys. Indexed arrays are <strong>always sparse</strong>, meaning indexes are not necessarily contiguous. All syntax used for both assigning and dereferencing indexed arrays is an <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic evaluation context</a> (see <a href="#referencing" title="syntax:arrays ↵" class="wikilink1">Referencing</a>). As in C and many other languages, the numerical array indexes start at 0 (zero). Indexed arrays are the most common, useful, and portable type. Indexed arrays were first introduced to Bourne-like shells by ksh88. Similar, partially compatible syntax was inherited by many derivatives including Bash. Indexed arrays always carry the <code>-a</code> attribute.</div>
+</li>
+<li class="level1"><div class="li"> <em>Associative arrays</em> (sometimes known as a &quot;hash&quot; or &quot;dict&quot;) use arbitrary nonempty strings as keys. In other words, associative arrays allow you to look up a value from a table based upon its corresponding string label. <strong>Associative arrays are always unordered</strong>, they merely <em>associate</em> key-value pairs. If you retrieve multiple values from the array at once, you can&#039;t count on them coming out in the same order you put them in. Associative arrays always carry the <code>-A</code> attribute, and unlike indexed arrays, Bash requires that they always be declared explicitly (as indexed arrays are the default, see <a href="#declaration" title="syntax:arrays ↵" class="wikilink1"> declaration</a>). Associative arrays were first introduced in ksh93, and similar mechanisms were later adopted by Zsh and Bash version 4. These three are currently the only POSIX-compatible shells with any associative array support.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Indexing&quot;,&quot;hid&quot;:&quot;indexing&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;723-2377&quot;} -->
+<h2 class="sectionedit4" id="syntax">Syntax</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Syntax&quot;,&quot;hid&quot;:&quot;syntax&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;2378-2397&quot;} -->
+<h3 class="sectionedit5" id="referencing">Referencing</h3>
+<div class="level3">
+
+<p>
+To accommodate referring to array variables and their individual elements, Bash extends the parameter naming scheme with a subscript suffix. Any valid ordinary scalar parameter name is also a valid array name: <code>[[:alpha:]_][[:alnum:]_]*</code>. The parameter name may be followed by an optional subscript enclosed in square brackets to refer to a member of the array.
+</p>
+
+<p>
+The overall syntax is <code>arrname[subscript]</code> - where for indexed arrays, <code>subscript</code> is any valid arithmetic expression, and for associative arrays, any nonempty string. Subscripts are first processed for parameter and arithmetic expansions, and command and process substitutions. When used within parameter expansions or as an argument to the <a href="/commands/builtin/unset" class="wikilink1" title="commands:builtin:unset"> unset</a> builtin, the special subscripts <code>*</code> and <code>@</code> are also accepted which act upon arrays analogously to the way the <code>@</code> and <code>*</code> special parameters act upon the positional parameters. In parsing the subscript, bash ignores any text that follows the closing bracket up to the end of the parameter name.
+</p>
+
+<p>
+With few exceptions, names of this form may be used anywhere ordinary parameter names are valid, such as within <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expressions</a>, <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansions</a>, and as arguments to builtins that accept parameter names. An <em>array</em> is a Bash parameter that has been given the <code>-a</code> (for indexed) or <code>-A</code> (for associative) <em>attributes</em>. However, any regular (non-special or positional) parameter may be validly referenced using a subscript, because in most contexts, referring to the zeroth element of an array is synonymous with referring to the array name without a subscript.
+</p>
+
+<p>
+<pre class="code"># &quot;x&quot; is an ordinary non-array parameter.
+$ x=hi; printf &#039;%s &#039; &quot;$x&quot; &quot;${x[0]}&quot;; echo &quot;${_[0]}&quot;
+hi hi hi</pre>
+
+</p>
+
+<p>
+The only exceptions to this rule are in a few cases where the array variable&#039;s name refers to the array as a whole. This is the case for the <code>unset</code> builtin (see <a href="#destruction" title="syntax:arrays ↵" class="wikilink1"> destruction</a>) and when declaring an array without assigning any values (see <a href="#declaration" title="syntax:arrays ↵" class="wikilink1"> declaration</a>).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Referencing&quot;,&quot;hid&quot;:&quot;referencing&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;2398-4520&quot;} -->
+<h3 class="sectionedit6" id="declaration">Declaration</h3>
+<div class="level3">
+
+<p>
+The following explicitly give variables array attributes, making them arrays:
+</p>
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Syntax </th><th class="col1">Description </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>ARRAY=()</code> </td><td class="col1">Declares an <strong>indexed</strong> array <code>ARRAY</code> and initializes it to be empty. This can also be used to empty an existing array. </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>ARRAY[0]=</code> </td><td class="col1">Generally sets the first element of an <strong>indexed</strong> array. If no array <code>ARRAY</code> existed before, it is created. </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>declare -a ARRAY</code> </td><td class="col1">Declares an <strong>indexed</strong> array <code>ARRAY</code>. An existing array is not initialized. </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>declare -A ARRAY</code> </td><td class="col1">Declares an <strong>associative</strong> array <code>ARRAY</code>. This is the one and only way to create associative arrays. </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;4623-5146&quot;} -->
+<p>
+As an example, and for use below, let&#039;s declare our <code>NAMES</code> array as described <a href="#purpose" title="syntax:arrays ↵" class="wikilink1">above</a>:
+</p>
+<pre class="code">  declare -a NAMES=(&#039;Peter&#039; &#039;Anna&#039; &#039;Greg&#039; &#039;Jan&#039;)</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Declaration&quot;,&quot;hid&quot;:&quot;declaration&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;4521-5301&quot;} -->
+<h3 class="sectionedit8" id="storing_values">Storing values</h3>
+<div class="level3">
+
+<p>
+Storing values in arrays is quite as simple as storing values in normal variables.
+</p>
+<div class="table sectionedit9"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Syntax                             </th><th class="col1 leftalign"> Description                                                                                                                                                                                                                                                                                                                                                                                                                                               </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>ARRAY[N]=VALUE</code>                 </td><td class="col1 leftalign"> Sets the element <code>N</code> of the <strong>indexed</strong> array <code>ARRAY</code> to <code>VALUE</code>. <strong><code>N</code> can be any valid <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expression</a></strong>.                                                                                                                                                                                                                                                                                                          </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>ARRAY[STRING]=VALUE</code>            </td><td class="col1 leftalign"> Sets the element indexed by <code>STRING</code> of the <strong>associative array</strong> <code>ARRAY</code>.                                                                                                                                                                                                                                                                                                                                                                            </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>ARRAY=VALUE</code>                    </td><td class="col1 leftalign"> As above. If no index is given, as a default the zeroth element is set to <code>VALUE</code>. Careful, this is even true of associative arrays - there is no error if no key is specified, and the value is assigned to string index &quot;0&quot;.                                                                                                                                                                                                                          </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>ARRAY=(E1 E2 …)</code>            </td><td class="col1 leftalign"> Compound array assignment - sets the whole array <code>ARRAY</code> to the given list of elements indexed sequentially starting at zero. The array is unset before assignment unless the += operator is used. When the list is empty (<code>ARRAY=()</code>), the array will be set to an empty array. This method obviously does not use explicit indexes. An <strong>associative array</strong> can <strong>not</strong> be set like that! Clearing an associative array using <code>ARRAY=()</code> works.  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>ARRAY=([X]=E1 [Y]=E2 …)</code>    </td><td class="col1 leftalign"> Compound assignment for indexed arrays with index-value pairs declared individually (here for example <code>X</code> and <code>Y</code>). X and Y are arithmetic expressions. This syntax can be combined with the above - elements declared without an explicitly specified index are assigned sequentially starting at either the last element with an explicit index, or zero.                                                                                           </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>ARRAY=([S1]=E1 [S2]=E2 …)</code>  </td><td class="col1 leftalign"> Individual mass-setting for <strong>associative arrays</strong>. The named indexes (here: <code>S1</code> and <code>S2</code>) are strings.                                                                                                                                                                                                                                                                                                                                              </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>ARRAY+=(E1 E2 …)</code>           </td><td class="col1 leftalign"> Append to ARRAY.                                                                                                                                                                                                                                                                                                                                                                                                                                          </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>ARRAY=(&quot;${ANOTHER_ARRAY[@]}&quot;)</code>  </td><td class="col1 leftalign"> Copy ANOTHER_ARRAY to ARRAY, copying each element.                                                                                                                                                                                                                                                                                                                                                                                                        </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;5412-9758&quot;} -->
+<p>
+As of now, arrays can&#039;t be exported.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Storing values&quot;,&quot;hid&quot;:&quot;storing_values&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;5302-9796&quot;} -->
+<h3 class="sectionedit10" id="getting_values">Getting values</h3>
+<div class="level3">
+<div class="plugin_note noteclassic">For completeness and details on several parameter expansion variants, see the <a href="/syntax/pe" class="wikilink1" title="syntax:pe">article about parameter expansion</a> and check the notes about arrays.
+
+</div><div class="table sectionedit11"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Syntax </th><th class="col1">Description </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> <code>${ARRAY[N]}</code> </td><td class="col1 leftalign"> Expands to the value of the index <code>N</code> in the <strong>indexed</strong> array <code>ARRAY</code>. If <code>N</code> is a negative number, it&#039;s treated as the offset from the maximum assigned index (can&#039;t be used for assignment) - 1  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <code>${ARRAY[S]}</code> </td><td class="col1"> Expands to the value of the index <code>S</code> in the <strong>associative</strong> array <code>ARRAY</code>. </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <code>&quot;${ARRAY[@]}&quot;<br/>
+${ARRAY[@]}<br/>
+&quot;${ARRAY[*]}&quot;<br/>
+${ARRAY[*]}</code> </td><td class="col1"> Similar to <a href="/scripting/posparams#mass_usage" class="wikilink1" title="scripting:posparams"> mass-expanding positional parameters</a>, this expands to all elements. If unquoted, both subscripts <code>*</code> and <code>@</code> expand to the same result, if quoted, <code>@</code> expands to all elements individually quoted, <code>*</code> expands to all elements quoted as a whole. </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> <code>&quot;${ARRAY[@]:N:M}&quot;<br/>
+${ARRAY[@]:N:M}<br/>
+&quot;${ARRAY[*]:N:M}&quot;<br/>
+${ARRAY[*]:N:M}</code> </td><td class="col1"> Similar to what this syntax does for the characters of a single string when doing <a href="/syntax/pe#substring_expansion" class="wikilink1" title="syntax:pe"> substring expansion</a>, this expands to <code>M</code> elements starting with element <code>N</code>. This way you can mass-expand individual indexes. The rules for quoting and the subscripts <code>*</code> and <code>@</code> are the same as above for the other mass-expansions. </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:11,&quot;range&quot;:&quot;9998-11153&quot;} -->
+<p>
+For clarification: When you use the subscripts <code>@</code> or <code>*</code> for mass-expanding, then the behaviour is exactly what it is for <code>$@</code> and <code>$*</code> when <a href="/scripting/posparams#mass_usage" class="wikilink1" title="scripting:posparams"> mass-expanding the positional parameters</a>. You should read this article to understand what&#039;s going on.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Getting values&quot;,&quot;hid&quot;:&quot;getting_values&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:10,&quot;range&quot;:&quot;9797-11444&quot;} -->
+<h3 class="sectionedit12" id="metadata">Metadata</h3>
+<div class="level3">
+<div class="table sectionedit13"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Syntax </th><th class="col1">Description </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>${#ARRAY[N]}</code> </td><td class="col1">Expands to the <strong>length</strong> of an individual array member at index <code>N</code> (<strong>stringlength</strong>) </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>${#ARRAY[STRING]}</code> </td><td class="col1"> Expands to the <strong>length</strong> of an individual associative array member at index <code>STRING</code> (<strong>stringlength</strong>) </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>${#ARRAY[@]}</code><br/>
+<code>${#ARRAY[*]}</code></td><td class="col1">Expands to the <strong>number of elements</strong> in <code>ARRAY</code> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>${!ARRAY[@]}</code><br/>
+<code>${!ARRAY[*]}</code></td><td class="col1">Expands to the <strong>indexes</strong> in <code>ARRAY</code> since BASH 3.0</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:13,&quot;range&quot;:&quot;11465-11915&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Metadata&quot;,&quot;hid&quot;:&quot;metadata&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:12,&quot;range&quot;:&quot;11445-11916&quot;} -->
+<h3 class="sectionedit14" id="destruction">Destruction</h3>
+<div class="level3">
+
+<p>
+The <a href="/commands/builtin/unset" class="wikilink1" title="commands:builtin:unset"> unset</a> builtin command is used to destroy (unset) arrays or individual elements of arrays.
+</p>
+<div class="table sectionedit15"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Syntax </th><th class="col1">Description </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>unset -v ARRAY</code><br/>
+<code>unset -v ARRAY[@]</code><br/>
+<code>unset -v ARRAY[*]</code> </td><td class="col1">Destroys a complete array </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>unset -v ARRAY[N]</code></td><td class="col1">Destroys the array element at index <code>N</code> </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>unset -v ARRAY[STRING]</code></td><td class="col1">Destroys the array element of the associative array at index <code>STRING</code> </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table4&quot;,&quot;secid&quot;:15,&quot;range&quot;:&quot;12063-12351&quot;} -->
+<p>
+It is best to <a href="/commands/builtin/unset#portability_considerations" class="wikilink1" title="commands:builtin:unset"> explicitly specify -v</a> when unsetting variables with unset.
+</p>
+<div class="plugin_note notewarning">Specifying unquoted array elements as arguments to any command, such as with the syntax above <strong>may cause <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> pathname expansion</a> to occur</strong> due to the presence of glob characters.
+<p>
+Example: You are in a directory with a file named <code>x1</code>, and you want to destroy an array element <code>x[1]</code>, with
+<pre class="code">unset x[1]</pre>
+
+then pathname expansion will expand to the filename <code>x1</code> and break your processing!
+</p>
+
+<p>
+Even worse, if <code>nullglob</code> is set, your array/index will disappear.
+</p>
+
+<p>
+To avoid this, <strong>always quote</strong> the array name and index:
+<pre class="code">unset -v &#039;x[1]&#039;</pre>
+
+</p>
+
+<p>
+This applies generally to all commands which take variable names as arguments. Single quotes preferred.
+</p>
+
+</div>
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Destruction&quot;,&quot;hid&quot;:&quot;destruction&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:14,&quot;range&quot;:&quot;11917-13203&quot;} -->
+<h2 class="sectionedit16" id="usage">Usage</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Usage&quot;,&quot;hid&quot;:&quot;usage&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:16,&quot;range&quot;:&quot;13204-13222&quot;} -->
+<h3 class="sectionedit17" id="numerical_index">Numerical Index</h3>
+<div class="level3">
+
+<p>
+Numerical indexed arrays are easy to understand and easy to use. The <a href="#purpose" title="syntax:arrays ↵" class="wikilink1">Purpose</a> and <a href="#indexing" title="syntax:arrays ↵" class="wikilink1">Indexing</a> chapters above more or less explain all the needed background theory.
+</p>
+
+<p>
+Now, some examples and comments for you.
+</p>
+
+<p>
+Let&#039;s say we have an array <code>sentence</code> which is initialized as follows:
+<pre class="code">sentence=(Be liberal in what you accept, and conservative in what you send)</pre>
+
+</p>
+
+<p>
+Since no special code is there to prevent word splitting (no quotes), every word there will be assigned to an individual array element. When you count the words you see, you should get 12. Now let&#039;s see if Bash has the same opinion:
+</p>
+
+<p>
+<pre class="code">$ echo ${#sentence[@]}
+12</pre>
+
+</p>
+
+<p>
+Yes, 12. Fine. You can take this number to walk through the array. Just <strong>subtract 1 from the number of elements, and start your walk at 0 (zero)</strong>:
+<pre class="code">((n_elements=${#sentence[@]}, max_index=n_elements - 1))
+
+for ((i = 0; i &lt;= max_index; i++)); do
+  echo &quot;Element $i: &#039;${sentence[i]}&#039;&quot;
+done</pre>
+
+</p>
+
+<p>
+You always have to remember that, it seems newbies have problems sometimes. Please understand that <strong>numerical array indexing begins at 0 (zero)</strong>!
+</p>
+
+<p>
+The method above, walking through an array by just knowing its number of elements, only works for arrays where all elements are set, of course. If one element in the middle is removed, then the calculation is nonsense, because the number of elements doesn&#039;t correspond to the highest used index anymore (we call them &quot;<em>sparse arrays</em>&quot;).
+</p>
+
+<p>
+Now, suppose that you want to replace your array <code>sentence</code> with the values in the <a href="#purpose" title="syntax:arrays ↵" class="wikilink1">previously-declared array</a> <code>NAMES</code> . You might think you could just do
+</p>
+
+<p>
+<pre class="code">$ unset sentence ; declare -a sentence=NAMES
+$ echo ${#sentence[@]}
+1
+# omit calculating max_index as above, and iterate as one-liner
+$ for ((i = 0; i &lt; ${#sentence[@]}; i++)); do  echo &quot;Element $i: &#039;${sentence[i]}&#039;&quot; ; done
+Element 0: &#039;NAMES&#039;</pre>
+
+</p>
+
+<p>
+Obviously that&#039;s wrong. What about
+</p>
+
+<p>
+<pre class="code">$ unset sentence ; declare -a sentence=${NAMES}</pre>
+
+</p>
+
+<p>
+? Again, wrong:
+</p>
+
+<p>
+<pre class="code">$ echo ${#sentence[*]}
+1
+$ for ((i = 0; i &lt; ${#sentence[@]}; i++)); do  echo &quot;Element $i: &#039;${sentence[i]}&#039;&quot; ; done
+Element 0: &#039;Peter&#039;</pre>
+
+</p>
+
+<p>
+So what&#039;s the <strong>right</strong> way? The (slightly ugly) answer is, reuse the enumeration syntax:
+</p>
+
+<p>
+<pre class="code">$ unset sentence ; declare -a sentence=(&quot;${NAMES[@]}&quot;)
+$ echo ${#sentence[@]}
+4
+$ for ((i = 0; i &lt; ${#sentence[@]}; i++)); do  echo &quot;Element $i: &#039;${sentence[i]}&#039;&quot; ; done
+Element 0: &#039;Peter&#039;
+Element 1: &#039;Anna&#039;
+Element 2: &#039;Greg&#039;
+Element 3: &#039;Jan&#039;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Numerical Index&quot;,&quot;hid&quot;:&quot;numerical_index&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:17,&quot;range&quot;:&quot;13223-15760&quot;} -->
+<h3 class="sectionedit18" id="associative_bash_4">Associative (Bash 4)</h3>
+<div class="level3">
+
+<p>
+Associative arrays (or <em>hash tables</em>) are not much more complicated than numerical indexed arrays. The numerical index value (in Bash a number starting at zero) just is replaced with an arbitrary string:
+</p>
+
+<p>
+<pre class="code"># declare -A, introduced with Bash 4 to declare an associative array
+declare -A sentence
+
+sentence[Begin]=&#039;Be liberal in what&#039;
+sentence[Middle]=&#039;you accept, and conservative&#039;
+sentence[End]=&#039;in what you send&#039;
+sentence[&#039;Very end&#039;]=...</pre>
+
+</p>
+
+<p>
+<em class="u"><strong>Beware:</strong></em> don&#039;t rely on the fact that the elements are ordered in memory like they were declared, it could look like this:
+<pre class="code"># output from &#039;set&#039; command
+sentence=([End]=&quot;in what you send&quot; [Middle]=&quot;you accept, and conservative &quot; [Begin]=&quot;Be liberal in what &quot; [&quot;Very end&quot;]=&quot;...&quot;)</pre>
+
+This effectively means, you can get the data back with <code>&quot;${sentence[@]}&quot;</code>, of course (just like with numerical indexing), but you can&#039;t rely on a specific order. If you want to store ordered data, or re-order data, go with numerical indexes. For associative arrays, you usually query known index values:
+<pre class="code">for element in Begin Middle End &quot;Very end&quot;; do
+    printf &quot;%s&quot; &quot;${sentence[$element]}&quot;
+done
+printf &quot;\n&quot;</pre>
+
+</p>
+
+<p>
+<strong>A nice code example:</strong> Checking for duplicate files using an associative array indexed with the SHA sum of the files:
+<pre class="code"># Thanks to Tramp in #bash for the idea and the code
+
+unset flist; declare -A flist;
+while read -r sum fname; do 
+    if [[ ${flist[$sum]} ]]; then
+        printf &#039;rm -- &quot;%s&quot; # Same as &gt;%s&lt;\n&#039; &quot;$fname&quot; &quot;${flist[$sum]}&quot; 
+    else
+        flist[$sum]=&quot;$fname&quot;
+    fi
+done &lt;  &lt;(find . -type f -exec sha256sum {} +)  &gt;rmdups</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Associative (Bash 4)&quot;,&quot;hid&quot;:&quot;associative_bash_4&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:18,&quot;range&quot;:&quot;15761-17430&quot;} -->
+<h3 class="sectionedit19" id="integer_arrays">Integer arrays</h3>
+<div class="level3">
+
+<p>
+Any type attributes applied to an array apply to all elements of the array. If the integer attribute is set for either indexed or associative arrays, then values are considered as arithmetic for both compound and ordinary assignment, and the += operator is modified in the same way as for ordinary integer variables.
+</p>
+
+<p>
+<pre class="code"> ~ $ ( declare -ia &#039;a=(2+4 [2]=2+2 [a[2]]=&quot;a[2]&quot;)&#039; &#039;a+=(42 [a[4]]+=3)&#039;; declare -p a )
+declare -ai a=&#039;([0]=&quot;6&quot; [2]=&quot;4&quot; [4]=&quot;7&quot; [5]=&quot;42&quot;)&#039;</pre>
+
+</p>
+
+<p>
+<code>a[0]</code> is assigned to the result of <code>2+4</code>. <code>a[2]</code> gets the result of <code>2+2</code>. The last index in the first assignment is the result of <code>a[2]</code>, which has already been assigned as <code>4</code>, and its value is also given <code>a[2]</code>.
+</p>
+
+<p>
+This shows that even though any existing arrays named <code>a</code> in the current scope have already been unset by using <code>=</code> instead of <code>+=</code> to the compound assignment, arithmetic variables within keys can self-reference any elements already assigned within the same compound-assignment. With integer arrays this also applies to expressions to the right of the <code>=</code>. (See <a href="#evaluation_order" title="syntax:arrays ↵" class="wikilink1"> evaluation order</a>, the right side of an arithmetic assignment is typically evaluated first in Bash.)
+</p>
+
+<p>
+The second compound assignment argument to declare uses <code>+=</code>, so it appends after the last element of the existing array rather than deleting it and creating a new array, so <code>a[5]</code> gets <code>42</code>.
+</p>
+
+<p>
+Lastly, the element whose index is the value of <code>a[4]</code> (<code>4</code>), gets <code>3</code> added to its existing value, making <code>a[4]</code> == <code>7</code>. Note that having the integer attribute set this time causes += to add, rather than append a string, as it would for a non-integer array.
+</p>
+
+<p>
+The single quotes force the assignments to be evaluated in the environment of <code>declare</code>. This is important because attributes are only applied to the assignment after assignment arguments are processed. Without them the <code>+=</code> compound assignment would have been invalid, and strings would have been inserted into the integer array without evaluating the arithmetic. A special-case of this is shown in the next section.
+</p>
+<div class="plugin_note noteclassic">Bash declaration commands are really keywords in disguise. They magically parse arguments to determine whether they are in the form of a valid assignment. If so, they are evaluated as assignments. If not, they are undergo normal argument expansion before being passed to the builtin which evaluates the resulting string as an assignment (somewhat like <code>eval</code>, but there are differences.) <code>&#039;Todo:</code>&#039; Discuss this in detail.
+
+</div>
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Integer arrays&quot;,&quot;hid&quot;:&quot;integer_arrays&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:19,&quot;range&quot;:&quot;17431-19988&quot;} -->
+<h3 class="sectionedit20" id="indirection">Indirection</h3>
+<div class="level3">
+
+<p>
+Arrays can be expanded indirectly using the indirect parameter expansion syntax. Parameters whose values are of the form: <code>name[index]</code>, <code>name[@]</code>, or <code>name[*]</code> when expanded indirectly produce the expected results. This is mainly useful for passing arrays (especially multiple arrays) by name to a function.
+</p>
+
+<p>
+This example is an &quot;isSubset&quot;-like predicate which returns true if all key-value pairs of the array given as the first argument to isSubset correspond to a key-value of the array given as the second argument. It demonstrates both indirect array expansion and indirect key-passing without eval using the aforementioned special compound assignment expansion.
+<pre class="code">isSubset() {
+    local -a &#039;xkeys=(&quot;${!&#039;&quot;$1&quot;&#039;[@]}&quot;)&#039; &#039;ykeys=(&quot;${!&#039;&quot;$2&quot;&#039;[@]}&quot;)&#039;
+    set -- &quot;${@/%/[key]}&quot;
+
+    (( ${#xkeys[@]} &lt;= ${#ykeys[@]} )) || return 1
+
+    local key
+    for key in &quot;${xkeys[@]}&quot;; do
+        [[ ${!2+_} &amp;&amp; ${!1} == ${!2} ]] || return 1
+    done
+}
+
+main() {
+    # &quot;a&quot; is a subset of &quot;b&quot;
+    local -a &#039;a=({0..5})&#039; &#039;b=({0..10})&#039;
+    isSubset a b
+    echo $? # true
+
+    # &quot;a&quot; contains a key not in &quot;b&quot;
+    local -a &#039;a=([5]=5 {6..11})&#039; &#039;b=({0..10})&#039;
+    isSubset a b
+    echo $? # false
+
+    # &quot;a&quot; contains an element whose value != the corresponding member of &quot;b&quot;
+    local -a &#039;a=([5]=5 6 8 9 10)&#039; &#039;b=({0..10})&#039;
+    isSubset a b
+    echo $? # false
+}
+
+main</pre>
+
+</p>
+
+<p>
+This script is one way of implementing a crude multidimensional associative array by storing array definitions in an array and referencing them through indirection. The script takes two keys and dynamically calls a function whose name is resolved from the array.
+<pre class="code">callFuncs() {
+    # Set up indirect references as positional parameters to minimize local name collisions.
+    set -- &quot;${@:1:3}&quot; ${2+&#039;a[&quot;$1&quot;]&#039; &quot;$1&quot;&#039;[&quot;$2&quot;]&#039;}
+
+    # The only way to test for set but null parameters is unfortunately to test each individually.
+    local x
+    for x; do
+        [[ $x ]] || return 0
+    done
+
+    local -A a=(
+        [foo]=&#039;([r]=f [s]=g [t]=h)&#039;
+        [bar]=&#039;([u]=i [v]=j [w]=k)&#039;
+        [baz]=&#039;([x]=l [y]=m [z]=n)&#039;
+        ) ${4+${a[&quot;$1&quot;]+&quot;${1}=${!3}&quot;}} # For example, if &quot;$1&quot; is &quot;bar&quot; then define a new array: bar=([u]=i [v]=j [w]=k)
+
+    ${4+${a[&quot;$1&quot;]+&quot;${!4-:}&quot;}} # Now just lookup the new array. for inputs: &quot;bar&quot; &quot;v&quot;, the function named &quot;j&quot; will be called, which prints &quot;j&quot; to stdout.
+}
+
+main() {
+    # Define functions named {f..n} which just print their own names.
+    local fun=&#039;() { echo &quot;$FUNCNAME&quot;; }&#039; x
+
+    for x in {f..n}; do
+        eval &quot;${x}${fun}&quot;
+    done
+
+    callFuncs &quot;$@&quot;
+}
+
+main &quot;$@&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Indirection&quot;,&quot;hid&quot;:&quot;indirection&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:20,&quot;range&quot;:&quot;19989-22592&quot;} -->
+<h2 class="sectionedit21" id="bugs_and_portability_considerations">Bugs and Portability Considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Arrays are not specified by POSIX. One-dimensional indexed arrays are supported using similar syntax and semantics by most Korn-like shells.</div>
+</li>
+<li class="level1"><div class="li"> Associative arrays are supported via <code>typeset -A</code> in Bash 4, Zsh, and Ksh93.</div>
+</li>
+<li class="level1"><div class="li"> In Ksh93, arrays whose types are not given explicitly are not necessarily indexed. Arrays defined using compound assignments which specify subscripts are associative by default. In Bash, associative arrays can <em>only</em> be created by explicitly declaring them as associative, otherwise they are always indexed. In addition, ksh93 has several other compound structures whose types can be determined by the compound assignment syntax used to create them.</div>
+</li>
+<li class="level1"><div class="li"> In Ksh93, using the <code>=</code> compound assignment operator unsets the array, including any attributes that have been set on the array prior to assignment. In order to preserve attributes, you must use the <code>+=</code> operator. However, declaring an associative array, then attempting an <code>a=(…)</code> style compound assignment without specifying indexes is an error. I can&#039;t explain this inconsistency.<pre class="code"> $ ksh -c &#039;function f { typeset -a a; a=([0]=foo [1]=bar); typeset -p a; }; f&#039; # Attribute is lost, and since subscripts are given, we default to associative.
+typeset -A a=([0]=foo [1]=bar)
+ $ ksh -c &#039;function f { typeset -a a; a+=([0]=foo [1]=bar); typeset -p a; }; f&#039; # Now using += gives us the expected results.
+typeset -a a=(foo bar)
+ $ ksh -c &#039;function f { typeset -A a; a=(foo bar); typeset -p a; }; f&#039; # On top of that, the reverse does NOT unset the attribute. No idea why.
+ ksh: f: line 1: cannot append index array to associative array a</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Only Bash and mksh support compound assignment with mixed explicit subscripts and automatically incrementing subscripts. In ksh93, in order to specify individual subscripts within a compound assignment, all subscripts must be given (or none). Zsh doesn&#039;t support specifying individual subscripts at all.</div>
+</li>
+<li class="level1"><div class="li"> Appending to a compound assignment is a fairly portable way to append elements after the last index of an array. In Bash, this also sets append mode for all individual assignments within the compound assignment, such that if a lower subscript is specified, subsequent elements will be appended to previous values. In ksh93, it causes subscripts to be ignored, forcing appending everything after the last element. (Appending has different meaning due to support for multi-dimensional arrays and nested compound datastructures.) <pre class="code"> $ ksh -c &#039;function f { typeset -a a; a+=(foo bar baz); a+=([3]=blah [0]=bork [1]=blarg [2]=zooj); typeset -p a; }; f&#039; # ksh93 forces appending to the array, disregarding subscripts
+typeset -a a=(foo bar baz &#039;[3]=blah&#039; &#039;[0]=bork&#039; &#039;[1]=blarg&#039; &#039;[2]=zooj&#039;)
+ $ bash -c &#039;function f { typeset -a a; a+=(foo bar baz); a+=(blah [0]=bork blarg zooj); typeset -p a; }; f&#039; # Bash applies += to every individual subscript.
+declare -a a=&#039;([0]=&quot;foobork&quot; [1]=&quot;barblarg&quot; [2]=&quot;bazzooj&quot; [3]=&quot;blah&quot;)&#039;
+ $ mksh -c &#039;function f { typeset -a a; a+=(foo bar baz); a+=(blah [0]=bork blarg zooj); typeset -p a; }; f&#039; # Mksh does like Bash, but clobbers previous values rather than appending.
+set -A a
+typeset a[0]=bork
+typeset a[1]=blarg
+typeset a[2]=zooj
+typeset a[3]=blah</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> In Bash and Zsh, the alternate value assignment parameter expansion (<code>${arr[idx]:=foo}</code>) evaluates the subscript twice, first to determine whether to expand the alternate, and second to determine the index to assign the alternate to. See <a href="#evaluation_order" title="syntax:arrays ↵" class="wikilink1"> evaluation order</a>. <pre class="code"> $ : ${_[$(echo $RANDOM &gt;&amp;2)1]:=$(echo hi &gt;&amp;2)}
+13574
+hi
+14485</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> In Zsh, arrays are indexed starting at 1 in its default mode. Emulation modes are required in order to get any kind of portability.</div>
+</li>
+<li class="level1"><div class="li"> Zsh and mksh do not support compound assignment arguments to <code>typeset</code>.</div>
+</li>
+<li class="level1"><div class="li"> Ksh88 didn&#039;t support modern compound array assignment syntax. The original (and most portable) way to assign multiple elements is to use the <code>set -A name arg1 arg2 …</code> syntax. This is supported by almost all shells that support ksh-like arrays except for Bash. Additionally, these shells usually support an optional <code>-s</code> argument to <code>set</code> which performs lexicographic sorting on either array elements or the positional parameters. Bash has no built-in sorting ability other than the usual comparison operators. <pre class="code"> $ ksh -c &#039;set -A arr -- foo bar bork baz; typeset -p arr&#039; # Classic array assignment syntax
+typeset -a arr=(foo bar bork baz)
+ $ ksh -c &#039;set -sA arr -- foo bar bork baz; typeset -p arr&#039; # Native sorting!
+typeset -a arr=(bar baz bork foo)
+ $ mksh -c &#039;set -sA arr -- foo &quot;[3]=bar&quot; &quot;[2]=baz&quot; &quot;[7]=bork&quot;; typeset -p arr&#039; # Probably a bug. I think the maintainer is aware of it.
+set -A arr
+typeset arr[2]=baz
+typeset arr[3]=bar
+typeset arr[7]=bork
+typeset arr[8]=foo</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Evaluation order for assignments involving arrays varies significantly depending on context. Notably, the order of evaluating the subscript or the value first can change in almost every shell for both expansions and arithmetic variables. See <a href="#evaluation_order" title="syntax:arrays ↵" class="wikilink1"> evaluation order</a> for details.</div>
+</li>
+<li class="level1"><div class="li"> Bash 4.1.* and below cannot use negative subscripts to address array indexes relative to the highest-numbered index. You must use the subscript expansion, i.e. <code>&quot;${arr[@]:(-n):1}&quot;</code>, to expand the nth-last element (or the next-highest indexed after <code>n</code> if <code>arr[n]</code> is unset). In Bash 4.2, you may expand (but not assign to) a negative index. In Bash 4.3, ksh93, and zsh, you may both assign and expand negative offsets.</div>
+</li>
+<li class="level1"><div class="li"> ksh93 also has an additional slice notation: <code>&quot;${arr[n..m]}&quot;</code> where <code>n</code> and <code>m</code> are arithmetic expressions. These are needed for use with multi-dimensional arrays.</div>
+</li>
+<li class="level1"><div class="li"> Assigning or referencing negative indexes in mksh causes wrap-around. The max index appears to be <code>UINT_MAX</code>, which would be addressed by <code>arr[-1]</code>.</div>
+</li>
+<li class="level1"><div class="li"> So far, Bash&#039;s <code>-v var</code> test doesn&#039;t support individual array subscripts. You may supply an array name to test whether an array is defined, but can&#039;t check an element. ksh93&#039;s <code>-v</code> supports both. Other shells lack a <code>-v</code> test.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bugs and Portability Considerations&quot;,&quot;hid&quot;:&quot;bugs_and_portability_considerations&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:21,&quot;range&quot;:&quot;22593-28761&quot;} -->
+<h3 class="sectionedit22" id="bugs">Bugs</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <strong>Fixed in 4.3</strong> Bash 4.2.* and earlier considers each chunk of a compound assignment, including the subscript for globbing. The subscript part is considered quoted, but any unquoted glob characters on the right-hand side of the <code>[…]=</code> will be clumped with the subscript and counted as a glob. Therefore, you must quote anything on the right of the <code>=</code> sign.  This is fixed in 4.3, so that each subscript assignment statement is expanded following the same rules as an ordinary assignment. This also works correctly in ksh93. <pre class="code">$ touch &#039;[1]=a&#039;; bash -c &#039;a=([1]=*); echo &quot;${a[@]}&quot;&#039;
+[1]=a</pre>
+ mksh has a similar but even worse problem in that the entire subscript is considered a glob. <pre class="code">$ touch 1=a; mksh -c &#039;a=([123]=*); print -r -- &quot;${a[@]}&quot;&#039;
+1=a</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> <strong>Fixed in 4.3</strong> In addition to the above globbing issue, assignments preceding &quot;declare&quot; have an additional effect on brace and pathname expansion. <pre class="code">$ set -x; foo=bar declare arr=( {1..10} )
++ foo=bar
++ declare &#039;arr=(1)&#039; &#039;arr=(2)&#039; &#039;arr=(3)&#039; &#039;arr=(4)&#039; &#039;arr=(5)&#039; &#039;arr=(6)&#039; &#039;arr=(7)&#039; &#039;arr=(8)&#039; &#039;arr=(9)&#039; &#039;arr=(10)&#039;
+
+$ touch xy=foo
++ touch xy=foo
+$ declare x[y]=*
++ declare &#039;x[y]=*&#039;
+$ foo=bar declare x[y]=*
++ foo=bar
++ declare xy=foo</pre>
+ Each word (the entire assignment) is subject to globbing and brace expansion. This appears to trigger the same strange expansion mode as <code>let</code>, <code>eval</code>, other declaration commands, and maybe more. </div>
+</li>
+<li class="level1"><div class="li"> <strong>Fixed in 4.3</strong> Indirection combined with another modifier expands arrays to a single word. <pre class="code">$ a=({a..c}) b=a[@]; printf &#039;&lt;%s&gt; &#039; &quot;${!b}&quot;; echo; printf &#039;&lt;%s&gt; &#039; &quot;${!b/%/foo}&quot;; echo
+&lt;a&gt; &lt;b&gt; &lt;c&gt;
+&lt;a b cfoo&gt;</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> <strong>Fixed in 4.3</strong> Process substitutions are evaluated within array indexes. Zsh and ksh don&#039;t do this in any arithmetic context. <pre class="code"> 
+# print &quot;moo&quot;
+dev=fd=1 _[1&lt;(echo moo &gt;&amp;2)]=
+
+# Fork bomb
+${dev[${dev=&#039;dev[1&gt;(${dev[dev]})]&#039;}]}</pre>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bugs&quot;,&quot;hid&quot;:&quot;bugs&quot;,&quot;codeblockOffset&quot;:22,&quot;secid&quot;:22,&quot;range&quot;:&quot;28762-30673&quot;} -->
+<h3 class="sectionedit23" id="evaluation_order">Evaluation order</h3>
+<div class="level3">
+
+<p>
+Here are some of the nasty details of array assignment evaluation order. You can use this <a href="https://gist.github.com/ormaaj/4942297" class="urlextern" title="https://gist.github.com/ormaaj/4942297" rel="nofollow"> testcase code</a> to generate these results.
+</p>
+
+<p>
+<pre class="code">Each testcase prints evaluation order for indexed array assignment
+contexts. Each context is tested for expansions (represented by digits) and
+arithmetic (letters), ordered from left to right within the expression. The
+output corresponds to the way evaluation is re-ordered for each shell:
+
+a[ $1 a ]=${b[ $2 b ]:=${c[ $3 c ]}}               No attributes
+a[ $1 a ]=${b[ $2 b ]:=c[ $3 c ]}                  typeset -ia a
+a[ $1 a ]=${b[ $2 b ]:=c[ $3 c ]}                  typeset -ia b
+a[ $1 a ]=${b[ $2 b ]:=c[ $3 c ]}                  typeset -ia a b
+(( a[ $1 a ] = b[ $2 b ] ${c[ $3 c ]} ))           No attributes
+(( a[ $1 a ] = ${b[ $2 b ]:=c[ $3 c ]} ))          typeset -ia b
+a+=( [ $1 a ]=${b[ $2 b ]:=${c[ $3 c ]}} [ $4 d ]=$(( $5 e )) ) typeset -a a
+a+=( [ $1 a ]=${b[ $2 b ]:=c[ $3 c ]} [ $4 d ]=${5}e ) typeset -ia a
+
+bash: 4.2.42(1)-release
+2 b 3 c 2 b 1 a
+2 b 3 2 b 1 a c
+2 b 3 2 b c 1 a
+2 b 3 2 b c 1 a c
+1 2 3 c b a
+1 2 b 3 2 b c c a
+1 2 b 3 c 2 b 4 5 e a d
+1 2 b 3 2 b 4 5 a c d e
+
+ksh93: Version AJM 93v- 2013-02-22
+1 2 b b a
+1 2 b b a
+1 2 b b a
+1 2 b b a
+1 2 3 c b a
+1 2 b b a
+1 2 b b a 4 5 e d
+1 2 b b a 4 5 d e
+
+mksh: @(#)MIRBSD KSH R44 2013/02/24
+2 b 3 c 1 a
+2 b 3 1 a c
+2 b 3 c 1 a
+2 b 3 c 1 a
+1 2 3 c a b
+1 2 b 3 c a
+1 2 b 3 c 4 5 e a d
+1 2 b 3 4 5 a c d e
+
+zsh: 5.0.2
+2 b 3 c 2 b 1 a
+2 b 3 2 b 1 a c
+2 b 1 a
+2 b 1 a
+1 2 3 c b a
+1 2 b a
+1 2 b 3 c 2 b 4 5 e
+1 2 b 3 2 b 4 5</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Evaluation order&quot;,&quot;hid&quot;:&quot;evaluation_order&quot;,&quot;codeblockOffset&quot;:27,&quot;secid&quot;:23,&quot;range&quot;:&quot;30674-32291&quot;} -->
+<h2 class="sectionedit24" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/pe" class="wikilink1" title="syntax:pe">Parameter expansion</a> (contains sections for arrays)</div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/classic_for" class="wikilink1" title="syntax:ccmd:classic_for">The classic for-loop</a> (contains some examples to iterate over arrays)</div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/builtin/declare" class="wikilink1" title="commands:builtin:declare">The declare builtin command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/005" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/005" rel="nofollow">BashFAQ 005 - How can I use array variables?</a> - A very detailed discussion on arrays with many examples.</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashSheet#Arrays" class="urlextern" title="http://mywiki.wooledge.org/BashSheet#Arrays" rel="nofollow">BashSheet - Arrays</a> - Bashsheet quick-reference on Greycat&#039;s wiki.</div>
+</li>
+</ul>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:25,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_hide plugin_wrap">
+<p>
+ vim: set fenc=utf-8 ff=unix ts=4 sts=4 sw=4 ft=dokuwiki et wrap lbr: 
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:26,&quot;range&quot;:&quot;0-&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:28,&quot;secid&quot;:24,&quot;range&quot;:&quot;32292-&quot;} --></div>
+</body>
+</html>

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:bashbehaviour</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,bashbehaviour,bash,shell,scripting,startup,files,dotfiles,modes,POSIX"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/bashbehaviour?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/bashbehaviour"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/bashbehaviour"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/bashbehaviour"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:bashbehaviour","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#bash_s_behaviour">Bash&#039;s behaviour</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#bash_startup_modes">Bash startup modes</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#login_shell">Login shell</a></div></li>
+<li class="level3"><div class="li"><a href="#interactive_shell">Interactive shell</a></div></li>
+<li class="level3"><div class="li"><a href="#sh_mode">SH mode</a></div></li>
+<li class="level3"><div class="li"><a href="#posix_mode">POSIX mode</a></div></li>
+<li class="level3"><div class="li"><a href="#quick_startup_file_reference">Quick startup file reference</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#bash_run_modes">Bash run modes</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#normal_bash">Normal Bash</a></div></li>
+<li class="level3"><div class="li"><a href="#posix_run_mode">POSIX run mode</a></div></li>
+<li class="level3"><div class="li"><a href="#restricted_shell">Restricted shell</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="bash_s_behaviour">Bash&#039;s behaviour</h1>
+<div class="level1">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> incomplete
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash&#039;s behaviour&quot;,&quot;hid&quot;:&quot;bash_s_behaviour&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-121&quot;} -->
+<h2 class="sectionedit2" id="bash_startup_modes">Bash startup modes</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash startup modes&quot;,&quot;hid&quot;:&quot;bash_startup_modes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;122-154&quot;} -->
+<h3 class="sectionedit3" id="login_shell">Login shell</h3>
+<div class="level3">
+
+<p>
+As a &quot;login shell&quot;, Bash reads and sets (executes) the user&#039;s profile from <code>/etc/profile</code> and one of <code>~/.bash_profile</code>, <code>~/.bash_login</code>, or <code>~/.profile</code> (in that order, using the first one that&#039;s readable!).
+</p>
+
+<p>
+When a login shell exits, Bash reads and executes commands from the file <code>~/.bash_logout</code>, if it exists.
+</p>
+
+<p>
+Why an extra login shell mode? There are many actions and variable sets that only make sense for the initial user login. That&#039;s why all UNIX® shells have (should have) a &quot;login&quot; mode.
+</p>
+
+<p>
+<em class="u"><strong>Methods to start Bash as a login shell:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> the first character of <code>argv[0]</code> is <code>-</code> (a hyphen): traditional UNIX® shells start from the <code>login</code> binary</div>
+</li>
+<li class="level1"><div class="li"> Bash is started with the <code>-l</code> option</div>
+</li>
+<li class="level1"><div class="li"> Bash is started with the <code>--login</code> option</div>
+</li>
+</ul>
+
+<p>
+<em class="u"><strong>Methods to test for login shell mode:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> the shell option <code><a href="/internals/shell_options#login_shell" class="wikilink1" title="internals:shell_options">login_shell</a></code> is set</div>
+</li>
+</ul>
+
+<p>
+<em class="u"><strong>Related switches:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>--noprofile</code> disables reading of all profile files</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Login shell&quot;,&quot;hid&quot;:&quot;login_shell&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;155-1204&quot;} -->
+<h3 class="sectionedit4" id="interactive_shell">Interactive shell</h3>
+<div class="level3">
+
+<p>
+When Bash starts as an interactive non-login shell, it reads and executes commands from <code>~/.bashrc</code>. This file should contain, for example, aliases, since they need to be defined in every shell as they&#039;re not inherited from the parent shell.
+</p>
+
+<p>
+The feature to have a system-wide <code>/etc/bash.bashrc</code> or a similar system-wide rc-file is specific to vendors and distributors that ship <em>their own, patched variant of Bash</em>. The classic way to have a system-wide rc file is to <code>source /etc/bashrc</code> from every user&#039;s <code>~/.bashrc</code>.
+</p>
+
+<p>
+<em class="u"><strong>Methods to test for interactive-shell mode:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> the special parameter <code>$-</code> contains the letter <code>i</code> (lowercase I)</div>
+</li>
+</ul>
+
+<p>
+<em class="u"><strong>Related switches:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>-i</code> forces the interactive mode</div>
+</li>
+<li class="level1"><div class="li"> <code>--norc</code> disables reading of the startup files (e.g. <code>/etc/bash.bashrc</code> if supported) and <code>~/.bashrc</code></div>
+</li>
+<li class="level1"><div class="li"> <code>--rcfile</code> defines another startup file (instead of <code>/etc/bash.bashrc</code> and <code>~/.bashrc</code>)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Interactive shell&quot;,&quot;hid&quot;:&quot;interactive_shell&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1205-2204&quot;} -->
+<h3 class="sectionedit5" id="sh_mode">SH mode</h3>
+<div class="level3">
+
+<p>
+When Bash starts in SH compatiblity mode, it tries to mimic the startup behaviour of historical versions of <code>sh</code> as closely as possible, while conforming to the POSIX® standard as well. The profile files read are <code>/etc/profile</code> and <code>~/.profile</code>, if it&#039;s a login shell.
+</p>
+
+<p>
+If it&#039;s not a login shell, the environment variable <a href="/syntax/shellvars#env" class="wikilink1" title="syntax:shellvars">ENV</a> is evaluated and the resulting filename is used as the name of the startup file.
+</p>
+
+<p>
+After the startup files are read, Bash enters the <a href="#posix_run_mode" title="scripting:bashbehaviour ↵" class="wikilink1"> POSIX(r) compatiblity mode (for running, not for starting!)</a>.
+</p>
+
+<p>
+<em class="u"><strong>Bash starts in <code>sh</code> compatiblity mode when:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> the base filename in <code>argv[0]</code> is <code>sh</code> (<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> NB: <code>/bin/sh</code> may be linked to <code>/bin/bash</code>, but that doesn&#039;t mean it acts like <code>/bin/bash</code> <img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" />)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SH mode&quot;,&quot;hid&quot;:&quot;sh_mode&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2205-3011&quot;} -->
+<h3 class="sectionedit6" id="posix_mode">POSIX mode</h3>
+<div class="level3">
+
+<p>
+When Bash is started in POSIX® mode, it follows the POSIX® standard for startup files. In this mode, <strong>interactive shells</strong> expand the <a href="/syntax/shellvars#env" class="wikilink1" title="syntax:shellvars">ENV</a> variable and commands are read and executed from the file whose name is the expanded value.<br/>
+
+No other startup files are read. Hence, a non-interactive shell doesn&#039;t read any startup files in POSIX® mode.
+</p>
+
+<p>
+<em class="u"><strong>Bash starts in POSIX® mode when:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> the commandline option <code>--posix</code> is specified</div>
+</li>
+<li class="level1"><div class="li"> the environment variable <a href="/syntax/shellvars#posixly_correct" class="wikilink1" title="syntax:shellvars">POSIXLY_CORRECT</a> is set</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;POSIX mode&quot;,&quot;hid&quot;:&quot;posix_mode&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;3012-3614&quot;} -->
+<h3 class="sectionedit7" id="quick_startup_file_reference">Quick startup file reference</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Eventual system-wide rc-files are usually read when <code>~/.bashrc</code> would be read (at least Debian GNU/Linux behaves like that)</div>
+</li>
+<li class="level1"><div class="li"> Regardless of the system-wide files in <code>/etc</code> which are always read, Bash usually reads the first file found, when multiple choices are given (for  user files in <code>~/</code>)</div>
+</li>
+</ul>
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Mode</th><th class="col1"><code>/etc/profile</code></th><th class="col2"><code>~/.bash_profile</code></th><th class="col3"><code>~/.bash_login</code></th><th class="col4"><code>~/.profile</code></th><th class="col5"><code>~/.bashrc</code></th><th class="col6"><code>${ENV}</code></th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">Login shell           </td><td class="col1 centeralign">  X  </td><td class="col2 centeralign">  X  </td><td class="col3 centeralign">  X  </td><td class="col4 centeralign">  X  </td><td class="col5 centeralign">  -  </td><td class="col6 centeralign">  -  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">Interactive shell     </td><td class="col1 centeralign">  -  </td><td class="col2 centeralign">  -  </td><td class="col3 centeralign">  -  </td><td class="col4 centeralign">  -  </td><td class="col5 centeralign">  X  </td><td class="col6 centeralign">  -  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">SH compatible login   </td><td class="col1 centeralign">  X  </td><td class="col2 centeralign">  -  </td><td class="col3 centeralign">  -  </td><td class="col4 centeralign">  X  </td><td class="col5 centeralign">  -  </td><td class="col6 centeralign">  -  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">SH compatible         </td><td class="col1 centeralign">  -  </td><td class="col2 centeralign">  -  </td><td class="col3 centeralign">  -  </td><td class="col4 centeralign">  -  </td><td class="col5 centeralign">  -  </td><td class="col6 centeralign">  X  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">POSIX® compatiblity </td><td class="col1 centeralign">  -  </td><td class="col2 centeralign">  -  </td><td class="col3 centeralign">  -  </td><td class="col4 centeralign">  -  </td><td class="col5 centeralign">  -  </td><td class="col6 centeralign">  X  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;3962-4368&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Quick startup file reference&quot;,&quot;hid&quot;:&quot;quick_startup_file_reference&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;3615-4370&quot;} -->
+<h2 class="sectionedit9" id="bash_run_modes">Bash run modes</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash run modes&quot;,&quot;hid&quot;:&quot;bash_run_modes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;4371-4399&quot;} -->
+<h3 class="sectionedit10" id="normal_bash">Normal Bash</h3>
+<div class="level3">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Normal Bash&quot;,&quot;hid&quot;:&quot;normal_bash&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;4400-4428&quot;} -->
+<h3 class="sectionedit11" id="posix_run_mode">POSIX run mode</h3>
+<div class="level3">
+
+<p>
+In POSIX® mode, Bash follows the POSIX® standard regarding behaviour and parsing (excerpt from a Bash maintainer&#039;s document):
+<pre class="code">Starting Bash with the `--posix&#039; command-line option or executing `set
+-o posix&#039; while Bash is running will cause Bash to conform more closely
+to the POSIX standard by changing the behavior to match that specified
+by POSIX in areas where the Bash default differs.
+
+When invoked as `sh&#039;, Bash enters POSIX mode after reading the startup
+files.
+
+The following lists what&#039;s changed when Bash is in `POSIX mode&#039;:
+
+  1. When a command in the hash table no longer exists, Bash will
+     re-search `$PATH&#039; to find the new location.  This is also
+     available with `shopt -s checkhash&#039;.
+
+  2. The message printed by the job control code and builtins when a job
+     exits with a non-zero status is `Done(status)&#039;.
+
+  3. The message printed by the job control code and builtins when a job
+     is stopped is `Stopped(SIGNAME)&#039;, where SIGNAME is, for example,
+     `SIGTSTP&#039;.
+
+  4. The `bg&#039; builtin uses the required format to describe each job
+     placed in the background, which does not include an indication of
+     whether the job is the current or previous job.
+
+  5. Reserved words appearing in a context where reserved words are
+     recognized do not undergo alias expansion.
+
+  6. The POSIX `PS1&#039; and `PS2&#039; expansions of `!&#039; to the history number
+     and `!!&#039; to `!&#039; are enabled, and parameter expansion is performed
+     on the values of `PS1&#039; and `PS2&#039; regardless of the setting of the
+     `promptvars&#039; option.
+
+  7. The POSIX startup files are executed (`$ENV&#039;) rather than the
+     normal Bash files.
+
+  8. Tilde expansion is only performed on assignments preceding a
+     command name, rather than on all assignment statements on the line.
+
+  9. The default history file is `~/.sh_history&#039; (this is the default
+     value of `$HISTFILE&#039;).
+
+ 10. The output of `kill -l&#039; prints all the signal names on a single
+     line, separated by spaces, without the `SIG&#039; prefix.
+
+ 11. The `kill&#039; builtin does not accept signal names with a `SIG&#039;
+     prefix.
+
+ 12. Non-interactive shells exit if FILENAME in `.&#039; FILENAME is not
+     found.
+
+ 13. Non-interactive shells exit if a syntax error in an arithmetic
+     expansion results in an invalid expression.
+
+ 14. Redirection operators do not perform filename expansion on the word
+     in the redirection unless the shell is interactive.
+
+ 15. Redirection operators do not perform word splitting on the word in
+     the redirection.
+
+ 16. Function names must be valid shell names.  That is, they may not
+     contain characters other than letters, digits, and underscores, and
+     may not start with a digit.  Declaring a function with an invalid
+     name causes a fatal syntax error in non-interactive shells.
+
+ 17. POSIX special builtins are found before shell functions during
+     command lookup.
+
+ 18. If a POSIX special builtin returns an error status, a
+     non-interactive shell exits.  The fatal errors are those listed in
+     the POSIX standard, and include things like passing incorrect
+     options, redirection errors, variable assignment errors for
+     assignments preceding the command name, etc.
+
+ 19. If `CDPATH&#039; is set, the `cd&#039; builtin will not implicitly append
+     the current directory to it.  This means that `cd&#039; will fail if no
+     valid directory name can be constructed from any of the entries in
+     `$CDPATH&#039;, even if the a directory with the same name as the name
+     given as an argument to `cd&#039; exists in the current directory.
+
+ 20. A non-interactive shell exits with an error status if a variable
+     assignment error occurs when no command name follows the assignment
+     statements.  A variable assignment error occurs, for example, when
+     trying to assign a value to a readonly variable.
+
+ 21. A non-interactive shell exits with an error status if the iteration
+     variable in a `for&#039; statement or the selection variable in a
+     `select&#039; statement is a readonly variable.
+
+ 22. Process substitution is not available.
+
+ 23. Assignment statements preceding POSIX special builtins persist in
+     the shell environment after the builtin completes.
+
+ 24. Assignment statements preceding shell function calls persist in the
+     shell environment after the function returns, as if a POSIX
+     special builtin command had been executed.
+
+ 25. The `export&#039; and `readonly&#039; builtin commands display their output
+     in the format required by POSIX.
+
+ 26. The `trap&#039; builtin displays signal names without the leading `SIG&#039;.
+
+ 27. The `trap&#039; builtin doesn&#039;t check the first argument for a possible
+     signal specification and revert the signal handling to the original
+     disposition if it is, unless that argument consists solely of
+     digits and is a valid signal number.  If users want to reset the
+     handler for a given signal to the original disposition, they
+     should use `-&#039; as the first argument.
+
+ 28. The `.&#039; and `source&#039; builtins do not search the current directory
+     for the filename argument if it is not found by searching `PATH&#039;.
+
+ 29. Subshells spawned to execute command substitutions inherit the
+     value of the `-e&#039; option from the parent shell.  When not in POSIX
+     mode, Bash clears the `-e&#039; option in such subshells.
+
+ 30. Alias expansion is always enabled, even in non-interactive shells.
+
+ 31. When the `alias&#039; builtin displays alias definitions, it does not
+     display them with a leading `alias &#039; unless the `-p&#039; option is
+     supplied.
+
+ 32. When the `set&#039; builtin is invoked without options, it does not
+     display shell function names and definitions.
+
+ 33. When the `set&#039; builtin is invoked without options, it displays
+     variable values without quotes, unless they contain shell
+     metacharacters, even if the result contains nonprinting characters.
+
+ 34. When the `cd&#039; builtin is invoked in LOGICAL mode, and the pathname
+     constructed from `$PWD&#039; and the directory name supplied as an
+     argument does not refer to an existing directory, `cd&#039; will fail
+     instead of falling back to PHYSICAL mode.
+
+ 35. When the `pwd&#039; builtin is supplied the `-P&#039; option, it resets
+     `$PWD&#039; to a pathname containing no symlinks.
+
+ 36. The `pwd&#039; builtin verifies that the value it prints is the same as
+     the current directory, even if it is not asked to check the file
+     system with the `-P&#039; option.
+
+ 37. When listing the history, the `fc&#039; builtin does not include an
+     indication of whether or not a history entry has been modified.
+
+ 38. The default editor used by `fc&#039; is `ed&#039;.
+
+ 39. The `type&#039; and `command&#039; builtins will not report a non-executable
+     file as having been found, though the shell will attempt to
+     execute such a file if it is the only so-named file found in
+     `$PATH&#039;.
+
+ 40. The `vi&#039; editing mode will invoke the `vi&#039; editor directly when
+     the `v&#039; command is run, instead of checking `$FCEDIT&#039; and
+     `$EDITOR&#039;.
+
+ 41. When the `xpg_echo&#039; option is enabled, Bash does not attempt to
+     interpret any arguments to `echo&#039; as options.  Each argument is
+     displayed, after escape characters are converted.
+
+
+There is other POSIX behavior that Bash does not implement by default
+even when in POSIX mode.  Specifically:
+
+  1. The `fc&#039; builtin checks `$EDITOR&#039; as a program to edit history
+     entries if `FCEDIT&#039; is unset, rather than defaulting directly to
+     `ed&#039;.  `fc&#039; uses `ed&#039; if `EDITOR&#039; is unset.
+
+  2. As noted above, Bash requires the `xpg_echo&#039; option to be enabled
+     for the `echo&#039; builtin to be fully conformant.
+
+
+Bash can be configured to be POSIX-conformant by default, by specifying
+the `--enable-strict-posix-default&#039; to `configure&#039; when building.</pre>
+
+</p>
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> help me to find out what breaks in POSIX® mode!
+</p>
+
+<p>
+<em class="u"><strong>The POSIX® mode can be switched on by:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> Bash starting as <code>sh</code> (the basename of <code>argv[0]</code> is <code>sh</code>)</div>
+</li>
+<li class="level1"><div class="li"> starting Bash with the commandline option <code>--posix</code></div>
+</li>
+<li class="level1"><div class="li"> on startup, the environment variable <a href="/syntax/shellvars#posixly_correct" class="wikilink1" title="syntax:shellvars">POSIXLY_CORRECT</a> is set</div>
+</li>
+<li class="level1"><div class="li"> the command <code>set -o posix</code></div>
+</li>
+</ul>
+
+<p>
+<em class="u"><strong>Tests for the POSIX® mode:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> the variable <a href="/syntax/shellvars#shellopts" class="wikilink1" title="syntax:shellvars">SHELLOPTS</a> contains <code>posix</code> in its list</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;POSIX run mode&quot;,&quot;hid&quot;:&quot;posix_run_mode&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;4429-12680&quot;} -->
+<h3 class="sectionedit12" id="restricted_shell">Restricted shell</h3>
+<div class="level3">
+
+<p>
+In restricted mode, Bash sets up (and runs) a shell environment that&#039;s far more controlled and limited than the standard shell mode. It acts like normal Bash with the following restrictions:
+</p>
+<ul>
+<li class="level1"><div class="li"> the <code>cd</code> command can&#039;t be used to change directories</div>
+</li>
+<li class="level1"><div class="li"> the variables <a href="/syntax/shellvars#shell" class="wikilink1" title="syntax:shellvars">SHELL</a>, <a href="/syntax/shellvars#path" class="wikilink1" title="syntax:shellvars">PATH</a>, <a href="/syntax/shellvars#env" class="wikilink1" title="syntax:shellvars">ENV</a> and <a href="/syntax/shellvars#bash_env" class="wikilink1" title="syntax:shellvars">BASH_ENV</a> can&#039;t be set or unset</div>
+</li>
+<li class="level1"><div class="li"> command names that contain a <code>/</code> (slash) can&#039;t be called (hence you&#039;re limited to <code>PATH</code>)</div>
+</li>
+<li class="level1"><div class="li"> filenames containing a <code>/</code> (slash) can&#039;t be specified as argument to the <code>source</code> or <code>.</code> builtin command</div>
+</li>
+<li class="level1"><div class="li"> filenames containing a <code>/</code> (slash) can&#039;t be specified as argument to the <code>-p</code> option of the <code>hash</code> builtin command</div>
+</li>
+<li class="level1"><div class="li"> function definitions are not inherited from the environment at shell startup</div>
+</li>
+<li class="level1"><div class="li"> the environment variable <a href="/syntax/shellvars#shellopts" class="wikilink1" title="syntax:shellvars">SHELLOPTS</a> is ignored at startup</div>
+</li>
+<li class="level1"><div class="li"> redirecting output using the <code>&gt;</code>, <code>&gt;|</code>, <code>&lt;&gt;</code>, <code>&gt;&amp;</code>, <code>&amp;&gt;</code>, and <code>&gt;&gt;</code> redirection operators isn&#039;t allowed</div>
+</li>
+<li class="level1"><div class="li"> the <code>exec</code> builtin command can&#039;t replace the shell with another process</div>
+</li>
+<li class="level1"><div class="li"> adding or deleting builtin commands with the <code>-f</code> and <code>-d</code> options to the enable builtin command is forbidden</div>
+</li>
+<li class="level1"><div class="li"> using the <code>enable</code> builtin command to enable disabled shell builtins doesn&#039;t work</div>
+</li>
+<li class="level1"><div class="li"> the <code>-p</code> option to the <code>command</code> builtin command doesn&#039;t work</div>
+</li>
+<li class="level1"><div class="li"> turning off restricted mode with <code>set +r</code> or <code>set +o restricted</code> is (of course) forbidden</div>
+</li>
+</ul>
+
+<p>
+The &quot;-r&quot; restrictions are turned on <strong>after</strong> Bash has read its startup files.
+</p>
+
+<p>
+When the command that is run is a shell script, then the restrictions are <strong>turned off</strong> for the (sub-)shell that runs that shell script.
+</p>
+
+<p>
+<em class="u"><strong>The restricted shell can be switched on by:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> calling Bash as <code>rbash</code> (the basename of <code>argv[0]</code> is <code>rbash</code>)</div>
+</li>
+<li class="level1"><div class="li"> calling Bash with the <code>-r</code> option</div>
+</li>
+<li class="level1"><div class="li"> calling Bash with the <code>--restricted</code> option</div>
+</li>
+</ul>
+
+<p>
+<em class="u"><strong>Tests for restricted mode:</strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> the special parameter <code>$-</code> contains the letter <code>r</code> (lowercase R)</div>
+</li>
+<li class="level1"><div class="li"> the shell option <code><a href="/internals/shell_options#restricted_shell" class="wikilink1" title="internals:shell_options">restricted_shell</a></code> is set and can be checked by the <code>shopt</code> builtin command</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Restricted shell&quot;,&quot;hid&quot;:&quot;restricted_shell&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:12,&quot;range&quot;:&quot;12681-&quot;} --></div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>mac</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="mac"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/mac?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns="/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/mac"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/mac"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/mac"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"mac","namespace":"","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="macappleosx">Mac/Apple/OSX</h1>
+<div class="level1">
+
+<p>
+Some oddities concerning the default bash installed on a typical macintosh computer (osX 10.6.8)
+<pre class="code">&gt; bash --version
+GNU bash, version 3.2.48(1)-release (x86_64-apple-darwin10.0)
+Copyright (C) 2007 Free Software Foundation, Inc.</pre>
+
+</p>
+
+<p>
+<strong>echo -e weirdness</strong>
+</p>
+
+<p>
+Something I came across today while testing some bash-4.2 scripts on a mac; to print some text in bold I used the ancient ansi escape sequence &lt;ESC&gt;[1m.
+</p>
+
+<p>
+Now printing this to the screen should&#039;ve been simply a question of doing a quick <code>echo -e &quot;\e[1m bold \e[0m &quot;</code> … even the installed 3.2 manpage said it would. 
+It didn&#039;t though…
+<pre class="code">&gt; echo -e &quot;\e[1m bold \e[0m&quot;
+\e[1m bold \e[0m</pre>
+
+</p>
+
+<p>
+WTH? I thought as I tried some other escapes ( <code>\n \t \a</code> ) and without problem the newline, the tab and the sysbeep/bell sounded.
+</p>
+
+<p>
+<em>Ok</em>, I thought, <em>maybe escape is disabled on some level</em>.. but just out of curiosity, and a healthy dose of boredom, I tried to
+<pre class="code"> echo -e &quot;So what if I \033[1m give the octal value of \e033[0m escape&quot;</pre>
+
+and Lo-and-Behold, it printed it proper: 
+</p>
+
+<p>
+<code>So what if I <strong>give the octal value of </strong> escape</code>
+</p>
+
+<p>
+Now I started getting REALLY confused…. why block the one (\e) and not the other (\033)…
+</p>
+
+<p>
+But that wasn&#039;t even the annoying bit, even though my bash refuses to acknowledge the existence of \e in a <code>echo -e</code> double quoted string, 
+</p>
+
+<p>
+It has <strong>no</strong> problem giving me my beloved \e when I use a $&#039;string&#039;
+</p>
+
+<p>
+That&#039;s right:
+<pre class="code">echo $&#039; why dont u \e[1m W0RK \e[0m&#039;</pre>
+
+gave me nice and proper 
+</p>
+
+<p>
+<code>why dont u <strong>W0RK</strong> </code>
+</p>
+
+<p>
+I guess someone at apple didn&#039;t like consistency too much or something. ^^
+</p>
+
+<p>
+If anyone knows which setting, flag, version or environment variable van have this effect.. 
+And/or how to fix it, please <strong>DO</strong> let me know. :)
+</p>
+
+<p>
+/rant
+</p>
+
+<p>
+Krim
+</p>
+
+<p>
+–
+Don&#039;t even get me started about <code>printf &quot;%(%Y-%m-%d)T&quot; -1</code>
+</p>
+
+</div>
+</div>
+</body>
+</html>

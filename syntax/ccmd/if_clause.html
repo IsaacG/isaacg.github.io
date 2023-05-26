@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:ccmd:if_clause</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,ccmd,if_clause"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/ccmd/if_clause?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:ccmd"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/ccmd/if_clause"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/ccmd/if_clause"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/ccmd/if_clause"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:ccmd';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:ccmd:if_clause","namespace":"syntax:ccmd","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_if-clause">The if-clause</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#operation">Operation</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_if-clause">The if-clause</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The if-clause&quot;,&quot;hid&quot;:&quot;the_if-clause&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-29&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">if &lt;LIST&gt;; then
+  &lt;LIST&gt;
+fi</pre>
+
+<pre class="code">if &lt;LIST&gt;; then
+  &lt;LIST&gt;
+else
+  &lt;LIST&gt;
+fi</pre>
+
+<pre class="code">if &lt;LIST&gt;; then
+  &lt;LIST&gt;
+elif &lt;LIST&gt;; then
+  &lt;LIST&gt;
+else
+  &lt;LIST&gt;
+fi</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;30-235&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>if</code>-clause can control the script&#039;s flow (what&#039;s executed) by looking at the exit codes of other commands.
+</p>
+
+<p>
+All commandsets <code>&lt;LIST&gt;</code> are interpreted as <a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> command lists</a>, thus they can contain the whole palette from <a href="/syntax/basicgrammar#simple_commands" class="wikilink1" title="syntax:basicgrammar"> simple commands</a> over <a href="/syntax/basicgrammar#pipelines" class="wikilink1" title="syntax:basicgrammar"> pipelines</a> to <a href="/syntax/basicgrammar#compound_commands" class="wikilink1" title="syntax:basicgrammar"> compound commands</a> (and their combination) as condition.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:3,&quot;range&quot;:&quot;236-725&quot;} -->
+<h3 class="sectionedit4" id="operation">Operation</h3>
+<div class="level3">
+
+<p>
+The <strong><code>if &lt;LIST&gt;</code></strong> commands are executed. If the exit code was 0 (TRUE) then the <strong><code>then &lt;LIST&gt;</code></strong> commands are executed, otherwise the <strong><code>elif &lt;LIST&gt;</code></strong> commands and their <strong><code>then &lt;LIST&gt;</code></strong> statements are executed in turn, if all down to the last one fails, the <strong><code>else &lt;LIST&gt;</code></strong> commands are executed, if one of the <code>elif</code> succeeds, its <code>then</code> thread is executed, and the <code>if</code>-clause finishes.
+</p>
+
+<p>
+Basically, the <code>elif</code> clauses are just additional conditions to test (like a chain of conditions) if the very first condition failed. If one of the conditions fails, the <code>else</code> commands are executed, otherwise the commands of the condition that succeeded.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Operation&quot;,&quot;hid&quot;:&quot;operation&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:4,&quot;range&quot;:&quot;726-1421&quot;} -->
+<h2 class="sectionedit5" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+<strong>Check if a specific user exists in /etc/passwd <img src="/lib/images/smileys/icon_smile.gif" class="icon" alt=":-)" /></strong>
+<pre class="code">if grep ^myuser: /etc/passwd &gt;/dev/null 2&gt;&amp;1; then
+  echo &quot;Yes, it seems I&#039;m real&quot;
+else
+  echo &quot;Uh - am I a ghost?&quot;
+fi</pre>
+
+</p>
+
+<p>
+<strong>Mount with check</strong>
+<pre class="code">if ! mount /mnt/backup &gt;/dev/null 2&gt;&amp;1; then
+  echo &quot;FATAL: backup mount failed&quot; &gt;&amp;2
+  exit 1
+fi</pre>
+
+</p>
+
+<p>
+<strong>Multiple commands as condition</strong>
+</p>
+
+<p>
+It&#039;s perfectly valid to do:
+<pre class="code">if echo &quot;I&#039;m testing!&quot;; [ -e /some/file ]; then
+  ...
+fi</pre>
+
+The exit code that dictates the condition&#039;s value is the exit code of the very last command executed in the condition-list (here: The <code>[ -e /some/file ]</code>)
+</p>
+
+<p>
+<strong>A complete pipe as condition</strong>
+</p>
+
+<p>
+A complete pipe can also be used as condition. It&#039;s very similar to the example above (multiple commands):
+<pre class="code">if echo &quot;Hello world!&quot; | grep -i hello &gt;/dev/null 2&gt;&amp;1; then
+  echo &quot;You just said &#039;hello&#039;, yeah?&quot;
+fi</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;1422-2319&quot;} -->
+<h2 class="sectionedit6" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:6,&quot;range&quot;:&quot;2320-2360&quot;} -->
+<h2 class="sectionedit7" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/commands/classictest" class="wikilink1" title="commands:classictest"> the classic test command</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:7,&quot;range&quot;:&quot;2361-&quot;} --></div>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:let</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,let"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/let?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/let"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/let"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/let"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:let","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_let_builtin_command">The let builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_let_builtin_command">The let builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The let builtin command&quot;,&quot;hid&quot;:&quot;the_let_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-39&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">let arg [arg ...]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;40-95&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>let</code> builtin command evaluates each supplied word from left to right as an <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expression</a> and returns an exit code according to the truth value of the rightmost expression.
+</p>
+<ul>
+<li class="level1"><div class="li"> 0 (TRUE) when <code>arg</code> evaluated to not 0 (arithmetic &quot;true&quot;)</div>
+</li>
+<li class="level1"><div class="li"> 1 (FALSE) when <code>arg</code> evaluated to 0 (arithmetic &quot;false&quot;)</div>
+</li>
+</ul>
+
+<p>
+For this return code mapping, please see <a href="/syntax/arith_expr#arithmetic_expressions_and_return_codes" class="wikilink1" title="syntax:arith_expr"> this section</a>. They work in the same way as <code>((</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;96-632&quot;} -->
+<h2 class="sectionedit4" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+<code>let</code> is very similar to <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> ((</a> - the only difference being <code>let</code> is a builtin (simple command), and <code>((</code> is a compound command. The arguments to <code>let</code> are therefore subject to all the same expansions and substitutions as any other simple command - requiring proper quoting and escaping - whereas the contents of <code>((</code> aren&#039;t subject to <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> word-splitting</a> or <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> pathname expansion</a> (almost never desirable for arithmetic). For this reason, <strong>the <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic compound command</a> should generally be preferred over <code>let</code></strong>.
+</p>
+
+<p>
+<pre class="code">$ let &#039;b = a&#039; &quot;(a += 3) + $((a = 1)), b++&quot;
+$ echo &quot;$a - $b - $?&quot;
+4 - 2 - 0</pre>
+
+</p>
+
+<p>
+Is equivalent to the <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic evaluation compound command</a>:
+</p>
+
+<p>
+<pre class="code">$ (( b = a, (a += 3) + $((a = 1)), b++ ))
+$ echo &quot;$a - $b - $?&quot;
+4 - 2 - 0</pre>
+
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_info plugin_wrap">
+<p>
+Remember that inside arithmetic evaluation contexts, all other expansions are processed as usual (from left-to-right), and the resulting text is evaluated as an arithmetic expression. Arithmetic already has a way to control precedence using parentheses, so it&#039;s very rare to need to nest arithmetic expansions within one another. It&#039;s used above only to illustrate how this precedence works.
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+Unlike <code>((</code>, being a simple command <code>let</code> has its own environment. In Bash, built-ins that can set variables process any arithmetic under their own environment, which makes the variable effectively &quot;local&quot; to the builtin unless the variable is also set or modified by the builtin. This differs in other shells, such as ksh93, where environment assignments to regular builtins are always local even if the variable is modified by the builtin.
+</p>
+
+<p>
+<pre class="code"> ~ $ ( y=1+1 let x=y; declare -p x y )
+declare -- x=&quot;2&quot;
+bash: declare: y: not found
+
+ ~ $ ( y=1+1 let x=y++; declare -p x y )
+declare -- x=&quot;2&quot;
+declare -- y=&quot;3&quot;</pre>
+
+</p>
+
+<p>
+This can be useful in certain situations where a temporary variable is needed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;633-2745&quot;} -->
+<h2 class="sectionedit7" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> the <code>let</code> command is not specified by POSIX®. The portable alternative is: <pre class="code">[ &quot;$(( &lt;EXPRESSION&gt; ))&quot; -ne 0 ]</pre>
+. To make portable scripts simpler and cleaner, <code>let</code> can be defined as: <pre class="code"># POSIX
+let() {
+    IFS=, command eval test &#039;$(($*))&#039; -ne 0
+}</pre>
+ Aside from differences in supported arithmetic features, this should be identical to the Bash/Ksh <code>let</code>.</div>
+</li>
+<li class="level1"><div class="li"> It seems to be a common misunderstanding that <code>let</code> has some legacy purpose. Both <code>let</code> and <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> ((...))</a> were ksh88 features and almost identical in terms of portability as everything that inherited one also tended to get the other. Don&#039;t choose <code>let</code> over <code>((</code> expecting it to work in more places.</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/expr.html#tag_20_42" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/expr.html#tag_20_42" rel="nofollow"> expr(1)</a> is a command one is likely to come across sooner or later. While it is more &quot;standard&quot; than <code>let</code>, the above should always be preferred. Both <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expansion</a>s and the <code>[</code> test operator are specified by POSIX® and satisfy almost all of expr&#039;s use-cases. Unlike <code>let</code>, <code>expr</code> cannot assign directly to bash variables but instead returns a result on stdout. <code>expr</code> takes each operator it recognizes as a separate word and then concatenates them into a single expression that&#039;s evaluated according to it&#039;s own rules (which differ from shell arithmetic). <code>let</code> parses each word it recieves on its own and evaluates it as an expression without generating any output other than a return code.</div>
+</li>
+<li class="level1"><div class="li"> For unknown reasons, <code>let</code> is one of the Bash commands with special parsing for arguments formatted like compound array assignments. See: <a href="/commands/builtin/eval#portability_considerations" class="wikilink1" title="commands:builtin:eval"> eval</a> for details. There are no known practical uses for this. Parentheses are treated as grouping operators and compound assignment is not possible by arithmetic expressions.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;2746-4711&quot;} -->
+<h2 class="sectionedit8" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> arithmetic expansion</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expressions</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic evaluation compound command</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:8,&quot;range&quot;:&quot;4712-&quot;} --></div>
+</body>
+</html>

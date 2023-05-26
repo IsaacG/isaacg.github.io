@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:kill</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,kill"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/kill?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/kill"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/kill"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/kill"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:kill","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_kill_builtin_command">The kill builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#options">Options</a></div></li>
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#list_supported_signals">List supported signals</a></div></li>
+<li class="level3"><div class="li"><a href="#send_kill_to_a_process_id">Send KILL to a process ID</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_kill_builtin_command">The kill builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The kill builtin command&quot;,&quot;hid&quot;:&quot;the_kill_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-40&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">kill [-s SIGNAL | -n SIGNALNUMBER | -SIGNAL] PID|JOB</pre>
+
+<pre class="code">kill -l|-L [SIGNAL...]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;41-164&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>kill</code> command is used to send signals to processes specified by their <code>PID</code> or their <code>JOB</code>-specification.
+</p>
+
+<p>
+The signal(s) to be specified can have the following formats:
+</p>
+<ul>
+<li class="level1"><div class="li"> Numerical: The signal is specified using its constant numeric value. Be aware that not all systems have identical numbers for the signals.</div>
+</li>
+<li class="level1"><div class="li"> Symbolic (long): The signal is specified using the same name that is used for the constant/macro in the C <abbr title="Application Programming Interface">API</abbr> (<code>SIG&lt;name&gt;</code>)</div>
+</li>
+<li class="level1"><div class="li"> Symbolic (short): The signal is specified using the name from the C <abbr title="Application Programming Interface">API</abbr> without the <code>SIG</code>-prefix (<code>&lt;name&gt;</code>)</div>
+</li>
+</ul>
+
+<p>
+Without any specified signal, the command sends the <code>SIGTERM</code>-signal.
+</p>
+
+<p>
+The <code>kill</code> command is a Bash builtin command instead of relying on the external <code>kill</code> command of the operating system to
+</p>
+<ul>
+<li class="level1"><div class="li"> be able to use shell job specifications instead of Unix process IDs</div>
+</li>
+<li class="level1"><div class="li"> be able to send signals (&quot;kill something&quot;) also, when your process limit is reached</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;165-1118&quot;} -->
+<h3 class="sectionedit4" id="options">Options</h3>
+<div class="level3">
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Option  </th><th class="col1 leftalign">Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>-s SIGNAL</code>  </td><td class="col1 leftalign">specifies the signal to send  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>-n SIGNALNUMBER</code>  </td><td class="col1 leftalign">specifies the signal to send  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>-SIGNAL</code> </td><td class="col1 leftalign">specifies the signal to send    </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"><code>-l [SIGNAL…]</code>  </td><td class="col1 leftalign">Lists supported/known signal numbers and their symbolic name. If <code>SIGNAL</code> is given, only list this signal, translated (if a number is given the symbolic name is printed, and vice versa)   </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"><code>-L [SIGNAL…]</code>  </td><td class="col1 leftalign">Same as <code>-l [SIGNAL]</code> (compatiblity option)   </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;1138-1600&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;1119-1601&quot;} -->
+<h3 class="sectionedit6" id="return_status">Return status</h3>
+<div class="level3">
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Status  </th><th class="col1 leftalign">Reason  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">0       </td><td class="col1 leftalign">no error/success    </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">!=0     </td><td class="col1 leftalign">invalid option  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">!=0     </td><td class="col1 leftalign">invalid signal specification  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">!=0     </td><td class="col1 leftalign">error returned by the system function (e.g. insufficient permissions to send to a specific process)  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;1627-1861&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;1602-1862&quot;} -->
+<h2 class="sectionedit8" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;1863-1884&quot;} -->
+<h3 class="sectionedit9" id="list_supported_signals">List supported signals</h3>
+<div class="level3">
+
+<p>
+<pre class="code">kill -l</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;List supported signals&quot;,&quot;hid&quot;:&quot;list_supported_signals&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:9,&quot;range&quot;:&quot;1885-1942&quot;} -->
+<h3 class="sectionedit10" id="send_kill_to_a_process_id">Send KILL to a process ID</h3>
+<div class="level3">
+
+<p>
+<pre class="code">kill -9 12345</pre>
+
+</p>
+
+<p>
+<pre class="code">kill -KILL 12345</pre>
+
+</p>
+
+<p>
+<pre class="code">kill -SIGKILL 12345</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Send KILL to a process ID&quot;,&quot;hid&quot;:&quot;send_kill_to_a_process_id&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:10,&quot;range&quot;:&quot;1943-2078&quot;} -->
+<h2 class="sectionedit11" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> POSIX(R) and ISO C only standardize symbolic signal names (no numbers) and a default action</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:11,&quot;range&quot;:&quot;2079-2215&quot;} -->
+<h2 class="sectionedit12" id="see_also">See also</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:12,&quot;range&quot;:&quot;2216-&quot;} --></div>
+</body>
+</html>

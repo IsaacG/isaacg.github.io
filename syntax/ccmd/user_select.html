@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:ccmd:user_select</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,ccmd,user_select"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/ccmd/user_select?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:ccmd"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/ccmd/user_select"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/ccmd/user_select"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/ccmd/user_select"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:ccmd';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:ccmd:user_select","namespace":"syntax:ccmd","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#user_selections">User selections</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="user_selections">User selections</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;User selections&quot;,&quot;hid&quot;:&quot;user_selections&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-31&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">select &lt;NAME&gt;; do
+  &lt;LIST&gt;
+done</pre>
+
+</p>
+
+<p>
+<pre class="code">select &lt;NAME&gt; in &lt;WORDS&gt;; do
+  &lt;LIST&gt;
+done</pre>
+
+</p>
+
+<p>
+<pre class="code"># alternative, historical and undocumented syntax
+
+select &lt;NAME&gt;
+{
+  &lt;LIST&gt;
+}
+
+select &lt;NAME&gt; in &lt;WORDS&gt;
+{
+  &lt;LIST&gt;
+}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;32-292&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+This compound command provides a kind of menu. The user is prompted with a <em>numbered list</em> of the given words, and is asked to input the index number of the word. If a word was selected, the variable <code>&lt;NAME&gt;</code> is set to this word, and the <a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> list</a> <code>&lt;LIST&gt;</code> is executed.
+</p>
+
+<p>
+If no <code>in &lt;WORDS&gt;</code> is given, then the positional parameters are taken as words (as if <code>in &quot;$@&quot;</code> was written).
+</p>
+
+<p>
+Regardless of the functionality, the <em>number</em> the user entered is saved in the variable <code>REPLY</code>.
+</p>
+
+<p>
+Bash knows an alternative syntax for the <code>select</code> command, enclosing the loop body in <code>{...}</code> instead of <code>do ... done</code>:
+<pre class="code">select x in 1 2 3
+{
+  echo $x
+}</pre>
+
+This syntax is <strong>not documented</strong> and should not be used. I found the parser definitions for it in 1.x code, and in modern 4.x code. My guess is that it&#039;s there for compatiblity reasons. This syntax is not specified by POSIX(R).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:3,&quot;range&quot;:&quot;293-1274&quot;} -->
+<h2 class="sectionedit4" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+<pre class="code bash"><span class="co0"># select &lt;NAME&gt; in &lt;WORDS&gt;; do</span>
+<span class="co0">#   &lt;LIST&gt;</span>
+<span class="co0"># done</span>
+&nbsp;
+&nbsp;
+<span class="co0">#   meaning    e.g.:</span>
+&nbsp;
+<span class="kw2">clear</span>
+<span class="kw3">echo</span>
+<span class="kw3">echo</span>  hit number key <span class="nu0">1</span> <span class="nu0">2</span> or <span class="nu0">3</span> <span class="kw1">then</span> ENTER-key
+<span class="kw3">echo</span>  ENTER alone is an empty choice and will loop endlessly <span class="kw1">until</span> Ctrl-C or Ctrl-D
+<span class="kw3">echo</span>
+&nbsp;
+<span class="kw1">select</span> OPTIONX <span class="kw1">in</span> beer whiskey <span class="kw2">wine</span> liquor ; <span class="kw1">do</span>
+&nbsp;
+  <span class="kw3">echo</span>  you ordered a   <span class="re1">$OPTIONX</span>
+  <span class="kw3">break</span> <span class="co0"># break avoids endless loop -- second line to be executed always</span>
+&nbsp;
+<span class="kw1">done</span>
+&nbsp;
+<span class="co0"># place some   if else fi    business here</span>
+<span class="co0"># and explain how it makes sense that $OPTIONX is red but OPTIONX is black </span>
+<span class="co0"># even though both are variables</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;1275-1852&quot;} -->
+<h2 class="sectionedit5" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:5,&quot;range&quot;:&quot;1853-1892&quot;} -->
+<h2 class="sectionedit6" id="see_also">See also</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:6,&quot;range&quot;:&quot;1893-&quot;} --></div>
+</body>
+</html>

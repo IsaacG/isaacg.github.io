@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:processtree</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,processtree,bash,shell,scripting,processes,pipes,variables,environment"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/processtree?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/processtree"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/processtree"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/processtree"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:processtree","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#bash_and_the_process_tree">Bash and the process tree</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#the_process_tree">The process tree</a></div></li>
+<li class="level2"><div class="li"><a href="#executing_programs">Executing programs</a></div></li>
+<li class="level2"><div class="li"><a href="#bash_playing_with_pipes">Bash playing with pipes</a></div></li>
+<li class="level2"><div class="li"><a href="#actions_that_create_a_subshell">Actions that create a subshell</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#executing_commands">Executing commands</a></div></li>
+<li class="level3"><div class="li"><a href="#pipes">Pipes</a></div></li>
+<li class="level3"><div class="li"><a href="#explicit_subshell">Explicit subshell</a></div></li>
+<li class="level3"><div class="li"><a href="#command_substitution">Command substitution</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="bash_and_the_process_tree">Bash and the process tree</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash and the process tree&quot;,&quot;hid&quot;:&quot;bash_and_the_process_tree&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-114&quot;} -->
+<h2 class="sectionedit2" id="the_process_tree">The process tree</h2>
+<div class="level2">
+
+<p>
+The processes in UNIX® are - unlike other systems - <strong>organized as a tree</strong>. Every process has a parent process that started, or is responsible, for it. Every process has its own <strong>context memory</strong> (Not the memory where the process stores its data, rather, the memory where data is stored that doesn&#039;t directly belong to the process, but is needed to run the process) i.e. <em class="u"><strong>The environment</strong></em>.
+</p>
+
+<p>
+Every process has its <strong>own</strong> environment space.
+</p>
+
+<p>
+The environment stores, among other things, data that&#039;s useful to us, the <strong>environment variables</strong>. These are strings in common <code>NAME=VALUE</code> form, but they are not related to shell variables. A variable named <code>LANG</code>, for example, is used by every program that looks it up in its environment to determinate the current locale.
+</p>
+
+<p>
+<strong><em class="u">Attention:</em></strong> A variable that is set, like with <code>MYVAR=Hello</code>, is <strong>not</strong> automatically part of the environment. You need to put it into the environment with the bash builtin command <code>export</code>:
+<pre class="code">export MYVAR</pre>
+
+Common system variables like <a href="/syntax/shellvars#path" class="wikilink1" title="syntax:shellvars">PATH</a> or <a href="/syntax/shellvars#home" class="wikilink1" title="syntax:shellvars">HOME</a> are usually part of the environment (as set by login scripts or programs).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The process tree&quot;,&quot;hid&quot;:&quot;the_process_tree&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;115-1325&quot;} -->
+<h2 class="sectionedit3" id="executing_programs">Executing programs</h2>
+<div class="level2">
+
+<p>
+All the diagrams of the process tree use names like &quot;<code>xterm</code>&quot; or &quot;<code>bash</code>&quot;, but that&#039;s just to make it easier to understand what&#039;s going on, it doesn&#039;t mean those processes are actually executed.
+</p>
+
+<p>
+Let&#039;s take a short look at what happens when you &quot;execute a program&quot; from the Bash prompt, a program like &quot;ls&quot;:
+</p>
+
+<p>
+<pre class="code">$ ls</pre>
+
+</p>
+
+<p>
+Bash will now perform <strong>two steps</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> It will make a copy of itself</div>
+</li>
+<li class="level1"><div class="li"> The copy will replace itself with the &quot;ls&quot; program</div>
+</li>
+</ul>
+
+<p>
+The copy of Bash will inherit the environment from the &quot;main Bash&quot; process: All environment variables will also be copied to the new process. This step is called <strong>forking</strong>.
+</p>
+
+<p>
+For a short moment, you have a process tree that might look like this…
+<pre class="code">xterm ----- bash ----- bash(copy)</pre>
+
+…and after the &quot;second Bash&quot; (the copy) replaces itself with the <code>ls</code> program (the copy execs it), it might look like
+<pre class="code">xterm ----- bash ----- ls</pre>
+
+</p>
+
+<p>
+If everything was okay, the two steps resulted in one program being run. The copy of the environment from the first step (forking) becomes the environment for the final running program (in this case, <code>ls</code>).
+</p>
+
+<p>
+<em class="u"><strong>What is so important about it?</strong></em> In our example, what the program <code>ls</code> does inside its own environment, it can&#039;t affect the environment of its parent process (in this case, <code>bash</code>). The environment was copied when ls was executed. Nothing is &quot;copied back&quot; to the parent environment when <code>ls</code> terminates.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Executing programs&quot;,&quot;hid&quot;:&quot;executing_programs&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;1326-2806&quot;} -->
+<h2 class="sectionedit4" id="bash_playing_with_pipes">Bash playing with pipes</h2>
+<div class="level2">
+
+<p>
+Pipes are a very powerful tool. You can connect the output of one process to the input of another process. We won&#039;t delve into piping at this point, we just want to see how it looks in the process tree. Again, we execute some commands, this time, we&#039;ll run <code>ls</code> and <code>grep</code>:
+</p>
+
+<p>
+<pre class="code">$ ls | grep myfile</pre>
+
+</p>
+
+<p>
+It results in a tree like this:
+<pre class="code">                   +-- ls
+xterm ----- bash --|
+                   +-- grep</pre>
+
+</p>
+
+<p>
+Note once again, <code>ls</code> can&#039;t influence the <code>grep</code> environment, <code>grep</code> can&#039;t influence the <code>ls</code> environment, and neither <code>grep</code> nor <code>ls</code> can influence the <code>bash</code> environment.
+</p>
+
+<p>
+<em class="u"><strong>How is that related to shell programming?!?</strong></em>
+</p>
+
+<p>
+Well, imagine some Bash code that reads data from a pipe. For example, the internal command <code>read</code>, which reads data from <em>stdin</em> and puts it into a variable. We run it in a loop here to count input lines:
+</p>
+
+<p>
+<pre class="code">counter=0
+
+cat /etc/passwd | while read; do ((counter++)); done
+echo &quot;Lines: $counter&quot;</pre>
+
+</p>
+
+<p>
+What? It&#039;s 0? Yes! The number of lines might not be 0, but the variable <code>$counter</code> still is 0. Why?
+Remember the diagram from above? Rewriting it a bit, we have:
+<pre class="code">                   +-- cat /etc/passwd
+xterm ----- bash --|
+                   +-- bash (while read; do ((counter++)); done)</pre>
+
+</p>
+
+<p>
+See the relationship? The forked Bash process will count the lines like a charm. It will also set the variable <code>counter</code> as directed. But if everything ends, this extra process will be terminated - <strong>your &quot;counter&quot; variable is gone.</strong> You see a 0 because in the main shell it was 0, and wasn&#039;t changed by the child process!
+</p>
+
+<p>
+<em class="u"><strong>So, how do we count the lines?</strong></em>
+Easy: <strong>Avoid the subshell.</strong> The details don&#039;t matter, the important thing is the shell that sets the counter must be the &quot;main shell&quot;. For example:
+</p>
+
+<p>
+<pre class="code">counter=0
+
+while read; do ((counter++)); done &lt;/etc/passwd
+echo &quot;Lines: $counter&quot;</pre>
+
+</p>
+
+<p>
+It&#039;s nearly self-explanatory. The <code>while</code> loop runs in the <strong>current shell</strong>, the counter is incremented in the <strong>current shell</strong>, everything vital happens in the <strong>current shell</strong>, also the <code>read</code> command sets the variable <code>REPLY</code> (the default if nothing is given), though we don&#039;t use it here.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash playing with pipes&quot;,&quot;hid&quot;:&quot;bash_playing_with_pipes&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;2807-5057&quot;} -->
+<h2 class="sectionedit5" id="actions_that_create_a_subshell">Actions that create a subshell</h2>
+<div class="level2">
+
+<p>
+Bash creates <strong>subshells</strong> or <strong>subprocesses</strong> on various actions it performs:
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Actions that create a subshell&quot;,&quot;hid&quot;:&quot;actions_that_create_a_subshell&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:5,&quot;range&quot;:&quot;5058-5181&quot;} -->
+<h3 class="sectionedit6" id="executing_commands">Executing commands</h3>
+<div class="level3">
+
+<p>
+As shown above, Bash will create subprocesses everytime it executes commands. That&#039;s nothing new.
+</p>
+
+<p>
+But if your command is a subprocess that sets variables you want to use in your main script, that won&#039;t work.
+</p>
+
+<p>
+For exactly this purpose, there&#039;s the <code>source</code> command (also: the <em>dot</em> <code>.</code> command). Source doesn&#039;t execute the script, it imports the other script&#039;s code into the current shell:
+<pre class="code">source ./myvariables.sh
+# equivalent to:
+. ./myvariables.sh</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Executing commands&quot;,&quot;hid&quot;:&quot;executing_commands&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:6,&quot;range&quot;:&quot;5182-5683&quot;} -->
+<h3 class="sectionedit7" id="pipes">Pipes</h3>
+<div class="level3">
+
+<p>
+The last big section was about pipes, so no example here.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Pipes&quot;,&quot;hid&quot;:&quot;pipes&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:7,&quot;range&quot;:&quot;5684-5758&quot;} -->
+<h3 class="sectionedit8" id="explicit_subshell">Explicit subshell</h3>
+<div class="level3">
+
+<p>
+If you group commands by enclosing them in parentheses, these commands are run inside a subshell:
+<pre class="code">(echo PASSWD follows; cat /etc/passwd; echo GROUP follows; cat /etc/group) &gt;output.txt</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Explicit subshell&quot;,&quot;hid&quot;:&quot;explicit_subshell&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:8,&quot;range&quot;:&quot;5759-5985&quot;} -->
+<h3 class="sectionedit9" id="command_substitution">Command substitution</h3>
+<div class="level3">
+
+<p>
+With <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> command substitution</a> you re-use the output of another command as text in your command line, for example to set a variable. The other command is run in a subshell:
+<pre class="code">number_of_users=$(cat /etc/passwd | wc -l)</pre>
+
+Note that, in this example,  a second subshell was created by using a pipe in the command substitution:
+<pre class="code">                                            +-- cat /etc/passwd
+xterm ----- bash ----- bash (cmd. subst.) --|
+                                            +-- wc -l</pre>
+
+</p>
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> to be continued
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Command substitution&quot;,&quot;hid&quot;:&quot;command_substitution&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:9,&quot;range&quot;:&quot;5986-&quot;} --></div>
+</body>
+</html>

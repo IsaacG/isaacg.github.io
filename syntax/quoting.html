@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:quoting</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,quoting,bash,shell,scripting,quoting,quotes,escape,backslash,marks,singlequotes,doublequotes,single,double"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/quoting?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/quoting"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/quoting"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/quoting"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:quoting","namespace":"syntax","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#quotes_and_escaping">Quotes and escaping</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#per-character_escaping">Per-character escaping</a></div></li>
+<li class="level2"><div class="li"><a href="#weak_quoting">Weak quoting</a></div></li>
+<li class="level2"><div class="li"><a href="#strong_quoting">Strong quoting</a></div></li>
+<li class="level2"><div class="li"><a href="#ansi_c_like_strings">ANSI C like strings</a></div></li>
+<li class="level2"><div class="li"><a href="#i18nl10n">I18N/L10N</a></div></li>
+<li class="level2"><div class="li"><a href="#common_mistakes">Common mistakes</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#string_lists_in_for-loops">String lists in for-loops</a></div></li>
+<li class="level3"><div class="li"><a href="#working_out_the_test-command">Working out the test-command</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="quotes_and_escaping">Quotes and escaping</h1>
+<div class="level1">
+
+<p>
+Quoting and escaping are important, as they influence the way Bash acts upon your input. There are three recognized types:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>per-character escaping</strong> using a backslash: <code>\$stuff</code></div>
+</li>
+<li class="level1"><div class="li"> <strong>weak quoting</strong> with double-quotes: <code>&quot;stuff&quot;</code></div>
+</li>
+<li class="level1"><div class="li"> <strong>strong quoting</strong> with single-quotes: <code>&#039;stuff&#039;</code></div>
+</li>
+</ul>
+
+<p>
+All three forms have the very same purpose: <strong>They give you general control over parsing, expansion and expansion results.</strong>
+</p>
+
+<p>
+Besides these basic variants, there are some special quoting methods (like interpreting ANSI-C escapes in a string) you&#039;ll meet below.
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> <strong>ATTENTION</strong> <img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> The quote characters (<code>&quot;</code>, double quote and <code>&#039;</code>, single quote) are a syntax element that influence parsing. It is not related to the quote characters passed as text to the command line! The syntax quotes are removed before the command is called! Example:
+<pre class="code">### NO NO NO: this passes three strings:
+###      (1)  &quot;my
+###      (2)  multiword
+###      (3)  argument&quot;
+MYARG=&quot;\&quot;my multiword argument\&quot;&quot;
+somecommand $MYARG
+
+### THIS IS NOT (!) THE SAME AS ###
+command &quot;my multiword argument&quot;
+
+### YOU NEED ###
+MYARG=&quot;my multiword argument&quot;
+command &quot;$MYARG&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Quotes and escaping&quot;,&quot;hid&quot;:&quot;quotes_and_escaping&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1329&quot;} -->
+<h2 class="sectionedit2" id="per-character_escaping">Per-character escaping</h2>
+<div class="level2">
+
+<p>
+Per-character escaping is useful in on expansions and substitutions. In general, a character that has a special meaning to Bash, like the dollar-sign (<code>$</code>) can be masked to not have a special meaning using the backslash:
+</p>
+
+<p>
+<pre class="code">echo \$HOME is set to \&quot;$HOME\&quot;</pre>
+
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>\$HOME</code> won&#039;t expand because it&#039;s not in variable-expansion syntax anymore</div>
+</li>
+<li class="level1"><div class="li"> The backslash changes the quotes into literals - otherwise Bash would interpret them</div>
+</li>
+</ul>
+
+<p>
+The sequence <code>\&lt;newline&gt;</code> (an unquoted backslash, followed by a <code>&lt;newline&gt;</code> character) is interpreted as <strong>line continuation</strong>. It is removed from the input stream and thus effectively ignored. Use it to beautify your code:
+<pre class="code"># escapestr_sed()
+# read a stream from stdin and escape characters in text that could be interpreted as
+# special characters by sed
+escape_sed() {
+ sed \
+  -e &#039;s/\//\\\//g&#039; \
+  -e &#039;s/\&amp;/\\\&amp;/g&#039;
+}</pre>
+
+</p>
+
+<p>
+The backslash can be used to mask every character that has a special meaning to bash. <em class="u">Exception:</em> Inside a single-quoted string (see below).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Per-character escaping&quot;,&quot;hid&quot;:&quot;per-character_escaping&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:2,&quot;range&quot;:&quot;1330-2397&quot;} -->
+<h2 class="sectionedit3" id="weak_quoting">Weak quoting</h2>
+<div class="level2">
+
+<p>
+Inside a weak-quoted string there&#039;s <strong>no special interpretion of</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> spaces as word-separators (on inital command line splitting and on <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> word splitting</a>!)</div>
+</li>
+<li class="level1"><div class="li"> single-quotes to introduce strong-quoting (see below)</div>
+</li>
+<li class="level1"><div class="li"> characters for pattern matching</div>
+</li>
+<li class="level1"><div class="li"> tilde expansion</div>
+</li>
+<li class="level1"><div class="li"> pathname expansion</div>
+</li>
+<li class="level1"><div class="li"> process substitution</div>
+</li>
+</ul>
+
+<p>
+Everything else, especially <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansion</a>, is performed!
+</p>
+
+<p>
+<pre class="code">ls -l &quot;*&quot;</pre>
+
+Will not be expanded. <code>ls</code> gets the literal <code>*</code> as argument. It will, unless you have a file named <code>*</code>, spit out an error.
+</p>
+
+<p>
+<pre class="code">echo &quot;Your PATH is: $PATH&quot;</pre>
+
+Will work as expected. <code>$PATH</code> is expanded, because it&#039;s double (weak) quoted.
+</p>
+
+<p>
+If a backslash in double quotes (&quot;weak quoting&quot;) occurs, there are 2 ways to deal with it
+</p>
+<ul>
+<li class="level1"><div class="li"> if the baskslash is followed by a character that would have a special meaning even inside double-quotes, the backslash is removed and the following character looses its special meaning</div>
+</li>
+<li class="level1"><div class="li"> if the backslash is followed by a character without special meaning, the backslash is not removed</div>
+</li>
+</ul>
+
+<p>
+In particuar this means that <code>&quot;\$&quot;</code> will become <code>$</code>, but <code>&quot;\x&quot;</code> will become <code>\x</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Weak quoting&quot;,&quot;hid&quot;:&quot;weak_quoting&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:3,&quot;range&quot;:&quot;2398-3608&quot;} -->
+<h2 class="sectionedit4" id="strong_quoting">Strong quoting</h2>
+<div class="level2">
+
+<p>
+Strong quoting is very easy to explain:
+</p>
+
+<p>
+Inside a single-quoted string <strong>nothing</strong> is interpreted, except the single-quote that closes the string.
+</p>
+
+<p>
+<pre class="code">echo &#039;Your PATH is: $PATH&#039;</pre>
+
+<code>$PATH</code> won&#039;t be expanded, it&#039;s interpreted as ordinary text because it&#039;s surrounded by strong quotes.
+</p>
+
+<p>
+In practise that means, to produce a text like <code>Here&#039;s my test…</code> as a single-quoted string, you have to leave and re-enter the single quoting to get the character &quot;<code>&#039;</code>&quot; as literal text:
+<pre class="code"># WRONG
+echo &#039;Here&#039;s my test...&#039;
+
+# RIGHT
+echo &#039;Here&#039;\&#039;&#039;s my test...&#039;
+
+# ALTERNATIVE: It&#039;s also possible to mix-and-match quotes for readability:
+echo &quot;Here&#039;s my test&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Strong quoting&quot;,&quot;hid&quot;:&quot;strong_quoting&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:4,&quot;range&quot;:&quot;3609-4326&quot;} -->
+<h2 class="sectionedit5" id="ansi_c_like_strings">ANSI C like strings</h2>
+<div class="level2">
+
+<p>
+Bash provides another quoting mechanism: Strings that contain ANSI C-like escape sequences. The Syntax is:
+<pre class="code">$&#039;string&#039;</pre>
+
+where the following escape sequences are decoded in <code>string</code>:
+</p>
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Code </th><th class="col1"> Meaning </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> <code>\&quot;</code> </td><td class="col1"> double-quote </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <code>\&#039;</code> </td><td class="col1"> single-quote </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <code>\\</code> </td><td class="col1"> backslash </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> <code>\a</code> </td><td class="col1"> terminal alert character (bell) </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> <code>\b</code> </td><td class="col1"> backspace </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> <code>\e</code> </td><td class="col1"> escape (<abbr title="American Standard Code for Information Interchange">ASCII</abbr> 033) </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> <code>\E</code> </td><td class="col1"> escape (<abbr title="American Standard Code for Information Interchange">ASCII</abbr> 033) <strong>\E is non-standard</strong> </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"> <code>\f</code> </td><td class="col1"> form feed </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"> <code>\n</code> </td><td class="col1"> newline </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0"> <code>\r</code> </td><td class="col1"> carriage return </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0"> <code>\t</code> </td><td class="col1"> horizontal tab </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0"> <code>\v</code> </td><td class="col1"> vertical tab </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0"> <code>\cx</code> </td><td class="col1"> a control-x character, for example, <code>$&#039;\cZ&#039;</code> to print the control sequence composed of Ctrl-Z (<code>^Z</code>) </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0"> <code>\uXXXX</code> </td><td class="col1"> Interprets <code>XXXX</code> as a hexadecimal number and prints the corresponding character from the character set (4 digits) (Bash 4.2-alpha) </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0"> <code>\UXXXXXXXX</code> </td><td class="col1"> Interprets <code>XXXX</code> as a hexadecimal number and prints the corresponding character from the character set (8 digits) (Bash 4.2-alpha) </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0"> <code>\nnn</code> </td><td class="col1"> the eight-bit character whose value is the octal value nnn (one to three digits) </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0"> <code>\xHH</code> </td><td class="col1"> the eight-bit character whose value is the hexadecimal value HH (one or two hex digits) </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;4556-5563&quot;} -->
+<p>
+This is especially useful when you want to pass special characters as arguments to some programs, like passing a newline to sed.
+</p>
+
+<p>
+The resulting text is treated as if it were <strong>single-quoted</strong>. No further expansion happens.
+</p>
+
+<p>
+The <code>$&#039;...&#039;</code> syntax comes from ksh93, but is portable to most modern shells including pdksh. A <a href="http://austingroupbugs.net/view.php?id=249#c590" class="urlextern" title="http://austingroupbugs.net/view.php?id=249#c590" rel="nofollow"> specification</a> for it was accepted for SUS issue 7. There are still some stragglers, such as most ash variants including dash, (except busybox built with &quot;bash compatibility&quot; features).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ANSI C like strings&quot;,&quot;hid&quot;:&quot;ansi_c_like_strings&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:5,&quot;range&quot;:&quot;4327-6143&quot;} -->
+<h2 class="sectionedit7" id="i18nl10n">I18N/L10N</h2>
+<div class="level2">
+
+<p>
+A dollar-sign followed by a double-quoted string, for example
+<pre class="code">echo $&quot;generating database...&quot;</pre>
+
+means I18N. If there is a translation available for that string, it is used instead of the given text. If not, or if the locale is <code>C</code>/<code>POSIX</code>, the dollar sign is simply ignored, which results in a normal double quoted string.
+</p>
+
+<p>
+If the string was replaced (translated), the result is double quoted.
+</p>
+
+<p>
+In case you&#039;re a C programmer: The purpose of <code>$&quot;…&quot;</code> is the same as for <code>gettext()</code> or <code>_()</code>.
+</p>
+
+<p>
+For useful examples to localize your scripts, please see <a href="http://tldp.org/LDP/abs/html/localization.html" class="urlextern" title="http://tldp.org/LDP/abs/html/localization.html" rel="nofollow"> Appendix I of the Advanced Bash Scripting Guide</a>.
+</p>
+
+<p>
+<strong>Attention:</strong> There is a security hole. Please read <a href="http://www.gnu.org/software/gettext/manual/html_node/bash.html" class="urlextern" title="http://www.gnu.org/software/gettext/manual/html_node/bash.html" rel="nofollow"> the gettext documentation</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;I18N\/L10N&quot;,&quot;hid&quot;:&quot;i18nl10n&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:7,&quot;range&quot;:&quot;6144-6989&quot;} -->
+<h2 class="sectionedit8" id="common_mistakes">Common mistakes</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Common mistakes&quot;,&quot;hid&quot;:&quot;common_mistakes&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:8,&quot;range&quot;:&quot;6990-7019&quot;} -->
+<h3 class="sectionedit9" id="string_lists_in_for-loops">String lists in for-loops</h3>
+<div class="level3">
+
+<p>
+The <a href="/syntax/ccmd/classic_for" class="wikilink1" title="syntax:ccmd:classic_for"> classic for loop</a> uses a list of words to iterate through. The list can also be in a variable:
+<pre class="code">mylist=&quot;DOG CAT BIRD HORSE&quot;</pre>
+
+</p>
+
+<p>
+<strong><em class="u">WRONG</em></strong> way to iterate through this list:
+<pre class="code">for animal in &quot;$mylist&quot;; do
+    echo $animal
+done</pre>
+
+Why? Due to the double-quotes, technically, the expansion of <code>$mylist</code> is seen as <strong>one word</strong>. The for loop iterates exactly one time, with <code>animal</code> set to the whole list.
+</p>
+
+<p>
+<strong><em class="u">RIGHT</em></strong> way to iterate through this list:
+<pre class="code">for animal in $mylist; do
+    echo $animal
+done</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;String lists in for-loops&quot;,&quot;hid&quot;:&quot;string_lists_in_for-loops&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:9,&quot;range&quot;:&quot;7020-7631&quot;} -->
+<h3 class="sectionedit10" id="working_out_the_test-command">Working out the test-command</h3>
+<div class="level3">
+
+<p>
+The command <code>test</code> or <code>[ … ]</code> (<a href="/commands/classictest" class="wikilink1" title="commands:classictest"> the classic test command</a>) is an ordinary command, so ordinary syntax rules apply. Let&#039;s take string comparison as an example:
+<pre class="code">[ WORD = WORD ]</pre>
+
+</p>
+
+<p>
+The <code>]</code> at the end is a convenience; if you type <code>which [</code> you will see that there is in fact a binary file with that name. So if we were writing this as a test command it would be:
+</p>
+
+<p>
+<pre class="code">test WORD = WORD</pre>
+
+</p>
+
+<p>
+When you compare variables, it&#039;s wise to quote them. Let&#039;s create a test string with spaces:
+<pre class="code">mystring=&quot;my string&quot;</pre>
+
+</p>
+
+<p>
+And now check that string against the word &quot;testword&quot;:
+</p>
+
+<p>
+<pre class="code">[ $mystring = testword ] # WRONG!</pre>
+
+This fails! These are too many arguments for the string comparison test. After expansion is performed, you really execute:
+<pre class="code">[ my string = testword ]
+test my string = testword</pre>
+
+Which is wrong, because <code>my</code> and <code>string</code> are two separate arguments.
+</p>
+
+<p>
+So what you really want to do is:
+<pre class="code">[ &quot;$mystring&quot; = testword ] # RIGHT!</pre>
+
+</p>
+
+<p>
+<pre class="code">test &#039;my string&#039; = testword</pre>
+
+</p>
+
+<p>
+Now the command has three parameters, which makes sense for a binary (two argument) operator.
+</p>
+
+<p>
+<strong><em class="u">Hint:</em></strong> Inside the <a href="/syntax/ccmd/conditional_expression" class="wikilink1" title="syntax:ccmd:conditional_expression"> conditional expression</a> (<code>[[ ]]</code>) Bash doesn&#039;t perform word splitting, and thus you don&#039;t need to quote your variable references - they are always seen as &quot;one word&quot;.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Working out the test-command&quot;,&quot;hid&quot;:&quot;working_out_the_test-command&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:10,&quot;range&quot;:&quot;7632-9090&quot;} -->
+<h2 class="sectionedit11" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/words" class="wikilink1" title="syntax:words"> Some words about words...</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> Word splitting</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansions and substitutions</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> External: <a href="http://www.grymoire.com/Unix/Quote.html" class="urlextern" title="http://www.grymoire.com/Unix/Quote.html" rel="nofollow"> Grymore: Shellquoting</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:19,&quot;secid&quot;:11,&quot;range&quot;:&quot;9091-&quot;} --></div>
+</body>
+</html>

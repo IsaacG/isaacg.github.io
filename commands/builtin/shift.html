@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:shift</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,shift"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/shift?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/shift"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/shift"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/shift"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:shift","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_shift_builtin_command">The shift builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#options">Options</a></div></li>
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_shift_builtin_command">The shift builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The shift builtin command&quot;,&quot;hid&quot;:&quot;the_shift_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-41&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">shift [n]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;42-86&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>shift</code> builtin command is used to &quot;shift&quot; the positional parameters by the given number <code>n</code> or by 1, if no number is given.
+</p>
+
+<p>
+This means, the number and the position of the positional parameters are changed.
+The very first positional parameter is discarded, the second becomes the first one, etc.
+</p>
+
+<p>
+Imagine the following set of positional parameters (<code>$1</code> to <code>$4</code>):
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">1  </th><td class="col1 leftalign">This  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">2  </th><td class="col1 leftalign">is    </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">3  </th><td class="col1 leftalign">a     </td>
+	</tr>
+	<tr class="row3">
+		<th class="col0 leftalign">4  </th><td class="col1 leftalign">test  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;490-541&quot;} -->
+<p>
+When you use <code>shift 1</code>, they will be changed to:
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">1  </th><td class="col1 leftalign">is    </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">2  </th><td class="col1 leftalign">a     </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">3  </th><td class="col1 leftalign">test  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;595-633&quot;} -->
+<p>
+The <a href="/syntax/shellvars#special_parameters" class="wikilink1" title="syntax:shellvars">special parameter</a> <code>$#</code> will reflect the final number of positional parameters.
+</p>
+
+<p>
+If the number given is 0, no changes are made to the positional parameters.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;87-838&quot;} -->
+<h3 class="sectionedit6" id="options">Options</h3>
+<div class="level3">
+
+<p>
+There are no options.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;839-880&quot;} -->
+<h3 class="sectionedit7" id="return_status">Return status</h3>
+<div class="level3">
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Status  </th><th class="col1 leftalign">Reason  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">0     </td><td class="col1 leftalign">no error  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">1     </td><td class="col1 leftalign">non-numeric argument  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">1     </td><td class="col1 leftalign">given number (or the default 1) is bigger than the number of actually present positional parameters  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">1     </td><td class="col1 leftalign">given number is negative  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;906-1124&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:7,&quot;range&quot;:&quot;881-1126&quot;} -->
+<h2 class="sectionedit9" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:9,&quot;range&quot;:&quot;1127-1148&quot;} -->
+<h2 class="sectionedit10" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> The <code>shift</code> builtin command is specified by POSIX®.</div>
+</li>
+<li class="level1"><div class="li"> Many shells will throw a fatal error when attempting to <code>shift</code> more than the number of positional parameters. <strong>POSIX does not require that behavior</strong>. Bash (even in POSIX mode) and Zsh return 1 when there are no args, and no error output is produced unless the <a href="/internals/shell_options#shift_verbose" class="wikilink1" title="internals:shell_options"> shift_verbose</a> <a href="/commands/builtin/shopt" class="wikilink1" title="commands:builtin:shopt"> shopt</a> option is enabled. Ksh93, pdksh, posh, mksh, and dash, all throw useless fatal shell errors.<pre class="code">$ dash -c &#039;f() { if shift; then echo &quot;$1&quot;; else echo &quot;no args&quot;; fi; }; f&#039;
+dash: 1: shift: can&#039;t shift that many</pre>
+ In most shells, you can work around this problem using the <a href="/commands/builtin/command" class="wikilink2" title="commands:builtin:command" rel="nofollow"> command</a> builtin to suppress fatal errors caused by <em>special builtins</em>. <pre class="code"> $ dash -c &#039;f() { if command shift 2&gt;/dev/null; then echo &quot;$1&quot;; else echo &quot;no args&quot;; fi; }; f&#039;
+no args</pre>
+ While, POSIX requires this behavior, it isn&#039;t very obvious and some shells don&#039;t do it correctly. To work around this, you can use something like:</div>
+</li>
+</ul>
+
+<p>
+<pre class="code"> $ mksh -c &#039;f() { if ! ${1+false} &amp;&amp; shift; then echo &quot;$1&quot;; else echo &quot;no args&quot;; fi; }; f&#039;
+no args</pre>
+
+<del>The mksh maintainer refuses to change either the <code>shift</code> or <code>command</code> builtins.</del> <a href="https://github.com/MirBSD/mksh/commit/996e05548ab82f7ef2dea61f109cc7b6d13837fa" class="urlextern" title="https://github.com/MirBSD/mksh/commit/996e05548ab82f7ef2dea61f109cc7b6d13837fa" rel="nofollow"> Fixed</a>. (Thanks!)
+</p>
+<ul>
+<li class="level1"><div class="li"> Perhaps almost as bad as the above, busybox sh&#039;s <code>shift</code> always returns success, even when attempting to shift beyond the final argument. <pre class="code"> $ bb -c &#039;f() { if shift; then echo &quot;$1&quot;; else echo &quot;no args&quot;; fi; }; f&#039;
+(no output)</pre>
+ The above mksh workaround will work in this case too.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:10,&quot;range&quot;:&quot;1149-2865&quot;} -->
+<h2 class="sectionedit11" id="see_also">See also</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:11,&quot;range&quot;:&quot;2866-&quot;} --></div>
+</body>
+</html>

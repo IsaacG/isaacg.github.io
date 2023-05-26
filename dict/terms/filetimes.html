@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>dict:terms:filetimes</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="dict,terms,filetimes"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/dict/terms/filetimes?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=dict:terms"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/dict/terms/filetimes"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/dict/terms/filetimes"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/dict/terms/filetimes"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='dict:terms';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"dict:terms:filetimes","namespace":"dict:terms","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#file_timestamp">File timestamp</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#atime">atime</a></div></li>
+<li class="level2"><div class="li"><a href="#ctime">ctime</a></div></li>
+<li class="level2"><div class="li"><a href="#mtime">mtime</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="file_timestamp">File timestamp</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;File timestamp&quot;,&quot;hid&quot;:&quot;file_timestamp&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-30&quot;} -->
+<h2 class="sectionedit2" id="atime">atime</h2>
+<div class="level2">
+
+<p>
+This timestamp indicates when a file was last accessed (read). <code>cat</code>ing a file or executing a shellscript will set it, for example.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;atime&quot;,&quot;hid&quot;:&quot;atime&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;31-185&quot;} -->
+<h2 class="sectionedit3" id="ctime">ctime</h2>
+<div class="level2">
+
+<p>
+This timestamp is set, whenever the metadata of a file (stored in the responsible inode) is set. The metadata includes for example:
+</p>
+<ul>
+<li class="level1"><div class="li"> file name</div>
+</li>
+<li class="level1"><div class="li"> fize size</div>
+</li>
+<li class="level1"><div class="li"> file mode (permissions)</div>
+</li>
+</ul>
+
+<p>
+and some other things. <code>ctime</code> will also be updated when a file is written to (when <code>mtime</code> is updated.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ctime&quot;,&quot;hid&quot;:&quot;ctime&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;186-500&quot;} -->
+<h2 class="sectionedit4" id="mtime">mtime</h2>
+<div class="level2">
+
+<p>
+The mtime is set, whenever a file&#039;s contents are changed, for example by editing a file.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;mtime&quot;,&quot;hid&quot;:&quot;mtime&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;501-&quot;} --></div>
+</body>
+</html>

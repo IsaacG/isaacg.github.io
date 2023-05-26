@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:expansion:proc_subst</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,expansion,proc_subst,bash,shell,scripting,expansion,substitution,text,stdin,stdout,save,capture"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/expansion/proc_subst?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:expansion"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/expansion/proc_subst"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/expansion/proc_subst"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/expansion/proc_subst"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:expansion';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:expansion:proc_subst","namespace":"syntax:expansion","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#process_substitution">Process substitution</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#scope">Scope</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#avoiding_subshells">Avoiding subshells</a></div></li>
+<li class="level3"><div class="li"><a href="#process_substitution_assigned_to_a_parameter">Process substitution assigned to a parameter</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#bugs_and_portability_considerations">Bugs and Portability Considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="process_substitution">Process substitution</h1>
+<div class="level1">
+
+<p>
+Process substitution is a form of redirection where the input or output of a process (some sequence of commands) appear as a temporary file.
+</p>
+
+<p>
+<pre class="code">&lt;( &lt;LIST&gt; )
+
+&gt;( &lt;LIST&gt; )</pre>
+
+</p>
+
+<p>
+Process substitution is performed <strong>simultaneously</strong> with <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansion</a>, <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> command substitution</a> and <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> arithmetic expansion</a>.
+</p>
+
+<p>
+The <a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> command list</a> <code>&lt;LIST&gt;</code> is executed and its
+</p>
+<ul>
+<li class="level1"><div class="li"> standard output filedescriptor in the <code>&lt;( … )</code> form or</div>
+</li>
+<li class="level1"><div class="li"> standard input filedescriptor in the <code>&gt;( … )</code> form</div>
+</li>
+</ul>
+
+<p>
+is connected to a FIFO or a file in <code>/dev/fd/</code>. The filename (where the filedescriptor is connected) is then used as a substitution for the <code>&lt;(…)</code>-construct.
+</p>
+
+<p>
+That, for example, allows to give data to a command that can&#039;t be reached by pipelining (that doesn&#039;t expect its data from <code>stdin</code> but from a file).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Process substitution&quot;,&quot;hid&quot;:&quot;process_substitution&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1031&quot;} -->
+<h3 class="sectionedit2" id="scope">Scope</h3>
+<div class="level3">
+<div class="plugin_note noteimportant">Note: According to multiple comments and sources, the scope of process substitution file descriptors is <strong>not</strong> stable, guaranteed, or specified by bash. Newer versions of bash (5.0+) seem to have shorter scope, and substitutions scope seems to be shorter than function scope.
+See <a href="https://unix.stackexchange.com/questions/425456/conditional-process-substitution" class="urlextern" title="https://unix.stackexchange.com/questions/425456/conditional-process-substitution" rel="nofollow">stackexchange</a> and <a href="https://stackoverflow.com/questions/46660020/bash-what-is-the-scope-of-the-process-substitution" class="urlextern" title="https://stackoverflow.com/questions/46660020/bash-what-is-the-scope-of-the-process-substitution" rel="nofollow">stackoverflow</a>; the latter discussion contains a script that can test the scoping behavior case-by-case
+
+</div>
+<p>
+If a process substitution is expanded as an argument to a function, expanded to an environment variable during calling of a function, or expanded to any assignment within a function, the process substitution will be &quot;held open&quot; for use by any command within the function or its callees, until the function in which it was set returns. If the same variable is set again within a callee, unless the new variable is local, the previous process substitution is closed and will be unavailable to the caller when the callee returns.
+</p>
+
+<p>
+In essence, process substitutions expanded to variables within functions remain open until the function in which the process substitution occured returns - even when assigned to locals that were set by a function&#039;s caller. Dynamic scope doesn&#039;t protect them from closing.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Scope&quot;,&quot;hid&quot;:&quot;scope&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:2,&quot;range&quot;:&quot;1032-2461&quot;} -->
+<h2 class="sectionedit3" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+This code is useless, but it demonstrates how it works:
+<pre class="code bash">$ <span class="kw3">echo</span> <span class="sy0">&lt;</span><span class="br0">&#40;</span><span class="kw2">ls</span><span class="br0">&#41;</span>
+<span class="sy0">/</span>dev<span class="sy0">/</span>fd<span class="sy0">/</span><span class="nu0">63</span></pre>
+
+</p>
+
+<p>
+The <strong>output</strong> of the <code>ls</code>-program can then be accessed by reading the file <code>/dev/fd/63</code>.
+</p>
+
+<p>
+Consider the following:
+<pre class="code bash"><span class="kw2">diff</span> <span class="sy0">&lt;</span><span class="br0">&#40;</span><span class="kw2">ls</span> <span class="st0">&quot;<span class="es2">$first_directory</span>&quot;</span><span class="br0">&#41;</span> <span class="sy0">&lt;</span><span class="br0">&#40;</span><span class="kw2">ls</span> <span class="st0">&quot;<span class="es2">$second_directory</span>&quot;</span><span class="br0">&#41;</span></pre>
+
+This will compare the contents of each directory. In this command, each <em>process</em> is <em>substituted</em> for a <em>file</em>, and diff doesn&#039;t see &lt;(bla), it sees two files, so the effective command is something like
+<pre class="code bash"><span class="kw2">diff</span> <span class="sy0">/</span>dev<span class="sy0">/</span>fd<span class="sy0">/</span><span class="nu0">63</span> <span class="sy0">/</span>dev<span class="sy0">/</span>fd<span class="sy0">/</span><span class="nu0">64</span></pre>
+
+where those files are written to and destroyed automatically.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;2462-3098&quot;} -->
+<h3 class="sectionedit4" id="avoiding_subshells">Avoiding subshells</h3>
+<div class="level3">
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_center wrap_round wrap_info plugin_wrap" style="width: 60%;">
+<p>
+See Also: <a href="http://mywiki.wooledge.org/BashFAQ/024" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/024" rel="nofollow"> BashFAQ/024</a> – <em>I set variables in a loop that&#039;s in a pipeline. Why do they disappear after the loop terminates? Or, why can&#039;t I pipe data to read?</em>
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+One of the most common uses for process substitutions is to avoid the final subshell that results from executing a pipeline. The following is a <strong>wrong</strong> piece of code to count all files in <code>/etc</code> is:
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">counter</span>=<span class="nu0">0</span>
+&nbsp;
+<span class="kw2">find</span> <span class="sy0">/</span>etc <span class="re5">-print0</span> <span class="sy0">|</span> <span class="kw1">while</span> <span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-rd</span> <span class="st_h">''</span> _; <span class="kw1">do</span>
+    <span class="br0">&#40;</span><span class="br0">&#40;</span>counter++<span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw1">done</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$counter</span> files&quot;</span> <span class="co0"># prints &quot;0 files&quot;</span></pre>
+
+</p>
+
+<p>
+Due to the pipe, the <code>while read; do … done</code> part is executed in a subshell (in Bash, by default), which means <code>counter</code> is only incremented within the subshell. When the pipeline finishes, the subshell is terminated, and the <code>counter</code> visible to <code>echo</code> is still at &quot;0&quot;!
+</p>
+
+<p>
+Process substitution helps us avoid the pipe operator (the reason for the subshell):
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">counter</span>=<span class="nu0">0</span>
+&nbsp;
+<span class="kw1">while</span> <span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-rN1</span> _; <span class="kw1">do</span>
+    <span class="br0">&#40;</span><span class="br0">&#40;</span>counter++<span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw1">done</span> <span class="sy0">&lt;</span> <span class="sy0">&lt;</span><span class="br0">&#40;</span><span class="kw2">find</span> <span class="sy0">/</span>etc <span class="re5">-printf</span> <span class="st_h">' '</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$counter</span> files&quot;</span></pre>
+
+</p>
+
+<p>
+This is the normal input file redirection <code>&lt; FILE</code>, just that the <code>FILE</code> in this case is the result of process substitution. It&#039;s important to note that the space is required in order to disambiguate the syntax from <a href="/syntax/redirection#here_documents" class="wikilink1" title="syntax:redirection"> here documents</a>.
+</p>
+
+<p>
+<pre class="code bash">: <span class="sy0">&lt;</span> <span class="sy0">&lt;</span><span class="br0">&#40;</span>COMMAND<span class="br0">&#41;</span> <span class="co0"># Good.</span>
+: <span class="sy0">&lt;&lt;</span><span class="br0">&#40;</span>...<span class="br0">&#41;</span> <span class="co0"># Wrong. Will be parsed as a heredoc. Bash fails when it comes across the unquoted metacharacter ''(''</span>
+: <span class="sy0">&gt;&lt;</span><span class="br0">&#40;</span>...<span class="br0">&#41;</span> <span class="co0"># Technically valid but pointless syntax. Bash opens the pipe for writing, while the commands within the process substitution have their stdout connected to the pipe.</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Avoiding subshells&quot;,&quot;hid&quot;:&quot;avoiding_subshells&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;3099-4832&quot;} -->
+<h3 class="sectionedit7" id="process_substitution_assigned_to_a_parameter">Process substitution assigned to a parameter</h3>
+<div class="level3">
+
+<p>
+This example demonstrates how process substitutions can be made to resemble &quot;passable&quot; objects. This results in converting the output of <code>f</code>&#039;s argument to uppercase.
+</p>
+
+<p>
+<pre class="code bash">f<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw2">cat</span> <span class="st0">&quot;$1&quot;</span> <span class="sy0">&gt;</span><span class="st0">&quot;<span class="es2">$x</span>&quot;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="re2">x</span>=<span class="sy0">&gt;</span><span class="br0">&#40;</span><span class="kw2">tr</span> <span class="st_h">'[:lower:]'</span> <span class="st_h">'[:upper:]'</span><span class="br0">&#41;</span> f <span class="sy0">&lt;</span><span class="br0">&#40;</span><span class="kw3">echo</span> <span class="st_h">'hi there'</span><span class="br0">&#41;</span></pre>
+
+</p>
+
+<p>
+See the above section on <a href="#scope" title="syntax:expansion:proc_subst ↵" class="wikilink1">scope</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Process substitution assigned to a parameter&quot;,&quot;hid&quot;:&quot;process_substitution_assigned_to_a_parameter&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:7,&quot;range&quot;:&quot;4833-5196&quot;} -->
+<h2 class="sectionedit8" id="bugs_and_portability_considerations">Bugs and Portability Considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Process substitution is not specified by POSIX.</div>
+</li>
+<li class="level1"><div class="li"> Process substitution is disabled completely in Bash POSIX mode.</div>
+</li>
+<li class="level1"><div class="li"> Process substitution is implemented by Bash, Zsh, Ksh{88,93}, but not (yet) pdksh derivatives (mksh). Coprocesses may be used instead.</div>
+</li>
+<li class="level1"><div class="li"> Process substitution is supported only on systems that support either named pipes (FIFO - a <a href="/dict/terms/special_file" class="wikilink1" title="dict:terms:special_file"> special file</a>) or the <code>/dev/fd/*</code> method for accessing open files. If the system doesn&#039;t support <code>/dev/fd/*</code>, Bash falls back to creating named pipes. Note that not all shells that support process substitution have that fallback.</div>
+</li>
+<li class="level1"><div class="li"> Bash evaluates process substitutions within array indices, but not other arithmetic contexts. Ksh and Zsh do not. (Possible Bug)</div>
+</li>
+</ul>
+
+<p>
+<pre class="code bash"><span class="co0"># print &quot;moo&quot;</span>
+<span class="re2">dev</span>=<span class="re2">fd</span>=<span class="nu0">1</span> _<span class="br0">&#91;</span><span class="nu0">1</span><span class="sy0">&lt;</span><span class="br0">&#40;</span><span class="kw3">echo</span> moo <span class="sy0">&gt;&amp;</span><span class="nu0">2</span><span class="br0">&#41;</span><span class="br0">&#93;</span>=
+<span class="co0"># fork bomb</span>
+<span class="co1">${dev[${dev='dev[1&gt;(${dev[dev]}</span><span class="br0">&#41;</span><span class="br0">&#93;</span><span class="st_h">'}]}</span></pre>
+
+</p>
+<ul>
+<li class="level1"><div class="li"> Issues with wait, race conditions, etc: <a href="https://groups.google.com/forum/?fromgroups=#!topic/comp.unix.shell/GqLNzUA4ulA" class="urlextern" title="https://groups.google.com/forum/?fromgroups=#!topic/comp.unix.shell/GqLNzUA4ulA" rel="nofollow">https://groups.google.com/forum/?fromgroups=#!topic/comp.unix.shell/GqLNzUA4ulA</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bugs and Portability Considerations&quot;,&quot;hid&quot;:&quot;bugs_and_portability_considerations&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:8,&quot;range&quot;:&quot;5197-6235&quot;} -->
+<h2 class="sectionedit9" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansion and substitution</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/scripting/processtree" class="wikilink1" title="scripting:processtree"> Bash in the process tree</a> (subshells)</div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/redirection" class="wikilink1" title="syntax:redirection"> Redirection</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:9,&quot;range&quot;:&quot;6236-&quot;} --></div>
+</body>
+</html>

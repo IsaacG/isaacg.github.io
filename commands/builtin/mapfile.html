@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:mapfile</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,mapfile"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/mapfile?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/mapfile"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/mapfile"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/mapfile"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:mapfile","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_mapfile_builtin_command">The mapfile builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#the_callback">The callback</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#bugs">Bugs</a></div></li>
+<li class="level2"><div class="li"><a href="#to_do">To Do</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_mapfile_builtin_command">The mapfile builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The mapfile builtin command&quot;,&quot;hid&quot;:&quot;the_mapfile_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-43&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">mapfile [-n COUNT] [-O ORIGIN] [-s COUNT] [-t] [-u FD] [-C CALLBACK] [-c QUANTUM] [ARRAY]</pre>
+
+</p>
+
+<p>
+<pre class="code">readarray [-n COUNT] [-O ORIGIN] [-s COUNT] [-t] [-u FD] [-C CALLBACK] [-c QUANTUM] [ARRAY]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;44-278&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+This builtin is also accessible using the command name <code>readarray</code>.
+</p>
+
+<p>
+<code>mapfile</code> is one of the two builtin commands primarily intended for handling standard input (the other being <code>read</code>). <code>mapfile</code> reads lines of standard input and assigns each to the elements of an indexed array. If no array name is given, the default array name is <code>MAPFILE</code>. The target array must be a &quot;normal&quot; integer indexed array.
+</p>
+
+<p>
+<code>mapfile</code> returns success (0) unless an invalid option is given or the given array <code>ARRAY</code> is set readonly.
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Option </th><th class="col1">Description </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>-c QUANTUM</code> </td><td class="col1">Specifies the number of lines that have to be read between every call to the callback specified with <code>-C</code>. The default QUANTUM is 5000</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>-C CALLBACK</code> </td><td class="col1">Specifies a callback. The string <code>CALLBACK</code> can be any shell code, the index of the array that will be assigned, and the line is appended at evaluation time. </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>-n COUNT</code> </td><td class="col1">Reads at most <code>COUNT</code> lines, then terminates. If <code>COUNT</code> is 0, then all lines are read (default). </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>-O ORIGIN</code> </td><td class="col1">Starts populating the given array <code>ARRAY</code> at the index <code>ORIGIN</code> rather than clearing it and starting at index 0. </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>-s COUNT</code> </td><td class="col1">Discards the first <code>COUNT</code> lines read. </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>-t</code> </td><td class="col1">Remove any trailing newline from a line read, before it is assigned to an array element. </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>-u FD</code> </td><td class="col1">Read from filedescriptor <code>FD</code> rather than standard input. </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;832-1675&quot;} -->
+<p>
+While <code>mapfile</code> isn&#039;t a common or portable shell feature, it&#039;s functionality will be familiar to many programmers. Almost all programming languages (aside from shells) with support for compound datatypes like arrays, and which handle open file objects in the traditional way, have some analogous shortcut for easily reading all lines of some input as a standard feature. In Bash, <code>mapfile</code> in itself can&#039;t do anything that couldn&#039;t already be done using read and a loop, and if portability is even a slight concern, should never be used. However, it does <em>significantly</em> outperform a read loop, and can make for shorter and cleaner code - especially convenient for interactive use.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;279-2365&quot;} -->
+<h2 class="sectionedit5" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+Here&#039;s a real-world example of interactive use borrowed from Gentoo workflow. Xorg updates require rebuilding drivers, and the Gentoo-suggested command is less than ideal, so let&#039;s Bashify it. The first command produces a list of packages, one per line. We can read those into the array named &quot;args&quot; using <code>mapfile</code>, stripping trailing newlines with the &#039;-t&#039; option. The resulting array is then expanded into the arguments of the &quot;emerge&quot; command - an interface to Gentoo&#039;s package manager. This type of usage can make for a safe and effective replacement for xargs(1) in certain situations. Unlike xargs, all arguments are guaranteed to be passed to a single invocation of the command with no wordsplitting, pathname expansion, or other monkey business.
+</p>
+
+<p>
+<pre class="code"># eix --only-names -IC x11-drivers | { mapfile -t args; emerge -av1 &quot;${args[@]}&quot; &lt;&amp;1; }</pre>
+
+</p>
+
+<p>
+Note the use of command grouping to keep the emerge command inside the pipe&#039;s subshell and within the scope of &quot;args&quot;. Also note the unusual redirection. This is because the -a flag makes emerge interactive, asking the user for confirmation before continuing, and checking with isatty(3) to abort if stdin isn&#039;t pointed at a terminal. Since stdin of the entire command group is still coming from the pipe even though mapfile has read all available input, we just borrow FD 1 as it just so happens to be pointing where we want it. More on this over at greycat&#039;s wiki: <a href="http://mywiki.wooledge.org/BashFAQ/024" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/024" rel="nofollow">http://mywiki.wooledge.org/BashFAQ/024</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;2366-3854&quot;} -->
+<h3 class="sectionedit6" id="the_callback">The callback</h3>
+<div class="level3">
+
+<p>
+This is one of the more unusual features of a Bash builtin. As far as I&#039;m able to tell, the exact behavior is as follows: If defined, as each line is read, the code contained within the string argument to the -C flag is evaluated and executed <em>before</em> the assignment of each array element. There are no restrictions to this string, which can be any arbitrary code, however, two additional &quot;words&quot; are automatically appended to the end before evaluation: the index, and corresponding line of data to be assigned to the next array element. Since all this happens before assignment, the callback feature cannot be used to modify the element to be assigned, though it can read and modify any array elements already assigned.
+</p>
+
+<p>
+A very simple example might be to use it as a kind of progress bar. This will print a dot for each line read. Note the escaped comment to hide the appended words from printf.
+</p>
+
+<p>
+<pre class="code">$ printf &#039;%s\n&#039; {1..5} | mapfile -c 1 -C &#039;printf . \#&#039; )
+.....</pre>
+
+</p>
+
+<p>
+Really, the intended usage is for the callback to just contain the name of a function, with the extra words passed to it as arguments. If you&#039;re going to use callbacks at all, this is probably the best way because it allows for easy access to the arguments with no ugly &quot;code in a string&quot;.
+<pre class="code">$ foo() { echo &quot;|$1|&quot;; }; mapfile -n 11 -c 2 -C &#039;foo&#039; &lt;file
+|2|
+|4|
+etc..</pre>
+
+</p>
+
+<p>
+For the sake of completeness, here are some more complicated examples inspired by a question asked in #bash - how to prepend something to every line of some input, and then output even and odd lines to separate files. This is far from the best possible answer, but hopefully illustrates the callback behavior:
+</p>
+
+<p>
+<pre class="code">$ { printf &#039;input%s\n&#039; {1..10} | mapfile -c 1 -C &#039;&gt;&amp;$(( (${#x[@]} % 2) + 3 )) printf -- &quot;%.sprefix %s&quot;&#039; x; } 3&gt;outfile0 4&gt;outfile1
+$ cat outfile{0,1}
+prefix input1
+prefix input3
+prefix input5
+prefix input7
+prefix input9
+prefix input2
+prefix input4
+prefix input6
+prefix input8
+prefix input10</pre>
+
+</p>
+
+<p>
+Since redirects are syntactically allowed anywhere in a command, we put it before the printf to stay out of the way of additional arguments. Rather than opening &quot;outfile&lt;n&gt;&quot; for appending on each call by calculating the filename, open an FD for each first and calculate which FD to send output to by measuring the size of x mod 2. The zero-width format specification is used to absorb the index number argument.
+</p>
+
+<p>
+Another variation might be to add each of these lines to the elements of separate arrays. I&#039;ll leave dissecting this one as an exercise for the reader. This is quite the hack but illustrates some interesting properties of printf -v and mapfile -C (which you should probably never use in real code).
+</p>
+
+<p>
+<pre class="code">$ y=( &#039;odd[j]&#039; &#039;even[j++]&#039; ); printf &#039;input%s\n&#039; {1..10} | { mapfile -tc 1 -C &#039;printf -v &quot;${y[${#x[@]} % 2]}&quot; -- &quot;%.sprefix %s&quot;&#039; x; printf &#039;%s\n&#039; &quot;${odd[@]}&quot; &#039;&#039; &quot;${even[@]}&quot;; }
+prefix input1
+prefix input3
+prefix input5
+prefix input7
+prefix input9
+
+prefix input2
+prefix input4
+prefix input6
+prefix input8
+prefix input10</pre>
+
+</p>
+
+<p>
+This example based on yet another #bash question illustrates mapfile in combination with read. The sample input is the heredoc to <code>main</code>. The goal is to build a &quot;struct&quot; based upon records in the input file made up of the numbers following the colon on each line. Every 3rd line is a key followed by 2 corresponding fields. The showRecord function takes a key and returns the record.
+</p>
+
+<p>
+<pre class="code">#!/usr/bin/env bash
+
+showRecord() {
+    printf &#039;key[%d] = %d, %d\n&#039; &quot;$1&quot; &quot;${vals[@]:keys[$1]*2:2}&quot;
+}
+
+parseRecords() {
+    trap &#039;unset -f _f&#039; RETURN
+    _f() {
+        local x
+        IFS=: read -r _ x
+        ((keys[x]=n++))
+    }
+    local n
+
+    _f
+    mapfile -tc2 -C _f &quot;$1&quot;
+    eval &quot;$1&quot;&#039;=(&quot;${&#039;&quot;$1&quot;&#039;[@]##*:}&quot;)&#039; # Return the array with some modification
+}
+
+main() {
+    local -a keys vals
+    parseRecords vals
+    showRecord &quot;$1&quot;
+}
+
+main &quot;$1&quot; &lt;&lt;-&quot;EOF&quot;
+fabric.domain:123
+routex:1
+routey:2
+fabric.domain:321
+routex:6
+routey:4
+EOF</pre>
+
+</p>
+
+<p>
+For example, running <code>scriptname 321</code> would output <code>key[321] = 6, 4</code>. Every 2 lines read by <code>mapfile</code>, the function <code>_f</code> is called, which reads one additional line. Since the first line in the file is a key, and <code>_f</code> is responsible for the keys, it gets called first so that <code>mapfile</code> starts by reading the second line of input, calling <code>_f</code> with each subsequent 2 iterations. The RETURN trap is unimportant.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The callback&quot;,&quot;hid&quot;:&quot;the_callback&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;3855-8258&quot;} -->
+<h2 class="sectionedit7" id="bugs">Bugs</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Early implementations were buggy. For example, <code>mapfile</code> filling the readline history buffer with calls to the <code>CALLBACK</code>. This was fixed in 4.1 beta.</div>
+</li>
+<li class="level1"><div class="li"> <code>mapfile -n</code> reads an extra line beyond the last line assigned to the array, through Bash. <a href="ftp://ftp.gnu.org/gnu/bash/bash-4.2-patches/bash42-035" class="urlextern" title="ftp://ftp.gnu.org/gnu/bash/bash-4.2-patches/bash42-035" rel="nofollow"> Fixed in 4.2.35</a>.</div>
+</li>
+<li class="level1"><div class="li"> <code>mapfile</code> callbacks could cause a crash if the variable being assigned is manipulated in certain ways. <a href="https://lists.gnu.org/archive/html/bug-bash/2013-01/msg00039.html" class="urlextern" title="https://lists.gnu.org/archive/html/bug-bash/2013-01/msg00039.html" rel="nofollow">https://lists.gnu.org/archive/html/bug-bash/2013-01/msg00039.html</a>. Fixed in 4.3.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bugs&quot;,&quot;hid&quot;:&quot;bugs&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:7,&quot;range&quot;:&quot;8259-8804&quot;} -->
+<h2 class="sectionedit8" id="to_do">To Do</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Create an implementation as a shell function that&#039;s portable between Ksh, Zsh, and Bash (and possibly other bourne-like shells with array support).</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;To Do&quot;,&quot;hid&quot;:&quot;to_do&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:8,&quot;range&quot;:&quot;8805-8975&quot;} -->
+<h2 class="sectionedit9" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">Arrays</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read">The read builtin command</a> - If you don&#039;t know about this yet, why are you reading this page?</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/001" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/001" rel="nofollow">http://mywiki.wooledge.org/BashFAQ/001</a> - It&#039;s <abbr title="Frequently Asked Questions">FAQ</abbr> 1 for a reason.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:9,&quot;range&quot;:&quot;8976-&quot;} --></div>
+</body>
+</html>

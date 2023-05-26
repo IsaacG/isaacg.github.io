@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>bash4</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="bash4"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/bash4?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns="/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/bash4"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/bash4"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/bash4"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"bash4","namespace":"","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#bash_4_-_a_rough_overview">Bash 4 - a rough overview</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#new_or_changed_commands_and_keywords">New or changed commands and keywords</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#the_new_coproc_keyword">The new &quot;coproc&quot; keyword</a></div></li>
+<li class="level3"><div class="li"><a href="#the_new_mapfile_builtin">The new &quot;mapfile&quot; builtin</a></div></li>
+<li class="level3"><div class="li"><a href="#changes_to_the_case_keyword">Changes to the &quot;case&quot; keyword</a></div></li>
+<li class="level3"><div class="li"><a href="#changes_to_the_declare_builtin">Changes to the &quot;declare&quot; builtin</a></div></li>
+<li class="level3"><div class="li"><a href="#changes_to_the_read_builtin">Changes to the &quot;read&quot; builtin</a></div></li>
+<li class="level3"><div class="li"><a href="#changes_to_the_help_builtin">Changes to the &quot;help&quot; builtin</a></div></li>
+<li class="level3"><div class="li"><a href="#changes_to_the_ulimit_builtin">Changes to the &quot;ulimit&quot; builtin</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#expansions">Expansions</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#brace_expansion">Brace Expansion</a></div></li>
+<li class="level3"><div class="li"><a href="#parameter_expansion">Parameter Expansion</a></div></li>
+<li class="level3"><div class="li"><a href="#substring_expansion">Substring expansion</a></div></li>
+<li class="level3"><div class="li"><a href="#globbing">Globbing</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#associative_arrays">Associative Arrays</a></div></li>
+<li class="level2"><div class="li"><a href="#redirection">Redirection</a></div></li>
+<li class="level2"><div class="li"><a href="#interesting_new_shell_variables">Interesting new shell variables</a></div></li>
+<li class="level2"><div class="li"><a href="#interesting_new_shell_options">Interesting new Shell Options</a></div></li>
+<li class="level2"><div class="li"><a href="#misc">Misc</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="bash_4_-_a_rough_overview">Bash 4 - a rough overview</h1>
+<div class="level1">
+
+<p>
+<img src="/lib/images/smileys/v4logo_short.gif" class="icon" alt=":V4:" />
+</p>
+<div class="plugin_note noteclassic">Attention: Since Bash 4 has been around for quite some time now (4.3 will come soon), I consider it to be &quot;standard&quot;. This page is not maintained anymore and is left here to keep your links working. See the <a href="/scripting/bashchanges" class="wikilink1" title="scripting:bashchanges">Bash changes</a> page for new stuff introduced.
+</div>
+<p>
+Besides many bugfixes since Bash 3.2, Bash 4 will bring some interesting new
+features for shell users and scripters. See also <a href="/scripting/bashchanges" class="wikilink1" title="scripting:bashchanges">Bash changes</a> for a small general overview with more details.
+</p>
+
+<p>
+Not all of the changes and news are included here, just the biggest or
+most interesting ones. The changes to completion, and the readline component
+are not covered. <strong>Though, if you&#039;re familiar with these parts of Bash (and Bash 4), 
+feel free to write a chapter here.</strong>
+</p>
+
+<p>
+The complete list of fixes and changes is in the CHANGES or NEWS file of your
+Bash 4 distribution.
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_center wrap_round wrap_download plugin_wrap" style="width: 60%;">
+<p>
+The current available <strong>stable</strong> version is  4.4.18 release (February 03, 2018):
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="ftp://ftp.cwru.edu/pub/bash/bash-4.4.18.tar.gz" class="urlextern" title="ftp://ftp.cwru.edu/pub/bash/bash-4.4.18.tar.gz" rel="nofollow">ftp://ftp.cwru.edu/pub/bash/bash-4.4.18.tar.gz</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="ftp://ftp.gnu.org/pub/gnu/bash/bash-4.4.18.tar.gz" class="urlextern" title="ftp://ftp.gnu.org/pub/gnu/bash/bash-4.4.18.tar.gz" rel="nofollow">ftp://ftp.gnu.org/pub/gnu/bash/bash-4.4.18.tar.gz</a></div>
+</li>
+</ul>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;0-&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash 4 - a rough overview&quot;,&quot;hid&quot;:&quot;bash_4_-_a_rough_overview&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1128&quot;} -->
+<h2 class="sectionedit4" id="new_or_changed_commands_and_keywords">New or changed commands and keywords</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;New or changed commands and keywords&quot;,&quot;hid&quot;:&quot;new_or_changed_commands_and_keywords&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1129-1178&quot;} -->
+<h3 class="sectionedit5" id="the_new_coproc_keyword">The new &quot;coproc&quot; keyword</h3>
+<div class="level3">
+
+<p>
+Bash 4 introduces the concepts of coprocesses, a well known feature of other
+shells. The basic concept is simple: It will start any command in the background
+and set up an array that is populated with accessible files that represent the
+filedescriptors of the started process.
+</p>
+
+<p>
+In other words: It lets you start a process in background and communicate with
+its input and output data streams.
+</p>
+
+<p>
+See <a href="/syntax/keywords/coproc" class="wikilink1" title="syntax:keywords:coproc"> The coproc keyword</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The new \&quot;coproc\&quot; keyword&quot;,&quot;hid&quot;:&quot;the_new_coproc_keyword&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1179-1660&quot;} -->
+<h3 class="sectionedit6" id="the_new_mapfile_builtin">The new &quot;mapfile&quot; builtin</h3>
+<div class="level3">
+
+<p>
+The <code>mapfile</code> builtin is able to map the lines of a file directly into an
+array. This avoids having to fill an array yourself using a loop. It enables you to define
+the range of lines to read, and optionally call a callback, for example to
+display a progress bar.
+</p>
+
+<p>
+See: <a href="/commands/builtin/mapfile" class="wikilink1" title="commands:builtin:mapfile">The mapfile builtin command</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The new \&quot;mapfile\&quot; builtin&quot;,&quot;hid&quot;:&quot;the_new_mapfile_builtin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;1661-1999&quot;} -->
+<h3 class="sectionedit7" id="changes_to_the_case_keyword">Changes to the &quot;case&quot; keyword</h3>
+<div class="level3">
+
+<p>
+The <code>case</code> construct understands two new action list terminators:
+</p>
+
+<p>
+The <code>;&amp;</code> terminator causes execution to continue with the next action list
+(rather than terminate the <code>case</code> construct).
+</p>
+
+<p>
+The <code>;;&amp;</code> terminator causes the <code>case</code> construct to test the next given
+pattern instead of terminating the whole execution.
+</p>
+
+<p>
+See <a href="/syntax/ccmd/case" class="wikilink1" title="syntax:ccmd:case">The case statement</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Changes to the \&quot;case\&quot; keyword&quot;,&quot;hid&quot;:&quot;changes_to_the_case_keyword&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;2000-2390&quot;} -->
+<h3 class="sectionedit8" id="changes_to_the_declare_builtin">Changes to the &quot;declare&quot; builtin</h3>
+<div class="level3">
+
+<p>
+The <code>-p</code> option now prints all attributes and values of declared variables (or
+functions, when used with <code>-f</code>). The output is fully re-usable as input.
+</p>
+
+<p>
+The new option <code>-l</code> declares a variable in a way that the content is
+converted to lowercase on assignment. For uppercase, the same applies to
+<code>-u</code>. The option <code>-c</code> causes the content to be capitalized before
+assignment.
+</p>
+
+<p>
+<code>declare -A</code> declares associative arrays (see below).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Changes to the \&quot;declare\&quot; builtin&quot;,&quot;hid&quot;:&quot;changes_to_the_declare_builtin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;2391-2875&quot;} -->
+<h3 class="sectionedit9" id="changes_to_the_read_builtin">Changes to the &quot;read&quot; builtin</h3>
+<div class="level3">
+
+<p>
+The <code>read</code> builtin command has some interesting new features.
+</p>
+
+<p>
+The <code>-t</code> option to specify a timeout value has been slightly tuned. It now
+accepts fractional values and the special value 0 (zero). When <code>-t 0</code> is
+specified, <code>read</code> immediately returns with an exit status indicating if
+there&#039;s data waiting or not. However, when a timeout is given, and the <code>read</code>
+builtin times out, any partial data recieved up to the timeout is stored in the
+given variable, rather than lost. When a timeout is hit, <code>read</code> exits with a
+code greater than 128.
+</p>
+
+<p>
+A new option, <code>-i</code>, was introduced to be able to preload the input buffer with
+some text (when Readline is used, with <code>-e</code>). The user is able to change the
+text, or press return to accept it.
+</p>
+
+<p>
+See <a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read">The read builtin command</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Changes to the \&quot;read\&quot; builtin&quot;,&quot;hid&quot;:&quot;changes_to_the_read_builtin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;2876-3698&quot;} -->
+<h3 class="sectionedit10" id="changes_to_the_help_builtin">Changes to the &quot;help&quot; builtin</h3>
+<div class="level3">
+
+<p>
+The builtin itself didn&#039;t change much, but the data displayed is more structured
+now. The help texts are in a better format, much easier to read.
+</p>
+
+<p>
+There are two new options: <code>-d</code> displays the summary of a help text, <code>-m</code>
+displays a manpage-like format.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Changes to the \&quot;help\&quot; builtin&quot;,&quot;hid&quot;:&quot;changes_to_the_help_builtin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;3699-3997&quot;} -->
+<h3 class="sectionedit11" id="changes_to_the_ulimit_builtin">Changes to the &quot;ulimit&quot; builtin</h3>
+<div class="level3">
+
+<p>
+Besides the use of the 512 bytes blocksize everywhere in POSIX mode, <code>ulimit</code>
+supports two new limits: <code>-b</code> for max socket buffer size and <code>-T</code> for max
+number of threads.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Changes to the \&quot;ulimit\&quot; builtin&quot;,&quot;hid&quot;:&quot;changes_to_the_ulimit_builtin&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;3998-4218&quot;} -->
+<h2 class="sectionedit12" id="expansions">Expansions</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Expansions&quot;,&quot;hid&quot;:&quot;expansions&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:12,&quot;range&quot;:&quot;4219-4242&quot;} -->
+<h3 class="sectionedit13" id="brace_expansion">Brace Expansion</h3>
+<div class="level3">
+
+<p>
+The brace expansion was tuned to provide expansion results with leading zeros
+when requesting a row of numbers.
+</p>
+
+<p>
+See <a href="/syntax/expansion/brace" class="wikilink1" title="syntax:expansion:brace">Brace expansion</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Brace Expansion&quot;,&quot;hid&quot;:&quot;brace_expansion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:13,&quot;range&quot;:&quot;4243-4414&quot;} -->
+<h3 class="sectionedit14" id="parameter_expansion">Parameter Expansion</h3>
+<div class="level3">
+
+<p>
+Methods to modify the case on expansion time have been added.
+</p>
+
+<p>
+On expansion time you can modify the syntax by adding operators to the parameter
+name.
+</p>
+
+<p>
+See <a href="/syntax/pe#case_modification" class="wikilink1" title="syntax:pe"> Case modification on parameter expansion</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Parameter Expansion&quot;,&quot;hid&quot;:&quot;parameter_expansion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:14,&quot;range&quot;:&quot;4415-4675&quot;} -->
+<h3 class="sectionedit15" id="substring_expansion">Substring expansion</h3>
+<div class="level3">
+
+<p>
+When using substring expansion on the positional parameters, a starting
+index of 0 now causes $0 to be prepended to the list (if the positional parameters are used). Before, this expansion
+started with $1:
+<pre class="code"># this should display $0 on Bash v4, $1 on Bash v3
+echo ${@:0:1}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Substring expansion&quot;,&quot;hid&quot;:&quot;substring_expansion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:15,&quot;range&quot;:&quot;4676-4992&quot;} -->
+<h3 class="sectionedit16" id="globbing">Globbing</h3>
+<div class="level3">
+
+<p>
+There&#039;s a new shell option <code><a href="/internals/shell_options#globstar" class="wikilink1" title="internals:shell_options"> globstar</a></code>. When enabled, Bash will perform
+recursive globbing on <code>**</code> – this means it matches all directories and files
+from the current position in the filesystem, rather than only the current level.
+</p>
+
+<p>
+The new shell option  <code><a href="/internals/shell_options#dirspell" class="wikilink1" title="internals:shell_options"> dirspell</a></code> enables spelling corrections on directory
+names during globbing.
+</p>
+
+<p>
+See <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs">Pathname expansion (globbing)</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Globbing&quot;,&quot;hid&quot;:&quot;globbing&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:16,&quot;range&quot;:&quot;4993-5475&quot;} -->
+<h2 class="sectionedit17" id="associative_arrays">Associative Arrays</h2>
+<div class="level2">
+
+<p>
+Besides the classic method of integer indexed arrays, Bash 4 supports associative arrays.
+</p>
+
+<p>
+An associative array is an array indexed by an arbitrary string, something like
+<pre class="code">declare -A ASSOC
+
+ASSOC[First]=&quot;first element&quot;
+ASSOC[Hello]=&quot;second element&quot;
+ASSOC[Peter Pan]=&quot;A weird guy&quot;</pre>
+
+</p>
+
+<p>
+See <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">Arrays</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Associative Arrays&quot;,&quot;hid&quot;:&quot;associative_arrays&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:17,&quot;range&quot;:&quot;5476-5825&quot;} -->
+<h2 class="sectionedit18" id="redirection">Redirection</h2>
+<div class="level2">
+
+<p>
+There is a new <code>&amp;&gt;&gt;</code> redirection operator, which appends the standard output
+and standard error to the named file. This is the same as the good old <code>&gt;&gt;FILE 2&gt;&amp;1</code>
+notation.
+</p>
+
+<p>
+The parser now understands <code>|&amp;</code> as a synonym for <code>2&gt;&amp;1 |</code>, which redirects
+the standard error for a command through a pipe.
+</p>
+
+<p>
+See <a href="/syntax/redirection" class="wikilink1" title="syntax:redirection">Redirection</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Redirection&quot;,&quot;hid&quot;:&quot;redirection&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:18,&quot;range&quot;:&quot;5826-6218&quot;} -->
+<h2 class="sectionedit19" id="interesting_new_shell_variables">Interesting new shell variables</h2>
+<div class="level2">
+<div class="table sectionedit20"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Variable </th><th class="col1">Description </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><a href="/syntax/shellvars#bashpid" class="wikilink1" title="syntax:shellvars">BASHPID</a> </td><td class="col1"> contains the PID of the current shell (this is different than what <code>$$</code> does!) </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><a href="/syntax/shellvars#prompt_dirtrim" class="wikilink1" title="syntax:shellvars">PROMPT_DIRTRIM</a> </td><td class="col1"> specifies the max. level of unshortened pathname elements in the prompt </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><a href="/syntax/shellvars#funcnest" class="wikilink1" title="syntax:shellvars">FUNCNEST</a> </td><td class="col1"> control the maximum number of shell function recursions </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:20,&quot;range&quot;:&quot;6263-6638&quot;} -->
+<p>
+See <a href="/syntax/shellvars" class="wikilink1" title="syntax:shellvars">Special parameters and shell variables</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Interesting new shell variables&quot;,&quot;hid&quot;:&quot;interesting_new_shell_variables&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:19,&quot;range&quot;:&quot;6219-6665&quot;} -->
+<h2 class="sectionedit21" id="interesting_new_shell_options">Interesting new Shell Options</h2>
+<div class="level2">
+
+<p>
+The mentioned shell options are <strong>off by default</strong> unless otherwise mentioned.
+</p>
+<div class="table sectionedit22"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Option </th><th class="col1">Description </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code><a href="/internals/shell_options#checkjobs" class="wikilink1" title="internals:shell_options"> checkjobs</a></code> </td><td class="col1"> check for and report any running jobs at shell exit </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code><a href="/internals/shell_options#compat31" class="wikilink1" title="internals:shell_options"> compat*</a></code> </td><td class="col1"> set compatiblity modes for older shell versions (influences regular expression matching in <code>[[ ... ]]</code> </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code><a href="/internals/shell_options#dirspell" class="wikilink1" title="internals:shell_options"> dirspell</a></code> </td><td class="col1"> enables spelling corrections on directory names during globbing </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code><a href="/internals/shell_options#globstar" class="wikilink1" title="internals:shell_options"> globstar</a></code> </td><td class="col1"> enables recursive globbing with <code>**</code> </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code><a href="/internals/shell_options#lastpipe" class="wikilink1" title="internals:shell_options"> lastpipe</a></code> </td><td class="col1"> (4.2) to execute the last command in a pipeline in the current environment </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:22,&quot;range&quot;:&quot;6789-7466&quot;} -->
+<p>
+See <a href="/internals/shell_options" class="wikilink1" title="internals:shell_options">List of shell options</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Interesting new Shell Options&quot;,&quot;hid&quot;:&quot;interesting_new_shell_options&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:21,&quot;range&quot;:&quot;6666-7501&quot;} -->
+<h2 class="sectionedit23" id="misc">Misc</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> If a command is not found, the shell attempts to execute a shell function named <code>command_not_found_handle</code>, supplying the command words as the function arguments. This can be used to display userfriendly messages or perform different command searches</div>
+</li>
+<li class="level1"><div class="li"> The behaviour of the <code>set -e</code> (<code>errexit</code>) mode was changed, it now acts more intuitive (and is better documented in the manpage).</div>
+</li>
+<li class="level1"><div class="li"> The output target for the <code>xtrace</code> (<code>set -x</code>/<code>set +x</code>) feature is configurable <strong>since Bash 4.1</strong> (previously, it was fixed to <code>stderr</code>): a variable named <a href="/syntax/shellvars#bash_xtracefd" class="wikilink1" title="syntax:shellvars">BASH_XTRACEFD</a> can be set to the filedescriptor that should get the output</div>
+</li>
+<li class="level1"><div class="li"> Bash 4.1 is able to log the history to syslog (only to be enabled at compile time in <code>config-top.h</code>)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Misc&quot;,&quot;hid&quot;:&quot;misc&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:23,&quot;range&quot;:&quot;7502-&quot;} --></div>
+</body>
+</html>

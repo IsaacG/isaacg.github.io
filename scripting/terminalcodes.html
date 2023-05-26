@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:terminalcodes</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,terminalcodes,bash,shell,scripting,colors,cursor,control,vt100,ansi"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/terminalcodes?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/terminalcodes"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/terminalcodes"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/terminalcodes"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:terminalcodes","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#terminal_codes_ansivt100_introduction">Terminal codes (ANSI/VT100) introduction</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#how_it_technically_works">How it technically works</a></div></li>
+<li class="level2"><div class="li"><a href="#the_tput_command">The tput command</a></div></li>
+<li class="level2"><div class="li"><a href="#the_codes">The codes</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#general_useful_ascii_codes">General useful ASCII codes</a></div></li>
+<li class="level3"><div class="li"><a href="#cursor_handling">Cursor handling</a></div></li>
+<li class="level3"><div class="li"><a href="#erasing_text">Erasing text</a></div></li>
+<li class="level3"><div class="li"><a href="#general_text_attributes">General text attributes</a></div></li>
+<li class="level3"><div class="li"><a href="#foreground_coloring">Foreground coloring</a></div></li>
+<li class="level3"><div class="li"><a href="#background_coloring">Background coloring</a></div></li>
+<li class="level3"><div class="li"><a href="#misc_codes">Misc codes</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#bash_examples">Bash examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#hardcoded_colors">Hardcoded colors</a></div></li>
+<li class="level3"><div class="li"><a href="#colors_using_tput">Colors using tput</a></div></li>
+<li class="level3"><div class="li"><a href="#misc">Misc</a></div></li>
+<li class="level3"><div class="li"><a href="#silly_but_nice_effect">Silly but nice effect</a></div></li>
+<li class="level3"><div class="li"><a href="#mandelbrot_set">Mandelbrot set</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="terminal_codes_ansivt100_introduction">Terminal codes (ANSI/VT100) introduction</h1>
+<div class="level1">
+
+<p>
+Terminal (control) codes are used to issue specific commands to your terminal. This can be related to switching colors or positioning the cursor, i.e. anything that can&#039;t be done by the application itself.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Terminal codes (ANSI\/VT100) introduction&quot;,&quot;hid&quot;:&quot;terminal_codes_ansivt100_introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-332&quot;} -->
+<h2 class="sectionedit2" id="how_it_technically_works">How it technically works</h2>
+<div class="level2">
+
+<p>
+A terminal control code is a special sequence of characters that is printed (like any other text). If the terminal understands the code, it won&#039;t display the character-sequence, but will perform some action. You can print the codes with a simple <code>echo</code> command.
+</p>
+
+<p>
+<em class="u"><strong>Note:</strong></em> I see codes referenced as &quot;Bash colors&quot; sometimes (several &quot;Bash tutorials&quot; etc…): That&#039;s a completely incorrect definition.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;How it technically works&quot;,&quot;hid&quot;:&quot;how_it_technically_works&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;333-777&quot;} -->
+<h2 class="sectionedit3" id="the_tput_command">The tput command</h2>
+<div class="level2">
+
+<p>
+Because there&#039;s a large number of different terminal control languages, usually a system has an intermediate communication layer. The real codes are looked up in a database <strong>for the currently detected terminal type</strong> and you give standardized requests to an <abbr title="Application Programming Interface">API</abbr> or (from the shell) to a command.
+</p>
+
+<p>
+One of these commands is <code>tput</code>. Tput accepts a set of acronyms called <em>capability names</em> and any parameters, if appropriate, then looks up the correct escape sequences for the detected terminal in the <code>terminfo</code> database and prints the correct codes (the terminal hopefully understands).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The tput command&quot;,&quot;hid&quot;:&quot;the_tput_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;778-1401&quot;} -->
+<h2 class="sectionedit4" id="the_codes">The codes</h2>
+<div class="level2">
+
+<p>
+In this list I&#039;ll focus on ANSI/VT100 control codes for the most common actions - take it as quick reference. The documentation of your terminal or the <code>terminfo</code> database is always the preferred source when something is unclear! Also the <code>tput</code> acronyms are usually the ones dedicated for ANSI escapes!
+</p>
+
+<p>
+I listed only the most relevant codes, of course, any ANSI terminal understands many more! But let&#039;s keep the discussion centered on common shell scripting <img src="/lib/images/smileys/icon_wink.gif" class="icon" alt=";-)" />
+</p>
+
+<p>
+If I couldn&#039;t find a matching ANSI escape, you&#039;ll see a <img src="/lib/images/smileys/icon_question.gif" class="icon" alt=":?:" /> as  the code. Feel free to mail me or fix it.
+</p>
+
+<p>
+The ANSI codes always start with the ESC character. (<abbr title="American Standard Code for Information Interchange">ASCII</abbr> 0x1B or octal 033) This isn&#039;t part of the list, but <strong>you should avoid using the ANSI codes directly - use the <code>tput</code> command!</strong>
+</p>
+
+<p>
+All codes that can be used with <code>tput</code> can be found in terminfo(5). (on OpenBSD at least)
+See <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=terminfo&amp;apropos=0&amp;sektion=5&amp;manpath=OpenBSD+Current&amp;arch=i386&amp;format=html" class="urlextern" title="http://www.openbsd.org/cgi-bin/man.cgi?query=terminfo&amp;apropos=0&amp;sektion=5&amp;manpath=OpenBSD+Current&amp;arch=i386&amp;format=html" rel="nofollow">OpenBSD&#039;s terminfo(5)</a> under the <em class="u">Capabilities</em> section.  The <em>cap-name</em> is the code to use with tput. A description of each code is also provided.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The codes&quot;,&quot;hid&quot;:&quot;the_codes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1402-2564&quot;} -->
+<h3 class="sectionedit5" id="general_useful_ascii_codes">General useful ASCII codes</h3>
+<div class="level3">
+
+<p>
+The <strong>Ctrl-Key</strong> representation is simply associating the non-printable characters from <abbr title="American Standard Code for Information Interchange">ASCII</abbr> code 1 with the printable (letter) characters from <abbr title="American Standard Code for Information Interchange">ASCII</abbr> code 65 (&quot;A&quot;). <abbr title="American Standard Code for Information Interchange">ASCII</abbr> code 1 would be <code>^A</code> (Ctrl-A), while <abbr title="American Standard Code for Information Interchange">ASCII</abbr> code 7 (BEL) would be <code>^G</code> (Ctrl-G). This is a common representation (and input method) and historically comes from one of the VT series of terminals.
+</p>
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Name</th><th class="col1">decimal</th><th class="col2">octal</th><th class="col3">hex</th><th class="col4">C-escape</th><th class="col5">Ctrl-Key</th><th class="col6">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>BEL</code></td><td class="col1">7</td><td class="col2">007</td><td class="col3">0x07</td><td class="col4"><code>\a</code></td><td class="col5"><code>^G</code></td><td class="col6">Terminal bell</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>BS</code></td><td class="col1">8</td><td class="col2">010</td><td class="col3">0x08</td><td class="col4"><code>\b</code></td><td class="col5"><code>^H</code></td><td class="col6">Backspace</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>HT</code></td><td class="col1">9</td><td class="col2">011</td><td class="col3">0x09</td><td class="col4"><code>\t</code></td><td class="col5"><code>^I</code></td><td class="col6">Horizontal TAB</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>LF</code></td><td class="col1">10</td><td class="col2">012</td><td class="col3">0x0A</td><td class="col4"><code>\n</code></td><td class="col5"><code>^J</code></td><td class="col6">Linefeed (newline)</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>VT</code></td><td class="col1">11</td><td class="col2">013</td><td class="col3">0x0B</td><td class="col4"><code>\v</code></td><td class="col5"><code>^K</code></td><td class="col6">Vertical TAB</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>FF</code></td><td class="col1">12</td><td class="col2">014</td><td class="col3">0x0C</td><td class="col4"><code>\f</code></td><td class="col5"><code>^L</code></td><td class="col6">Formfeed (also: New page <code>NP</code>)</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>CR</code></td><td class="col1">13</td><td class="col2">015</td><td class="col3">0x0D</td><td class="col4"><code>\r</code></td><td class="col5"><code>^M</code></td><td class="col6">Carriage return</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><code>ESC</code></td><td class="col1">27</td><td class="col2">033</td><td class="col3">0x1B</td><td class="col4"><code>&lt;none&gt;</code></td><td class="col5"><code>^[</code></td><td class="col6">Escape character</td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"><code>DEL</code></td><td class="col1">127</td><td class="col2">177</td><td class="col3">0x7F</td><td class="col4"><code>&lt;none&gt;</code></td><td class="col5"><code>&lt;none&gt;</code></td><td class="col6">Delete character</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;2974-3510&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;General useful ASCII codes&quot;,&quot;hid&quot;:&quot;general_useful_ascii_codes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;2565-3511&quot;} -->
+<h3 class="sectionedit7" id="cursor_handling">Cursor handling</h3>
+<div class="level3">
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">ANSI</th><th class="col1">terminfo equivalent</th><th class="col2">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>[ &lt;X&gt; ; &lt;Y&gt; H</code><br/>
+<code>[ &lt;X&gt; ; &lt;Y&gt; f</code></td><td class="col1"><code>cup &lt;X&gt; &lt;Y&gt;</code></td><td class="col2">Home-positioning to <code>X</code> and <code>Y</code> coordinates<br/>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> it seems that ANSI uses 1-1 as home while <code>tput</code> uses 0-0</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>[ H</code></td><td class="col1"><code>home</code></td><td class="col2">Move cursor to home position (0-0)</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>7</code></td><td class="col1"><code>sc</code></td><td class="col2">Save current cursor position</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>8</code></td><td class="col1"><code>rc</code></td><td class="col2">Restore saved cursor position</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><img src="/lib/images/smileys/icon_question.gif" class="icon" alt=":?:" /> most likely a normal code like <code>\b</code></td><td class="col1"><code>cub1</code></td><td class="col2">move left one space (backspace)</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">VT100 <code>[ ? 25 l</code></td><td class="col1"><code>civis</code></td><td class="col2">make cursor invisible</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0">VT100 <code>[ ? 25 h</code></td><td class="col1"><code>cvvis</code></td><td class="col2">make cursor visible</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;3539-4079&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Cursor handling&quot;,&quot;hid&quot;:&quot;cursor_handling&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;3512-4080&quot;} -->
+<h3 class="sectionedit9" id="erasing_text">Erasing text</h3>
+<div class="level3">
+<div class="table sectionedit10"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> ANSI                 </th><th class="col1 leftalign"> terminfo equivalent  </th><th class="col2 leftalign"> Description                                                     </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>[ K</code><br/>
+<code>[ 0 K</code>  </td><td class="col1 leftalign"> <code>el</code>               </td><td class="col2 leftalign"> <strong>Clear line</strong> from current cursor position <strong>to end</strong> of line  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>[ 1 K</code>            </td><td class="col1 leftalign"> <code>el1</code>              </td><td class="col2 leftalign"> <strong>Clear line from beginning</strong> to current cursor position        </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>[ 2 K</code>            </td><td class="col1 leftalign"> <code>el2</code><img src="/lib/images/smileys/icon_question.gif" class="icon" alt=":?:" />           </td><td class="col2 leftalign"> <strong>Clear whole line</strong> (cursor position unchanged)                </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:10,&quot;range&quot;:&quot;4105-4560&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Erasing text&quot;,&quot;hid&quot;:&quot;erasing_text&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;4081-4561&quot;} -->
+<h3 class="sectionedit11" id="general_text_attributes">General text attributes</h3>
+<div class="level3">
+<div class="table sectionedit12"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">ANSI</th><th class="col1">terminfo equivalent</th><th class="col2">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>[ 0 m</code></td><td class="col1"><code>sgr0</code></td><td class="col2">Reset all attributes</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>[ 1 m</code></td><td class="col1"><code>bold</code></td><td class="col2">Set &quot;bright&quot; attribute</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>[ 2 m</code></td><td class="col1"><code>dim</code></td><td class="col2">Set &quot;dim&quot; attribute</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>[ 3 m</code></td><td class="col1"><code>smso</code></td><td class="col2">Set &quot;standout&quot; attribute</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>[ 4 m</code></td><td class="col1">set <code>smul</code> unset <code>rmul</code> <img src="/lib/images/smileys/icon_question.gif" class="icon" alt=":?:" /></td><td class="col2">Set &quot;underscore&quot; (underlined text) attribute</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>[ 5 m</code></td><td class="col1"><code>blink</code></td><td class="col2">Set &quot;blink&quot; attribute</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>[ 7 m</code></td><td class="col1"><code>rev</code></td><td class="col2">Set &quot;reverse&quot; attribute</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><code>[ 8 m</code></td><td class="col1"><code>invis</code></td><td class="col2">Set &quot;hidden&quot; attribute</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:12,&quot;range&quot;:&quot;4597-5029&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;General text attributes&quot;,&quot;hid&quot;:&quot;general_text_attributes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;4562-5030&quot;} -->
+<h3 class="sectionedit13" id="foreground_coloring">Foreground coloring</h3>
+<div class="level3">
+<div class="table sectionedit14"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> ANSI         </th><th class="col1 leftalign"> terminfo equivalent  </th><th class="col2 leftalign"> Description                                   </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>[ 3 0 m</code>  </td><td class="col1 leftalign"> <code>setaf 0</code>          </td><td class="col2 leftalign"> Set <strong>foreground</strong> to color #0 - <strong>black</strong>    </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>[ 3 1 m</code>  </td><td class="col1 leftalign"> <code>setaf 1</code>          </td><td class="col2 leftalign"> Set <strong>foreground</strong> to color #1 - <strong>red</strong>      </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>[ 3 2 m</code>  </td><td class="col1 leftalign"> <code>setaf 2</code>          </td><td class="col2 leftalign"> Set <strong>foreground</strong> to color #2 - <strong>green</strong>    </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>[ 3 3 m</code>  </td><td class="col1 leftalign"> <code>setaf 3</code>          </td><td class="col2 leftalign"> Set <strong>foreground</strong> to color #3 - <strong>yellow</strong>   </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>[ 3 4 m</code>  </td><td class="col1 leftalign"> <code>setaf 4</code>          </td><td class="col2 leftalign"> Set <strong>foreground</strong> to color #4 - <strong>blue</strong>     </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>[ 3 5 m</code>  </td><td class="col1 leftalign"> <code>setaf 5</code>          </td><td class="col2 leftalign"> Set <strong>foreground</strong> to color #5 - <strong>magenta</strong>  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>[ 3 6 m</code>  </td><td class="col1 leftalign"> <code>setaf 6</code>          </td><td class="col2 leftalign"> Set <strong>foreground</strong> to color #6 - <strong>cyan</strong>     </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>[ 3 7 m</code>  </td><td class="col1 leftalign"> <code>setaf 7</code>          </td><td class="col2 leftalign"> Set <strong>foreground</strong> to color #7 - <strong>white</strong>    </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> <code>[ 3 9 m</code>  </td><td class="col1 leftalign"> <code>setaf 9</code>          </td><td class="col2 leftalign"> Set <strong>default</strong> color as foreground color     </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table4&quot;,&quot;secid&quot;:14,&quot;range&quot;:&quot;5062-5941&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Foreground coloring&quot;,&quot;hid&quot;:&quot;foreground_coloring&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:13,&quot;range&quot;:&quot;5031-5942&quot;} -->
+<h3 class="sectionedit15" id="background_coloring">Background coloring</h3>
+<div class="level3">
+<div class="table sectionedit16"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> ANSI         </th><th class="col1 leftalign"> terminfo equivalent  </th><th class="col2 leftalign"> Description                                   </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>[ 4 0 m</code>  </td><td class="col1 leftalign"> <code>setab 0</code>          </td><td class="col2 leftalign"> Set <strong>background</strong> to color #0 - <strong>black</strong>    </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>[ 4 1 m</code>  </td><td class="col1 leftalign"> <code>setab 1</code>          </td><td class="col2 leftalign"> Set <strong>background</strong> to color #1 - <strong>red</strong>      </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>[ 4 2 m</code>  </td><td class="col1 leftalign"> <code>setab 2</code>          </td><td class="col2 leftalign"> Set <strong>background</strong> to color #2 - <strong>green</strong>    </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>[ 4 3 m</code>  </td><td class="col1 leftalign"> <code>setab 3</code>          </td><td class="col2 leftalign"> Set <strong>background</strong> to color #3 - <strong>yellow</strong>   </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>[ 4 4 m</code>  </td><td class="col1 leftalign"> <code>setab 4</code>          </td><td class="col2 leftalign"> Set <strong>background</strong> to color #4 - <strong>blue</strong>     </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>[ 4 5 m</code>  </td><td class="col1 leftalign"> <code>setab 5</code>          </td><td class="col2 leftalign"> Set <strong>background</strong> to color #5 - <strong>magenta</strong>  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>[ 4 6 m</code>  </td><td class="col1 leftalign"> <code>setab 6</code>          </td><td class="col2 leftalign"> Set <strong>background</strong> to color #6 - <strong>cyan</strong>     </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>[ 4 7 m</code>  </td><td class="col1 leftalign"> <code>setab 7</code>          </td><td class="col2 leftalign"> Set <strong>background</strong> to color #7 - <strong>white</strong>    </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> <code>[ 4 9 m</code>  </td><td class="col1 leftalign"> <code>setab 9</code>          </td><td class="col2 leftalign"> Set <strong>default</strong> color as background color     </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table5&quot;,&quot;secid&quot;:16,&quot;range&quot;:&quot;5974-6853&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Background coloring&quot;,&quot;hid&quot;:&quot;background_coloring&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:15,&quot;range&quot;:&quot;5943-6854&quot;} -->
+<h3 class="sectionedit17" id="misc_codes">Misc codes</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="saverestore_screen">Save/restore screen</h4>
+<div class="level4">
+
+<p>
+Used capabilities: <code>smcup</code>, <code>rmcup</code>
+</p>
+
+<p>
+You&#039;ve undoubtedly already encountered programs that restore the terminal contents after they do their work (like <code>vim</code>). This can be done by the following commands:
+<pre class="code"># save, clear screen
+tput smcup
+clear
+
+# example &quot;application&quot; follows...
+read -n1 -p &quot;Press any key to continue...&quot;
+# example &quot;application&quot; ends here
+
+# restore
+tput rmcup</pre>
+
+</p>
+
+<p>
+These features require that certain capabilities exist in your termcap/terminfo.  While <code>xterm</code> and most of its clones (<code>rxvt</code>, <code>urxvt</code>, etc) will support the instructions, your operating system may not include references to them in its default xterm profile.  (FreeBSD, in particular, falls into this category.)  If `tput smcup` appears to do nothing for you, and you don&#039;t want to modify your system termcap/terminfo data, and you KNOW that you are using a compatible xterm application, the following may work for you:
+</p>
+
+<p>
+<pre class="code">echo -e &#039;\033[?47h&#039; # save screen
+echo -e &#039;\033[?47l&#039; # restore screen</pre>
+
+</p>
+
+<p>
+Certain software uses these codes (via their termcap capabilities) as well. You may have seen the screen save/restore in <code>less</code>, <code>vim</code>, <code>top</code>, <code>screen</code> and others.  Some of these applications may also provide configuration options to *disable* this behaviour.  For example, <code>less</code> has a <code>-X</code> option for this, which can also be set in an environment variable:
+</p>
+
+<p>
+<pre class="code">export LESS=X
+less /path/to/file</pre>
+
+</p>
+
+<p>
+Similarly, <code>vim</code> can be configured not to &quot;restore&quot; the screen by adding the following to your <code>~/.vimrc</code>:
+</p>
+
+<p>
+<pre class="code">set t_ti= t_te=</pre>
+
+</p>
+
+</div>
+
+<h4 id="additional_colors">Additional colors</h4>
+<div class="level4">
+
+<p>
+Some terminal emulators support additional colors. The most common extension used by xterm-compatible terminals supports 256 colors. These can be generated by <code>tput</code> with <code>seta{f,b} [0-255]</code> when the <code>TERM</code> value has a <code>-256color</code> suffix.
+<a href="https://gist.github.com/XVilka/8346728#now-supporting-truecolour" class="urlextern" title="https://gist.github.com/XVilka/8346728#now-supporting-truecolour" rel="nofollow">Some terminals</a> also support full 24-bit colors, and any X11 color code can be written directly into a special escape sequence. (<a href="https://gist.github.com/XVilka/8346728" class="urlextern" title="https://gist.github.com/XVilka/8346728" rel="nofollow">More infos</a>) Only a few programs make use of anything beyond 256 colors, and tput doesn&#039;t know about them. Colors beyond 16 usually only apply to modern terminal emulators running in graphical environments.
+</p>
+
+<p>
+The Virtual Terminal implemented in the Linux kernel supports only 16 colors, and the usual default terminfo entry for <code>TERM=linux</code> defines only 8. There is sometimes an alternate &quot;linux-16color&quot; that you can switch to, to get the other 8 colors.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Misc codes&quot;,&quot;hid&quot;:&quot;misc_codes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:17,&quot;range&quot;:&quot;6855-9456&quot;} -->
+<h2 class="sectionedit18" id="bash_examples">Bash examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash examples&quot;,&quot;hid&quot;:&quot;bash_examples&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:18,&quot;range&quot;:&quot;9457-9483&quot;} -->
+<h3 class="sectionedit19" id="hardcoded_colors">Hardcoded colors</h3>
+<div class="level3">
+
+<p>
+<pre class="code">printf &#039;%b\n&#039; &#039;It is \033[31mnot\033[39m intelligent to use \033[32mhardcoded ANSI\033[39m codes!&#039;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Hardcoded colors&quot;,&quot;hid&quot;:&quot;hardcoded_colors&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:19,&quot;range&quot;:&quot;9484-9626&quot;} -->
+<h3 class="sectionedit20" id="colors_using_tput">Colors using tput</h3>
+<div class="level3">
+
+<p>
+<em class="u">Directly inside the echo:</em>
+<pre class="code">echo &quot;TPUT is a $(tput setaf 2)nice$(tput setaf 9) and $(tput setaf 5)user friendly$(tput setaf 9) terminal capability database.&quot;</pre>
+
+</p>
+
+<p>
+<em class="u">With preset variables:</em>
+<pre class="code">COL_NORM=&quot;$(tput setaf 9)&quot;
+COL_RED=&quot;$(tput setaf 1)&quot;
+COL_GREEN=&quot;$(tput setaf 2)&quot;
+echo &quot;It&#039;s ${COL_RED}red${COL_NORM} and ${COL_GREEN}green${COL_NORM} - have you seen?&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Colors using tput&quot;,&quot;hid&quot;:&quot;colors_using_tput&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:20,&quot;range&quot;:&quot;9627-10042&quot;} -->
+<h3 class="sectionedit21" id="misc">Misc</h3>
+<div class="level3">
+
+<p>
+<em class="u">HOME function</em>
+<pre class="code">home() {
+  # yes, actually not much shorter ;-)
+  tput home
+}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Misc&quot;,&quot;hid&quot;:&quot;misc&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:21,&quot;range&quot;:&quot;10043-10154&quot;} -->
+<h3 class="sectionedit22" id="silly_but_nice_effect">Silly but nice effect</h3>
+<div class="level3">
+
+<p>
+<pre class="code">#!/bin/bash
+
+DATA[0]=&quot;     _/  _/    _/                            _/    &quot;
+DATA[1]=&quot;  _/_/_/_/_/  _/_/_/      _/_/_/    _/_/_/  _/_/_/ &quot;
+DATA[2]=&quot;   _/  _/    _/    _/  _/    _/  _/_/      _/    _/&quot;
+DATA[3]=&quot;_/_/_/_/_/  _/    _/  _/    _/      _/_/  _/    _/ &quot;
+DATA[4]=&quot; _/  _/    _/_/_/      _/_/_/  _/_/_/    _/    _/  &quot;
+
+# virtual coordinate system is X*Y ${#DATA} * 5
+
+REAL_OFFSET_X=0
+REAL_OFFSET_Y=0
+
+draw_char() {
+  V_COORD_X=$1
+  V_COORD_Y=$2
+
+  tput cup $((REAL_OFFSET_Y + V_COORD_Y)) $((REAL_OFFSET_X + V_COORD_X))
+
+  printf %c ${DATA[V_COORD_Y]:V_COORD_X:1}
+}
+
+
+trap &#039;exit 1&#039; INT TERM
+trap &#039;tput setaf 9; tput cvvis; clear&#039; EXIT
+
+tput civis
+clear
+
+while :; do
+
+for ((c=1; c &lt;= 7; c++)); do
+  tput setaf $c
+  for ((x=0; x&lt;${#DATA[0]}; x++)); do
+    for ((y=0; y&lt;=4; y++)); do
+      draw_char $x $y
+    done
+  done
+done
+
+done</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Silly but nice effect&quot;,&quot;hid&quot;:&quot;silly_but_nice_effect&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:22,&quot;range&quot;:&quot;10155-11037&quot;} -->
+<h3 class="sectionedit23" id="mandelbrot_set">Mandelbrot set</h3>
+<div class="level3">
+
+<p>
+This is a slightly modified version of Charles Cooke&#039;s colorful Mandelbrot plot scripts (<a href="http://earth.gkhs.net/ccooke/shell.html" class="urlextern" title="http://earth.gkhs.net/ccooke/shell.html" rel="nofollow"> original w/ screenshot</a>) – ungolfed, optimized a bit, and without hard-coded terminal escapes. The <code>colorBox</code> function is <a href="http://en.wikipedia.org/wiki/Memoization" class="urlextern" title="http://en.wikipedia.org/wiki/Memoization" rel="nofollow"> memoized</a> to collect <code>tput</code> output only when required and output a new escape only when a color change is needed. This limits the number of <code>tput</code> calls to at most 16, and reduces raw output by more than half. The <code>doBash</code> function uses integer arithmetic, but is still ksh93-compatible (run as e.g. <code>bash ./mandelbrot</code> to use it). The ksh93-only floating-point <code>doKsh</code> is almost 10x faster than <code>doBash</code> (thus the ksh shebang by default), but uses only features that don&#039;t make the Bash parser crash.
+</p>
+
+<p>
+<pre class="code">#!/usr/bin/env ksh
+
+# Charles Cooke&#039;s 16-color Mandelbrot
+# http://earth.gkhs.net/ccooke/shell.html
+# Combined Bash/ksh93 flavors by Dan Douglas (ormaaj)
+
+function doBash {
+	typeset P Q X Y a b c i v x y 
+	for ((P=10**8,Q=P/100,X=320*Q/cols,Y=210*Q/lines,y=-105*Q,v=-220*Q,x=v;y&lt;105*Q;x=v,y+=Y)); do
+		for ((;x&lt;P;a=b=i=c=0,x+=X)); do
+			for ((;a**2+b**2&lt;4*P**2&amp;&amp;i++&lt;99;a=((c=a)**2-b**2)/P+x,b=2*c*b/P+y)); do :
+			done
+			colorBox $((i&lt;99?i%16:0))
+		done
+		echo
+	done
+}
+
+function doKsh {
+	integer i
+	float a b c x=2.2 y=-1.05 X=3.2/cols Y=2.1/lines 
+	while
+		for ((a=b=i=0;(c=a)**2+b**2&lt;=2&amp;&amp;i++&lt;99&amp;&amp;(a=a**2-b**2+x,b=2*c*b+y);)); do :
+		done
+		. colorBox $((i&lt;99?i%16:0))
+		if ((x&lt;1?!(x+=X):(y+=Y,x=-2.2))); then
+			print
+			((y&lt;1.05)) 
+		fi
+		do :
+	done
+}
+
+function colorBox {
+	(($1==lastclr)) || printf %s &quot;${colrs[lastclr=$1]:=$(tput setaf &quot;$1&quot;)}&quot;
+	printf &#039;\u2588&#039;
+}
+
+unset -v lastclr
+((cols=$(tput cols)-1, lines=$(tput lines)))
+typeset -a colrs
+trap &#039;tput sgr0; echo&#039; EXIT
+${KSH_VERSION+. doKsh} ${BASH_VERSION+doBash}</pre>
+
+</p>
+
+<p>
+A much more sophisticated version by Roland Mainz can be found <a href="http://svn.nrubsig.org/svn/people/gisburn/scripts/mandelbrotset1.sh" class="urlextern" title="http://svn.nrubsig.org/svn/people/gisburn/scripts/mandelbrotset1.sh" rel="nofollow"> here</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Mandelbrot set&quot;,&quot;hid&quot;:&quot;mandelbrot_set&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:23,&quot;range&quot;:&quot;11038-&quot;} --></div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>dict:terms:file</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="dict,terms,file"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/dict/terms/file?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=dict:terms"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/dict/terms/file"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/dict/terms/file"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/dict/terms/file"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='dict:terms';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"dict:terms:file","namespace":"dict:terms","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="file">File</h1>
+<div class="level1">
+
+<p>
+A file is a pool of data in the <a href="/dict/terms/filesystem" class="wikilink2" title="dict:terms:filesystem" rel="nofollow"> filesystem</a>. On userlevel, it&#039;s referenced using a name, a <a href="/dict/terms/hardlink" class="wikilink1" title="dict:terms:hardlink"> hardlink</a> to the file.
+</p>
+
+<p>
+If a file is not referenced anymore (number of hardlinks to it drops to 0) then the space allocated for that file is re-used, unless it&#039;s still used by some process.
+</p>
+
+<p>
+The file-data splits into actual payload (file contents) and some metadata like filesize, filemode or timestamps. The metadata is stored in the <a href="/dict/terms/inode" class="wikilink2" title="dict:terms:inode" rel="nofollow"> inode</a>.
+</p>
+
+<p>
+Strictly spoken, a <a href="/dict/terms/hardlink" class="wikilink1" title="dict:terms:hardlink"> hardlink</a> (also called &quot;filename&quot;) points to the <a href="/dict/terms/inode" class="wikilink2" title="dict:terms:inode" rel="nofollow"> inode</a> which organizes a file, not to the file itself.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;File&quot;,&quot;hid&quot;:&quot;file&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-701&quot;} -->
+<h2 class="sectionedit2" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/dict/terms/filesystem" class="wikilink2" title="dict:terms:filesystem" rel="nofollow"> filesystem</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/dict/terms/filetimes" class="wikilink1" title="dict:terms:filetimes"> filetimes</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/dict/terms/hardlink" class="wikilink1" title="dict:terms:hardlink"> hardlink</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/dict/terms/inode" class="wikilink2" title="dict:terms:inode" rel="nofollow"> inode</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;702-&quot;} --></div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>howto:dissectabadoneliner</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="howto,dissectabadoneliner"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/howto/dissectabadoneliner?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=howto"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/howto/dissectabadoneliner"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/howto/dissectabadoneliner"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/howto/dissectabadoneliner"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='howto';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"howto:dissectabadoneliner","namespace":"howto","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="dissect_a_bad_oneliner">Dissect a bad oneliner</h1>
+<div class="level1">
+
+<p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw2">ls</span> <span class="sy0">*</span>.zip <span class="sy0">|</span> <span class="kw1">while</span> <span class="kw2">read</span> i; <span class="kw1">do</span> <span class="re2">j</span>=<span class="sy0">`</span><span class="kw3">echo</span> <span class="re1">$i</span> <span class="sy0">|</span> <span class="kw2">sed</span> <span class="st_h">'s/.zip//g'</span><span class="sy0">`</span>; <span class="kw2">mkdir</span> <span class="re1">$j</span>; <span class="kw3">cd</span> <span class="re1">$j</span>; <span class="kw2">unzip</span> ..<span class="sy0">/</span><span class="re1">$i</span>; <span class="kw3">cd</span> ..; <span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+This is an actual one-liner someone asked about in <code>#bash</code>. <strong>There are several things wrong with it. Let&#039;s break it down!</strong>
+</p>
+
+<p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw2">ls</span> <span class="sy0">*</span>.zip <span class="sy0">|</span> <span class="kw1">while</span> <span class="kw2">read</span> i; <span class="kw1">do</span> ...; <span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+(Please read <a href="http://mywiki.wooledge.org/ParsingLs" class="urlextern" title="http://mywiki.wooledge.org/ParsingLs" rel="nofollow">http://mywiki.wooledge.org/ParsingLs</a>.) This command executes <code>ls</code> on the expansion of <code>*.zip</code>. Assuming there are filenames in the current directory that end in &#039;.zip&#039;, ls will give a human-readable list of those names. The output of ls is not for parsing. But in sh and bash alike, we can loop safely over the glob itself:
+</p>
+
+<p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">*</span>.zip; <span class="kw1">do</span> <span class="re2">j</span>=<span class="sy0">`</span><span class="kw3">echo</span> <span class="re1">$i</span> <span class="sy0">|</span> <span class="kw2">sed</span> <span class="st_h">'s/.zip//g'</span><span class="sy0">`</span>; <span class="kw2">mkdir</span> <span class="re1">$j</span>; <span class="kw3">cd</span> <span class="re1">$j</span>; <span class="kw2">unzip</span> ..<span class="sy0">/</span><span class="re1">$i</span>; <span class="kw3">cd</span> ..; <span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+Let&#039;s break it down some more!
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">j</span>=<span class="sy0">`</span><span class="kw3">echo</span> <span class="re1">$i</span> <span class="sy0">|</span> <span class="kw2">sed</span> <span class="st_h">'s/.zip//g'</span><span class="sy0">`</span> <span class="co0"># where $i is some name ending in '.zip'</span></pre>
+
+</p>
+
+<p>
+The goal here seems to be get the filename without its <code>.zip</code> extension. In fact, there is a POSIX®-compliant command to do this: <code>basename</code> The implementation here is suboptimal in several ways, but the only thing that&#039;s genuinely error-prone with this is &quot;<code>echo $i</code>&quot;. Echoing an <em>unquoted</em> variable means <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> wordsplitting</a> will take place, so any whitespace in <code>$i</code> will essentially be normalized. In <code>sh</code> it is necessary to use an external command and a subshell to achieve the goal, but we can eliminate the pipe (subshells, external commands, and pipes carry extra overhead when they launch, so they can really hurt performance in a loop). Just for good measure, let&#039;s use the more readable, <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> modern</a> <code>$()</code> construct instead of the old style backticks:
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">sh</span> $ <span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">*</span>.zip; <span class="kw1">do</span> <span class="re2">j</span>=$<span class="br0">&#40;</span><span class="kw2">basename</span> <span class="st0">&quot;<span class="es2">$i</span>&quot;</span> <span class="st0">&quot;.zip&quot;</span><span class="br0">&#41;</span>; <span class="kw2">mkdir</span> <span class="re1">$j</span>; <span class="kw3">cd</span> <span class="re1">$j</span>; <span class="kw2">unzip</span> ..<span class="sy0">/</span><span class="re1">$i</span>; <span class="kw3">cd</span> ..; <span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+In Bash we don&#039;t need the subshell or the external basename command. See <a href="/syntax/pe#substring_removal" class="wikilink1" title="syntax:pe"> Substring removal with parameter expansion</a>:
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">bash</span> $ <span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">*</span>.zip; <span class="kw1">do</span> <span class="re2">j</span>=<span class="st0">&quot;<span class="es3">${i%.zip}</span>&quot;</span>; <span class="kw2">mkdir</span> <span class="re1">$j</span>; <span class="kw3">cd</span> <span class="re1">$j</span>; <span class="kw2">unzip</span> ..<span class="sy0">/</span><span class="re1">$i</span>; <span class="kw3">cd</span> ..; <span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+Let&#039;s keep going:
+</p>
+
+<p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw2">mkdir</span> <span class="re1">$j</span>; <span class="kw3">cd</span> <span class="re1">$j</span>; ...; <span class="kw3">cd</span> ..</pre>
+
+</p>
+
+<p>
+As a programmer, you <strong>never</strong> know the situation under which your program will run. Even if you do, the following best practice will never hurt: When a following command depends on the success of a previous command(s), check for success! You can do this with the &quot;<code>&amp;&amp;</code>&quot; conjunction, that way, if the previous command fails, bash will not try to execute the following command(s). It&#039;s fully POSIX®. Oh, and remember what I said about <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> wordsplitting</a> in the previous step? Well, if you don&#039;t quote <code>$j</code>, wordsplitting can happen again.
+</p>
+
+<p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw2">mkdir</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> ... <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> ..</pre>
+
+</p>
+
+<p>
+That&#039;s almost right, but there&#039;s one problem – what happens if <code>$j</code> contains a slash? Then <code>cd ..</code> will not return to the original directory. That&#039;s wrong! <code>cd -</code> causes cd to return to the previous working directory, so it&#039;s a much better choice:
+</p>
+
+<p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw2">mkdir</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> ... <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> -</pre>
+
+</p>
+
+<p>
+(If it occurred to you that I forgot to check for success after cd -, good job! You could do this with <code>{ cd - || break; }</code>, but I&#039;m going to leave that out because it&#039;s verbose and I think it&#039;s likely that we will be able to get back to our original working directory without a problem.)
+</p>
+
+<p>
+So now we have:
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">sh</span> $ <span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">*</span>.zip; <span class="kw1">do</span> <span class="re2">j</span>=$<span class="br0">&#40;</span><span class="kw2">basename</span> <span class="st0">&quot;<span class="es2">$i</span>&quot;</span> <span class="st0">&quot;.zip&quot;</span><span class="br0">&#41;</span>; <span class="kw2">mkdir</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">unzip</span> ..<span class="sy0">/</span><span class="re1">$i</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> -; <span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">bash</span> $ <span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">*</span>.zip; <span class="kw1">do</span> <span class="re2">j</span>=<span class="st0">&quot;<span class="es3">${i%.zip}</span>&quot;</span>; <span class="kw2">mkdir</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">unzip</span> ..<span class="sy0">/</span><span class="re1">$i</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> -; <span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+Let&#039;s throw the <code>unzip</code> command back in the mix:
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">mkdir</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">unzip</span> ..<span class="sy0">/</span><span class="re1">$i</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">cd</span> -</pre>
+
+</p>
+
+<p>
+Well, besides word splitting, there&#039;s nothing terribly wrong with this. Still, did it occur to you that unzip might already be able to target a directory? There isn&#039;t a standard for the <code>unzip</code> command, but all the implementations I&#039;ve seen can do it with the -d flag. So we can drop the cd commands entirely:
+</p>
+
+<p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw2">mkdir</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">unzip</span> <span class="re5">-d</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="st0">&quot;<span class="es2">$i</span>&quot;</span></pre>
+
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">sh</span> $ <span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">*</span>.zip; <span class="kw1">do</span> <span class="re2">j</span>=$<span class="br0">&#40;</span><span class="kw2">basename</span> <span class="st0">&quot;<span class="es2">$i</span>&quot;</span> <span class="st0">&quot;.zip&quot;</span><span class="br0">&#41;</span>; <span class="kw2">mkdir</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">unzip</span> <span class="re5">-d</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="st0">&quot;<span class="es2">$i</span>&quot;</span>; <span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">bash</span> $ <span class="kw1">for</span> i <span class="kw1">in</span> <span class="sy0">*</span>.zip; <span class="kw1">do</span> <span class="re2">j</span>=<span class="st0">&quot;<span class="es3">${i%.zip}</span>&quot;</span>; <span class="kw2">mkdir</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="sy0">&amp;&amp;</span> <span class="kw2">unzip</span> <span class="re5">-d</span> <span class="st0">&quot;<span class="es2">$j</span>&quot;</span> <span class="st0">&quot;<span class="es2">$i</span>&quot;</span>; <span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+There! That&#039;s as good as it gets.
+</p>
+
+</div>
+</div>
+</body>
+</html>

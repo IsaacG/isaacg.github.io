@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:ccmd:case</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,ccmd,case"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/ccmd/case?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:ccmd"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/ccmd/case"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/ccmd/case"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/ccmd/case"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:ccmd';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:ccmd:case","namespace":"syntax:ccmd","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_case_statement">The case statement</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_case_statement">The case statement</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The case statement&quot;,&quot;hid&quot;:&quot;the_case_statement&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-34&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">case &lt;WORD&gt; in
+  [(] &lt;PATTERN1&gt; ) &lt;LIST1&gt; ;; # or ;&amp; or ;;&amp; in Bash 4
+  [(] &lt;PATTERN2&gt; ) &lt;LIST2&gt; ;;
+  [(] &lt;PATTERN3&gt; | &lt;PATTERN4&gt; ) &lt;LIST3-4&gt; ;;
+  ...
+  [(] &lt;PATTERNn&gt;) &lt;LISTn&gt; [;;]
+esac</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;35-258&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>case</code>-statement can execute commands based on a <a href="/syntax/pattern" class="wikilink1" title="syntax:pattern"> pattern matching</a> decision. The word <code>&lt;WORD&gt;</code> is matched against every pattern <code>&lt;PATTERNn&gt;</code> and on a match, the associated <a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> list</a> <code>&lt;LISTn&gt;</code> is executed. Every commandlist is terminated by <code>;;</code>. This rule is optional for the very last commandlist (i.e., you can omit the <code>;;</code> before the <code>esac</code>). Every <code>&lt;PATTERNn&gt;</code> is separated from it&#039;s associated <code>&lt;LISTn&gt;</code> by a <code>)</code>, and is optionally preceded by a <code>(</code>.
+</p>
+
+<p>
+Bash 4 introduces two new action terminators. The classic behavior using <code>;;</code> is to execute only the list associated with the first matching pattern, then break out of the <code>case</code> block. The <code>;&amp;</code> terminator causes <code>case</code> to also execute the next block without testing its pattern. The <code>;;&amp;</code> operator is like <code>;;</code>, except the case statement doesn&#039;t terminate after executing the associated list - Bash just continues testing the next pattern as though the previous pattern didn&#039;t match. Using these terminators, a <code>case</code> statement can be configured to test against all patterns, or to share code between blocks, for example.
+</p>
+
+<p>
+The word <code>&lt;WORD&gt;</code> is expanded using <em>tilde</em>, <em>parameter</em> and <em>variable expansion</em>; <em>arithmetic</em>, <em>command</em> and <em>process substitution</em>; and <em>quote removal</em>. <strong>No word splitting, brace, or pathname expansion is done</strong>, which means you can leave expansions unquoted without problems:
+<pre class="code">var=&quot;test word&quot;
+
+case $var in
+  ...
+esac</pre>
+
+This is similar to the behavior of the <a href="/syntax/ccmd/conditional_expression" class="wikilink1" title="syntax:ccmd:conditional_expression"> conditional expression command (&quot;new test command&quot;)</a> (also no word splitting for expansions).
+</p>
+
+<p>
+Unlike the C-case-statement, only the matching list and nothing else is executed. If more patterns match the word, only the first match is taken. (<strong>Note</strong> the comment about Bash v4 changes above.)
+</p>
+
+<p>
+Multiple <code>|</code>-delimited patterns can be specified for a single block. This is a POSIX-compatable equivalent to the <code>@(pattern-list)</code> extglob construct.
+</p>
+
+<p>
+The <code>case</code> statement is one of the most difficult commands to indent clearly, and people frequently ask about the most &quot;correct&quot; style. Just do your best - there are many variations of indenting style for <code>case</code> and no real agreed-upon best practice.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;259-2623&quot;} -->
+<h2 class="sectionedit4" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+Another one of my stupid examples…
+<pre class="code">printf &#039;%s &#039; &#039;Which fruit do you like most?&#039;
+read -${BASH_VERSION+e}r fruit
+
+case $fruit in
+    apple)
+        echo &#039;Mmmmh... I like those!&#039;
+        ;;
+    banana)
+        echo &#039;Hm, a bit awry, no?&#039;
+        ;;
+    orange|tangerine)
+        echo $&#039;Eeeks! I don\&#039;t like those!\nGo away!&#039;
+        exit 1
+        ;;
+    *)
+        echo &quot;Unknown fruit - sure it isn&#039;t toxic?&quot;
+esac</pre>
+
+</p>
+
+<p>
+Here&#039;s a practical example showing a common pattern involving a <code>case</code> statement. If the first argument is one of a valid set of alternatives, then perform some sysfs operations under Linux to control a video card&#039;s power profile. Otherwise, show a usage synopsis, and print the current power profile and GPU temperature.
+<pre class="code bash"><span class="co0"># Set radeon power management</span>
+<span class="kw1">function</span> clk <span class="br0">&#123;</span>
+	<span class="kw3">typeset</span> <span class="re2">base</span>=<span class="sy0">/</span>sys<span class="sy0">/</span>class<span class="sy0">/</span>drm<span class="sy0">/</span>card0<span class="sy0">/</span>device
+	<span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-r</span> <span class="co1">${base}</span><span class="sy0">/</span>hwmon<span class="sy0">/</span>hwmon0<span class="sy0">/</span>temp1_input <span class="sy0">&amp;&amp;</span> <span class="re5">-r</span> <span class="co1">${base}</span><span class="sy0">/</span>power_profile <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">||</span> <span class="kw3">return</span> <span class="nu0">1</span>
+&nbsp;
+	<span class="kw1">case</span> <span class="re4">$1</span> <span class="kw1">in</span>
+		low<span class="sy0">|</span>high<span class="sy0">|</span>default<span class="br0">&#41;</span>
+			<span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;temp: <span class="es4">$(&lt;${base}/hwmon/hwmon0/temp1_input)</span>C&quot;</span> <span class="st0">&quot;old profile: <span class="es4">$(&lt;${base}/power_profile)</span>&quot;</span>
+			<span class="kw3">echo</span> <span class="st0">&quot;$1&quot;</span> <span class="sy0">&gt;</span><span class="co1">${base}</span><span class="sy0">/</span>power_profile
+			<span class="kw3">echo</span> <span class="st0">&quot;new profile: <span class="es4">$(&lt;${base}/power_profile)</span>&quot;</span>
+			<span class="sy0">;;</span>
+		<span class="sy0">*</span><span class="br0">&#41;</span>
+			<span class="kw3">echo</span> <span class="st0">&quot;Usage: <span class="es2">$FUNCNAME</span> [ low | high | default ]&quot;</span>
+			<span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;temp: <span class="es4">$(&lt;${base}/hwmon/hwmon0/temp1_input)</span>C&quot;</span> <span class="st0">&quot;current profile: <span class="es4">$(&lt;${base}/power_profile)</span>&quot;</span>
+	<span class="kw1">esac</span>
+<span class="br0">&#125;</span></pre>
+
+</p>
+
+<p>
+A template for experiments with <code>case</code> logic, showing shared code between blocks using <code>;&amp;</code>, and the non-short-circuiting <code>;;&amp;</code> operator:
+<pre class="code bash"><span class="co0">#!/usr/bin/env bash</span>
+&nbsp;
+f<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw3">local</span> <span class="re5">-a</span> <span class="st0">&quot;$@&quot;</span>
+    <span class="kw3">local</span> x
+&nbsp;
+    <span class="kw1">for</span> x; <span class="kw1">do</span>
+        <span class="kw1">case</span> <span class="re1">$x</span> <span class="kw1">in</span>
+            <span class="re4">$1</span><span class="br0">&#41;</span>
+                <span class="kw3">local</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span><span class="st_h">'+=(1)'</span> <span class="sy0">;;&amp;</span>
+            <span class="re4">$2</span><span class="br0">&#41;</span>
+                <span class="kw3">local</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span><span class="st_h">'+=(2)'</span> ;<span class="sy0">&amp;</span>
+            <span class="re4">$3</span><span class="br0">&#41;</span>
+                <span class="kw3">local</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span><span class="st_h">'+=(3)'</span> <span class="sy0">;;</span>
+            <span class="re4">$1</span><span class="sy0">|</span><span class="re4">$2</span><span class="br0">&#41;</span>
+                <span class="kw3">local</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span><span class="st_h">'+=(4)'</span>
+        <span class="kw1">esac</span>
+        <span class="re2">IFS</span>=, <span class="kw3">local</span> <span class="re5">-a</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span><span class="st_h">'=(&quot;${x}: ${'</span><span class="st0">&quot;<span class="es2">$x</span>&quot;</span><span class="st_h">'[*]}&quot;)'</span>
+    <span class="kw1">done</span>
+&nbsp;
+    <span class="kw1">for</span> x; <span class="kw1">do</span>
+        <span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${!x}</span>&quot;</span>
+    <span class="kw1">done</span>
+<span class="br0">&#125;</span>
+&nbsp;
+f a b c
+&nbsp;
+<span class="co0"># output:</span>
+<span class="co0"># a: 1,4</span>
+<span class="co0"># b: 2,3</span>
+<span class="co0"># c: 3</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;2624-4625&quot;} -->
+<h2 class="sectionedit5" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Only the <code>;;</code> delimiter is specified by POSIX.</div>
+</li>
+<li class="level1"><div class="li"> zsh and mksh use the <code>;|</code> control operator instead of Bash&#039;s <code>;;&amp;</code>. Mksh has <code>;;&amp;</code> for Bash compatability (undocumented).</div>
+</li>
+<li class="level1"><div class="li"> ksh93 has the <code>;&amp;</code> operator, but no <code>;;&amp;</code> or equivalent.</div>
+</li>
+<li class="level1"><div class="li"> ksh93, mksh, zsh, and posh support a historical syntax where open and close braces may be used in place of <code>in</code> and <code>esac</code>: <code>case word { x) …; };</code>. This is similar to the alternate form Bash supports for its <a href="/syntax/ccmd/classic_for" class="wikilink1" title="syntax:ccmd:classic_for"> for loops</a>, but Bash doesn&#039;t support this syntax for <code>case..esac</code>.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:5,&quot;range&quot;:&quot;4626-5233&quot;} -->
+<h2 class="sectionedit6" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_09_04_05" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_09_04_05" rel="nofollow">POSIX case conditional construct</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:6,&quot;range&quot;:&quot;5234-&quot;} --></div>
+</body>
+</html>

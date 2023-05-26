@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:export</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,export"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/export?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/export"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/export"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/export"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:export","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_export_builtin_command">The export builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#options">Options</a></div></li>
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_export_builtin_command">The export builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The export builtin command&quot;,&quot;hid&quot;:&quot;the_export_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-42&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">export [-fn] [NAME[=VALUE] ...]
+export -p</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;43-122&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>export</code> builtin command is used to mark variables or functions referenced by <code>NAME</code> for automatic export to the environment. If <code>NAME</code> is a shell variable, a value <code>VALUE</code> can be assigned before exporting it.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;123-370&quot;} -->
+<h3 class="sectionedit4" id="options">Options</h3>
+<div class="level3">
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Option  </th><th class="col1 leftalign">Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>-f</code>  </td><td class="col1 leftalign">refer to shell functions  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>-n</code>  </td><td class="col1 leftalign">remove the export property from any referenced <code>NAME</code>  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>-p</code>  </td><td class="col1">print all exported variables, with <code>-f</code>, print all exported functions - all in a format re-usable as input </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;390-642&quot;} -->
+<p>
+An argument of <code>--</code> disables further option processing.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;371-705&quot;} -->
+<h3 class="sectionedit6" id="return_status">Return status</h3>
+<div class="level3">
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Status  </th><th class="col1 leftalign">Reason  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">0    </td><td class="col1 leftalign">no error  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">!=0  </td><td class="col1 leftalign">invalid option  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">!=0  </td><td class="col1 leftalign">a given <code>NAME</code> is invalid  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;731-832&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;706-833&quot;} -->
+<h2 class="sectionedit8" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+Set the display to use when launching a <abbr title="Graphical User Interface">GUI</abbr> application (useful during SSH sessions):
+<pre class="code">export DISPLAY=&quot;:0&quot;</pre>
+
+</p>
+
+<p>
+Set your default text editor (e.g. SublimeText):
+<pre class="code">export EDITOR=subl</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:8,&quot;range&quot;:&quot;834-1061&quot;} -->
+<h2 class="sectionedit9" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> in POSIX®, only the <code>-p</code> option is specified</div>
+</li>
+<li class="level1"><div class="li"> in POSIX®, only variables (with value assignment) are to be exported, not shell functions</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:9,&quot;range&quot;:&quot;1062-1251&quot;} -->
+<h2 class="sectionedit10" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/commands/builtin/declare" class="wikilink1" title="commands:builtin:declare">The declare builtin command</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:10,&quot;range&quot;:&quot;1252-&quot;} --></div>
+</body>
+</html>

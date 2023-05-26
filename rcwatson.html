@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rcwatson</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="rcwatson"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/rcwatson?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns="/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/rcwatson"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/rcwatson"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/rcwatson"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"rcwatson","namespace":"","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#how_does_eval_work">How Does eval Work?</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#taking_it_line_by_line">Taking it line by line...</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#the_easy_way_to_get_the_quoting_right">The easy way to get the quoting right</a></div></li>
+<li class="level2"><div class="li"><a href="#references">References</a></div></li>
+<li class="level2"><div class="li"><a href="#notes">Notes</a></div></li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="how_does_eval_work">How Does eval Work?</h2>
+<div class="level2">
+
+<p>
+Part of the problem with eval is that most of us don&#039;t have a clear picture of how it works.
+</p>
+
+<p>
+In a nutshell, eval turns a string into a command and executes the command returning the result in place of the command…
+<pre class="code bash">  $ <span class="re2">A</span>=<span class="nu0">1</span>; <span class="re2">B</span>=<span class="st_h">'$A'</span>; <span class="kw3">echo</span> <span class="re1">$B</span>
+  <span class="re1">$A</span>
+  $ <span class="re2">A</span>=<span class="nu0">1</span>; <span class="re2">B</span>=<span class="st_h">'$A'</span>; <span class="kw3">eval</span> <span class="kw3">echo</span> <span class="re1">$B</span>
+  <span class="nu0">1</span></pre>
+
+</p>
+
+<p>
+Here the single-quotes around ($A) make it a literal instead of a variable so that $B contains ($A) instead of (1). The second pass then executes (echo $A) which yields 1. Using (set -vx), we can see what&#039;s happening under the covers…
+<pre class="code bash">  $ <span class="kw1">set</span> <span class="re5">-vx</span>; <span class="re2">A</span>=<span class="nu0">1</span>; <span class="re2">B</span>=<span class="st_h">'$A'</span>; <span class="kw3">eval</span> <span class="kw3">echo</span> <span class="re1">$B</span>
+  + <span class="kw1">set</span> <span class="re5">-vx</span>
+  + <span class="re2">A</span>=<span class="nu0">1</span>
+  + <span class="re2">B</span>=<span class="st_h">'$A'</span>
+  + <span class="kw3">eval</span> <span class="kw3">echo</span> <span class="st_h">'$A'</span>
+  <span class="kw3">echo</span> <span class="re1">$A</span>
+  ++ <span class="kw3">echo</span> <span class="nu0">1</span>
+  <span class="nu0">1</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;How Does eval Work?&quot;,&quot;hid&quot;:&quot;how_does_eval_work&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-708&quot;} -->
+<h3 class="sectionedit2" id="taking_it_line_by_line">Taking it line by line...</h3>
+<div class="level3">
+
+<p>
+Fire off our &quot;program&quot;…
+</p>
+<pre class="code">$ set -vx; A=1; B=&#039;$A&#039;; eval echo $B</pre>
+
+<p>
+Show each line and all expansions
+</p>
+<pre class="code">+ set -vx</pre>
+
+<p>
+Set variable A to 1
+</p>
+<pre class="code">+ A=1</pre>
+
+<p>
+Set variable B to the literal string &#039;$A&#039;
+</p>
+<pre class="code">+ B=&#039;$A&#039;</pre>
+
+<p>
+Replace B with &#039;$A&#039;
+</p>
+<pre class="code">+ eval echo &#039;$A&#039;</pre>
+
+<p>
+Execute 
+</p>
+<pre class="code">  echo $A</pre>
+
+<p>
+Replace (eval echo &#039;$A&#039;) with (echo 1) and execute it
+</p>
+<pre class="code">    ++ echo 1</pre>
+
+<p>
+Show the result
+</p>
+<pre class="code">1</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Taking it line by line...&quot;,&quot;hid&quot;:&quot;taking_it_line_by_line&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:2,&quot;range&quot;:&quot;709-1088&quot;} -->
+<h2 class="sectionedit3" id="the_easy_way_to_get_the_quoting_right">The easy way to get the quoting right</h2>
+<div class="level2">
+
+<p>
+One problem when trying to write an eval command is to get the quoting right, what is expanded, when etc…It turns out that it&#039;s in fact pretty easy when you realize that the result of the first expansion should be bash code just like the one you would put in your script. Let&#039;s take an example:
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">var</span>=value <span class="re2">name</span>=var
+<span class="kw3">eval</span> <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$name</span> has a value of <span class="es1">\&quot;</span>$<span class="es1">\$</span>name<span class="es1">\&quot;</span>&quot;</span> <span class="co0">#wrong!</span></pre>
+
+</p>
+
+<p>
+To correct this, the trick is simply to replace eval with echo. What echo prints should look just like what you would write in a script.
+</p>
+
+<p>
+<pre class="code bash">$ <span class="kw3">echo</span>  <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$name</span> has a value of <span class="es1">\&quot;</span>$<span class="es1">\$</span>name<span class="es1">\&quot;</span>&quot;</span>
+<span class="kw3">echo</span> var has a value of <span class="st0">&quot;$<span class="es2">$name</span>&quot;</span>     <span class="co0">#hmm 2 $ and name has not been expanded so too many quotes</span>
+&nbsp;
+$ <span class="kw3">echo</span>  <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$name</span> has a value of <span class="es1">\&quot;</span>$<span class="es2">$name</span><span class="es1">\&quot;</span>&quot;</span>
+<span class="kw3">echo</span> var has a value of <span class="st0">&quot;3090name&quot;</span>   <span class="co0"># $$ is expanded to the pid of the shell</span>
+&nbsp;
+$ <span class="kw3">echo</span>  <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$name</span> has a value of <span class="es1">\&quot;</span><span class="es1">\$</span><span class="es2">$name</span><span class="es1">\&quot;</span>&quot;</span>
+<span class="kw3">echo</span> var has a value of <span class="st0">&quot;<span class="es2">$var</span>&quot;</span>     <span class="co0"># now that looks good. let's replace with eval</span>
+&nbsp;
+$ <span class="kw3">eval</span>  <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$name</span> has a value of <span class="es1">\&quot;</span><span class="es1">\$</span><span class="es2">$name</span><span class="es1">\&quot;</span>&quot;</span>
+var has a value of value          <span class="co0">#victory</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The easy way to get the quoting right&quot;,&quot;hid&quot;:&quot;the_easy_way_to_get_the_quoting_right&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;1089-2182&quot;} -->
+<h2 class="sectionedit4" id="references">References</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/brace" class="wikilink1" title="syntax:expansion:brace">Brace Expansion</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/048" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/048" rel="nofollow">Eval command and security issues (with examples for safe use)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Eval" class="urlextern" title="http://en.wikipedia.org/wiki/Eval" rel="nofollow">eval (Wikipedia)</a></div>
+</li>
+<li class="level1 node"><div class="li"> Advanced Techniques - Using the eval Builtin for Data Structures, Arrays, and Indirection</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://developer.apple.com/library/mac/#documentation/OpenSource/Conceptual/ShellScripting/AdvancedTechniques/AdvancedTechniques.html" class="urlextern" title="http://developer.apple.com/library/mac/#documentation/OpenSource/Conceptual/ShellScripting/AdvancedTechniques/AdvancedTechniques.html" rel="nofollow">Mac OS X Developer Library</a></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> eval is Evil <em>(Most languages have an eval command. These are well know posts on the pros and cons)</em></div>
+<ul>
+<li class="level2"><div class="li"> Lippert blog posts about Microsoft JScript</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://blogs.msdn.com/b/ericlippert/archive/2003/11/01/53329.aspx" class="urlextern" title="http://blogs.msdn.com/b/ericlippert/archive/2003/11/01/53329.aspx" rel="nofollow">Part One</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://blogs.msdn.com/b/ericlippert/archive/2003/11/04/53335.aspx" class="urlextern" title="http://blogs.msdn.com/b/ericlippert/archive/2003/11/04/53335.aspx" rel="nofollow">Part Two</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://blogs.msdn.com/b/ericlippert/archive/2004/01/26/63087.aspx" class="urlextern" title="http://blogs.msdn.com/b/ericlippert/archive/2004/01/26/63087.aspx" rel="nofollow">Part Three</a></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;References&quot;,&quot;hid&quot;:&quot;references&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;2183-3099&quot;} -->
+<h2 class="sectionedit5" id="notes">Notes</h2>
+<div class="level2">
+<ul>
+<li class="level1 node"><div class="li"> (-) Performance</div>
+<ul>
+<li class="level2"><div class="li"> eval runs the language interpreter on the eval&#039;d text so this is an additional pass thru interpreter</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> (-) Security</div>
+<ul>
+<li class="level2"><div class="li"> If any part of the eval&#039;d text comes from outside the program, language constructs can be introduced into it that do malicious and other unwanted thimgs.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Notes&quot;,&quot;hid&quot;:&quot;notes&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;3100-&quot;} --></div>
+</body>
+</html>

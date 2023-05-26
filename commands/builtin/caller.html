@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:caller</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,caller"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/caller?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/caller"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/caller"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/caller"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:caller","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_caller_builtin_command">The caller builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#simple_stack_trace">Simple stack trace</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#notes">Notes</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_caller_builtin_command">The caller builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The caller builtin command&quot;,&quot;hid&quot;:&quot;the_caller_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-42&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">caller [FRAMENUMBER]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;43-98&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>caller</code> builtin command is used to print execution frames of subroutine calls. Without giving a framenumber, the topmost execution frame information is printed (&quot;who called me&quot;) wile linenumber and filename.
+</p>
+
+<p>
+When an execution frame number is given (0 - topmost), the linenumber, the subroutine (function) and the filename is printed. When an invalid execution frame number is given, it exists <code>FALSE</code>. This way it can be used in a loop (see the examples section below).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;99-603&quot;} -->
+<h2 class="sectionedit4" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;604-625&quot;} -->
+<h3 class="sectionedit5" id="simple_stack_trace">Simple stack trace</h3>
+<div class="level3">
+
+<p>
+The code below defines a function <code>die</code> that is used to exit the program. It prints a list of execution frames, starting with the topmost frame (0). The topmost frame is the &quot;caller of the die function&quot;, in this case function &quot;f1&quot;.
+</p>
+
+<p>
+This way, you can print a &quot;stack trace&quot; for debugging or logging purposes.
+</p>
+
+<p>
+The code is made very simple, just to show the basic purposes.
+</p>
+
+<p>
+<pre class="code bash"><span class="co0">#!/bin/bash</span>
+&nbsp;
+die<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw3">local</span> <span class="re2">frame</span>=<span class="nu0">0</span>
+  <span class="kw1">while</span> caller <span class="re1">$frame</span>; <span class="kw1">do</span>
+    <span class="br0">&#40;</span><span class="br0">&#40;</span>++frame<span class="br0">&#41;</span><span class="br0">&#41;</span>;
+  <span class="kw1">done</span>
+  <span class="kw3">echo</span> <span class="st0">&quot;$*&quot;</span>
+  <span class="kw3">exit</span> <span class="nu0">1</span>
+<span class="br0">&#125;</span>
+&nbsp;
+f1<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> die <span class="st0">&quot;*** an error occured ***&quot;</span>; <span class="br0">&#125;</span>
+f2<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> f1; <span class="br0">&#125;</span>
+f3<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> f2; <span class="br0">&#125;</span>
+&nbsp;
+f3</pre>
+
+</p>
+
+<p>
+<strong>Output</strong>
+<pre class="code">12 f1 ./callertest.sh
+13 f2 ./callertest.sh
+14 f3 ./callertest.sh
+16 main ./callertest.sh
+*** an error occured ***</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple stack trace&quot;,&quot;hid&quot;:&quot;simple_stack_trace&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;626-1375&quot;} -->
+<h2 class="sectionedit6" id="notes">Notes</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>caller</code> produces no output unless used within a script that&#039;s run from a real file. It isn&#039;t particularly useful for interactive use, but can be used to create a decent <code>die</code> function to track down errors in moderately complex scripts. <pre class="code">{ bash /dev/stdin; } &lt;&lt;&lt;$&#039;f(){ g; }\ng(){ h; }\nh(){ while caller $((n++)); do :; done; }\nf&#039;</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> For more sophisticated debugging, Bash extended debugging features are available and a number of special parameters that give more detail than caller (e.g. BASH_ARG{C,V}). Tools such as <a href="http://bashdb.sourceforge.net/" class="urlextern" title="http://bashdb.sourceforge.net/" rel="nofollow">Bashdb </a> can assist in using some of Bash&#039;s more advanced debug features.</div>
+</li>
+<li class="level1"><div class="li"> The Bash manpage and help text specifies that the argument to <code>caller</code> is an &quot;expr&quot; (whatever that means). Only an integer is actually allowed, with no special interpretation of an &quot;expression&quot; as far as we can tell.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Notes&quot;,&quot;hid&quot;:&quot;notes&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;1376-2268&quot;} -->
+<h2 class="sectionedit7" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>caller</code> is not specified by POSIX(R)</div>
+</li>
+<li class="level1"><div class="li"> the <code>caller</code> builtin command appeared in Bash version 3.0</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;2269-2416&quot;} -->
+<h2 class="sectionedit8" id="see_also">See also</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:8,&quot;range&quot;:&quot;2417-&quot;} --></div>
+</body>
+</html>

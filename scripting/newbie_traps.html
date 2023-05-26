@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:newbie_traps</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,newbie_traps,bash,shell,scripting,pitfalls,traps,beginners"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/newbie_traps?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/newbie_traps"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/newbie_traps"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/newbie_traps"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:newbie_traps","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#beginner_mistakes">Beginner Mistakes</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#script_execution">Script execution</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#your_perfect_bash_script_executes_with_syntax_errors">Your perfect Bash script executes with syntax errors</a></div></li>
+<li class="level3"><div class="li"><a href="#your_script_named_test_doesn_t_execute">Your script named &quot;test&quot; doesn&#039;t execute</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#globbing">Globbing</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#brace_expansion_is_not_globbing">Brace expansion is not globbing</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#test-command">Test-command</a></div></li>
+<li class="level2"><div class="li"><a href="#variables">Variables</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#setting_variables">Setting variables</a></div></li>
+<li class="level3"><div class="li"><a href="#expanding_using_variables">Expanding (using) variables</a></div></li>
+<li class="level3"><div class="li"><a href="#exporting">Exporting</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#exit_codes">Exit codes</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#reacting_to_exit_codes">Reacting to exit codes</a></div></li>
+<li class="level3"><div class="li"><a href="#output_vs_return_value">Output vs. Return Value</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="beginner_mistakes">Beginner Mistakes</h1>
+<div class="level1">
+
+<p>
+Here are some typical traps:
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Beginner Mistakes&quot;,&quot;hid&quot;:&quot;beginner_mistakes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-123&quot;} -->
+<h2 class="sectionedit2" id="script_execution">Script execution</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Script execution&quot;,&quot;hid&quot;:&quot;script_execution&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;124-153&quot;} -->
+<h3 class="sectionedit3" id="your_perfect_bash_script_executes_with_syntax_errors">Your perfect Bash script executes with syntax errors</h3>
+<div class="level3">
+
+<p>
+If you write Bash scripts with Bash specific syntax and features, run them with <em class="u">Bash</em>, and run them with Bash in <em class="u">native mode</em>.
+</p>
+
+<p>
+<strong>Wrong</strong>:
+</p>
+<ul>
+<li class="level1 node"><div class="li"> no shebang</div>
+<ul>
+<li class="level2"><div class="li"> the interpreter used depends on the <abbr title="Operating System">OS</abbr> implementation and current shell</div>
+</li>
+<li class="level2"><div class="li"> <strong>can</strong> be run by calling bash with the script name as an argument, e.g. <code>bash myscript</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <code>#!/bin/sh</code> shebang</div>
+<ul>
+<li class="level2"><div class="li"> depends on what <code>/bin/sh</code> actually is, for a Bash it means compatiblity mode, <strong>not</strong> native mode</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+See also:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/scripting/bashbehaviour#sh_mode" class="wikilink1" title="scripting:bashbehaviour"> Bash startup mode: SH mode</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/scripting/bashbehaviour#posix_run_mode" class="wikilink1" title="scripting:bashbehaviour"> Bash run mode: POSIX mode</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Your perfect Bash script executes with syntax errors&quot;,&quot;hid&quot;:&quot;your_perfect_bash_script_executes_with_syntax_errors&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;154-840&quot;} -->
+<h3 class="sectionedit4" id="your_script_named_test_doesn_t_execute">Your script named &quot;test&quot; doesn&#039;t execute</h3>
+<div class="level3">
+
+<p>
+Give it another name. The executable <code>test</code> already exists.
+</p>
+
+<p>
+In Bash it&#039;s a builtin. With other shells, it might be an executable file. Either way, it&#039;s bad name choice!
+</p>
+
+<p>
+Workaround: You can call it using the pathname:
+<pre class="code">/home/user/bin/test</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Your script named \&quot;test\&quot; doesn&#039;t execute&quot;,&quot;hid&quot;:&quot;your_script_named_test_doesn_t_execute&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;841-1149&quot;} -->
+<h2 class="sectionedit5" id="globbing">Globbing</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Globbing&quot;,&quot;hid&quot;:&quot;globbing&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1150-1171&quot;} -->
+<h3 class="sectionedit6" id="brace_expansion_is_not_globbing">Brace expansion is not globbing</h3>
+<div class="level3">
+
+<p>
+The following command line is not related to globbing (filename expansion):
+<pre class="code"># YOU EXPECT
+# -i1.vob -i2.vob -i3.vob ....
+
+echo -i{*.vob,}
+
+# YOU GET
+# -i*.vob -i</pre>
+
+<strong>Why?</strong> The brace expansion is simple text substitution. All possible text formed by the prefix, the postfix and the braces themselves are generated. In the example, these are only two: <code>-i*.vob</code> and <code>-i</code>. The filename expansion happens <strong>after</strong> that, so there is a chance that <code>-i*.vob</code> is expanded to a filename - if you have files like <code>-ihello.vob</code>. But it definitely doesn&#039;t do what you expected.
+</p>
+
+<p>
+Please see:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/brace" class="wikilink1" title="syntax:expansion:brace">Brace expansion</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Brace expansion is not globbing&quot;,&quot;hid&quot;:&quot;brace_expansion_is_not_globbing&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;1172-1848&quot;} -->
+<h2 class="sectionedit7" id="test-command">Test-command</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>if [ $foo ] …</code></div>
+</li>
+<li class="level1"><div class="li"> <code>if [-d $dir] …</code></div>
+</li>
+<li class="level1"><div class="li"> …</div>
+</li>
+</ul>
+
+<p>
+Please see:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/commands/classictest#pitfalls_summarized" class="wikilink1" title="commands:classictest">The classic test command - pitfalls</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Test-command&quot;,&quot;hid&quot;:&quot;test-command&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:7,&quot;range&quot;:&quot;1849-2029&quot;} -->
+<h2 class="sectionedit8" id="variables">Variables</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Variables&quot;,&quot;hid&quot;:&quot;variables&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;2030-2052&quot;} -->
+<h3 class="sectionedit9" id="setting_variables">Setting variables</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="the_dollar-sign">The Dollar-Sign</h4>
+<div class="level4">
+
+<p>
+There is no <code>$</code> (dollar-sign) when you reference the <strong>name</strong> of a variable! Bash is not PHP!
+<pre class="code"># THIS IS WRONG!
+$myvar=&quot;Hello world!&quot;</pre>
+
+</p>
+
+<p>
+A variable name preceeded with a dollar-sign always means that the variable gets <strong>expanded</strong>. In the example above, it might expand to nothing (because it wasn&#039;t set), effectively resulting in…
+<pre class="code">=&quot;Hello world!&quot;</pre>
+
+…which <strong>definitely is wrong</strong>!
+</p>
+
+<p>
+When you need the <strong>name</strong> of a variable, you write <strong>only the name</strong>, for example
+</p>
+<ul>
+<li class="level1"><div class="li"> (as shown above) to set variables: <code>picture=/usr/share/images/foo.png</code></div>
+</li>
+<li class="level1"><div class="li"> to name variables to be used by the <code>read</code> builtin command: <code>read picture</code></div>
+</li>
+<li class="level1"><div class="li"> to name variables to be unset: <code>unset picture</code></div>
+</li>
+</ul>
+
+<p>
+When you need the <strong>content</strong> of a variable, you prefix its name with <strong>a dollar-sign</strong>, like
+</p>
+<ul>
+<li class="level1"><div class="li"> echo &quot;The used picture is: $picture&quot;</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="whitespace">Whitespace</h4>
+<div class="level4">
+
+<p>
+Putting spaces on either or both sides of the equal-sign (<code>=</code>) when assigning a value to a variable <strong>will</strong> fail.
+</p>
+
+<p>
+<pre class="code"># INCORRECT 1
+example = Hello
+
+# INCORRECT 2
+example= Hello
+
+# INCORRECT 3
+example =Hello</pre>
+
+</p>
+
+<p>
+The only valid form is <strong>no spaces between the variable name and assigned value</strong>:
+<pre class="code"># CORRECT 1
+example=Hello
+
+# CORRECT 2
+example=&quot; Hello&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Setting variables&quot;,&quot;hid&quot;:&quot;setting_variables&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:9,&quot;range&quot;:&quot;2053-3352&quot;} -->
+<h3 class="sectionedit10" id="expanding_using_variables">Expanding (using) variables</h3>
+<div class="level3">
+
+<p>
+A typical beginner&#039;s trap is quoting.
+</p>
+
+<p>
+As noted above, when you want to <strong>expand</strong> a variable i.e. &quot;get the content&quot;, the variable name needs to be prefixed with a dollar-sign. But, since Bash knows various ways to quote and does word-splitting, the result isn&#039;t always the same.
+</p>
+
+<p>
+Let&#039;s define an example variable containing text with spaces:
+<pre class="code">example=&quot;Hello world&quot;</pre>
+
+</p>
+<div class="table sectionedit11"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Used form</th><th class="col1">result</th><th class="col2">number of words</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>$example</code> </td><td class="col1"><code>Hello world</code></td><td class="col2">2</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>&quot;$example&quot;</code> </td><td class="col1"><code>Hello world</code></td><td class="col2">1</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>\$example</code> </td><td class="col1"><code>$example</code></td><td class="col2">1</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>&#039;$example&#039;</code> </td><td class="col1"><code>$example</code></td><td class="col2">1</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:11,&quot;range&quot;:&quot;3773-3959&quot;} -->
+<p>
+If you use parameter expansion, you <strong>must</strong> use the <strong>name</strong> (<code>PATH</code>) of the referenced variables/parameters. i.e. <strong>not</strong> (<code>$PATH</code>):
+<pre class="code"># WRONG!
+echo &quot;The first character of PATH is ${$PATH:0:1}&quot;
+
+# CORRECT
+echo &quot;The first character of PATH is ${PATH:0:1}&quot;</pre>
+
+</p>
+
+<p>
+Note that if you are using variables in <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expressions</a>, then the bare <strong>name</strong> is allowed:
+<pre class="code">((a=$a+7))         # Add 7 to a
+((a = a + 7))      # Add 7 to a.  Identical to the previous command.
+((a += 7))         # Add 7 to a.  Identical to the previous command.
+
+a=$((a+7))         # POSIX-compatible version of previous code.</pre>
+
+</p>
+
+<p>
+Please see:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/words" class="wikilink1" title="syntax:words">Words...</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/quoting" class="wikilink1" title="syntax:quoting">Quotes and escaping</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit">Word splitting</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/pe" class="wikilink1" title="syntax:pe">Parameter expansion</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Expanding (using) variables&quot;,&quot;hid&quot;:&quot;expanding_using_variables&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:10,&quot;range&quot;:&quot;3353-4721&quot;} -->
+<h3 class="sectionedit12" id="exporting">Exporting</h3>
+<div class="level3">
+
+<p>
+Exporting a variable means giving <strong>newly created</strong> (child-)processes a copy of that variable.  It does <strong>not</strong> copy a variable created in a child process back to the parent process. The following example does <strong>not</strong> work, since the variable <code>hello</code> is set in a child process (the process you execute to start that script <code>./script.sh</code>):
+</p>
+
+<p>
+<pre class="code">$ cat script.sh
+export hello=world
+
+$ ./script.sh
+$ echo $hello
+$</pre>
+
+</p>
+
+<p>
+Exporting is one-way. The direction is from parent process to child process, not the reverse. The above example <strong>will</strong> work, when you don&#039;t execute the script, but include (&quot;source&quot;) it:
+<pre class="code">$ source ./script.sh
+$ echo $hello
+world
+$</pre>
+
+In this case, the export command is of no use.
+</p>
+
+<p>
+Please see:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/scripting/processtree" class="wikilink1" title="scripting:processtree">Bash and the process tree</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Exporting&quot;,&quot;hid&quot;:&quot;exporting&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:12,&quot;range&quot;:&quot;4722-5506&quot;} -->
+<h2 class="sectionedit13" id="exit_codes">Exit codes</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Exit codes&quot;,&quot;hid&quot;:&quot;exit_codes&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:13,&quot;range&quot;:&quot;5507-5529&quot;} -->
+<h3 class="sectionedit14" id="reacting_to_exit_codes">Reacting to exit codes</h3>
+<div class="level3">
+
+<p>
+If you just want to react to an exit code, regardless of its specific value, you <strong>don&#039;t need</strong> to use <code>$?</code> in a test command like this:
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">grep</span> ^root: <span class="sy0">/</span>etc<span class="sy0">/</span><span class="kw2">passwd</span> <span class="sy0">&gt;/</span>dev<span class="sy0">/</span>null <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#91;</span> <span class="re4">$?</span> <span class="re5">-ne</span> <span class="nu0">0</span> <span class="br0">&#93;</span>; <span class="kw1">then</span>
+  <span class="kw3">echo</span> <span class="st0">&quot;root was not found - check the pub at the corner&quot;</span>
+<span class="kw1">fi</span></pre>
+
+</p>
+
+<p>
+This can be simplified to:
+<pre class="code bash"><span class="kw1">if</span> <span class="sy0">!</span> <span class="kw2">grep</span> ^root: <span class="sy0">/</span>etc<span class="sy0">/</span><span class="kw2">passwd</span> <span class="sy0">&gt;/</span>dev<span class="sy0">/</span>null <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span>; <span class="kw1">then</span>
+  <span class="kw3">echo</span> <span class="st0">&quot;root was not found - check the pub at the corner&quot;</span>
+<span class="kw1">fi</span></pre>
+
+</p>
+
+<p>
+Or, simpler yet:
+<pre class="code bash"><span class="kw2">grep</span> ^root: <span class="sy0">/</span>etc<span class="sy0">/</span><span class="kw2">passwd</span> <span class="sy0">&gt;/</span>dev<span class="sy0">/</span>null <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span> <span class="sy0">||</span> <span class="kw3">echo</span> <span class="st0">&quot;root was not found - check the pub at the corner&quot;</span></pre>
+
+</p>
+
+<p>
+If you need the specific value of <code>$?</code>, there&#039;s no other choice. But if you need only a &quot;true/false&quot; exit indication, there&#039;s no need for <code>$?</code>.
+</p>
+
+<p>
+See also:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/scripting/basics#exit_codes" class="wikilink1" title="scripting:basics"> Exit codes</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Reacting to exit codes&quot;,&quot;hid&quot;:&quot;reacting_to_exit_codes&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:14,&quot;range&quot;:&quot;5530-6354&quot;} -->
+<h3 class="sectionedit15" id="output_vs_return_value">Output vs. Return Value</h3>
+<div class="level3">
+
+<p>
+It&#039;s important to remember the different ways to run a child command, and whether you want the output, the return value, or neither.
+</p>
+
+<p>
+When you want to run a command (or a pipeline) and save (or print) the <strong>output</strong>, whether as a string or an array, you use Bash&#039;s <code>$(command)</code> syntax:
+<pre class="code">$(ls -l /tmp)
+newvariable=$(printf &quot;foo&quot;)</pre>
+
+</p>
+
+<p>
+When you want to use the <strong>return value</strong> of a command, just use the command, or add ( ) to run a command or pipeline in a subshell:
+<pre class="code">if grep someuser /etc/passwd ; then
+    # do something
+fi
+
+if ( w | grep someuser | grep sqlplus ) ; then
+    # someuser is logged in and running sqlplus
+fi</pre>
+
+</p>
+
+<p>
+Make sure you&#039;re using the form you intended:
+<pre class="code"># WRONG!
+if $(grep ERROR /var/log/messages) ; then
+    # send alerts
+fi</pre>
+
+</p>
+
+<p>
+Please see:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/intro" class="wikilink1" title="syntax:ccmd:intro">Bash compound commands</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst">Command substitution</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/grouping_subshell" class="wikilink1" title="syntax:ccmd:grouping_subshell">Grouping commands in a subshell</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Output vs. Return Value&quot;,&quot;hid&quot;:&quot;output_vs_return_value&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:15,&quot;range&quot;:&quot;6355-&quot;} --></div>
+</body>
+</html>

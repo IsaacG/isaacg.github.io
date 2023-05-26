@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:expansion:tilde</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,expansion,tilde,bash,shell,scripting,expansion,substitution,tilde,home,homedir,shortcut"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/expansion/tilde?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:expansion"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/expansion/tilde"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/expansion/tilde"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/expansion/tilde"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:expansion';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:expansion:tilde","namespace":"syntax:expansion","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#tilde_expansion">Tilde expansion</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#home_directory">Home directory</a></div></li>
+<li class="level2"><div class="li"><a href="#current_working_directory">Current working directory</a></div></li>
+<li class="level2"><div class="li"><a href="#previous_working_directory">Previous working directory</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="tilde_expansion">Tilde expansion</h1>
+<div class="level1">
+
+<p>
+<pre class="code">~
+~/...
+
+~NAME
+~NAME/...
+
+~+
+~+/...
+
+~-
+~-/...</pre>
+
+</p>
+
+<p>
+The tilde expansion is used to expand to several specific pathnames:
+</p>
+<ul>
+<li class="level1"><div class="li"> home directories</div>
+</li>
+<li class="level1"><div class="li"> current working directory</div>
+</li>
+<li class="level1"><div class="li"> previous working directory</div>
+</li>
+</ul>
+
+<p>
+Tilde expansion is only performed, when the tilde-construct is at the beginning of a word, or a separate word.
+</p>
+
+<p>
+If there&#039;s nothing to expand, i.e., in case of a wrong username or any other error condition, the tilde construct is not replaced, it stays what it is.
+</p>
+
+<p>
+Tilde expansion is also performed everytime a variable is assigned:
+</p>
+<ul>
+<li class="level1"><div class="li"> after the <strong>first</strong> <code>=</code>: <code>TARGET=~moonman/share</code></div>
+</li>
+<li class="level1"><div class="li"> after <strong>every</strong> <code>:</code> (colon) in the assigned value: <code>TARGET=file:~moonman/share</code></div>
+</li>
+</ul>
+<div class="plugin_note plugin_note noteclassic">As of now (Bash 4.3-alpha) the following constructs <strong>also</strong> works, though it&#039;s not a variable assignment:
+<pre class="code">echo foo=~
+echo foo=:~</pre>
+
+I don&#039;t know yet, if this is a bug or intended.
+
+</div>
+<p>
+This way you can correctly use the tilde expansion in your <a href="/syntax/shellvars#path" class="wikilink1" title="syntax:shellvars">PATH</a>:
+<pre class="code">PATH=~/mybins:~peter/mybins:$PATH</pre>
+
+</p>
+
+<p>
+<strong>Spaces in the referenced pathes?</strong> A construct like…
+<pre class="code">~/&quot;my directory&quot;</pre>
+
+…is perfectly valid and works!
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Tilde expansion&quot;,&quot;hid&quot;:&quot;tilde_expansion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1289&quot;} -->
+<h2 class="sectionedit2" id="home_directory">Home directory</h2>
+<div class="level2">
+
+<p>
+<pre class="code">~
+~&lt;NAME&gt;</pre>
+
+</p>
+
+<p>
+This form expands to the home-directory of the current user (<code>~</code>) or the home directory of the given user (<code>~&lt;NAME&gt;</code>).
+</p>
+
+<p>
+If the given user doesn&#039;t exist (or if his home directory isn&#039;t determinable, for some reason), it doesn&#039;t expand to something else, it stays what it is. The requested home directory is found by asking the operating system for the associated home directory for <code>&lt;NAME&gt;</code>.
+</p>
+
+<p>
+To find the home directory of the current user (<code>~</code>), Bash has a precedence:
+</p>
+<ul>
+<li class="level1"><div class="li"> expand to the value of <a href="/syntax/shellvars#home" class="wikilink1" title="syntax:shellvars">HOME</a> if it&#039;s defined</div>
+</li>
+<li class="level1"><div class="li"> expand to the home directory of the user executing the shell (operating system)</div>
+</li>
+</ul>
+
+<p>
+That means, the variable <code>HOME</code> can override the &quot;real&quot; home directory, at least regarding tilde expansion.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Home directory&quot;,&quot;hid&quot;:&quot;home_directory&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:2,&quot;range&quot;:&quot;1290-2089&quot;} -->
+<h2 class="sectionedit3" id="current_working_directory">Current working directory</h2>
+<div class="level2">
+
+<p>
+<pre class="code">~+</pre>
+
+</p>
+
+<p>
+This expands to the value of the <a href="/syntax/shellvars#pwd" class="wikilink1" title="syntax:shellvars">PWD</a> variable, which holds the currect working directory:
+<pre class="code">echo &quot;CWD is $PWD&quot;</pre>
+
+is equivalent to (note it <strong>must</strong> be a separate word!):
+<pre class="code">echo &quot;CWD is&quot; ~+</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Current working directory&quot;,&quot;hid&quot;:&quot;current_working_directory&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:3,&quot;range&quot;:&quot;2090-2386&quot;} -->
+<h2 class="sectionedit4" id="previous_working_directory">Previous working directory</h2>
+<div class="level2">
+
+<p>
+<pre class="code">~-</pre>
+
+</p>
+
+<p>
+This expands to the value of the <a href="/syntax/shellvars#oldpwd" class="wikilink1" title="syntax:shellvars">OLDPWD</a> variable, which holds the previous working directory (the one before the last <code>cd</code>). If <code>OLDPWD</code> is unset (never changed the directory), it is not expanded.
+</p>
+
+<p>
+<pre class="code">$ pwd
+/home/bash
+$ cd /etc
+$ echo ~-
+/home/bash</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Previous working directory&quot;,&quot;hid&quot;:&quot;previous_working_directory&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:4,&quot;range&quot;:&quot;2387-2740&quot;} -->
+<h2 class="sectionedit5" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansion and substitution</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:5,&quot;range&quot;:&quot;2741-&quot;} --></div>
+</body>
+</html>

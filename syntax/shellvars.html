@@ -1,0 +1,2904 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:shellvars</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,shellvars"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/shellvars?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/shellvars"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/shellvars"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/shellvars"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:shellvars","namespace":"syntax","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#special_parameters_and_shell_variables">Special parameters and shell variables</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#special_parameters">Special Parameters</a></div></li>
+<li class="level2"><div class="li"><a href="#shell_variables">Shell Variables</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#bash">BASH</a></div></li>
+<li class="level3"><div class="li"><a href="#bashopts">BASHOPTS</a></div></li>
+<li class="level3"><div class="li"><a href="#bashpid">BASHPID</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_aliases">BASH_ALIASES</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_argc">BASH_ARGC</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_argv">BASH_ARGV</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_argv0">BASH_ARGV0</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_cmds">BASH_CMDS</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_command">BASH_COMMAND</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_compat">BASH_COMPAT</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_execution_string">BASH_EXECUTION_STRING</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_lineno">BASH_LINENO</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_rematch">BASH_REMATCH</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_source">BASH_SOURCE</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_subshell">BASH_SUBSHELL</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_versinfo">BASH_VERSINFO</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_version">BASH_VERSION</a></div></li>
+<li class="level3"><div class="li"><a href="#child_max">CHILD_MAX</a></div></li>
+<li class="level3"><div class="li"><a href="#comp_cword">COMP_CWORD</a></div></li>
+<li class="level3"><div class="li"><a href="#comp_key">COMP_KEY</a></div></li>
+<li class="level3"><div class="li"><a href="#comp_line">COMP_LINE</a></div></li>
+<li class="level3"><div class="li"><a href="#comp_point">COMP_POINT</a></div></li>
+<li class="level3"><div class="li"><a href="#comp_type">COMP_TYPE</a></div></li>
+<li class="level3"><div class="li"><a href="#comp_wordbreaks">COMP_WORDBREAKS</a></div></li>
+<li class="level3"><div class="li"><a href="#comp_words">COMP_WORDS</a></div></li>
+<li class="level3"><div class="li"><a href="#coproc">COPROC</a></div></li>
+<li class="level3"><div class="li"><a href="#dirstack">DIRSTACK</a></div></li>
+<li class="level3"><div class="li"><a href="#epochrealtime">EPOCHREALTIME</a></div></li>
+<li class="level3"><div class="li"><a href="#epochseconds">EPOCHSECONDS</a></div></li>
+<li class="level3"><div class="li"><a href="#euid">EUID</a></div></li>
+<li class="level3"><div class="li"><a href="#funcname">FUNCNAME</a></div></li>
+<li class="level3"><div class="li"><a href="#groups">GROUPS</a></div></li>
+<li class="level3"><div class="li"><a href="#histcmd">HISTCMD</a></div></li>
+<li class="level3"><div class="li"><a href="#hostname">HOSTNAME</a></div></li>
+<li class="level3"><div class="li"><a href="#hosttype">HOSTTYPE</a></div></li>
+<li class="level3"><div class="li"><a href="#lineno">LINENO</a></div></li>
+<li class="level3"><div class="li"><a href="#machtype">MACHTYPE</a></div></li>
+<li class="level3"><div class="li"><a href="#mapfile">MAPFILE</a></div></li>
+<li class="level3"><div class="li"><a href="#oldpwd">OLDPWD</a></div></li>
+<li class="level3"><div class="li"><a href="#optarg">OPTARG</a></div></li>
+<li class="level3"><div class="li"><a href="#optind">OPTIND</a></div></li>
+<li class="level3"><div class="li"><a href="#ostype">OSTYPE</a></div></li>
+<li class="level3"><div class="li"><a href="#pipestatus">PIPESTATUS</a></div></li>
+<li class="level3"><div class="li"><a href="#ppid">PPID</a></div></li>
+<li class="level3"><div class="li"><a href="#pwd">PWD</a></div></li>
+<li class="level3"><div class="li"><a href="#random">RANDOM</a></div></li>
+<li class="level3"><div class="li"><a href="#readline_line">READLINE_LINE</a></div></li>
+<li class="level3"><div class="li"><a href="#readline_point">READLINE_POINT</a></div></li>
+<li class="level3"><div class="li"><a href="#reply">REPLY</a></div></li>
+<li class="level3"><div class="li"><a href="#seconds">SECONDS</a></div></li>
+<li class="level3"><div class="li"><a href="#shellopts">SHELLOPTS</a></div></li>
+<li class="level3"><div class="li"><a href="#shlvl">SHLVL</a></div></li>
+<li class="level3"><div class="li"><a href="#uid">UID</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_env">BASH_ENV</a></div></li>
+<li class="level3"><div class="li"><a href="#bash_xtracefd">BASH_XTRACEFD</a></div></li>
+<li class="level3"><div class="li"><a href="#cdpath">CDPATH</a></div></li>
+<li class="level3"><div class="li"><a href="#columns">COLUMNS</a></div></li>
+<li class="level3"><div class="li"><a href="#compreply">COMPREPLY</a></div></li>
+<li class="level3"><div class="li"><a href="#emacs">EMACS</a></div></li>
+<li class="level3"><div class="li"><a href="#env">ENV</a></div></li>
+<li class="level3"><div class="li"><a href="#fcedit">FCEDIT</a></div></li>
+<li class="level3"><div class="li"><a href="#fignore">FIGNORE</a></div></li>
+<li class="level3"><div class="li"><a href="#funcnest">FUNCNEST</a></div></li>
+<li class="level3"><div class="li"><a href="#globignore">GLOBIGNORE</a></div></li>
+<li class="level3"><div class="li"><a href="#histcontrol">HISTCONTROL</a></div></li>
+<li class="level3"><div class="li"><a href="#histfile">HISTFILE</a></div></li>
+<li class="level3"><div class="li"><a href="#histfilesize">HISTFILESIZE</a></div></li>
+<li class="level3"><div class="li"><a href="#histignore">HISTIGNORE</a></div></li>
+<li class="level3"><div class="li"><a href="#histsize">HISTSIZE</a></div></li>
+<li class="level3"><div class="li"><a href="#histtimeformat">HISTTIMEFORMAT</a></div></li>
+<li class="level3"><div class="li"><a href="#home">HOME</a></div></li>
+<li class="level3"><div class="li"><a href="#hostfile">HOSTFILE</a></div></li>
+<li class="level3"><div class="li"><a href="#ifs">IFS</a></div></li>
+<li class="level3"><div class="li"><a href="#ignoreeof">IGNOREEOF</a></div></li>
+<li class="level3"><div class="li"><a href="#inputrc">INPUTRC</a></div></li>
+<li class="level3"><div class="li"><a href="#lang">LANG</a></div></li>
+<li class="level3"><div class="li"><a href="#lc_all">LC_ALL</a></div></li>
+<li class="level3"><div class="li"><a href="#lc_collate">LC_COLLATE</a></div></li>
+<li class="level3"><div class="li"><a href="#lc_ctype">LC_CTYPE</a></div></li>
+<li class="level3"><div class="li"><a href="#lc_messages">LC_MESSAGES</a></div></li>
+<li class="level3"><div class="li"><a href="#lc_numeric">LC_NUMERIC</a></div></li>
+<li class="level3"><div class="li"><a href="#lines">LINES</a></div></li>
+<li class="level3"><div class="li"><a href="#mail">MAIL</a></div></li>
+<li class="level3"><div class="li"><a href="#mailcheck">MAILCHECK</a></div></li>
+<li class="level3"><div class="li"><a href="#mailpath">MAILPATH</a></div></li>
+<li class="level3"><div class="li"><a href="#opterr">OPTERR</a></div></li>
+<li class="level3"><div class="li"><a href="#path">PATH</a></div></li>
+<li class="level3"><div class="li"><a href="#posixly_correct">POSIXLY_CORRECT</a></div></li>
+<li class="level3"><div class="li"><a href="#prompt_command">PROMPT_COMMAND</a></div></li>
+<li class="level3"><div class="li"><a href="#prompt_commands">PROMPT_COMMANDS</a></div></li>
+<li class="level3"><div class="li"><a href="#prompt_dirtrim">PROMPT_DIRTRIM</a></div></li>
+<li class="level3"><div class="li"><a href="#ps0">PS0</a></div></li>
+<li class="level3"><div class="li"><a href="#ps1">PS1</a></div></li>
+<li class="level3"><div class="li"><a href="#ps2">PS2</a></div></li>
+<li class="level3"><div class="li"><a href="#ps3">PS3</a></div></li>
+<li class="level3"><div class="li"><a href="#ps4">PS4</a></div></li>
+<li class="level3"><div class="li"><a href="#shell">SHELL</a></div></li>
+<li class="level3"><div class="li"><a href="#srandom">SRANDOM</a></div></li>
+<li class="level3"><div class="li"><a href="#timeformat">TIMEFORMAT</a></div></li>
+<li class="level3"><div class="li"><a href="#tmout">TMOUT</a></div></li>
+<li class="level3"><div class="li"><a href="#tmpdir">TMPDIR</a></div></li>
+<li class="level3"><div class="li"><a href="#auto_resume">auto_resume</a></div></li>
+<li class="level3"><div class="li"><a href="#histchars">histchars</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="special_parameters_and_shell_variables">Special parameters and shell variables</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Special parameters and shell variables&quot;,&quot;hid&quot;:&quot;special_parameters_and_shell_variables&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-54&quot;} -->
+<h2 class="sectionedit2" id="special_parameters">Special Parameters</h2>
+<div class="level2">
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">parameter</th><th class="col1">character</th><th class="col2">expansion description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>*</code></td><td class="col1">asterisk</td><td class="col2">The positional parameters starting from the first. When used inside doublequotes (see <a href="/syntax/quoting" class="wikilink1" title="syntax:quoting"> quoting</a>), like <code>&quot;$*&quot;</code>, it expands to all positional parameters <em>as one word</em>, delimited by the first character of the <code>IFS</code> variable (a space in this example): <code>&quot;$1 $2 $3 $4&quot;</code>. <br/>
+If <code>IFS</code> is unset, the delimiter used will be always a space, if <code>IFS</code> is NULL, the delimiter will be nothing, which effectively concatenates all the positional parameters without any delimiter. <br/>
+When used unquoted, it will just expand to the strings, one by one, not preserving the word boundaries (i.e. word splitting will split the text again, if it contains <code>IFS</code> characters. <br/>
+See also the <a href="/scripting/posparams" class="wikilink1" title="scripting:posparams"> scripting article about handling positional parameters</a>.</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>@</code></td><td class="col1">at-sign</td><td class="col2">The positional parameters starting from the first. When used inside doublequotes (see <a href="/syntax/quoting" class="wikilink1" title="syntax:quoting"> quoting</a>), like <code>&quot;$@&quot;</code>, it expands all positional parameters <em>as separate words</em>: <code>&quot;$1&quot; &quot;$2&quot; &quot;$3&quot; &quot;$4&quot;</code> <br/>
+Without doublequotes, the behaviour is like the one of <code>*</code> without doublequotes. <br/>
+See also the <a href="/scripting/posparams" class="wikilink1" title="scripting:posparams"> scripting article about handling positional parameters</a>.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>#</code></td><td class="col1">hash mark</td><td class="col2">Number of positional parameters (decimal) <br/>
+See also the <a href="/scripting/posparams" class="wikilink1" title="scripting:posparams"> scripting article about handling positional parameters</a>.</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>?</code></td><td class="col1">question mark</td><td class="col2">Status of the most recently executed foreground-pipeline (exit/return code)</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>-</code></td><td class="col1">dash</td><td class="col2">Current option flags set by the shell itself, on invocation, or using the <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> set builtin command</a>. It&#039;s just a set of characters, like <code>himB</code> for <code>h</code>, <code>i</code>, <code>m</code> and <code>B</code>.</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>$</code></td><td class="col1">dollar-sign</td><td class="col2">The process ID (PID) of the shell. In an <a href="/syntax/ccmd/grouping_subshell" class="wikilink1" title="syntax:ccmd:grouping_subshell"> explicit subshell</a> it expands to the PID of the current &quot;main shell&quot;, not the subshell. This is different from <code>$BASHPID</code>!</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>!</code></td><td class="col1">exclamation mark</td><td class="col2">The process ID (PID) of the most recently executed background pipeline (like started with <code>command &amp;</code>)</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><code>0</code></td><td class="col1">zero</td><td class="col2">The name of the shell or the shell script (filename). Set by the shell itself. <br/>
+If Bash is started with a filename to execute (script), it&#039;s set to this filename. If started with the <code>-c &lt;CMDLINE&gt;</code> option (commandline given as argument), then <code>$0</code> will be the first argument after the given <code>&lt;CMDLINE&gt;</code>. Otherwise, it is set to the string given on invocation for <code>argv[0]</code>. <br/>
+Unlike popular belief, <code>$0</code> is <em>not a positional parameter</em>.</td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"><code>_</code></td><td class="col1">underscore</td><td class="col2">A kind of catch-all parameter. Directly after shell invocation, it&#039;s set to the filename used to invoke Bash, or the absolute or relative path to the script, just like <code>$0</code> would show it. Subsequently, expands to the last argument to the previous command. Placed into the environment when executing commands, and set to the full pathname of these commands. When checking mail, this parameter holds the name of the mail file currently being checked.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;87-3101&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Special Parameters&quot;,&quot;hid&quot;:&quot;special_parameters&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;55-3102&quot;} -->
+<h2 class="sectionedit4" id="shell_variables">Shell Variables</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Shell Variables&quot;,&quot;hid&quot;:&quot;shell_variables&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;3103-3131&quot;} -->
+<h3 class="sectionedit5" id="bash">BASH</h3>
+<div class="level3">
+<div class="table sectionedit6"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;3147-3277&quot;} -->
+<p>
+Expands to the full file name used to invoke the current instance of Bash.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH&quot;,&quot;hid&quot;:&quot;bash&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;3132-3354&quot;} -->
+<h3 class="sectionedit7" id="bashopts">BASHOPTS</h3>
+<div class="level3">
+<div class="table sectionedit8"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASHOPTS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.1-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">yes  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;3374-3511&quot;} -->
+<p>
+A colon-separated list of enabled shell options.
+</p>
+
+<p>
+Each word in the list is a valid argument for the <code>-s</code> option to the
+<a href="/commands/builtin/shopt" class="wikilink1" title="commands:builtin:shopt">shopt builtin command</a>. The options appearing
+in <code>BASHOPTS</code> are those reported as on by <code>shopt</code>. If this variable is
+in the environment when Bash starts up, each shell option in the list will
+be enabled before reading any startup files.
+</p>
+
+<p>
+Example content:
+<pre class="code">cmdhist:expand_aliases:extquote:force_fignore:hostcomplete:interactive_comments:progcomp:promptvars:sourcepath</pre>
+
+</p>
+
+<p>
+This variable is read-only.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASHOPTS&quot;,&quot;hid&quot;:&quot;bashopts&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;3355-4074&quot;} -->
+<h3 class="sectionedit9" id="bashpid">BASHPID</h3>
+<div class="level3">
+<div class="table sectionedit10"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASHPID</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.0-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">yes  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:10,&quot;range&quot;:&quot;4093-4230&quot;} -->
+<p>
+Always expands to the process ID of the current Bash process. This
+differs from the special parameter <code>$</code> under certain circumstances,
+such as subshells that do not require Bash to be re-initialized.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASHPID&quot;,&quot;hid&quot;:&quot;bashpid&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:9,&quot;range&quot;:&quot;4075-4434&quot;} -->
+<h3 class="sectionedit11" id="bash_aliases">BASH_ALIASES</h3>
+<div class="level3">
+<div class="table sectionedit12"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_ALIASES</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">associative array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table4&quot;,&quot;secid&quot;:12,&quot;range&quot;:&quot;4458-4598&quot;} -->
+<p>
+An associative array variable whose members correspond to the
+internal list of aliases as maintained by the alias builtin.
+Elements added to this array appear in the alias list; unsetting
+array elements cause aliases to be removed from the alias list.
+</p>
+
+<p>
+The associative key is the name of the alias as used with the
+<a href="/commands/builtin/alias" class="wikilink2" title="commands:builtin:alias" rel="nofollow"> alias builtin command</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_ALIASES&quot;,&quot;hid&quot;:&quot;bash_aliases&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:11,&quot;range&quot;:&quot;4435-4967&quot;} -->
+<h3 class="sectionedit13" id="bash_argc">BASH_ARGC</h3>
+<div class="level3">
+<div class="table sectionedit14"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_ARGC</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only in extended debugging mode  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table5&quot;,&quot;secid&quot;:14,&quot;range&quot;:&quot;4988-5153&quot;} -->
+<p>
+An array variable whose values are the number of parameters in
+each frame of the current Bash execution call stack.
+</p>
+
+<p>
+The number of parameters to the current subroutine (shell function or
+script executed with <a href="/commands/builtin/source" class="wikilink2" title="commands:builtin:source" rel="nofollow">&#039;&#039;.&#039;&#039; or &#039;&#039;source&#039;&#039; builtin command</a>)
+is at the top of the stack.
+When a subroutine is executed, the number of parameters passed is pushed onto <code>BASH_ARGC</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_ARGC&quot;,&quot;hid&quot;:&quot;bash_argc&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:13,&quot;range&quot;:&quot;4968-5549&quot;} -->
+<h3 class="sectionedit15" id="bash_argv">BASH_ARGV</h3>
+<div class="level3">
+<div class="table sectionedit16"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_ARGV</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only in extended debugging mode  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table6&quot;,&quot;secid&quot;:16,&quot;range&quot;:&quot;5571-5735&quot;} -->
+<p>
+An array variable containing all of the parameters in the current Bash
+execution call stack.
+</p>
+
+<p>
+The final parameter of the last subroutine call is at
+the top of the stack; the first parameter of the initial call is at the
+bottom. When a subroutine is executed, the parameters supplied are pushed onto
+<code>BASH_ARGV</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_ARGV&quot;,&quot;hid&quot;:&quot;bash_argv&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:15,&quot;range&quot;:&quot;5550-6051&quot;} -->
+<h3 class="sectionedit17" id="bash_argv0">BASH_ARGV0</h3>
+<div class="level3">
+<div class="table sectionedit18"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_ARGV0</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">5.0-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">string  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">same as <code>$0</code>  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table7&quot;,&quot;secid&quot;:18,&quot;range&quot;:&quot;6074-6213&quot;} -->
+<p>
+Expands to the name of the shell or shell script - as the special parameter <code>$0</code> does. Assignments to <code>BASH_ARGV0</code> causes the value to be assigned to <code>$0</code>.
+</p>
+
+<p>
+If this parameter is unset, it loses its special properties, even if subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_ARGV0&quot;,&quot;hid&quot;:&quot;bash_argv0&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:17,&quot;range&quot;:&quot;6052-6468&quot;} -->
+<h3 class="sectionedit19" id="bash_cmds">BASH_CMDS</h3>
+<div class="level3">
+<div class="table sectionedit20"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_CMDS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">associative array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table8&quot;,&quot;secid&quot;:20,&quot;range&quot;:&quot;6489-6626&quot;} -->
+<p>
+An associative array variable whose members correspond to the
+internal hash table of commands as maintained by the <a href="/commands/builtin/hash" class="wikilink2" title="commands:builtin:hash" rel="nofollow">hash builtin command</a>.
+Elements added to this array appear in the hash table;
+unsetting array elements cause commands to be removed from the hash table.
+</p>
+
+<p>
+The associative key is the name of the command as used with the<a href="/commands/builtin/hash" class="wikilink2" title="commands:builtin:hash" rel="nofollow">hash builtin command</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_CMDS&quot;,&quot;hid&quot;:&quot;bash_cmds&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:19,&quot;range&quot;:&quot;6469-7033&quot;} -->
+<h3 class="sectionedit21" id="bash_command">BASH_COMMAND</h3>
+<div class="level3">
+<div class="table sectionedit22"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_COMMAND</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table9&quot;,&quot;secid&quot;:22,&quot;range&quot;:&quot;7057-7191&quot;} -->
+<p>
+The command currently being executed or about to be executed, unless the shell
+is executing a command as the result of a trap, in which case it is the command
+executing at the time of the trap.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_COMMAND&quot;,&quot;hid&quot;:&quot;bash_command&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:21,&quot;range&quot;:&quot;7034-7387&quot;} -->
+<h3 class="sectionedit23" id="bash_compat">BASH_COMPAT</h3>
+<div class="level3">
+<div class="table sectionedit24"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_COMPAT</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.3-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table10&quot;,&quot;secid&quot;:24,&quot;range&quot;:&quot;7410-7547&quot;} -->
+<p>
+The value is used to set the shell&#039;s compatibility level. The value may be a decimal number (e.g., <code>4.2</code>) or an integer (e.g., <code>42</code>) corresponding to the desired compatibility level. If <code>BASH_COMPAT</code> is unset or set to the empty string, the compatibility level is set to the default for the current version. If  <code>BASH_COMPAT</code> is set to a value that is not one of the valid compatibility levels, the shell prints an error message and sets the compatibility level to the default for the current version. The valid compatibility levels correspond to the compatibility options accepted by the shopt builtin. The current version is also a valid value.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_COMPAT&quot;,&quot;hid&quot;:&quot;bash_compat&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:23,&quot;range&quot;:&quot;7388-8204&quot;} -->
+<h3 class="sectionedit25" id="bash_execution_string">BASH_EXECUTION_STRING</h3>
+<div class="level3">
+<div class="table sectionedit26"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_EXECUTION_STRING</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table11&quot;,&quot;secid&quot;:26,&quot;range&quot;:&quot;8237-8380&quot;} -->
+<p>
+The command argument to the <code>-c</code> invocation option.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_EXECUTION_STRING&quot;,&quot;hid&quot;:&quot;bash_execution_string&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:25,&quot;range&quot;:&quot;8205-8436&quot;} -->
+<h3 class="sectionedit27" id="bash_lineno">BASH_LINENO</h3>
+<div class="level3">
+<div class="table sectionedit28"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_LINENO</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table12&quot;,&quot;secid&quot;:28,&quot;range&quot;:&quot;8459-8598&quot;} -->
+<p>
+An array variable whose members are the line numbers in source files
+corresponding to each member of <code>FUNCNAME</code>.
+</p>
+
+<p>
+<code>${BASH_LINENO[$i]}</code> is the line number in the source file where
+<code>${FUNCNAME[$ifP]}</code> was called. The corresponding source file name
+is <code>${BASH_SOURCE[$i]}</code>. Use <code>LINENO</code> to obtain the current line number.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_LINENO&quot;,&quot;hid&quot;:&quot;bash_lineno&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:27,&quot;range&quot;:&quot;8437-8929&quot;} -->
+<h3 class="sectionedit29" id="bash_rematch">BASH_REMATCH</h3>
+<div class="level3">
+<div class="table sectionedit30"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_REMATCH</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table13&quot;,&quot;secid&quot;:30,&quot;range&quot;:&quot;8953-9093&quot;} -->
+<p>
+An array variable whose members are assigned by the <code>=~</code> binary operator to
+the <code>[[</code> conditional command.
+</p>
+
+<p>
+The element with index 0 is the portion of the string matching the entire regular expression. The element
+with index <code>n</code> is the portion of the string matching the nth parenthesized
+subexpression.
+</p>
+
+<p>
+Before Bash version 5.1-alpha this variable was readonly.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_REMATCH&quot;,&quot;hid&quot;:&quot;bash_rematch&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:29,&quot;range&quot;:&quot;8930-9480&quot;} -->
+<h3 class="sectionedit31" id="bash_source">BASH_SOURCE</h3>
+<div class="level3">
+<div class="table sectionedit32"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_SOURCE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table14&quot;,&quot;secid&quot;:32,&quot;range&quot;:&quot;9503-9642&quot;} -->
+<p>
+An array variable whose members are the source filenames corresponding to the
+elements in the <code>FUNCNAME</code> array variable.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_SOURCE&quot;,&quot;hid&quot;:&quot;bash_source&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:31,&quot;range&quot;:&quot;9481-9767&quot;} -->
+<h3 class="sectionedit33" id="bash_subshell">BASH_SUBSHELL</h3>
+<div class="level3">
+<div class="table sectionedit34"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_SUBSHELL</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table15&quot;,&quot;secid&quot;:34,&quot;range&quot;:&quot;9792-9927&quot;} -->
+<p>
+Incremented by one each time a subshell or subshell environment is spawned.
+The initial value is 0.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_SUBSHELL&quot;,&quot;hid&quot;:&quot;bash_subshell&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:33,&quot;range&quot;:&quot;9768-10029&quot;} -->
+<h3 class="sectionedit35" id="bash_versinfo">BASH_VERSINFO</h3>
+<div class="level3">
+<div class="table sectionedit36"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_VERSINFO</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">yes  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table16&quot;,&quot;secid&quot;:36,&quot;range&quot;:&quot;10054-10196&quot;} -->
+<p>
+A readonly array variable whose members hold version information for this
+instance of Bash. The values assigned to the array members are as follows:
+</p>
+<div class="table sectionedit37"><table class="inline">
+	<tr class="row0">
+		<td class="col0 leftalign">BASH_VERSINFO[0]  </td><td class="col1 leftalign">The major version number (the release)  </td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 leftalign">BASH_VERSINFO[1]  </td><td class="col1 leftalign">The minor version number (the version)  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">BASH_VERSINFO[2]  </td><td class="col1 leftalign">The patch level                         </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">BASH_VERSINFO[3]  </td><td class="col1 leftalign">The build version                       </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">BASH_VERSINFO[4]  </td><td class="col1 leftalign">The release status (e.g., beta1)        </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">BASH_VERSINFO[5]  </td><td class="col1 leftalign">The value of <code>MACHTYPE</code>               </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table17&quot;,&quot;secid&quot;:37,&quot;range&quot;:&quot;10348-10719&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_VERSINFO&quot;,&quot;hid&quot;:&quot;bash_versinfo&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:35,&quot;range&quot;:&quot;10030-10720&quot;} -->
+<h3 class="sectionedit38" id="bash_version">BASH_VERSION</h3>
+<div class="level3">
+<div class="table sectionedit39"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_VERSION</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table18&quot;,&quot;secid&quot;:39,&quot;range&quot;:&quot;10744-10882&quot;} -->
+<p>
+Expands to a string describing the version of this instance of Bash.
+</p>
+
+<p>
+Since Bash 2.0 it includes the shell&#039;s &quot;release status&quot; (alpha[N], beta[N], release).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_VERSION&quot;,&quot;hid&quot;:&quot;bash_version&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:38,&quot;range&quot;:&quot;10721-11040&quot;} -->
+<h3 class="sectionedit40" id="child_max">CHILD_MAX</h3>
+<div class="level3">
+<div class="table sectionedit41"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>CHILD_MAX</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.3-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table19&quot;,&quot;secid&quot;:41,&quot;range&quot;:&quot;11061-11197&quot;} -->
+<p>
+Set the number of exited child status values for the shell to remember. Bash will not allow this value to be decreased below a POSIX-mandated minimum, and there is a maximum value (currently 8192) that this may not exceed. The minimum value is system-dependent.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;CHILD_MAX&quot;,&quot;hid&quot;:&quot;child_max&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:40,&quot;range&quot;:&quot;11041-11463&quot;} -->
+<h3 class="sectionedit42" id="comp_cword">COMP_CWORD</h3>
+<div class="level3">
+<div class="table sectionedit43"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COMP_CWORD</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only for programmable completion facilities  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table20&quot;,&quot;secid&quot;:43,&quot;range&quot;:&quot;11485-11661&quot;} -->
+<p>
+An index into <code>COMP_WORDS</code> of the word containing the current cursor position.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COMP_CWORD&quot;,&quot;hid&quot;:&quot;comp_cword&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:42,&quot;range&quot;:&quot;11464-11744&quot;} -->
+<h3 class="sectionedit44" id="comp_key">COMP_KEY</h3>
+<div class="level3">
+<div class="table sectionedit45"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COMP_KEY</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only for programmable completion facilities  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table21&quot;,&quot;secid&quot;:45,&quot;range&quot;:&quot;11764-11938&quot;} -->
+<p>
+The key (or final key of a key sequence) used to invoke the current completion
+function.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COMP_KEY&quot;,&quot;hid&quot;:&quot;comp_key&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:44,&quot;range&quot;:&quot;11745-12029&quot;} -->
+<h3 class="sectionedit46" id="comp_line">COMP_LINE</h3>
+<div class="level3">
+<div class="table sectionedit47"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COMP_LINE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only for programmable completion facilities  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table22&quot;,&quot;secid&quot;:47,&quot;range&quot;:&quot;12050-12225&quot;} -->
+<p>
+The current command line.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COMP_LINE&quot;,&quot;hid&quot;:&quot;comp_line&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:46,&quot;range&quot;:&quot;12030-12253&quot;} -->
+<h3 class="sectionedit48" id="comp_point">COMP_POINT</h3>
+<div class="level3">
+<div class="table sectionedit49"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COMP_POINT</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only for programmable completion facilities  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table23&quot;,&quot;secid&quot;:49,&quot;range&quot;:&quot;12275-12451&quot;} -->
+<p>
+The index of the current cursor position relative to the beginning
+of the current command. If the current cursor position is
+at the end of the current command, the value of this variable is
+equal to <code>${#COMP_LINE}</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COMP_POINT&quot;,&quot;hid&quot;:&quot;comp_point&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:48,&quot;range&quot;:&quot;12254-12671&quot;} -->
+<h3 class="sectionedit50" id="comp_type">COMP_TYPE</h3>
+<div class="level3">
+<div class="table sectionedit51"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COMP_TYPET</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only for programmable completion facilities  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table24&quot;,&quot;secid&quot;:51,&quot;range&quot;:&quot;12692-12868&quot;} -->
+<p>
+Set to an integer value corresponding to the type of completion
+attempted that caused a completion function to be called:
+</p>
+<div class="table sectionedit52"><table class="inline">
+	<tr class="row0">
+		<td class="col0 leftalign"><code>TAB</code>  </td><td class="col1 leftalign">normal completion                                  </td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>?</code>    </td><td class="col1 leftalign">listing completions after successive tabs          </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>!</code>    </td><td class="col1 leftalign">listing alternatives on partial word completion    </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>@</code>    </td><td class="col1 leftalign">to list completions if the word is not unmodified  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"><code>%</code>    </td><td class="col1 leftalign">for menu completion                                </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table25&quot;,&quot;secid&quot;:52,&quot;range&quot;:&quot;12993-13312&quot;} -->
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> where are the integer values?
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COMP_TYPE&quot;,&quot;hid&quot;:&quot;comp_type&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:50,&quot;range&quot;:&quot;12672-13350&quot;} -->
+<h3 class="sectionedit53" id="comp_wordbreaks">COMP_WORDBREAKS</h3>
+<div class="level3">
+<div class="table sectionedit54"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COMP_WORDBREAKS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table26&quot;,&quot;secid&quot;:54,&quot;range&quot;:&quot;13377-13518&quot;} -->
+<p>
+Reports the set of characters that the readline library treats as word
+separators when performing word completion.
+</p>
+
+<p>
+If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COMP_WORDBREAKS&quot;,&quot;hid&quot;:&quot;comp_wordbreaks&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:53,&quot;range&quot;:&quot;13351-13731&quot;} -->
+<h3 class="sectionedit55" id="comp_words">COMP_WORDS</h3>
+<div class="level3">
+<div class="table sectionedit56"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COMP_WORDS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only for programmable completion facilities  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table27&quot;,&quot;secid&quot;:56,&quot;range&quot;:&quot;13753-13935&quot;} -->
+<p>
+An array variable consisting of the individual words in the current command
+line. The line is split into words as readline would split it, using
+<code>COMP_WORDBREAKS</code> as described above.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COMP_WORDS&quot;,&quot;hid&quot;:&quot;comp_words&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:55,&quot;range&quot;:&quot;13732-14122&quot;} -->
+<h3 class="sectionedit57" id="coproc">COPROC</h3>
+<div class="level3">
+<div class="table sectionedit58"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COPROC</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table28&quot;,&quot;secid&quot;:58,&quot;range&quot;:&quot;14140-14278&quot;} -->
+<p>
+An array variable created to hold the file descriptors for output from and
+input to an unnamed coprocess.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COPROC&quot;,&quot;hid&quot;:&quot;coproc&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:57,&quot;range&quot;:&quot;14123-14386&quot;} -->
+<h3 class="sectionedit59" id="dirstack">DIRSTACK</h3>
+<div class="level3">
+<div class="table sectionedit60"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>DIRSTACK</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table29&quot;,&quot;secid&quot;:60,&quot;range&quot;:&quot;14406-14546&quot;} -->
+<p>
+An array variable containing the current contents of the directory stack.
+</p>
+
+<p>
+Directories appear in the stack in the order they are displayed by the dirs
+builtin. Assigning to members of this array variable may be used to modify
+directories already in the stack, but the pushd and popd builtins must
+be used to add and remove directories.
+</p>
+
+<p>
+Assignment to this variable will not change the current directory.
+</p>
+
+<p>
+If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;DIRSTACK&quot;,&quot;hid&quot;:&quot;dirstack&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:59,&quot;range&quot;:&quot;14387-15048&quot;} -->
+<h3 class="sectionedit61" id="epochrealtime">EPOCHREALTIME</h3>
+<div class="level3">
+<div class="table sectionedit62"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>EPOCHREALTIME</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">5.0-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table30&quot;,&quot;secid&quot;:62,&quot;range&quot;:&quot;15073-15215&quot;} -->
+<p>
+Expands to the number of seconds since Unix expoch as a floating point value with micro-second granularity.
+</p>
+
+<p>
+Assignments to this parameter are ignored. If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;EPOCHREALTIME&quot;,&quot;hid&quot;:&quot;epochrealtime&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:61,&quot;range&quot;:&quot;15049-15464&quot;} -->
+<h3 class="sectionedit63" id="epochseconds">EPOCHSECONDS</h3>
+<div class="level3">
+<div class="table sectionedit64"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>EPOCHSECONDS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">5.0-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table31&quot;,&quot;secid&quot;:64,&quot;range&quot;:&quot;15488-15629&quot;} -->
+<p>
+Expands to the number of seconds since Unix expoch.
+</p>
+
+<p>
+Assignments to this parameter are ignored. If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;EPOCHSECONDS&quot;,&quot;hid&quot;:&quot;epochseconds&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:63,&quot;range&quot;:&quot;15465-15823&quot;} -->
+<h3 class="sectionedit65" id="euid">EUID</h3>
+<div class="level3">
+<div class="table sectionedit66"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>EUID</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">yes  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table32&quot;,&quot;secid&quot;:66,&quot;range&quot;:&quot;15839-15970&quot;} -->
+<p>
+Expands to the effective user ID of the current user, initialized at shell startup.
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Do not rely on this variable when security is a concern.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;EUID&quot;,&quot;hid&quot;:&quot;euid&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:65,&quot;range&quot;:&quot;15824-16118&quot;} -->
+<h3 class="sectionedit67" id="funcname">FUNCNAME</h3>
+<div class="level3">
+<div class="table sectionedit68"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>FUNCNAME</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.04   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only inside shell functions  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table33&quot;,&quot;secid&quot;:68,&quot;range&quot;:&quot;16138-16299&quot;} -->
+<p>
+An array variable containing the names of all shell functions currently in the
+execution call stack.
+</p>
+
+<p>
+The element with index 0 is the name of any currently-executing shell function.
+The bottom-most element (the one with the highest index) is &quot;main&quot;.
+</p>
+
+<p>
+This variable can be used with <code>BASH_LINENO</code> and <code>BASH_SOURCE</code>:
+Each element of <code>FUNCNAME</code> has corresponding elements in <code>BASH_LINENO</code> and
+<code>BASH_SOURCE</code> to describe the call stack. For instance, <code>${FUNCNAME[$i]}</code>
+was called from the file <code>${BASH_SOURCE[$i+1]}</code> at line number
+<code>${BASH_LINENO[$i]}</code>. The <a href="/commands/builtin/caller" class="wikilink1" title="commands:builtin:caller">caller builtin command</a>
+displays the current call stack using this information.
+</p>
+
+<p>
+This variable exists only when a shell function is executing.
+</p>
+
+<p>
+Assignments to this parameter have no effect and return an error status.
+</p>
+
+<p>
+If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;FUNCNAME&quot;,&quot;hid&quot;:&quot;funcname&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:67,&quot;range&quot;:&quot;16119-17210&quot;} -->
+<h3 class="sectionedit69" id="groups">GROUPS</h3>
+<div class="level3">
+<div class="table sectionedit70"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>GROUPS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.01   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array   </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table34&quot;,&quot;secid&quot;:70,&quot;range&quot;:&quot;17228-17363&quot;} -->
+<p>
+An array variable containing the list of groups of which the current user
+is a member.
+</p>
+
+<p>
+Assignments to this parameter have no effect and return an error status.
+</p>
+
+<p>
+If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;GROUPS&quot;,&quot;hid&quot;:&quot;groups&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:69,&quot;range&quot;:&quot;17211-17622&quot;} -->
+<h3 class="sectionedit71" id="histcmd">HISTCMD</h3>
+<div class="level3">
+<div class="table sectionedit72"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HISTCMD</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">1.14.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table35&quot;,&quot;secid&quot;:72,&quot;range&quot;:&quot;17641-17773&quot;} -->
+<p>
+Expands to the history number (index in the history list) of the current command.
+</p>
+
+<p>
+If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HISTCMD&quot;,&quot;hid&quot;:&quot;histcmd&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:71,&quot;range&quot;:&quot;17623-17953&quot;} -->
+<h3 class="sectionedit73" id="hostname">HOSTNAME</h3>
+<div class="level3">
+<div class="table sectionedit74"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HOSTNAME</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table36&quot;,&quot;secid&quot;:74,&quot;range&quot;:&quot;17973-18106&quot;} -->
+<p>
+Automatically set to the name of the current host.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HOSTNAME&quot;,&quot;hid&quot;:&quot;hostname&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:73,&quot;range&quot;:&quot;17954-18159&quot;} -->
+<h3 class="sectionedit75" id="hosttype">HOSTTYPE</h3>
+<div class="level3">
+<div class="table sectionedit76"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HOSTTYPE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">system-dependent  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table37&quot;,&quot;secid&quot;:76,&quot;range&quot;:&quot;18179-18325&quot;} -->
+<p>
+Automatically set to a string that uniquely describes the type of machine on
+which Bash is executing.
+</p>
+
+<p>
+Example content:
+<pre class="code">x86_64</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HOSTTYPE&quot;,&quot;hid&quot;:&quot;hosttype&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:75,&quot;range&quot;:&quot;18160-18469&quot;} -->
+<h3 class="sectionedit77" id="lineno">LINENO</h3>
+<div class="level3">
+<div class="table sectionedit78"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>LINENO</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table38&quot;,&quot;secid&quot;:78,&quot;range&quot;:&quot;18487-18620&quot;} -->
+<p>
+Each time this parameter is referenced, the shell substitutes a decimal number
+representing the current sequential line number (starting with 1) within a
+script or function.
+</p>
+
+<p>
+When not in a script or function, the value substituted is not guaranteed
+to be meaningful.
+</p>
+
+<p>
+If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;LINENO&quot;,&quot;hid&quot;:&quot;lineno&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:77,&quot;range&quot;:&quot;18470-18985&quot;} -->
+<h3 class="sectionedit79" id="machtype">MACHTYPE</h3>
+<div class="level3">
+<div class="table sectionedit80"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>MACHTYPE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">system-dependent  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table39&quot;,&quot;secid&quot;:80,&quot;range&quot;:&quot;19005-19152&quot;} -->
+<p>
+Automatically set to a string that fully describes the system type on which
+Bash is executing, in the standard GNU &quot;cpu-company-system&quot; format.
+</p>
+
+<p>
+Example content:
+<pre class="code">x86_64-unknown-linux-gnu</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;MACHTYPE&quot;,&quot;hid&quot;:&quot;machtype&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:79,&quot;range&quot;:&quot;18986-19356&quot;} -->
+<h3 class="sectionedit81" id="mapfile">MAPFILE</h3>
+<div class="level3">
+<div class="table sectionedit82"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>MAPFILE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table40&quot;,&quot;secid&quot;:82,&quot;range&quot;:&quot;19375-19513&quot;} -->
+<p>
+An array variable created to hold the text read by the
+<a href="/commands/builtin/mapfile" class="wikilink1" title="commands:builtin:mapfile">mapfile builtin command</a> when no variable name
+is supplied.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;MAPFILE&quot;,&quot;hid&quot;:&quot;mapfile&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:81,&quot;range&quot;:&quot;19357-19658&quot;} -->
+<h3 class="sectionedit83" id="oldpwd">OLDPWD</h3>
+<div class="level3">
+<div class="table sectionedit84"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>OLDPWD</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table41&quot;,&quot;secid&quot;:84,&quot;range&quot;:&quot;19676-19807&quot;} -->
+<p>
+The previous working directory as set by the cd command.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;OLDPWD&quot;,&quot;hid&quot;:&quot;oldpwd&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:83,&quot;range&quot;:&quot;19659-19866&quot;} -->
+<h3 class="sectionedit85" id="optarg">OPTARG</h3>
+<div class="level3">
+<div class="table sectionedit86"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>OPTARG</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table42&quot;,&quot;secid&quot;:86,&quot;range&quot;:&quot;19884-20015&quot;} -->
+<p>
+The value of the last option argument processed by the
+<a href="/commands/builtin/getopts" class="wikilink2" title="commands:builtin:getopts" rel="nofollow">getopts builtin command</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;OPTARG&quot;,&quot;hid&quot;:&quot;optarg&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:85,&quot;range&quot;:&quot;19867-20126&quot;} -->
+<h3 class="sectionedit87" id="optind">OPTIND</h3>
+<div class="level3">
+<div class="table sectionedit88"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>OPTIND</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table43&quot;,&quot;secid&quot;:88,&quot;range&quot;:&quot;20144-20276&quot;} -->
+<p>
+The index of the next argument to be processed by the
+<a href="/commands/builtin/getopts" class="wikilink2" title="commands:builtin:getopts" rel="nofollow">getopts builtin command</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;OPTIND&quot;,&quot;hid&quot;:&quot;optind&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:87,&quot;range&quot;:&quot;20127-20386&quot;} -->
+<h3 class="sectionedit89" id="ostype">OSTYPE</h3>
+<div class="level3">
+<div class="table sectionedit90"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>OSTYPE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">system-dependent  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table44&quot;,&quot;secid&quot;:90,&quot;range&quot;:&quot;20404-20548&quot;} -->
+<p>
+Automatically set to a string that describes the operating system on which
+Bash is executing.
+</p>
+
+<p>
+Example content:
+<pre class="code">linux-gnu</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;OSTYPE&quot;,&quot;hid&quot;:&quot;ostype&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:89,&quot;range&quot;:&quot;20387-20688&quot;} -->
+<h3 class="sectionedit91" id="pipestatus">PIPESTATUS</h3>
+<div class="level3">
+<div class="table sectionedit92"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PIPESTATUS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table45&quot;,&quot;secid&quot;:92,&quot;range&quot;:&quot;20710-20847&quot;} -->
+<p>
+An array variable containing a list of exit status values from the processes
+in the most-recently-executed foreground pipeline (which may contain only a
+single command).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PIPESTATUS&quot;,&quot;hid&quot;:&quot;pipestatus&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:91,&quot;range&quot;:&quot;20689-21019&quot;} -->
+<h3 class="sectionedit93" id="ppid">PPID</h3>
+<div class="level3">
+<div class="table sectionedit94"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PPID</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">yes  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table46&quot;,&quot;secid&quot;:94,&quot;range&quot;:&quot;21035-21166&quot;} -->
+<p>
+The process ID of the shell&#039;s parent process.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PPID&quot;,&quot;hid&quot;:&quot;ppid&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:93,&quot;range&quot;:&quot;21020-21214&quot;} -->
+<h3 class="sectionedit95" id="pwd">PWD</h3>
+<div class="level3">
+<div class="table sectionedit96"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PWD</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table47&quot;,&quot;secid&quot;:96,&quot;range&quot;:&quot;21229-21357&quot;} -->
+<p>
+The current working directory as set by the
+<a href="/commands/builtin/cd" class="wikilink1" title="commands:builtin:cd">cd builtin command</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PWD&quot;,&quot;hid&quot;:&quot;pwd&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:95,&quot;range&quot;:&quot;21215-21447&quot;} -->
+<h3 class="sectionedit97" id="random">RANDOM</h3>
+<div class="level3">
+<div class="table sectionedit98"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>RANDOM</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table48&quot;,&quot;secid&quot;:98,&quot;range&quot;:&quot;21465-21597&quot;} -->
+<p>
+Each time this parameter is referenced, a random integer between 0 and 32767
+is generated. The sequence of random numbers may be initialized by assigning
+a value to <code>RANDOM</code>.
+</p>
+
+<p>
+If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;RANDOM&quot;,&quot;hid&quot;:&quot;random&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:97,&quot;range&quot;:&quot;21448-21872&quot;} -->
+<h3 class="sectionedit99" id="readline_line">READLINE_LINE</h3>
+<div class="level3">
+<div class="table sectionedit100"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>READLINE_LINE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table49&quot;,&quot;secid&quot;:100,&quot;range&quot;:&quot;21897-22035&quot;} -->
+<p>
+The contents of the readline line buffer, for use with <code>bind -x</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;READLINE_LINE&quot;,&quot;hid&quot;:&quot;readline_line&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:99,&quot;range&quot;:&quot;21873-22105&quot;} -->
+<h3 class="sectionedit101" id="readline_point">READLINE_POINT</h3>
+<div class="level3">
+<div class="table sectionedit102"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>READLINE_POINT</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table50&quot;,&quot;secid&quot;:102,&quot;range&quot;:&quot;22131-22270&quot;} -->
+<p>
+The position of the insertion point in the readline line buffer,
+for use with <code>bind -x</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;READLINE_POINT&quot;,&quot;hid&quot;:&quot;readline_point&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:101,&quot;range&quot;:&quot;22106-22363&quot;} -->
+<h3 class="sectionedit103" id="reply">REPLY</h3>
+<div class="level3">
+<div class="table sectionedit104"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>REPLY</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">only by the <a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read">read builtin command</a>  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table51&quot;,&quot;secid&quot;:104,&quot;range&quot;:&quot;22380-22565&quot;} -->
+<p>
+Set to the line of input read by the
+<a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read">read builtin command</a> when no arguments are supplied that name target variables.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;REPLY&quot;,&quot;hid&quot;:&quot;reply&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:103,&quot;range&quot;:&quot;22364-22710&quot;} -->
+<h3 class="sectionedit105" id="seconds">SECONDS</h3>
+<div class="level3">
+<div class="table sectionedit106"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>SECONDS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table52&quot;,&quot;secid&quot;:106,&quot;range&quot;:&quot;22729-22862&quot;} -->
+<p>
+Each time this parameter is referenced, the number of seconds since shell
+invocation is returned. If a value is assigned to SECONDS, the value
+returned upon subsequent references is the number of seconds since the
+assignment plus the value assigned.
+</p>
+
+<p>
+If this parameter is unset, it loses its special properties, even if it is subsequently reset.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SECONDS&quot;,&quot;hid&quot;:&quot;seconds&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:105,&quot;range&quot;:&quot;22711-23210&quot;} -->
+<h3 class="sectionedit107" id="shellopts">SHELLOPTS</h3>
+<div class="level3">
+<div class="table sectionedit108"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>SHELLOPTS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">yes  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table53&quot;,&quot;secid&quot;:108,&quot;range&quot;:&quot;23231-23366&quot;} -->
+<p>
+A colon-separated list of enabled shell options. Each word in the list is a
+valid argument for the <code>-o</code> option to the <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set">set builtin command</a>.
+The options appearing in <code>SHELLOPTS</code> are those reported as on by <code>set -o</code>.
+</p>
+
+<p>
+If this variable is in the environment when Bash starts up, each shell option in
+the list will be enabled before reading any startup files.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SHELLOPTS&quot;,&quot;hid&quot;:&quot;shellopts&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:107,&quot;range&quot;:&quot;23211-23754&quot;} -->
+<h3 class="sectionedit109" id="shlvl">SHLVL</h3>
+<div class="level3">
+<div class="table sectionedit110"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>SHLVL</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table54&quot;,&quot;secid&quot;:110,&quot;range&quot;:&quot;23771-23901&quot;} -->
+<p>
+Incremented by one each time an instance of Bash is started.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SHLVL&quot;,&quot;hid&quot;:&quot;shlvl&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:109,&quot;range&quot;:&quot;23755-23964&quot;} -->
+<h3 class="sectionedit111" id="uid">UID</h3>
+<div class="level3">
+<div class="table sectionedit112"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>UID</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">yes  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table55&quot;,&quot;secid&quot;:112,&quot;range&quot;:&quot;23979-24109&quot;} -->
+<p>
+Expands to the user ID of the current user, initialized at shell startup.
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Do not rely on this variable when security is a concern.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;UID&quot;,&quot;hid&quot;:&quot;uid&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:111,&quot;range&quot;:&quot;23965-24247&quot;} -->
+<h3 class="sectionedit113" id="bash_env">BASH_ENV</h3>
+<div class="level3">
+<div class="table sectionedit114"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_ENV</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table56&quot;,&quot;secid&quot;:114,&quot;range&quot;:&quot;24267-24399&quot;} -->
+<p>
+If this parameter is set when Bash is executing a shell script, its value is
+interpreted as a filename containing commands to initialize the shell, as in
+<code>~/.bashrc</code>. The value of <code>BASH_ENV</code> is subjected to
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/pe" class="wikilink1" title="syntax:pe">parameter expansion</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst">command substitution</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith">arithmetic expansion</a></div>
+</li>
+</ul>
+
+<p>
+before being interpreted as a file name.
+</p>
+
+<p>
+<code>PATH</code> is not used to search for the resultant file name.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_ENV&quot;,&quot;hid&quot;:&quot;bash_env&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:113,&quot;range&quot;:&quot;24248-24859&quot;} -->
+<h3 class="sectionedit115" id="bash_xtracefd">BASH_XTRACEFD</h3>
+<div class="level3">
+<div class="table sectionedit116"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>BASH_XTRACEFD</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.1-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table57&quot;,&quot;secid&quot;:116,&quot;range&quot;:&quot;24884-25023&quot;} -->
+<p>
+If set to an integer corresponding to a valid file descriptor, Bash will write
+the trace output generated when <code>set -x</code> is enabled to that file descriptor.
+</p>
+
+<p>
+The file descriptor is closed when <code>BASH_XTRACEFD</code> is unset or assigned
+a new value.
+</p>
+
+<p>
+Unsetting <code>BASH_XTRACEFD</code> or assigning it the empty string causes the trace
+output to be sent to the standard error. Note that setting <code>BASH_XTRACEFD</code>
+to 2 (the standard error file descriptor) and then unsetting it will result in
+the standard error being closed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;BASH_XTRACEFD&quot;,&quot;hid&quot;:&quot;bash_xtracefd&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:115,&quot;range&quot;:&quot;24860-25539&quot;} -->
+<h3 class="sectionedit117" id="cdpath">CDPATH</h3>
+<div class="level3">
+<div class="table sectionedit118"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>CDPATH</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table58&quot;,&quot;secid&quot;:118,&quot;range&quot;:&quot;25557-25687&quot;} -->
+<p>
+The search path for the <a href="/commands/builtin/cd" class="wikilink1" title="commands:builtin:cd">cd builtin command</a>.
+</p>
+
+<p>
+This is a colon-separated list of directories in which the shell looks for
+destination directories specified by the <code>cd</code> command.
+</p>
+
+<p>
+Example content:
+<pre class="code">.:~:/usr</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;CDPATH&quot;,&quot;hid&quot;:&quot;cdpath&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:117,&quot;range&quot;:&quot;25540-25930&quot;} -->
+<h3 class="sectionedit119" id="columns">COLUMNS</h3>
+<div class="level3">
+<div class="table sectionedit120"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COLUMNS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">on <code>SIGWINCH</code>  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table59&quot;,&quot;secid&quot;:120,&quot;range&quot;:&quot;25949-26093&quot;} -->
+<p>
+Used by the select compound command to determine the terminal width when
+printing selection lists. Automatically set upon receipt of a
+<code>SIGWINCH</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COLUMNS&quot;,&quot;hid&quot;:&quot;columns&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:119,&quot;range&quot;:&quot;25931-26244&quot;} -->
+<h3 class="sectionedit121" id="compreply">COMPREPLY</h3>
+<div class="level3">
+<div class="table sectionedit122"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>COMPREPLY</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table60&quot;,&quot;secid&quot;:122,&quot;range&quot;:&quot;26265-26404&quot;} -->
+<p>
+An array variable from which Bash reads the possible completions generated by
+a shell function invoked by the programmable completion facility.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;COMPREPLY&quot;,&quot;hid&quot;:&quot;compreply&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:121,&quot;range&quot;:&quot;26245-26550&quot;} -->
+<h3 class="sectionedit123" id="emacs">EMACS</h3>
+<div class="level3">
+<div class="table sectionedit124"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>EMACS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table61&quot;,&quot;secid&quot;:124,&quot;range&quot;:&quot;26567-26696&quot;} -->
+<p>
+If Bash finds this variable in the environment when the shell starts with
+value &quot;t&quot;, it assumes that the shell is running in an Emacs shell buffer
+and disables line editing.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;EMACS&quot;,&quot;hid&quot;:&quot;emacs&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:123,&quot;range&quot;:&quot;26551-26872&quot;} -->
+<h3 class="sectionedit125" id="env">ENV</h3>
+<div class="level3">
+<div class="table sectionedit126"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>ENV</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table62&quot;,&quot;secid&quot;:126,&quot;range&quot;:&quot;26887-27014&quot;} -->
+<p>
+Similar to <code>BASH_ENV</code>: Used when the shell is invoked in POSIX® mode.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ENV&quot;,&quot;hid&quot;:&quot;env&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:125,&quot;range&quot;:&quot;26873-27090&quot;} -->
+<h3 class="sectionedit127" id="fcedit">FCEDIT</h3>
+<div class="level3">
+<div class="table sectionedit128"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>FCEDIT</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table63&quot;,&quot;secid&quot;:128,&quot;range&quot;:&quot;27108-27238&quot;} -->
+<p>
+The default editor for the <a href="/commands/builtin/fc" class="wikilink2" title="commands:builtin:fc" rel="nofollow">fc builtin command</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;FCEDIT&quot;,&quot;hid&quot;:&quot;fcedit&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:127,&quot;range&quot;:&quot;27091-27311&quot;} -->
+<h3 class="sectionedit129" id="fignore">FIGNORE</h3>
+<div class="level3">
+<div class="table sectionedit130"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>FIGNORE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table64&quot;,&quot;secid&quot;:130,&quot;range&quot;:&quot;27330-27461&quot;} -->
+<p>
+A colon-separated list of suffixes to ignore when performing filename
+completion. A filename whose suffix matches one of the entries in <code>FIGNORE</code>
+is excluded from the list of matched filenames.
+</p>
+
+<p>
+Example content:
+<pre class="code">.o:~</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;FIGNORE&quot;,&quot;hid&quot;:&quot;fignore&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:129,&quot;range&quot;:&quot;27312-27695&quot;} -->
+<h3 class="sectionedit131" id="funcnest">FUNCNEST</h3>
+<div class="level3">
+<div class="table sectionedit132"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>FUNCNEST</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.2-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table65&quot;,&quot;secid&quot;:132,&quot;range&quot;:&quot;27715-27849&quot;} -->
+<p>
+If set to a numeric value greater than 0, defines a maximum function nesting
+level. Function invocations that exceed this nesting level will cause the
+current command to abort.
+</p>
+
+<p>
+Negative values, 0 or non-numeric assignments have the effect as if
+<code>FUNCNEST</code> was unset or empty: No nest control
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;FUNCNEST&quot;,&quot;hid&quot;:&quot;funcnest&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:131,&quot;range&quot;:&quot;27696-28146&quot;} -->
+<h3 class="sectionedit133" id="globignore">GLOBIGNORE</h3>
+<div class="level3">
+<div class="table sectionedit134"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>GLOBIGNORE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table66&quot;,&quot;secid&quot;:134,&quot;range&quot;:&quot;28168-28298&quot;} -->
+<p>
+A colon-separated list of patterns defining the set of filenames to be ignored
+by pathname expansion. If a filename matched by a pathname expansion pattern
+also matches one of the patterns in <code>GLOBIGNORE</code>, it is removed from the list of
+matches.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;GLOBIGNORE&quot;,&quot;hid&quot;:&quot;globignore&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:133,&quot;range&quot;:&quot;28147-28548&quot;} -->
+<h3 class="sectionedit135" id="histcontrol">HISTCONTROL</h3>
+<div class="level3">
+<div class="table sectionedit136"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HISTCONTROL</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table67&quot;,&quot;secid&quot;:136,&quot;range&quot;:&quot;28571-28706&quot;} -->
+<p>
+A colon-separated list of values controlling how commands are saved on the
+history list:
+</p>
+<div class="table sectionedit137"><table class="inline">
+	<tr class="row0">
+		<td class="col0 leftalign"><code>ignorespace</code>    </td><td class="col1 leftalign">lines which begin with a space character are not saved in the history list                                  </td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>ignoredups</code>     </td><td class="col1 leftalign">don&#039;t save lines matching the previous history entry                                                        </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>ignoreboth</code>     </td><td class="col1 leftalign">short for <code>ignorespace:ignoredups</code>                                                                        </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>erasedups</code>      </td><td class="col1 leftalign">remove all previous lines matching the current line from the history list before the current line is saved  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table68&quot;,&quot;secid&quot;:137,&quot;range&quot;:&quot;28798-29321&quot;} -->
+<p>
+Any value not in the above list is ignored.
+</p>
+
+<p>
+If <code>HISTCONTROL</code> is unset, or does not include a valid value, all lines read
+by the shell parser are saved on the history list, subject to the value
+of <code>HISTIGNORE</code>. The second and subsequent lines of a multi-line compound
+command are not tested, and are added to the history regardless of the value
+of <code>HISTCONTROL</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HISTCONTROL&quot;,&quot;hid&quot;:&quot;histcontrol&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:135,&quot;range&quot;:&quot;28549-29692&quot;} -->
+<h3 class="sectionedit138" id="histfile">HISTFILE</h3>
+<div class="level3">
+<div class="table sectionedit139"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HISTFILE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">if unset  </td><th class="col2">Default: </th><td class="col3 leftalign"><code> ~/.bash_history</code>  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table69&quot;,&quot;secid&quot;:139,&quot;range&quot;:&quot;29712-29867&quot;} -->
+<p>
+The name of the file in which command history is saved.
+</p>
+
+<p>
+If unset, the command history is not saved when an interactive shell
+exits.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HISTFILE&quot;,&quot;hid&quot;:&quot;histfile&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:138,&quot;range&quot;:&quot;29693-30002&quot;} -->
+<h3 class="sectionedit140" id="histfilesize">HISTFILESIZE</h3>
+<div class="level3">
+<div class="table sectionedit141"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HISTFILESIZE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">if unset  </td><th class="col2">Default: </th><td class="col3 leftalign"><code>HISTSIZE</code>  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table70&quot;,&quot;secid&quot;:141,&quot;range&quot;:&quot;30026-30177&quot;} -->
+<p>
+The maximum number of lines contained in the history file.
+</p>
+
+<p>
+When this variable is assigned a value, the history file is truncated,
+if necessary, by removing the oldest entries, to contain no more than the
+given number of lines. If the given number of lines is 0 (zero), the file is truncated to zero size.
+Non-numeric values and numeric values less than zero inhibit truncation.
+</p>
+
+<p>
+The history file is also truncated to this size after writing it
+when an interactive shell exits.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HISTFILESIZE&quot;,&quot;hid&quot;:&quot;histfilesize&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:140,&quot;range&quot;:&quot;30003-30657&quot;} -->
+<h3 class="sectionedit142" id="histignore">HISTIGNORE</h3>
+<div class="level3">
+<div class="table sectionedit143"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HISTIGNORE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table71&quot;,&quot;secid&quot;:143,&quot;range&quot;:&quot;30679-30809&quot;} -->
+<p>
+A colon-separated list of patterns used to decide which command lines should be
+saved on the history list. Each pattern is anchored at the beginning of the
+line and must match the complete line (no implicit &#039;*&#039; is appended).
+</p>
+
+<p>
+Each pattern is tested against the line after the checks specified by
+<code>HISTCONTROL</code> are applied.
+</p>
+
+<p>
+In addition to the normal shell pattern matching characters, &quot;&amp;&quot; matches the
+previous history line. &quot;&amp;&quot; may be escaped using a backslash; the backslash is
+removed before attempting a match.
+</p>
+
+<p>
+The second and subsequent lines of a multi-line compound command are not tested,
+and are added to the history regardless of the value of <code>HISTIGNORE</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HISTIGNORE&quot;,&quot;hid&quot;:&quot;histignore&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:142,&quot;range&quot;:&quot;30658-31481&quot;} -->
+<h3 class="sectionedit144" id="histsize">HISTSIZE</h3>
+<div class="level3">
+<div class="table sectionedit145"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HISTSIZE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">if unset  </td><th class="col2">Default: </th><td class="col3 leftalign">set at compile time (default 500)  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table72&quot;,&quot;secid&quot;:145,&quot;range&quot;:&quot;31501-31669&quot;} -->
+<p>
+The number of commands to remember in the command history.
+</p>
+
+<p>
+If the number is set to 0 (zero), then the history list is disabled. If the number is set to any negative number, then the history list is unlimited.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HISTSIZE&quot;,&quot;hid&quot;:&quot;histsize&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:144,&quot;range&quot;:&quot;31482-31881&quot;} -->
+<h3 class="sectionedit146" id="histtimeformat">HISTTIMEFORMAT</h3>
+<div class="level3">
+<div class="table sectionedit147"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HISTTIMEFORMAT</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table73&quot;,&quot;secid&quot;:147,&quot;range&quot;:&quot;31907-32045&quot;} -->
+<p>
+If this variable is set and not null, its value is used as a format string
+for <code>strftime(3)</code> to print the time stamp associated with each history
+entry displayed by the history builtin.
+</p>
+
+<p>
+If this variable is set, time stamps are written to the history file so
+they may be preserved across shell sessions. This uses the history comment
+character to distinguish timestamps from other history lines.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HISTTIMEFORMAT&quot;,&quot;hid&quot;:&quot;histtimeformat&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:146,&quot;range&quot;:&quot;31882-32445&quot;} -->
+<h3 class="sectionedit148" id="home">HOME</h3>
+<div class="level3">
+<div class="table sectionedit149"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HOME</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table74&quot;,&quot;secid&quot;:149,&quot;range&quot;:&quot;32461-32589&quot;} -->
+<p>
+The home directory of the current user.
+</p>
+
+<p>
+The default argument for the <a href="/commands/builtin/cd" class="wikilink1" title="commands:builtin:cd">cd builtin command</a>.
+</p>
+
+<p>
+The value of this variable is also used when performing
+<a href="/syntax/expansion/tilde" class="wikilink1" title="syntax:expansion:tilde">tilde expansion</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HOME&quot;,&quot;hid&quot;:&quot;home&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:148,&quot;range&quot;:&quot;32446-32806&quot;} -->
+<h3 class="sectionedit150" id="hostfile">HOSTFILE</h3>
+<div class="level3">
+<div class="table sectionedit151"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>HOSTFILE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table75&quot;,&quot;secid&quot;:151,&quot;range&quot;:&quot;32826-32958&quot;} -->
+<p>
+Contains the name of a file in the same format as <code>/etc/hosts</code> that should be
+read when the shell needs to complete a hostname.
+</p>
+
+<p>
+The list of possible hostname completions may be changed while the shell is
+running. the next time hostname completion is attempted after the value is
+changed, Bash adds the contents of the new file to the existing list.
+</p>
+
+<p>
+If <code>HOSTFILE</code> is set, but has no value, or does not name a readable file,
+Bash attempts to read <code>/etc/hosts</code> to obtain the list of possible hostname
+completions.
+</p>
+
+<p>
+When <code>HOSTFILE</code> is unset, the hostname list is cleared.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;HOSTFILE&quot;,&quot;hid&quot;:&quot;hostfile&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:150,&quot;range&quot;:&quot;32807-33538&quot;} -->
+<h3 class="sectionedit152" id="ifs">IFS</h3>
+<div class="level3">
+<div class="table sectionedit153"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>IFS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3"><code>&lt;space&gt;&lt;tab&gt;&lt;newline&gt;</code></td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table76&quot;,&quot;secid&quot;:153,&quot;range&quot;:&quot;33553-33700&quot;} -->
+<p>
+The Internal Field Separator that is used for word splitting
+after expansion and to split lines into words with the read
+builtin command.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;IFS&quot;,&quot;hid&quot;:&quot;ifs&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:152,&quot;range&quot;:&quot;33539-33840&quot;} -->
+<h3 class="sectionedit154" id="ignoreeof">IGNOREEOF</h3>
+<div class="level3">
+<div class="table sectionedit155"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>IGNOREEOF</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">10 (when invalid)  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table77&quot;,&quot;secid&quot;:155,&quot;range&quot;:&quot;33861-34008&quot;} -->
+<p>
+Controls the action of an interactive shell on receipt of an <code><abbr title="End of file">EOF</abbr></code>
+character (e.g. by Ctrl-D) as the sole input.
+</p>
+
+<p>
+If set, the value is the number of consecutive <abbr title="End of file">EOF</abbr> characters which must be
+typed as the first characters on an input line before Bash exits.
+</p>
+
+<p>
+If the variable exists but does not have a numeric value, or has no value, the
+default value is 10.
+</p>
+
+<p>
+If it does not exist, <code><abbr title="End of file">EOF</abbr></code> signifies the end of input to the shell.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;IGNOREEOF&quot;,&quot;hid&quot;:&quot;ignoreeof&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:154,&quot;range&quot;:&quot;33841-34441&quot;} -->
+<h3 class="sectionedit156" id="inputrc">INPUTRC</h3>
+<div class="level3">
+<div class="table sectionedit157"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>INPUTRC</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table78&quot;,&quot;secid&quot;:157,&quot;range&quot;:&quot;34460-34591&quot;} -->
+<p>
+The filename for the readline startup file, overriding the default
+of <code>~/.inputrc</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;INPUTRC&quot;,&quot;hid&quot;:&quot;inputrc&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:156,&quot;range&quot;:&quot;34442-34679&quot;} -->
+<h3 class="sectionedit158" id="lang">LANG</h3>
+<div class="level3">
+<div class="table sectionedit159"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>LANG</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table79&quot;,&quot;secid&quot;:159,&quot;range&quot;:&quot;34695-34823&quot;} -->
+<p>
+Used to determine the locale category for any category not
+specifically selected with a variable starting with <code>LC_</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;LANG&quot;,&quot;hid&quot;:&quot;lang&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:158,&quot;range&quot;:&quot;34680-34945&quot;} -->
+<h3 class="sectionedit160" id="lc_all">LC_ALL</h3>
+<div class="level3">
+<div class="table sectionedit161"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>LC_ALL</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table80&quot;,&quot;secid&quot;:161,&quot;range&quot;:&quot;34963-35093&quot;} -->
+<p>
+This variable overrides the value of <code>LANG</code> and any other <code>LC_</code>
+variable specifying a locale category.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;LC_ALL&quot;,&quot;hid&quot;:&quot;lc_all&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:160,&quot;range&quot;:&quot;34946-35202&quot;} -->
+<h3 class="sectionedit162" id="lc_collate">LC_COLLATE</h3>
+<div class="level3">
+<div class="table sectionedit163"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>LC_COLLATE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table81&quot;,&quot;secid&quot;:163,&quot;range&quot;:&quot;35224-35358&quot;} -->
+<p>
+This variable determines the collation order used when sorting
+the results of pathname expansion, and determines the behavior
+of range expressions, equivalence classes, and collating
+sequences within pathname expansion and pattern matching.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;LC_COLLATE&quot;,&quot;hid&quot;:&quot;lc_collate&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:162,&quot;range&quot;:&quot;35203-35601&quot;} -->
+<h3 class="sectionedit164" id="lc_ctype">LC_CTYPE</h3>
+<div class="level3">
+<div class="table sectionedit165"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>LC_CTYPE</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table82&quot;,&quot;secid&quot;:165,&quot;range&quot;:&quot;35621-35753&quot;} -->
+<p>
+This variable determines the interpretation of characters and
+the behavior of character classes within pathname expansion and
+pattern matching.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;LC_CTYPE&quot;,&quot;hid&quot;:&quot;lc_ctype&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:164,&quot;range&quot;:&quot;35602-35899&quot;} -->
+<h3 class="sectionedit166" id="lc_messages">LC_MESSAGES</h3>
+<div class="level3">
+<div class="table sectionedit167"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>LC_MESSAGES</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table83&quot;,&quot;secid&quot;:167,&quot;range&quot;:&quot;35922-36057&quot;} -->
+<p>
+This variable determines the locale used to translate double-
+quoted strings preceded by a <code>$</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;LC_MESSAGES&quot;,&quot;hid&quot;:&quot;lc_messages&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:166,&quot;range&quot;:&quot;35900-36157&quot;} -->
+<h3 class="sectionedit168" id="lc_numeric">LC_NUMERIC</h3>
+<div class="level3">
+<div class="table sectionedit169"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>LC_NUMERIC</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table84&quot;,&quot;secid&quot;:169,&quot;range&quot;:&quot;36179-36313&quot;} -->
+<p>
+This variable determines the locale category used for number
+formatting.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;LC_NUMERIC&quot;,&quot;hid&quot;:&quot;lc_numeric&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:168,&quot;range&quot;:&quot;36158-36388&quot;} -->
+<h3 class="sectionedit170" id="lines">LINES</h3>
+<div class="level3">
+<div class="table sectionedit171"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>LINES</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">on <code>SIGWINCH</code>  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table85&quot;,&quot;secid&quot;:171,&quot;range&quot;:&quot;36405-36547&quot;} -->
+<p>
+Used by the select compound command to determine the column
+length for printing selection lists. Automatically set upon
+receipt of a <code>SIGWINCH</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;LINES&quot;,&quot;hid&quot;:&quot;lines&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:170,&quot;range&quot;:&quot;36389-36696&quot;} -->
+<h3 class="sectionedit172" id="mail">MAIL</h3>
+<div class="level3">
+<div class="table sectionedit173"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>MAIL</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">system-dependent  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table86&quot;,&quot;secid&quot;:173,&quot;range&quot;:&quot;36712-36853&quot;} -->
+<p>
+If this parameter is set to a file or directory name and the
+<code>MAILPATH</code> variable is not set, Bash informs the user of the
+arrival of mail in the specified file or Maildir-format direc‐
+tory.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;MAIL&quot;,&quot;hid&quot;:&quot;mail&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:172,&quot;range&quot;:&quot;36697-37050&quot;} -->
+<h3 class="sectionedit174" id="mailcheck">MAILCHECK</h3>
+<div class="level3">
+<div class="table sectionedit175"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>MAILCHECK</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">60  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table87&quot;,&quot;secid&quot;:175,&quot;range&quot;:&quot;37071-37203&quot;} -->
+<p>
+Specifies how often (in seconds) Bash checks for mail.
+</p>
+
+<p>
+When it is time to check for mail, the shell does so before
+displaying the primary prompt.
+</p>
+
+<p>
+If this variable is unset, or set to a value that is not a number
+greater than or equal to zero, the shell disables mail checking.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;MAILCHECK&quot;,&quot;hid&quot;:&quot;mailcheck&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:174,&quot;range&quot;:&quot;37051-37484&quot;} -->
+<h3 class="sectionedit176" id="mailpath">MAILPATH</h3>
+<div class="level3">
+<div class="table sectionedit177"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>MAILPATH</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">system-dependent  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table88&quot;,&quot;secid&quot;:177,&quot;range&quot;:&quot;37504-37649&quot;} -->
+<p>
+A colon-separated list of file names to be checked for mail.
+</p>
+
+<p>
+The message to be printed when mail arrives in a particular file
+may be specified by separating the file name from the message
+with a &#039;?&#039; (question mark).
+</p>
+
+<p>
+When used in the text of the message, <code>$_</code> expands to
+the name of the current mailfile.
+</p>
+
+<p>
+Example content:
+<pre class="code">/var/mail/bfox?&quot;You have mail&quot;:~/shell-mail?&quot;$_ has mail!&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;MAILPATH&quot;,&quot;hid&quot;:&quot;mailpath&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:176,&quot;range&quot;:&quot;37485-38049&quot;} -->
+<h3 class="sectionedit178" id="opterr">OPTERR</h3>
+<div class="level3">
+<div class="table sectionedit179"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>OPTERR</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">1 (set on startup)  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table89&quot;,&quot;secid&quot;:179,&quot;range&quot;:&quot;38067-38213&quot;} -->
+<p>
+If set to the value 1, Bash displays error messages generated by
+the <a href="/commands/builtin/getopts" class="wikilink2" title="commands:builtin:getopts" rel="nofollow">getopts builtin command</a>.
+</p>
+
+<p>
+<code>OPTERR</code> is initialized to 1 each time the shell is invoked or a
+shell script is executed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;OPTERR&quot;,&quot;hid&quot;:&quot;opterr&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:178,&quot;range&quot;:&quot;38050-38432&quot;} -->
+<h3 class="sectionedit180" id="path">PATH</h3>
+<div class="level3">
+<div class="table sectionedit181"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PATH</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">system-dependent (set on compile time)  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table90&quot;,&quot;secid&quot;:181,&quot;range&quot;:&quot;38448-38611&quot;} -->
+<p>
+The search path for commands. This is a colon-separated list of directories in which the shell looks for commands.
+</p>
+
+<p>
+A zero-length (null) directory name in the value of <code>PATH</code> indicates the current directory.
+</p>
+
+<p>
+A null directory name may appear as two adjacent colons, or as an initial or
+trailing colon.
+</p>
+
+<p>
+There can be a static path compiled in for use in a restricted shell.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PATH&quot;,&quot;hid&quot;:&quot;path&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:180,&quot;range&quot;:&quot;38433-38987&quot;} -->
+<h3 class="sectionedit182" id="posixly_correct">POSIXLY_CORRECT</h3>
+<div class="level3">
+<div class="table sectionedit183"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>POSIXLY_CORRECT</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table91&quot;,&quot;secid&quot;:183,&quot;range&quot;:&quot;39014-39153&quot;} -->
+<p>
+If this variable is in the environment when Bash starts, the
+shell enters posix mode before reading the startup files, as if
+the <code>–posix</code> invocation option had been supplied.
+</p>
+
+<p>
+If it is set while the shell is running, Bash enables posix mode, as if the
+command <code>set -o posix</code> had been executed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;POSIXLY_CORRECT&quot;,&quot;hid&quot;:&quot;posixly_correct&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:182,&quot;range&quot;:&quot;38988-39454&quot;} -->
+<h3 class="sectionedit184" id="prompt_command">PROMPT_COMMAND</h3>
+<div class="level3">
+<div class="table sectionedit185"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PROMPT_COMMAND</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table92&quot;,&quot;secid&quot;:185,&quot;range&quot;:&quot;39480-39618&quot;} -->
+<p>
+If set, the value is executed as a command prior to issuing each
+primary prompt.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PROMPT_COMMAND&quot;,&quot;hid&quot;:&quot;prompt_command&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:184,&quot;range&quot;:&quot;39455-39701&quot;} -->
+<h3 class="sectionedit186" id="prompt_commands">PROMPT_COMMANDS</h3>
+<div class="level3">
+<div class="table sectionedit187"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PROMPT_COMMANDS</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">5.1-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">integer indexed array  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table93&quot;,&quot;secid&quot;:187,&quot;range&quot;:&quot;39728-39875&quot;} -->
+<p>
+If set, each element is executed as a command prior to issuing each
+primary prompt (like <code>PROMPT_COMMAND</code>, just as array).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PROMPT_COMMANDS&quot;,&quot;hid&quot;:&quot;prompt_commands&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:186,&quot;range&quot;:&quot;39702-40002&quot;} -->
+<h3 class="sectionedit188" id="prompt_dirtrim">PROMPT_DIRTRIM</h3>
+<div class="level3">
+<div class="table sectionedit189"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PROMPT_DIRTRIM</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table94&quot;,&quot;secid&quot;:189,&quot;range&quot;:&quot;40028-40166&quot;} -->
+<p>
+If set to a number greater than zero, the value is used as the
+number of trailing directory components to retain when expanding
+the <code>\w</code> and <code>\W</code> prompt string escapes.
+</p>
+
+<p>
+Characters removed are replaced with an ellipsis.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PROMPT_DIRTRIM&quot;,&quot;hid&quot;:&quot;prompt_dirtrim&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:188,&quot;range&quot;:&quot;40003-40392&quot;} -->
+<h3 class="sectionedit190" id="ps0">PS0</h3>
+<div class="level3">
+<div class="table sectionedit191"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PS0</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.4.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">if unset  </td><th class="col2">Default: </th><td class="col3 leftalign">&quot;<code></code>&quot;  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table95&quot;,&quot;secid&quot;:191,&quot;range&quot;:&quot;40407-40541&quot;} -->
+<p>
+Expanded and displayed by interactive shells after reading a complete command but before executing it.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PS0&quot;,&quot;hid&quot;:&quot;ps0&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:190,&quot;range&quot;:&quot;40393-40646&quot;} -->
+<h3 class="sectionedit192" id="ps1">PS1</h3>
+<div class="level3">
+<div class="table sectionedit193"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PS1</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">if unset  </td><th class="col2">Default: </th><td class="col3 leftalign">&quot;<code>\s-\v\$ </code>&quot;  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table96&quot;,&quot;secid&quot;:193,&quot;range&quot;:&quot;40661-40805&quot;} -->
+<p>
+The value of this parameter is expanded and used as the primary prompt string. See <a href="https://www.gnu.org/software/bash/manual/bash.html#Controlling-the-Prompt" class="urlextern" title="https://www.gnu.org/software/bash/manual/bash.html#Controlling-the-Prompt" rel="nofollow">Controlling the Prompt</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PS1&quot;,&quot;hid&quot;:&quot;ps1&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:192,&quot;range&quot;:&quot;40647-40992&quot;} -->
+<h3 class="sectionedit194" id="ps2">PS2</h3>
+<div class="level3">
+<div class="table sectionedit195"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PS2</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">if unset  </td><th class="col2">Default: </th><td class="col3 leftalign">&quot;<code>&gt; </code>&quot;  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table97&quot;,&quot;secid&quot;:195,&quot;range&quot;:&quot;41007-41145&quot;} -->
+<p>
+The value of this parameter is expanded as with PS1 and used as
+the secondary prompt string.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PS2&quot;,&quot;hid&quot;:&quot;ps2&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:194,&quot;range&quot;:&quot;40993-41240&quot;} -->
+<h3 class="sectionedit196" id="ps3">PS3</h3>
+<div class="level3">
+<div class="table sectionedit197"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PS3</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table98&quot;,&quot;secid&quot;:197,&quot;range&quot;:&quot;41255-41382&quot;} -->
+<p>
+The value of this parameter is used as the prompt for the select
+command.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PS3&quot;,&quot;hid&quot;:&quot;ps3&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:196,&quot;range&quot;:&quot;41241-41458&quot;} -->
+<h3 class="sectionedit198" id="ps4">PS4</h3>
+<div class="level3">
+<div class="table sectionedit199"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>PS4</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">if unset  </td><th class="col2">Default: </th><td class="col3 leftalign">&quot;<code>+ </code>&quot;  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table99&quot;,&quot;secid&quot;:199,&quot;range&quot;:&quot;41473-41611&quot;} -->
+<p>
+The value of this parameter is expanded as with <code>PS1</code> and the
+value is printed before each command Bash displays during an
+execution trace. The first character of <code>PS4</code> is replicated multiple
+times, as necessary, to indicate multiple levels of indirection.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;PS4&quot;,&quot;hid&quot;:&quot;ps4&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:198,&quot;range&quot;:&quot;41459-41874&quot;} -->
+<h3 class="sectionedit200" id="shell">SHELL</h3>
+<div class="level3">
+<div class="table sectionedit201"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>SHELL</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table100&quot;,&quot;secid&quot;:201,&quot;range&quot;:&quot;41891-42020&quot;} -->
+<p>
+The full pathname to the shell is kept in this environment variable.
+If it is not set when the shell starts, Bash assigns the full pathname
+of the current user&#039;s login shell.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SHELL&quot;,&quot;hid&quot;:&quot;shell&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:200,&quot;range&quot;:&quot;41875-42197&quot;} -->
+<h3 class="sectionedit202" id="srandom">SRANDOM</h3>
+<div class="level3">
+<div class="table sectionedit203"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>SRANDOM</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">5.1-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">yes  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table101&quot;,&quot;secid&quot;:203,&quot;range&quot;:&quot;42216-42350&quot;} -->
+<p>
+A variable that delivers a 32bit random number. The random number generation uses platform specific generators in the background and a builtin fallback generator.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;SRANDOM&quot;,&quot;hid&quot;:&quot;srandom&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:202,&quot;range&quot;:&quot;42198-42515&quot;} -->
+<h3 class="sectionedit204" id="timeformat">TIMEFORMAT</h3>
+<div class="level3">
+<div class="table sectionedit205"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>TIMEFORMAT</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table102&quot;,&quot;secid&quot;:205,&quot;range&quot;:&quot;42537-42671&quot;} -->
+<p>
+The value of this parameter is used as a format string specifying how the
+timing information for pipelines prefixed with the time reserved word should
+be displayed.
+</p>
+
+<p>
+The % character introduces an escape sequence that is expanded
+to a time value or other information. The escape sequences and their meanings are
+as follows, the braces denote optional portions:
+</p>
+<div class="table sectionedit206"><table class="inline">
+	<tr class="row0">
+		<td class="col0 leftalign"><code>%%</code>         </td><td class="col1 leftalign">a literal <code>%</code> (percent sign)                             </td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>%[p][l]R</code>   </td><td class="col1 leftalign">elapsed time in seconds                                    </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>%[p][l]U</code>   </td><td class="col1 leftalign">number of CPU seconds spent in user mode                   </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>%[p][l]S</code>   </td><td class="col1 leftalign">number of CPU seconds spent in system mode                 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"><code>%P</code>         </td><td class="col1 leftalign">CPU percentage, computed as <code>(%U + %S) / %R</code>             </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table103&quot;,&quot;secid&quot;:206,&quot;range&quot;:&quot;43033-43422&quot;} -->
+<p>
+The optional modifiers (p and l) are:
+</p>
+<div class="table sectionedit207"><table class="inline">
+	<tr class="row0">
+		<td class="col0 leftalign"><code>p</code>  </td><td class="col1 leftalign">A digit specifying the precision. A value of 0 causes no decimal point or fraction to be output. At most three digits after the decimal point are shown. If not specified, the value 3 is used.  </td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>l</code>  </td><td class="col1 leftalign">A longer format, including minutes, of the form MMmSS.FFs. The value of p determines whether or not the fraction is included.  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table104&quot;,&quot;secid&quot;:207,&quot;range&quot;:&quot;43462-43803&quot;} -->
+<p>
+If this variable is not set, Bash acts as if it had the value
+<pre class="code">$&#039;\nreal\t%3lR\nuser\t%3lU\nsys%3lS&#039;</pre>
+
+</p>
+
+<p>
+If the value is null, no timing information is displayed.
+</p>
+
+<p>
+A trailing newline is added when the format string is displayed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;TIMEFORMAT&quot;,&quot;hid&quot;:&quot;timeformat&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:204,&quot;range&quot;:&quot;42516-44042&quot;} -->
+<h3 class="sectionedit208" id="tmout">TMOUT</h3>
+<div class="level3">
+<div class="table sectionedit209"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>TMOUT</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.05b   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table105&quot;,&quot;secid&quot;:209,&quot;range&quot;:&quot;44059-44186&quot;} -->
+<p>
+If set to a value greater than zero, <code>TMOUT</code> is treated as the
+default timeout for the <a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read">read builtin command</a>.
+</p>
+
+<p>
+The <a href="/commands/builtin/select" class="wikilink2" title="commands:builtin:select" rel="nofollow">select command</a> terminates if input does not
+arrive after <code>TMOUT</code> seconds when input is coming from a terminal.
+</p>
+
+<p>
+In an interactive shell, the value is interpreted as the number of seconds to
+wait for input after issuing the primary prompt. Bash terminates after waiting for
+that number of seconds if input does not arrive.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;TMOUT&quot;,&quot;hid&quot;:&quot;tmout&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:208,&quot;range&quot;:&quot;44043-44682&quot;} -->
+<h3 class="sectionedit210" id="tmpdir">TMPDIR</h3>
+<div class="level3">
+<div class="table sectionedit211"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>TMPDIR</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table106&quot;,&quot;secid&quot;:211,&quot;range&quot;:&quot;44700-44830&quot;} -->
+<p>
+If set, Bash uses its value as the name of a directory in which
+Bash creates temporary files for the shell&#039;s use.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;TMPDIR&quot;,&quot;hid&quot;:&quot;tmpdir&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:210,&quot;range&quot;:&quot;44683-44946&quot;} -->
+<h3 class="sectionedit212" id="auto_resume">auto_resume</h3>
+<div class="level3">
+<div class="table sectionedit213"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>auto_resume</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table107&quot;,&quot;secid&quot;:213,&quot;range&quot;:&quot;44969-45104&quot;} -->
+<p>
+This variable controls how the shell interacts with the user and
+job control. If this variable is set, single word simple commands
+without redirections are treated as candidates for resumption
+of an existing stopped job. There is no ambiguity allowed;
+if there is more than one job beginning with the string typed,
+the job most recently accessed is selected. The name of a
+stopped job, in this context, is the command line used to start
+it. If set to the value exact, the string supplied must match
+the name of a stopped job exactly; if set to substring, the
+string supplied needs to match a substring of the name of a
+stopped job. The substring value provides functionality analogous
+to the %? job identifier.
+</p>
+
+<p>
+If set to any other value, the supplied string must be a prefix of a
+stopped job&#039;s name; this provides functionality analogous to the
+<code>%string</code> job identifier.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;auto_resume&quot;,&quot;hid&quot;:&quot;auto_resume&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:212,&quot;range&quot;:&quot;44947-45980&quot;} -->
+<h3 class="sectionedit214" id="histchars">histchars</h3>
+<div class="level3">
+<div class="table sectionedit215"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Variable:  </th><td class="col1 leftalign"><code>histchars</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Type:  </th><td class="col1 leftalign">normal variable  </td><th class="col2 leftalign">Read-only:  </th><td class="col3 leftalign">no  </td>
+	</tr>
+	<tr class="row2">
+		<th class="col0 leftalign">Set by Bash:  </th><td class="col1 leftalign">no  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table108&quot;,&quot;secid&quot;:215,&quot;range&quot;:&quot;46001-46134&quot;} -->
+<p>
+The two or three characters which control history expansion and
+tokenization.
+</p>
+
+<p>
+The first character is the history expansion character,
+the character which signals the start of a history expansion, normally &#039;!&#039; (exlamation mark).
+</p>
+
+<p>
+The second character is the quick substitution character, which is used as
+shorthand for re-running the previous command entered, substi tuting one string for
+another in the command. The default is &#039;^&#039; (carret).
+</p>
+
+<p>
+The optional third character is the character which indicates that the remainder of
+the line is a comment when found as the first character of a word, normally &#039;#&#039; (hash mark).
+The history comment character causes history substitution to be skipped for the
+remaining words on the line. It does not necessarily cause the shell parser to treat the
+rest of the line as a comment.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;histchars&quot;,&quot;hid&quot;:&quot;histchars&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:214,&quot;range&quot;:&quot;45981-&quot;} --></div>
+</body>
+</html>

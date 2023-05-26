@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:pattern</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,pattern,bash,shell,scripting,glob,globbing,wildcards,filename,pattern,matching"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/pattern?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/pattern"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/pattern"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/pattern"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:pattern","namespace":"syntax","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#patterns_and_pattern_matching">Patterns and pattern matching</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#normal_pattern_language">Normal pattern language</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#bracket_expressions">Bracket expressions</a></div></li>
+<li class="level3"><div class="li"><a href="#examples">Examples</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#extended_pattern_language">Extended pattern language</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#examples1">Examples</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#pattern_matching_configuration">Pattern matching configuration</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#related_shell_options">Related shell options</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#bugs_and_portability_considerations">Bugs and Portability considerations</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#ksh93_extras">ksh93 extras</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="patterns_and_pattern_matching">Patterns and pattern matching</h1>
+<div class="level1">
+
+<p>
+A pattern is a <strong>string description</strong>. Bash uses them in various ways:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> Pathname expansion</a> (Globbing - matching filenames)</div>
+</li>
+<li class="level1"><div class="li"> Pattern matching in <a href="/syntax/ccmd/conditional_expression" class="wikilink1" title="syntax:ccmd:conditional_expression"> conditional expressions</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/pe#substring_removal" class="wikilink1" title="syntax:pe"> Substring removal</a> and <a href="/syntax/pe#search_and_replace" class="wikilink1" title="syntax:pe"> search and replace</a> in <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> Parameter Expansion</a></div>
+</li>
+<li class="level1"><div class="li"> Pattern-based branching using the <a href="/syntax/ccmd/case" class="wikilink1" title="syntax:ccmd:case"> case command</a></div>
+</li>
+</ul>
+
+<p>
+The pattern description language is relatively easy. Any character that&#039;s not mentioned below matches itself.
+The <code>NUL</code> character may not occur in a pattern. If special characters are quoted, they&#039;re matched literally, i.e., without their special meaning.
+</p>
+
+<p>
+Do <strong>not</strong> confuse patterns with <strong><em>regular expressions</em></strong>, because they share some symbols and do similar matching work.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Patterns and pattern matching&quot;,&quot;hid&quot;:&quot;patterns_and_pattern_matching&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-986&quot;} -->
+<h2 class="sectionedit2" id="normal_pattern_language">Normal pattern language</h2>
+<div class="level2">
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Sequence</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>*</code></td><td class="col1">Matches <strong>any string</strong>, including the null string (empty string)</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>?</code></td><td class="col1">Matches any <strong>single character</strong></td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>X</code></td><td class="col1">Matches the character <code>X</code> which can be any character that has no special meaning</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>\X</code></td><td class="col1">Matches the character <code>X</code>, where the character&#039;s special meaning is stripped by the backslash</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>\\</code></td><td class="col1">Matches a backslash</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>[…]</code></td><td class="col1">Defines a pattern <strong>bracket expression</strong> (see below). Matches any of the enclosed characters at this position.</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;1024-1508&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Normal pattern language&quot;,&quot;hid&quot;:&quot;normal_pattern_language&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;987-1510&quot;} -->
+<h3 class="sectionedit4" id="bracket_expressions">Bracket expressions</h3>
+<div class="level3">
+
+<p>
+The bracket expression <code>[…]</code> mentioned above has some useful applications:
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Bracket expression</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>[XYZ]</code></td><td class="col1">The &quot;normal&quot; bracket expression, matching either <code>X</code>, <code>Y</code> or <code>Z</code></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>[X-Z]</code></td><td class="col1">A range expression: Matching all the characters from <code>X</code> to <code>Y</code> (your current <strong>locale</strong>, defines how the characters are <strong>sorted</strong>!)</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>[[:class:]]</code></td><td class="col1">Matches all the characters defined by a <a href="https://pubs.opengroup.org/onlinepubs/009696899/basedefs/xbd_chap07.html#tag_07_03_01" class="urlextern" title="https://pubs.opengroup.org/onlinepubs/009696899/basedefs/xbd_chap07.html#tag_07_03_01" rel="nofollow">POSIX(r) character class</a>: <code>alnum</code>, <code>alpha</code>, <code>ascii</code>, <code>blank</code>, <code>cntrl</code>, <code>digit</code>, <code>graph</code>, <code>lower</code>, <code>print</code>, <code>punct</code>, <code>space</code>, <code>upper</code>, <code>word</code> and <code>xdigit</code></td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>[^…]</code></td><td class="col1">A negating expression: It matches all the characters that are <strong>not</strong> in the bracket expression</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>[!…]</code></td><td class="col1">Equivalent to <code>[^…]</code></td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>[]...]</code> or <code>[-…]</code></td><td class="col1">Used to include the characters <code>]</code> and <code>-</code> into the set, they need to be the first characters after the opening bracket</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>[=C=]</code></td><td class="col1">Matches any character that is eqivalent to the collation weight of <code>C</code> (current locale!)</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><code>[[.SYMBOL.]]</code></td><td class="col1">Matches the collating symbol <code>SYMBOL</code></td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;1621-2727&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bracket expressions&quot;,&quot;hid&quot;:&quot;bracket_expressions&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1511-2731&quot;} -->
+<h3 class="sectionedit6" id="examples">Examples</h3>
+<div class="level3">
+
+<p>
+Some simple examples using normal pattern matching:
+</p>
+<ul>
+<li class="level1 node"><div class="li"> Pattern <code>&quot;Hello world&quot;</code> matches</div>
+<ul>
+<li class="level2"><div class="li"> <code>Hello world</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Pattern <code>[Hh]&quot;ello world&quot;</code> matches</div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>Hello world</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code>hello world</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Pattern <code>Hello*</code> matches (for example)</div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>Hello world</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code>Helloworld</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code>HelloWoRlD</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code>Hello</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Pattern <code>Hello world[[:punct:]]</code> matches (for example)</div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>Hello world!</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code>Hello world.</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code>Hello world+</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code>Hello world?</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> Pattern <code>[[.backslash.]]Hello[[.vertical-line.]]world[[.exclamation-mark.]]</code> matches (using <a href="https://pubs.opengroup.org/onlinepubs/009696899/basedefs/xbd_chap07.html#tag_07_03_02_04" class="urlextern" title="https://pubs.opengroup.org/onlinepubs/009696899/basedefs/xbd_chap07.html#tag_07_03_02_04" rel="nofollow">collation symbols</a>)</div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>\Hello|world!</code></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;2732-3529&quot;} -->
+<h2 class="sectionedit7" id="extended_pattern_language">Extended pattern language</h2>
+<div class="level2">
+
+<p>
+If you set the <a href="/internals/shell_options" class="wikilink1" title="internals:shell_options"> shell option</a> <code>extglob</code>, Bash understands some powerful patterns. A <code>&lt;PATTERN-LIST&gt;</code> is one or more patterns, separated by the pipe-symbol (<code>PATTERN|PATTERN</code>).
+</p>
+<div class="table sectionedit8"><table class="inline">
+	<tr class="row0">
+		<td class="col0"><code>?(&lt;PATTERN-LIST&gt;)</code></td><td class="col1">Matches <strong>zero or one</strong> occurrence of the given patterns</td>
+	</tr>
+	<tr class="row1">
+		<td class="col0"><code>*(&lt;PATTERN-LIST&gt;)</code></td><td class="col1">Matches <strong>zero or more</strong> occurrences of the given patterns</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>+(&lt;PATTERN-LIST&gt;)</code></td><td class="col1">Matches <strong>one or more</strong> occurrences of the given patterns</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>@(&lt;PATTERN-LIST&gt;)</code></td><td class="col1">Matches <strong>one</strong> of the given patterns</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>!(&lt;PATTERN-LIST&gt;)</code></td><td class="col1">Matches anything <strong>except</strong> one of the given patterns</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;3780-4165&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Extended pattern language&quot;,&quot;hid&quot;:&quot;extended_pattern_language&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;3530-4166&quot;} -->
+<h3 class="sectionedit9" id="examples1">Examples</h3>
+<div class="level3">
+
+<p>
+<strong><em class="u">Delete all but one specific file</em></strong>
+<pre class="code">rm -f !(survivior.txt)</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples1&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;4167-4266&quot;} -->
+<h2 class="sectionedit10" id="pattern_matching_configuration">Pattern matching configuration</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Pattern matching configuration&quot;,&quot;hid&quot;:&quot;pattern_matching_configuration&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:10,&quot;range&quot;:&quot;4267-4310&quot;} -->
+<h3 class="sectionedit11" id="related_shell_options">Related shell options</h3>
+<div class="level3">
+<div class="table sectionedit12"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">option </th><th class="col1">classification </th><th class="col2">description </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>dotglob</code> </td><td class="col1"> <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs">globbing</a> </td><td class="col2"> see <a href="/syntax/expansion/globs#customization" class="wikilink1" title="syntax:expansion:globs">Pathname expansion customization</a> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>extglob</code> </td><td class="col1"> global </td><td class="col2"> enable/disable extended pattern matching language, as described above </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>failglob</code> </td><td class="col1"> <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs">globbing</a> </td><td class="col2"> see <a href="/syntax/expansion/globs#customization" class="wikilink1" title="syntax:expansion:globs">Pathname expansion customization</a> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>nocaseglob</code> </td><td class="col1"> <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs">globbing</a> </td><td class="col2"> see <a href="/syntax/expansion/globs#customization" class="wikilink1" title="syntax:expansion:globs">Pathname expansion customization</a> </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>nocasematch</code> </td><td class="col1"> pattern/string matching </td><td class="col2"> perform pattern matching without regarding the case of individual letters </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>nullglob</code> </td><td class="col1"> <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs">globbing</a> </td><td class="col2"> see <a href="/syntax/expansion/globs#customization" class="wikilink1" title="syntax:expansion:globs">Pathname expansion customization</a> </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>globasciiranges</code> </td><td class="col1"> <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs">globbing</a> </td><td class="col2"> see <a href="/syntax/expansion/globs#customization" class="wikilink1" title="syntax:expansion:globs">Pathname expansion customization</a> </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:12,&quot;range&quot;:&quot;4343-5276&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Related shell options&quot;,&quot;hid&quot;:&quot;related_shell_options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:11,&quot;range&quot;:&quot;4311-5278&quot;} -->
+<h2 class="sectionedit13" id="bugs_and_portability_considerations">Bugs and Portability considerations</h2>
+<div class="level2">
+
+<p>
+ * Counter-intuitively, only the <code>[!chars]</code> syntax for negating a character class is specified by POSIX for shell pattern matching. <code>[^chars]</code> is merely a commonly-supported extension. Even dash supports <code>[^chars]</code>, but not posh.
+</p>
+
+<p>
+ * All of the extglob quantifiers supported by bash were supported by ksh88. The set of extglob quantifiers supported by ksh88 are identical to those supported by Bash, mksh, ksh93, and zsh.
+</p>
+
+<p>
+ * mksh does not support POSIX character classes. Therefore, character ranges like <code>[0-9]</code> are somewhat more portable than an equivalent POSIX class like <code>[:digit:]</code>.
+</p>
+
+<p>
+ * Bash uses a custom runtime interpreter for pattern matching. (at least) ksh93 and zsh translate patterns into regexes and then use a regex compiler to emit and cache optimized pattern matching code. This means Bash may be an order of magnitude or more slower in cases that involve complex back-tracking (usually that means extglob quantifier nesting). You may wish to use Bash&#039;s regex support (the <code>=~</code> operator) if performance is a problem, because Bash will use your C library regex implementation rather than its own pattern matcher.
+</p>
+
+<p>
+TODO: describe the pattern escape bug <a href="https://gist.github.com/ormaaj/6195070" class="urlextern" title="https://gist.github.com/ormaaj/6195070" rel="nofollow">https://gist.github.com/ormaaj/6195070</a>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bugs and Portability considerations&quot;,&quot;hid&quot;:&quot;bugs_and_portability_considerations&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:13,&quot;range&quot;:&quot;5279-6549&quot;} -->
+<h3 class="sectionedit14" id="ksh93_extras">ksh93 extras</h3>
+<div class="level3">
+
+<p>
+ksh93 supports some very powerful pattern matching features in addition to those described above.
+</p>
+
+<p>
+ * ksh93 supports arbitrary quantifiers just like ERE using the <code>{from,to}(pattern-list)</code> syntax. <code>{2,4}(foo)bar</code> matches between 2-4 &quot;foo&quot;&#039;s followed by &quot;bar&quot;. <code>{2,}(foo)bar</code> matches 2 or more &quot;foo&quot;&#039;s followed by &quot;bar&quot;. You can probably figure out the rest. So far, none of the other shells support this syntax.
+</p>
+
+<p>
+ * In ksh93, a <code>pattern-list</code> may be delimited by either <code>&amp;</code> or <code>|</code>. <code>&amp;</code> means &quot;all patterns must be matched&quot; instead of &quot;any pattern&quot;. For example, <pre class="code">[[ fo0bar == @(fo[0-9]&amp;+([[:alnum:]]))bar ]]</pre>
+ would be true while <pre class="code">[[ f00bar == @(fo[0-9]&amp;+([[:alnum:]]))bar ]]</pre>
+ is false, because all members of the and-list must be satisfied. No other shell supports this so far, but you can simulate some cases in other shells using double extglob negation. The aforementioned ksh93 pattern is equivalent in Bash to: <pre class="code">[[ fo0bar == !(!(fo[0-9])|!(+([[:alnum:]])))bar ]]</pre>
+, which is technically more portable, but ugly.
+</p>
+
+<p>
+ * ksh93&#039;s <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf">printf</a> builtin can translate from shell patterns to ERE and back again using the <code>%R</code> and <code>%P</code> format specifiers respectively.
+</p>
+
+<p>
+TODO: <code>~()</code> (and regex), <code>.sh.match</code>, backrefs, special <code>${var/…/…}</code> behavior, <code>%()</code>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;ksh93 extras&quot;,&quot;hid&quot;:&quot;ksh93_extras&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:14,&quot;range&quot;:&quot;6550-&quot;} --></div>
+</body>
+</html>

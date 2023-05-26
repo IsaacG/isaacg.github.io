@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:read</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,read"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/read?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/read"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/read"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/read"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:read","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_read_builtin_command">The read builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#options">Options</a></div></li>
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+<li class="level3"><div class="li"><a href="#read_without_-r">read without -r</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#rudimentary_cat_replacement">Rudimentary cat replacement</a></div></li>
+<li class="level3"><div class="li"><a href="#press_any_key">Press any key...</a></div></li>
+<li class="level3"><div class="li"><a href="#reading_columns">Reading Columns</a></div></li>
+<li class="level3"><div class="li"><a href="#are_you_sure">Are you sure?</a></div></li>
+<li class="level3"><div class="li"><a href="#ask_for_a_path_with_a_default_value">Ask for a path with a default value</a></div></li>
+<li class="level3"><div class="li"><a href="#multichar-ifsparsing_a_simple_datetime_string">Multichar-IFS: Parsing a simple date/time string</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_read_builtin_command">The read builtin command</h1>
+<div class="level1">
+
+<p>
+<em>read something about read here!</em>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The read builtin command&quot;,&quot;hid&quot;:&quot;the_read_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-76&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">read [-ers] [-u &lt;FD&gt;] [-t &lt;TIMEOUT&gt;] [-p &lt;PROMPT&gt;] [-a &lt;ARRAY&gt;] [-n &lt;NCHARS&gt;] [-N &lt;NCHARS&gt;] [-d &lt;DELIM&gt;] [-i &lt;TEXT&gt;] [&lt;NAME...&gt;]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;77-242&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>read</code> builtin reads <strong>one line</strong> of data (text, user input, …) from standard input or a supplied filedescriptor number into one or more variables named by <code>&lt;NAME…&gt;</code>.
+</p>
+
+<p>
+Since Bash 4.3-alpha, <code>read</code> skips any <code>NUL</code> (<abbr title="American Standard Code for Information Interchange">ASCII</abbr> code 0) characters in input.
+</p>
+
+<p>
+If <code>&lt;NAME…&gt;</code> is given, the line is word-split using <a href="/syntax/shellvars#ifs" class="wikilink1" title="syntax:shellvars">IFS</a> variable, and every word is assigned to one <code>&lt;NAME&gt;</code>. The remaining words are all assigned to the last <code>&lt;NAME&gt;</code> if more words than variable names are present.
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_center wrap_round wrap_info plugin_wrap" style="width: 90%;">
+<p>
+If no <code>&lt;NAME&gt;</code> is given, the whole line read (without performing word-splitting!) is assigned to the shell variable <a href="/syntax/shellvars#reply" class="wikilink1" title="syntax:shellvars">REPLY</a>. Then, <code>REPLY</code> really contains the line as it was read, without stripping pre- and postfix spaces and other things!
+<pre class="code">while read -r; do
+  printf &#039;&quot;%s&quot;\n&#039; &quot;$REPLY&quot;
+done &lt;&lt;&lt;&quot;  a line with prefix and postfix space  &quot;</pre>
+
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+If a timeout is given, or if the shell variable <a href="/syntax/shellvars#tmout" class="wikilink1" title="syntax:shellvars">TMOUT</a> is set, it is counted from initially waiting for input until the completion of input (i.e. until the complete line is read). That means the timeout can occur during input, too.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;243-1460&quot;} -->
+<h3 class="sectionedit6" id="options">Options</h3>
+<div class="level3">
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Option</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>-a &lt;ARRAY&gt;</code></td><td class="col1">read the data word-wise into the specified array <code>&lt;ARRAY&gt;</code> instead of normal variables</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>-d &lt;DELIM&gt;</code></td><td class="col1">recognize <code>&lt;DELIM&gt;</code> as data-end, rather than <code>&lt;newline&gt;</code></td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>-e</code></td><td class="col1">on interactive shells: use Bash&#039;s readline interface to read the data. Since version 5.1-alpha, this can also be used on specified file descriptors using <code>-u</code></td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>-i &lt;STRING&gt;</code></td><td class="col1">preloads the input buffer with text from <code>&lt;STRING&gt;</code>, only works when Readline (<code>-e</code>) is used</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>-n &lt;NCHARS&gt;</code></td><td class="col1">reads <code>&lt;NCHARS&gt;</code> characters of input, then quits</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>-N &lt;NCHARS&gt;</code></td><td class="col1">reads <code>&lt;NCHARS&gt;</code> characters of input, <em>ignoring any delimiter</em>, then quits</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>-p &lt;PROMPT&gt;</code></td><td class="col1">the prompt string <code>&lt;PROMPT&gt;</code> is output (without a trailing automatic newline) before the read is performed</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><code>-r</code></td><td class="col1">raw input - <strong>disables</strong> interpretion of <strong>backslash escapes</strong> and <strong>line-continuation</strong> in the read data</td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"><code>-s</code></td><td class="col1">secure input - don&#039;t echo input if on a terminal (passwords!)</td>
+	</tr>
+	<tr class="row10">
+		<td class="col0"><code>-t &lt;TIMEOUT&gt;</code></td><td class="col1">wait for data <code>&lt;TIMEOUT&gt;</code> seconds, then quit (exit code 1). Fractional seconds (&quot;5.33&quot;) are allowed since Bash 4. A value of 0 immediately returns and indicates if data is waiting in the exit code. Timeout is indicated by an exit code greater than 128. If timeout arrives before data is read completely (before end-of-line), the partial data is saved.</td>
+	</tr>
+	<tr class="row11">
+		<td class="col0"><code>-u &lt;FD&gt;</code></td><td class="col1">use the filedescriptor number <code>&lt;FD&gt;</code> rather than <code>stdin</code> (0)</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;1480-2900&quot;} -->
+<p>
+When both, <code>-a &lt;ARRAY&gt;</code> and a variable name <code>&lt;NAME&gt;</code> is given, then the array is set, but not the variable.
+</p>
+
+<p>
+Of course it&#039;s valid to set individual array elements without using <code>-a</code>:
+<pre class="code">read MYARRAY[5]</pre>
+
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_center wrap_round wrap_important plugin_wrap" style="width: 90%;">
+<p>
+Reading into array elements using the syntax above <strong>may cause <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> pathname expansion</a> to occur</strong>.
+</p>
+
+<p>
+Example: You are in a directory with a file named <code>x1</code>, and you want to read into an array <code>x</code>, index <code>1</code> with
+<pre class="code">read x[1]</pre>
+
+then pathname expansion will expand to the filename <code>x1</code> and break your processing!
+</p>
+
+<p>
+Even worse, if <code>nullglob</code> is set, your array/index will disappear.
+</p>
+
+<p>
+To avoid this, either <strong>disable pathname expansion</strong> or <strong>quote</strong> the array name and index:
+<pre class="code">read &#039;x[1]&#039;</pre>
+
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;0-&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;1461-3709&quot;} -->
+<h3 class="sectionedit10" id="return_status">Return status</h3>
+<div class="level3">
+<div class="table sectionedit11"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Status  </th><th class="col1 leftalign">Reason  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">0     </td><td class="col1 leftalign">no error  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">0     </td><td class="col1 leftalign">error when assigning to a read-only variable <sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">2     </td><td class="col1 leftalign">invalid option  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">&gt;128  </td><td class="col1 leftalign">timeout (see <code>-t</code>)  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">!=0   </td><td class="col1 leftalign">invalid filedescriptor supplied to <code>-u</code>  </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">!=0   </td><td class="col1 leftalign">end-of-file reached  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:11,&quot;range&quot;:&quot;3735-3993&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:10,&quot;range&quot;:&quot;3710-3994&quot;} -->
+<h3 class="sectionedit12" id="read_without_-r">read without -r</h3>
+<div class="level3">
+
+<p>
+Essentially all you need to know about <code>-r</code> is to <strong>ALWAYS</strong> use it. The exact behavior you get without <code>-r</code> is completely useless even for weird purposes. It basically allows the escaping of input which matches something in IFS, and also escapes line continuations. It&#039;s explained pretty well in the <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/read.html#tag_20_109" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/read.html#tag_20_109" rel="nofollow"> POSIX read</a> <abbr title="specification">spec</abbr>.
+</p>
+
+<p>
+<pre class="code">2012-05-23 13:48:31	geirha	it should only remove the backslashes, not change \n and \t and such into newlines and tabs
+2012-05-23 13:49:00	ormaaj	so that&#039;s what read without -r does?
+2012-05-23 13:49:16	geirha	no, -r doesn&#039;t remove the backslashes
+2012-05-23 13:49:34	ormaaj	I thought read &lt;&lt;&lt;&#039;str&#039; was equivalent to read -r &lt;&lt;&lt;$&#039;str&#039;
+2012-05-23 13:49:38	geirha	# read x y &lt;&lt;&lt; &#039;foo\ bar baz&#039;; echo &quot;&lt;$x&gt;&lt;$y&gt;&quot;
+2012-05-23 13:49:40	shbot	geirha: &lt;foo bar&gt;&lt;baz&gt;
+2012-05-23 13:50:32	geirha	no, read without -r is mostly pointless. Damn bourne
+2012-05-23 13:51:08	ormaaj	So it&#039;s mostly (entirely) used to escape spaces
+2012-05-23 13:51:24	ormaaj	and insert newlines
+2012-05-23 13:51:47	geirha	ormaaj: you mostly get the same effect as using \ at the prompt
+2012-05-23 13:52:04	geirha	echo \&quot;  outputs a &quot; ,  read x &lt;&lt;&lt; &#039;\&quot;&#039;  reads a &quot;
+2012-05-23 13:52:32	ormaaj	oh weird
+2012-05-23 13:52:46	 *	ormaaj struggles to think of a point to that...
+2012-05-23 13:53:01	geirha	ormaaj: ask Bourne :P
+2012-05-23 13:53:20	geirha	(not Jason)
+2012-05-23 13:53:56	ormaaj	hm thanks anyway :)</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;read without -r&quot;,&quot;hid&quot;:&quot;read_without_-r&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:12,&quot;range&quot;:&quot;3995-5516&quot;} -->
+<h2 class="sectionedit13" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:13,&quot;range&quot;:&quot;5517-5537&quot;} -->
+<h3 class="sectionedit14" id="rudimentary_cat_replacement">Rudimentary cat replacement</h3>
+<div class="level3">
+
+<p>
+A rudimentary replacement for the <code>cat</code> command: read lines of input from a file and print them on the terminal.
+<pre class="code">opossum() {
+  while read -r; do
+    printf &quot;%s\n&quot; &quot;$REPLY&quot;
+  done &lt;&quot;$1&quot;
+}</pre>
+
+</p>
+
+<p>
+<em class="u"><strong>Note:</strong></em> Here, <code>read -r</code> and the default <code>REPLY</code> is used, because we want to have the real literal line, without any mangeling. <code>printf</code> is used, because (depending on settings), <code>echo</code> may interpret some baskslash-escapes or switches (like <code>-n</code>).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Rudimentary cat replacement&quot;,&quot;hid&quot;:&quot;rudimentary_cat_replacement&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:14,&quot;range&quot;:&quot;5538-6047&quot;} -->
+<h3 class="sectionedit15" id="press_any_key">Press any key...</h3>
+<div class="level3">
+
+<p>
+Remember the MSDOS <code>pause</code> command? Here&#039;s something similar:
+<pre class="code">pause() {
+  local dummy
+  read -s -r -p &quot;Press any key to continue...&quot; -n 1 dummy
+}</pre>
+
+</p>
+
+<p>
+Notes:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>-s</code> to suppress terminal echo (printing)</div>
+</li>
+<li class="level1"><div class="li"> <code>-r</code> to not interpret special characters (like waiting for a second character if somebody presses the backslash)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Press any key...&quot;,&quot;hid&quot;:&quot;press_any_key&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:15,&quot;range&quot;:&quot;6048-6414&quot;} -->
+<h3 class="sectionedit16" id="reading_columns">Reading Columns</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="simple_split">Simple Split</h4>
+<div class="level4">
+
+<p>
+Read can be used to split a string:
+<pre class="code">var=&quot;one two three&quot;
+read -r col1 col2 col3 &lt;&lt;&lt; &quot;$var&quot;
+printf &quot;col1: %s col2: %s col3 %s\n&quot; &quot;$col1&quot; &quot;$col2&quot; &quot;$col3&quot;</pre>
+
+</p>
+
+<p>
+Take care that you cannot use a pipe: 
+<pre class="code">echo &quot;$var&quot; | read col1 col2 col3 # does not work!
+printf &quot;col1: %s col2: %s col3 %s\n&quot; &quot;$col1&quot; &quot;$col2&quot; &quot;$col3&quot;</pre>
+
+Why? because the commands of the pipe run in subshells that cannot modify the parent shell. As a result, the variables
+<code>col1</code>, <code>col2</code> and <code>col3</code> of the parent shell are not modified (see article: <a href="/scripting/processtree" class="wikilink1" title="scripting:processtree">Bash and the process tree</a>).
+</p>
+
+<p>
+If the variable has more fields than there are variables, the last variable get the remaining of the line:
+<pre class="code">read col1 col2 col3 &lt;&lt;&lt; &quot;one two three four&quot;
+printf &quot;%s\n&quot; &quot;$col3&quot; #prints three four</pre>
+
+</p>
+
+</div>
+
+<h4 id="changing_the_separator">Changing The Separator</h4>
+<div class="level4">
+
+<p>
+By default reads separates the line in fields using spaces or tabs. You can modify this using the <em>special variable</em> <a href="/syntax/shellvars#ifs" class="wikilink1" title="syntax:shellvars"> IFS</a>,
+the Internal Field Separator.
+<pre class="code">IFS=&quot;:&quot; read -r col1 col2 &lt;&lt;&lt; &quot;hello:world&quot;
+printf &quot;col1: %s col2: %s\n&quot; &quot;$col1&quot; &quot;$col2&quot;</pre>
+
+Here we use the <code>var=value command</code> syntax to set the environment of <code>read</code> temporarily. We could have set <code>IFS</code> normally,
+but then we would have to take care to save its value and restore it afterward (<code>OLD=$IFS IFS=&quot;:&quot;; read ….;IFS=$OLD</code>).
+</p>
+
+<p>
+The default <code>IFS</code> is special in that 2 fields can be separated by one or more space or tab. When you set <code>IFS</code> to something besides whitespace (space or tab), the
+fields are separated by <strong>exactly</strong> one character:
+<pre class="code">IFS=&quot;:&quot; read -r col1 col2 col3 &lt;&lt;&lt; &quot;hello::world&quot;
+printf &quot;col1: %s col2: %s col3 %s\n&quot; &quot;$col1&quot; &quot;$col2&quot; &quot;$col3&quot;</pre>
+
+See how the <code>::</code> in the middle infact defines an additional <em>empty field</em>.
+</p>
+
+<p>
+The fields are separated by exactly one character, but the character can be different between each field:
+<pre class="code">IFS=&quot;:|@&quot; read -r col1 col2 col3 col4 &lt;&lt;&lt; &quot;hello:world|in@bash&quot;
+printf &quot;col1: %s col2: %s col3 %s col4 %s\n&quot; &quot;$col1&quot; &quot;$col2&quot; &quot;$col3&quot; &quot;$col4&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Reading Columns&quot;,&quot;hid&quot;:&quot;reading_columns&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:16,&quot;range&quot;:&quot;6415-8515&quot;} -->
+<h3 class="sectionedit17" id="are_you_sure">Are you sure?</h3>
+<div class="level3">
+
+<p>
+<pre class="code">asksure() {
+echo -n &quot;Are you sure (Y/N)? &quot;
+while read -r -n 1 -s answer; do
+  if [[ $answer = [YyNn] ]]; then
+    [[ $answer = [Yy] ]] &amp;&amp; retval=0
+    [[ $answer = [Nn] ]] &amp;&amp; retval=1
+    break
+  fi
+done
+
+echo # just a final linefeed, optics...
+
+return $retval
+}
+
+### using it
+if asksure; then
+  echo &quot;Okay, performing rm -rf / then, master....&quot;
+else
+  echo &quot;Pfff...&quot;
+fi</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Are you sure?&quot;,&quot;hid&quot;:&quot;are_you_sure&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:17,&quot;range&quot;:&quot;8516-8926&quot;} -->
+<h3 class="sectionedit18" id="ask_for_a_path_with_a_default_value">Ask for a path with a default value</h3>
+<div class="level3">
+
+<p>
+<em class="u"><strong>Note:</strong></em> The <code>-i</code> option was introduced with Bash 4
+</p>
+
+<p>
+<pre class="code">read -e -p &quot;Enter the path to the file: &quot; -i &quot;/usr/local/etc/&quot; FILEPATH</pre>
+
+</p>
+
+<p>
+The user will be prompted, he can just accept the default, or edit it.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ask for a path with a default value&quot;,&quot;hid&quot;:&quot;ask_for_a_path_with_a_default_value&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:18,&quot;range&quot;:&quot;8927-9193&quot;} -->
+<h3 class="sectionedit19" id="multichar-ifsparsing_a_simple_datetime_string">Multichar-IFS: Parsing a simple date/time string</h3>
+<div class="level3">
+
+<p>
+Here, <code>IFS</code> contains both, a colon and a space. The fields of the date/time string are recognized correctly.
+</p>
+
+<p>
+<pre class="code">datetime=&quot;2008:07:04 00:34:45&quot;
+IFS=&quot;: &quot; read -r year month day hour minute second &lt;&lt;&lt; &quot;$datetime&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Multichar-IFS: Parsing a simple date\/time string&quot;,&quot;hid&quot;:&quot;multichar-ifsparsing_a_simple_datetime_string&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:19,&quot;range&quot;:&quot;9194-9479&quot;} -->
+<h2 class="sectionedit20" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> POSIX® only specified the <code>-r</code> option (raw read); <code>-r</code> is not only POSIX, you can find it in earlier Bourne source code</div>
+</li>
+<li class="level1"><div class="li"> POSIX® doesn&#039;t support arrays</div>
+</li>
+<li class="level1"><div class="li"> <code>REPLY</code> is not POSIX®, you need to set <code>IFS</code> to the empty string to get the whole line for shells that don&#039;t know <code>REPLY</code>. <pre class="code">while IFS= read -r line; do
+  ...
+done &lt; text.txt</pre>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:20,&quot;range&quot;:&quot;9480-9888&quot;} -->
+<h2 class="sectionedit21" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf"> The printf builtin command</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:21,&quot;range&quot;:&quot;9889-&quot;} --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<div class="content">fixed in 4.2-rc1</div></div>
+</div>
+</div>
+</body>
+</html>

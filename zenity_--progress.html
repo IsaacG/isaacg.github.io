@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>zenity_--progress</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="zenity_--progress"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/zenity_--progress?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns="/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/zenity_--progress"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/zenity_--progress"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/zenity_--progress"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"zenity_--progress","namespace":"","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> <sub><em>under construction</em></sub>
+</p>
+
+<h4 id="zenity_--progress">zenity --progress</h4>
+<div class="level4">
+
+<p>
+The zenity command is intended to be used in shell scripts to obtain input via small Gnome dialog windows. It uses the newer &#039;long options&#039; format (--) and returns results as strings and result codes. There are 10 different dialogs including one for --file-selection, --list (select from a list), --text (single line input), and --text-info (multiline input).
+</p>
+
+<p>
+The --progress dialog produces a progress bar which can be finicky to get to update correctly.
+</p>
+
+<p>
+The function below encapsulates the complex part of using zenity --progress.
+</p>
+
+<p>
+The &#039;find&#039; command returns all symbolic links found under the SDIR directory and directories under it on stdout which is piped to &#039;tee&#039;. &#039;tee&#039; duplicates stdout sending one copy to the guiProgress() process using the &#039;&gt;()&#039; notation and passing the other on. stderr then gets redirected to a logfile and stdout is captured into the variable LINKS.
+
+If nothing was found, LINKS will be empty and fail the &#039;if [[ $LINKS ]]&#039; test. The &#039;return $(true)&#039; and &#039;return $(false)&#039; insure that the the proper result code is set on return.
+<pre class="code bash"><span class="kw1">function</span> guiProgress <span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="co0"># 20110829, Robert C. Watson</span>
+  <span class="co0">#</span>
+  <span class="co0"># EXAMPLE USAGE...</span>
+  <span class="co0">#</span>
+  <span class="co0">#  SDIR=  ### starting directory for 'find' command</span>
+  <span class="co0">#  FILE=  ### file that the symlinks point to</span>
+  <span class="co0">#  LINKS= ### string containing the full pathname of every symlink pointing to FILE, separated by a space</span>
+  <span class="co0">#</span>
+  <span class="co0">#  LINKS=$(find -L &quot;$SDIR&quot; -xtype l -samefile &quot;$FILE&quot; -exec echo '{}' \; | tee &gt;(guiProgress &quot;Searching for links...&quot;) )  2&gt;&gt;$LOGFILE</span>
+  <span class="co0">#  if [[ $LINKS ]]</span>
+  <span class="co0">#  then</span>
+  <span class="co0">#    do something with the list of links...</span>
+  <span class="co0">#    return $(true)</span>
+  <span class="co0">#  else</span>
+  <span class="co0">#    log an error and take appropriate action...</span>
+  <span class="co0">#    return $(false)</span>
+  <span class="co0">#  fi</span>
+  <span class="co0">#</span>
+  <span class="co0"># A bug in zenity prevents pulsating or advancing the progress bar until it gets some kind of input so</span>
+  <span class="co0"># we can introduce an 'echo' into the input stream with...</span>
+  <span class="co0">#   cat &lt;(echo) - | tee &gt;(...)</span>
+  <span class="co0">#</span>
+  <span class="co0"># See EXPERIMENTS below</span>
+  <span class="co0">#</span>
+  <span class="co0">#</span>
+  <span class="co0"># STEP-BY-STEP PROGRESS DIALOG</span>
+  <span class="co0">#</span>
+  <span class="co0"># Uses zenity to show a progress bar dialog that advances for each string</span>
+  <span class="co0"># fed to it on stdin. First characters of the string are displayed above the</span>
+  <span class="co0"># bar prefixed with a count. stdin is re-echoed to stdout for further</span>
+  <span class="co0"># processing such as to capture output.</span>
+  <span class="co0">#</span>
+  <span class="co0"># NOTE: The piping and process substitution specifics are absolutely critical to make this work!</span>
+  <span class="co0">#</span>
+  <span class="co0"># OPTIONS</span>
+  <span class="co0">#   -m {number}   Maximum value of progress bar. Defaults to 100.</span>
+  <span class="co0">#                 If even an approximation of this can be supplied,</span>
+  <span class="co0">#                 progress of the bar will more closely match reality.</span>
+  <span class="co0">#</span>
+  <span class="co0"># The process...</span>
+  <span class="co0">#</span>
+  <span class="co0"># - awk...</span>
+  <span class="co0"># Prepend a record count to the input string.</span>
+  <span class="co0">#   - each string (text between &quot;&quot;) is treated by awk as a record</span>
+  <span class="co0">#   - (NR/MAX)*100)%100 calculates what percentage to advance the bar</span>
+  <span class="co0">#     - 'zenity --progress' takes stdin input like the following...</span>
+  <span class="co0">#         1</span>
+  <span class="co0">#         # string such as a filename</span>
+  <span class="co0">#         2</span>
+  <span class="co0">#         # string such as a filename</span>
+  <span class="co0">#         :</span>
+  <span class="co0">#         90</span>
+  <span class="co0">#         # string such as a filename</span>
+  <span class="co0">#         99</span>
+  <span class="co0">#         # string such as a filename</span>
+  <span class="co0">#     - The first of the two lines per input string is the percentage to</span>
+  <span class="co0">#       advance and the second line is '#' followed by the text to display</span>
+  <span class="co0">#</span>
+  <span class="co0"># - | tee</span>
+  <span class="co0"># Pipe awk output to 2 processes by duplicating it with 'tee'.</span>
+  <span class="co0">#   - 'tee' outputs to both a file and to stdout whatever input it gets from the pipe.</span>
+  <span class="co0">#   - to prevent dealing with creating and destroying a tmp file, we</span>
+  <span class="co0">#     use Process Substitution to direct the output destined for a file</span>
+  <span class="co0">#     instead to our zenity process.</span>
+  <span class="co0">#   - the copy of the output going to stdout is automatically passed back</span>
+  <span class="co0">#     to the calling function where it can be displayed or captured as in</span>
+  <span class="co0">#       RESULT=$(ls | guiProgress -m 400 &quot;Listing files...&quot;)</span>
+  <span class="co0">#</span>
+  <span class="co0"># --text=&quot;$(echo $TEXT | cut --characters=-160)...&quot;</span>
+  <span class="co0"># Limit displayed text to what will fit in the window.</span>
+  <span class="co0">#   - 'zenity --progress' bombs if it tries to display too much much text.</span>
+  <span class="co0">#   - there is no apparent limit on the amount it can be fed, just how much</span>
+  <span class="co0">#     can be displayed.</span>
+  <span class="co0">#</span>
+  <span class="co0"># REFERENCE</span>
+  <span class="co0"># - http://wiki.bash-hackers.org/howto/redirection_tutorial</span>
+  <span class="co0"># - http://wiki.bash-hackers.org/syntax/expansion/proc_subst?s[]=process</span>
+  <span class="co0"># - http://library.gnome.org/users/zenity/stable/zenity-usage.html.en</span>
+  <span class="co0"># - http://stanley-huang.blogspot.com/search/label/Zenity</span>
+  <span class="co0">#</span>
+  <span class="co0">#</span>
+  <span class="kw3">local</span> <span class="re2">MAX</span>=
+  <span class="kw3">local</span> <span class="re2">TEXT</span>=
+  <span class="co0">#</span>
+  <span class="co0"># OPTIONAL</span>
+  <span class="co0">#   $1 = -m</span>
+  <span class="co0">#   $2 = {max-num-values}</span>
+  <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="st0">&quot;$1&quot;</span> == <span class="st0">&quot;-m&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>
+  <span class="kw1">then</span>
+    <span class="re2">MAX</span>=<span class="st0">&quot;$2&quot;</span>
+    <span class="kw3">shift</span>
+  <span class="kw1">else</span>
+    <span class="re2">MAX</span>=<span class="nu0">100</span>
+  <span class="kw1">fi</span>
+  <span class="co0">#</span>
+  <span class="re2">TEXT</span>=<span class="st0">&quot;$*&quot;</span>
+  <span class="co0">#</span>
+  <span class="kw2">awk</span> <span class="re5">-v</span> <span class="re2">MAX</span>=<span class="re1">$MAX</span> <span class="st_h">'{ print ((NR/MAX)*100)%100  &quot;\n&quot; &quot;# &quot; NR &quot; of &quot; MAX &quot;: &quot; $0 &quot;\n&quot; }'</span> <span class="sy0">|</span> <span class="kw2">tee</span> <span class="sy0">&gt;</span><span class="br0">&#40;</span>zenity <span class="re5">--progress</span>  <span class="re5">--title</span>=<span class="st0">&quot;<span class="es2">$TITLE</span>&quot;</span> <span class="re5">--text</span>=<span class="st0">&quot;<span class="es4">$(echo $TEXT | cut --characters=-160)</span>...&quot;</span> <span class="re5">--width</span>=<span class="st0">&quot;800&quot;</span> <span class="re5">--auto-close</span> --auto-kill<span class="br0">&#41;</span>
+  <span class="kw3">return</span> $<span class="br0">&#40;</span><span class="kw2">true</span><span class="br0">&#41;</span>
+<span class="br0">&#125;</span></pre>
+
+</p>
+
+</div>
+
+<h3 class="sectionedit1" id="experiments">Experiments</h3>
+<div class="level3">
+
+<p>
+Below are the experiments that led to the conclusions above. The result of each is noted at the beginning of its commented line of code.
+<pre class="code bash">  <span class="co0"># EXPERIMENTS LEGEND</span>
+  <span class="co0"># First Y/N  = pulsates; Second Y/N = passed string intact</span>
+  <span class="co0"># A lowercase y/n means it partially worked.</span>
+  <span class="co0"># Thus, from failure to success would be: N, n, y, Y</span>
+  <span class="co0">#</span>
+  <span class="co0"># 40 DOCUMENTED EXPERIMENTS...</span>
+  <span class="co0"># YN: tee &gt;(echo) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: echo | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: tee echo &quot;10&quot; | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># YN: tee &gt;(echo &quot;10&quot;) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: cat | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: tee &gt;(echo; zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: tee echo | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># nY: &gt;(echo) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># nY: &gt;(echo; sleep 1) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># nN: &gt;(echo &quot;20&quot;) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: &gt;(cat) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: tee &gt;(cat) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill</span>
+  <span class="co0"># NY: &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: &gt;(echo) &gt; &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: &gt;(echo) &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: echo &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: echo tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># nN: cat - | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: &gt;(cat -) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># N-: cat tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: echo | zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill &lt;(echo)</span>
+  <span class="co0"># NY: &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill) &lt;(echo)</span>
+  <span class="co0"># NY: &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill) &lt;(echo -n)</span>
+  <span class="co0"># NY: &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill) &lt;(printf &quot;&quot;)</span>
+  <span class="co0"># NN: tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill) &lt;(printf &quot;&quot;)</span>
+  <span class="co0"># YN: tee &gt;(echo &quot;&quot;) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: &gt;(echo &quot;&quot;) | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: tee | tee &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NN: tee &gt;(echo) &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: tee &gt;(echo) | &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># --: tee (echo) | &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: tee &gt;(echo &quot;&quot;) | &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: tee &gt;(echo) | &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># NY: tee &gt;(echo; echo) | &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># nY: tee &gt;(echo) | &gt;(echo | zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0"># yY: &gt;(echo | zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill)</span>
+  <span class="co0">#</span>
+  <span class="co0"># per http://ubuntuforums.org/showthread.php?t=686757</span>
+  <span class="co0"># nY: exec 3&gt;&amp;1 &gt;(zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill); tee 1&gt;&amp;3; exec 3&gt;&amp;-</span>
+  <span class="co0">#</span>
+  <span class="co0"># [SOLVED (mostly)]</span>
+  <span class="co0"># YY: cat &lt;(echo) - | zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill</span>
+  <span class="co0">#</span>
+  <span class="co0"># 20110910-20110918</span>
+  <span class="co0"># cat &lt;(echo) - | zenity --progress --pulsate --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill</span>
+  <span class="co0"># cat &lt;( ((++i)); echo &quot;$(($i / $#))&quot;; sleep 1; ) - | zenity --progress --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill</span>
+  <span class="co0"># cat &lt;( awk -v LAST=$LASTMAX '{ print NR%100 &quot;\n&quot; &quot;# &quot; NR &quot; of &quot; LAST &quot;: &quot; $0 &quot;\n&quot; }'; sleep 1; ) - | zenity --progress --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill --width=900</span>
+  <span class="co0"># cat &lt;( awk -v LAST=$LAST -v MAX=$MAX '{ print &quot;&quot; MAX&gt;0?((NR/MAX)*100):(NR%100) &quot;\n&quot; &quot;# &quot; NR &quot; of &quot; LAST &quot;: &quot; $0 &quot;\n&quot; }'; ) - | zenity --progress  --width=&quot;900&quot; --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill</span>
+  <span class="co0"># cat &lt;( awk -v LAST=$LAST -v MAX=$MAX '{ print ((NR/MAX)*100)%100  &quot;\n&quot; &quot;# &quot; NR &quot; of &quot; LAST &quot;: &quot; $0 &quot;\n&quot; }'; ) - | zenity --progress  --width=&quot;800&quot; --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill</span>
+  <span class="co0">#</span>
+  <span class="co0"># 20110919 These work but not fully functional</span>
+  <span class="co0"># awk -v MAXTXT=$MAXTXT -v MAX=$MAX '{ print ((NR/MAX)*100)%100  &quot;\n&quot; &quot;# &quot; NR &quot; of &quot; MAXTXT &quot;: &quot; $0 &quot;\n&quot; }' | tee -a $LOGFILE | zenity --progress  --width=&quot;800&quot; --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill</span>
+  <span class="co0"># awk -v MAXTXT=$MAXTXT -v MAX=$MAX '{ print ((NR/MAX)*100)%100  &quot;\n&quot; &quot;# &quot; NR &quot; of &quot; MAXTXT &quot;: &quot; $0 &quot;\n&quot; }' | tee &gt;(zenity --progress  --width=&quot;800&quot; --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill) | grep --count ^#</span>
+  <span class="co0"># awk -v MAXTXT=$MAXTXT -v MAX=$MAX '{ print ((NR/MAX)*100)%100  &quot;\n&quot; &quot;# &quot; NR &quot; of &quot; MAX &quot;: &quot; $0 &quot;\n&quot; }' | tee &gt;(zenity --progress  --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --auto-close --auto-kill) | grep --count ^#</span>
+  <span class="co0"># awk -v MAX=$MAX '{ print ((NR/MAX)*100)%100  &quot;\n&quot; &quot;# &quot; NR &quot; of &quot; MAX &quot;: &quot; $0 &quot;\n&quot; }' | tee &gt;(zenity --progress  --title=&quot;$TITLE&quot; --text=&quot;$TEXT&quot; --width=&quot;800&quot; --auto-close --auto-kill) | grep --count ^#</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Experiments&quot;,&quot;hid&quot;:&quot;experiments&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:1,&quot;range&quot;:&quot;4937-&quot;} --></div>
+</body>
+</html>

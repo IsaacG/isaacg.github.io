@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>snipplets:screen_saverestore</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="snipplets,screen_saverestore"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/snipplets/screen_saverestore?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=snipplets"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/snipplets/screen_saverestore"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/snipplets/screen_saverestore"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/snipplets/screen_saverestore"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='snipplets';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"snipplets:screen_saverestore","namespace":"snipplets","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="save_and_restore_terminalscreen_content">Save and restore terminal/screen content</h1>
+<div class="level1">
+<div class="inline dataplugin_entry snipplet sectionedit2"><dl><dt class="snipplet">snipplet<span class="sep">: </span></dt><dd class="snipplet"><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dterminal" title="Show pages matching 'terminal'" class="wikilink1">terminal</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Drestore%20screen" title="Show pages matching 'restore screen'" class="wikilink1">restore screen</a></dd><dt class="lastupdate">LastUpdate<span class="sep">: </span></dt><dd class="lastupdate">2010-07-31</dd><dt class="contributor">Contributor<span class="sep">: </span></dt><dd class="contributor">Greg Wooledge</dd><dt class="type">type<span class="sep">: </span></dt><dd class="type">snipplet</dd></dl></div><!-- EDIT{&quot;target&quot;:&quot;plugin_data&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;57-199&quot;} -->
+<p>
+This cool hack uses the terminal capabilities (see <code>terminfo(5)</code> manual) <strong>smcup</strong> and <strong>rmcup</strong> to save and restore the terminal content.
+</p>
+
+<p>
+For sure, you’ve already seen those programs that restore the terminal contents after they did their work (like <code>vim</code>).
+</p>
+
+<p>
+<pre class="code"># save, clear screen
+tput smcup
+clear
+
+# example &quot;application&quot; follows...
+read -n1 -p &quot;Press any key to continue...&quot;
+# example &quot;application&quot; ends here
+
+# restore
+tput rmcup</pre>
+
+</p>
+
+</div>
+</div>
+</body>
+</html>

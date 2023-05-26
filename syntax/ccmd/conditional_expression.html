@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:ccmd:conditional_expression</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,ccmd,conditional_expression"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/ccmd/conditional_expression?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:ccmd"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/ccmd/conditional_expression"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/ccmd/conditional_expression"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/ccmd/conditional_expression"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:ccmd';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:ccmd:conditional_expression","namespace":"syntax:ccmd","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_conditional_expression">The conditional expression</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#word_splitting">Word splitting</a></div></li>
+<li class="level3"><div class="li"><a href="#regular_expression_matching">Regular Expression Matching</a></div></li>
+<li class="level3"><div class="li"><a href="#behaviour_differences_compared_to_the_builtin_test_command">Behaviour differences compared to the builtin test command</a></div></li>
+<li class="level3"><div class="li"><a href="#implicit_arithmetic_context">Implicit arithmetic context</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_conditional_expression">The conditional expression</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The conditional expression&quot;,&quot;hid&quot;:&quot;the_conditional_expression&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-42&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">[[ &lt;EXPRESSION&gt; ]]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;43-98&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The conditional expression is meant as the modern variant of the <a href="/commands/classictest" class="wikilink1" title="commands:classictest"> classic test command</a>. Since it is <strong>not</strong> a normal command, Bash doesn&#039;t need to apply the normal commandline parsing rules like recognizing <code>&amp;&amp;</code> as <a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> command list</a> operator.
+</p>
+
+<p>
+The testing features basically are the same (see the lists for <a href="/commands/classictest" class="wikilink1" title="commands:classictest"> classic test command</a>), with some additions and extensions.
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Operator                                                            </th><th class="col1 leftalign"> Description                                                                                                                                                          </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code><strong>(</strong> &lt;EXPRESSION&gt; <strong>)</strong></code>                                        </td><td class="col1 leftalign"> Used to group expressions, to influence precedence of operators                                                                                                      </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>&lt;EXPRESSION1&gt; <strong>&amp;&amp;</strong> &lt;EXPRESSION2&gt;</code>                              </td><td class="col1 leftalign"> <code>TRUE</code> if <code>&lt;EXPRESSION1&gt;</code><strong>and</strong><code>&lt;EXPRESSION2&gt;</code> are <code>TRUE</code> (do <strong>not</strong> use <code>-a</code>!)                                                                          </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>&lt;EXPRESSION1&gt; <strong>||</strong> &lt;EXPRESSION2&gt;</code>                              </td><td class="col1 leftalign"> <code>TRUE</code> if <code>&lt;EXPRESSION1&gt;</code><strong>or</strong><code>&lt;EXPRESSION2&gt;</code> is <code>TRUE</code> (do <strong>not</strong> use <code>-o</code>!)                                                                            </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>&lt;STRING&gt; <strong>==</strong> &lt;PATTERN&gt;</code>                                       </td><td class="col1 leftalign"> <code>&lt;STRING&gt;</code> is checked against the pattern <code>&lt;PATTERN&gt;</code> - <code>TRUE</code> on a match <br/>
+   <em>But note¹, quoting the pattern forces a literal comparison.</em>                </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>&lt;STRING&gt; <strong>=</strong> &lt;PATTERN&gt;</code>                                        </td><td class="col1 leftalign"> equivalent to the <code>==</code> operator                                                                                                                                    </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>&lt;STRING&gt; <strong>!=</strong> &lt;PATTERN&gt;</code>                                       </td><td class="col1 leftalign"> <code>&lt;STRING&gt;</code> is checked against the pattern <code>&lt;PATTERN&gt;</code> - <code>TRUE</code> on <strong>no match</strong>                                                                                 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>&lt;STRING&gt; <strong>=~</strong> &lt;ERE&gt;</code>                                           </td><td class="col1 leftalign"> <code>&lt;STRING&gt;</code> is checked against the <a href="https://en.wikipedia.org/wiki/Regular_expression#POSIX_extended" class="urlextern" title="https://en.wikipedia.org/wiki/Regular_expression#POSIX_extended" rel="nofollow">extended regular expression</a> <code>&lt;ERE&gt;</code> - <code>TRUE</code> on a match  </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> See the <a href="/commands/classictest#file_tests" class="wikilink1" title="commands:classictest">classic test operators</a>  </td><td class="col1 leftalign"> Do <strong>not</strong> use the <code>test</code>-typical operators <code>-a</code> and <code>-o</code> for AND and OR.                                                                                      </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> See also <a href="/syntax/arith_expr#comparisons" class="wikilink1" title="syntax:arith_expr">arithmetic comparisons</a>   </td><td class="col1 leftalign"> Using <code>(( &lt;EXPRESSION&gt; ))</code>, the <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval">arithmetic expression compound command</a>                                                         </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;572-2962&quot;} -->
+<p>
+When the <code>==</code> and <code>!=</code> operators are used, the string to the right of the operator is considered a pattern and matched according to the rules of <a href="/syntax/pattern" class="wikilink1" title="syntax:pattern"> Pattern Matching</a>. If the shell option <code>nocasematch</code> is enabled, the match is performed without regard to the case of alphabetic characters.
+</p>
+
+<p>
+¹Any part of the pattern may be quoted to force it to be matched as a literal string.
+</p>
+
+<p>
+When the operators <code>&lt;</code> and <code>&gt;</code> are used (string collation order), the test happens using the current locale when the <code>compat</code> level is greater than &quot;40&quot;.
+</p>
+
+<p>
+Operator precedence (highest ⇒ lowest):
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>( &lt;EXPRESSION&gt; )</code></div>
+</li>
+<li class="level1"><div class="li"> <code>! &lt;EXPRESSION&gt;</code></div>
+</li>
+<li class="level1"><div class="li"> <code>&lt;EXPRESSION1&gt; &amp;&amp; &lt;EXPRESSION2&gt;</code></div>
+</li>
+<li class="level1"><div class="li"> <code>&lt;EXPRESSION1&gt; <strong>||</strong> &lt;EXPRESSION2&gt;</code></div>
+</li>
+</ul>
+
+<p>
+Do <strong>not</strong> use the <code>test</code>-typical operators <code>-a</code> and <code>-o</code> for AND and OR, they are not known to the conditional expression. Instead, use the operators <code>&amp;&amp;</code> and <code>||</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;99-3874&quot;} -->
+<h3 class="sectionedit5" id="word_splitting">Word splitting</h3>
+<div class="level3">
+
+<p>
+<a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> Word splitting</a> and <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> pathname expansion</a> are not performed in the expression you give. That means, a variable containing spaces can be used without quoting:
+<pre class="code">sentence=&quot;Be liberal in what you accept, and conservative in what you send&quot;
+checkme=&quot;Be liberal in what you accept, and conservative in what you send&quot;
+if [[ $sentence == $checkme ]]; then
+  echo &quot;Matched...!&quot;
+else
+  echo &quot;Sorry, no match :-(&quot;
+fi</pre>
+
+</p>
+
+<p>
+Compare that to the <a href="/commands/classictest" class="wikilink1" title="commands:classictest"> classic test command</a>, where word splitting is done (because it&#039;s a normal command, not something special):
+</p>
+
+<p>
+<pre class="code">sentence=&quot;Be liberal in what you accept, and conservative in what you send&quot;
+checkme=&quot;Be liberal in what you accept, and conservative in what you send&quot;
+if [ &quot;$sentence&quot; == &quot;$checkme&quot; ]; then
+  echo &quot;Matched...!&quot;
+else
+  echo &quot;Sorry, no match :-(&quot;
+fi</pre>
+
+</p>
+
+<p>
+You need to quote that variable reference in the classic test command, since (due to the spaces) the word splitting will break it otherwise!
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Word splitting&quot;,&quot;hid&quot;:&quot;word_splitting&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;3875-4939&quot;} -->
+<h3 class="sectionedit6" id="regular_expression_matching">Regular Expression Matching</h3>
+<div class="level3">
+
+<p>
+Using the operator <code>=~</code>, the left hand side operand is matched against the <strong>extended regular expression (ERE)</strong> on the right hand side.
+</p>
+
+<p>
+This is consistent with matching against patterns: Every quoted part of the regular expression is taken literally, even if it contains regular expression special characters.
+</p>
+
+<p>
+Best practise is to put the regular expression to match against into a variable.  This is to avoid shell parsing errors on otherwise valid regular expressions.
+<pre class="code">REGEX=&quot;^[[:upper:]]{2}[[:lower:]]*$&quot;
+
+# Test 1
+STRING=Hello
+if [[ $STRING =~ $REGEX ]]; then
+  echo &quot;Match.&quot;
+else
+  echo &quot;No match.&quot;
+fi
+# ==&gt; &quot;No match.&quot;
+
+# Test 2
+STRING=HEllo
+if [[ $STRING =~ $REGEX ]]; then
+  echo &quot;Match.&quot;
+else
+  echo &quot;No match.&quot;
+fi
+# ==&gt; &quot;Match.&quot;</pre>
+
+</p>
+
+<p>
+The interpretation of quoted regular expression special characters can be influenced by setting the <code>compat31</code> and <code>compat32</code> shell options (<code>compat*</code> in general). See <a href="/internals/shell_options" class="wikilink1" title="internals:shell_options">List of shell options</a>.
+</p>
+
+</div>
+
+<h4 id="the_special_bash_rematch_array_variable">The special BASH_REMATCH array variable</h4>
+<div class="level4">
+
+<p>
+An array variable whose members are assigned by the <code>=~</code> binary operator to the <code>[[</code>  conditional command.
+</p>
+
+<p>
+The element with index 0 is the portion of the string matching the entire regular expression. The element with index n is the portion of the string matching the nth parenthesized subexpression.
+</p>
+
+<p>
+See <a href="/syntax/shellvars#bash_rematch" class="wikilink1" title="syntax:shellvars">BASH_REMATCH</a>.
+</p>
+
+<p>
+Example:
+<pre class="code">if [[ &quot;The quick, red fox&quot; =~ ^The\ (.*),\ (.*)\ fox$ ]]; then
+    echo &quot;${BASH_REMATCH[0]} is ${BASH_REMATCH[1]} and ${BASH_REMATCH[2]}.&quot;;
+fi
+
+==&gt; The quick, red fox is quick and red.</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Regular Expression Matching&quot;,&quot;hid&quot;:&quot;regular_expression_matching&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;4940-6573&quot;} -->
+<h3 class="sectionedit7" id="behaviour_differences_compared_to_the_builtin_test_command">Behaviour differences compared to the builtin test command</h3>
+<div class="level3">
+
+<p>
+As of Bash 4.1 alpha, the test primaries &#039;&lt;&#039; and &#039;&gt;&#039; (compare strings lexicographically) use the current locale settings, while the same primitives for the builtin test command don&#039;t. This leads to the following situation where they behave differently:
+<pre class="code">$ ./cond.sh
+[[ &#039; 4&#039; &lt; &#039;1&#039; ]]        --&gt; exit 1
+[[ &#039;step+&#039; &lt; &#039;step-&#039; ]] --&gt; exit 1
+[ &#039; 4&#039; \&lt; &#039;1&#039; ]         --&gt; exit 0
+[ &#039;step+&#039; \&lt; &#039;step-&#039; ]  --&gt; exit 0</pre>
+
+</p>
+
+<p>
+It won&#039;t be aligned. The conditional expression continues to respect the locate, as introduced with 4.1-alpha, the builtin <code>test</code>/<code>[</code> command continues to behave differently.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Behaviour differences compared to the builtin test command&quot;,&quot;hid&quot;:&quot;behaviour_differences_compared_to_the_builtin_test_command&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;6574-7261&quot;} -->
+<h3 class="sectionedit8" id="implicit_arithmetic_context">Implicit arithmetic context</h3>
+<div class="level3">
+
+<p>
+When you use a numeric comparison, the arguments are evaluated as an arithmetic expression. The arithmetic expression must be quoted if it both contains whitespace and is not the result of an expansion.
+<pre class="code">[[ &#039;i=5, i+=2&#039; -eq 3+4 ]] &amp;&amp; echo true # prints true.</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Implicit arithmetic context&quot;,&quot;hid&quot;:&quot;implicit_arithmetic_context&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:8,&quot;range&quot;:&quot;7262-7572&quot;} -->
+<h2 class="sectionedit9" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:9,&quot;range&quot;:&quot;7573-7595&quot;} -->
+<h2 class="sectionedit10" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>[[ ... ]]</code> functionality isn&#039;t specified by POSIX(R), though it&#039;s a reserved word</div>
+</li>
+<li class="level1"><div class="li"> Amongst the major &quot;POSIX-shell superset languages&quot; (for lack of a better term) which do have <code>[[</code>, the test expression compound command is one of the very most portable non-POSIX features. Aside from the <code>=~</code> operator, almost every major feature is consistent between Ksh88, Ksh93, mksh, Zsh, and Bash. Ksh93 also adds a large number of unique pattern matching features not supported by other shells including support for several different regex dialects, which are invoked using a different syntax from Bash&#039;s <code>=~</code>, though <code>=~</code> is still supported by ksh and defaults to ERE.</div>
+</li>
+<li class="level1"><div class="li"> As an extension to POSIX ERE, most GNU software supports backreferences in ERE, including Bash. According to POSIX, only BRE is supposed to support them. This requires Bash to be linked against glibc, so it won&#039;t necessarily work on all platforms. For example, <pre class="code">$(m=&#039;(abc(def))(\1)(\2)&#039;; [[ abcdefabcdefdef =~ $m ]]; printf &#039;&lt;%s&gt; &#039; $? &quot;${BASH_REMATCH[@]}&quot; )</pre>
+ will give <code>&lt;0&gt; &lt;abcdefabcdefdef&gt; &lt;abcdef&gt; &lt;def&gt; &lt;abcdef&gt; &lt;def&gt;</code>.</div>
+</li>
+<li class="level1"><div class="li"> the <code>=~</code> (regex) operator was introduced in Bash 3.0, and its behaviour changed in Bash 3.2: since 3.2, quoted strings and substrings are matched as literals by default.</div>
+</li>
+<li class="level1"><div class="li"> the behaviour of the <code>&lt;</code> and <code>&gt;</code> operators (string collation order) has changed since Bash 4.0</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:10,&quot;range&quot;:&quot;7596-9065&quot;} -->
+<h2 class="sectionedit11" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/pattern" class="wikilink1" title="syntax:pattern"> pattern matching language</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/commands/classictest" class="wikilink1" title="commands:classictest"> the classic test command</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/if_clause" class="wikilink1" title="syntax:ccmd:if_clause"> the if-clause</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/031" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/031" rel="nofollow">What is the difference between test, [ and [[ ?</a> - BashFAQ 31 - Greg&#039;s wiki.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:11,&quot;range&quot;:&quot;9066-&quot;} --></div>
+</body>
+</html>

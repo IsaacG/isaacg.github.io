@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>snipplets:largestfile</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="snipplets,largestfile"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/snipplets/largestfile?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=snipplets"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/snipplets/largestfile"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/snipplets/largestfile"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/snipplets/largestfile"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='snipplets';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"snipplets:largestfile","namespace":"snipplets","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="get_largest_file">Get largest file</h1>
+<div class="level1">
+<div class="inline dataplugin_entry snipplet sectionedit2"><dl><dt class="snipplet">snipplet<span class="sep">: </span></dt><dd class="snipplet"><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Ddirectory" title="Show pages matching 'directory'" class="wikilink1">directory</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Drecursive" title="Show pages matching 'recursive'" class="wikilink1">recursive</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dfind" title="Show pages matching 'find'" class="wikilink1">find</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dcrawl" title="Show pages matching 'crawl'" class="wikilink1">crawl</a></dd><dt class="lastupdate">LastUpdate<span class="sep">: </span></dt><dd class="lastupdate">2013-03-23</dd><dt class="contributor">Contributor<span class="sep">: </span></dt><dd class="contributor">Dan Douglas</dd><dt class="type">type<span class="sep">: </span></dt><dd class="type">snipplet</dd></dl></div><!-- EDIT{&quot;target&quot;:&quot;plugin_data&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;33-182&quot;} -->
+<p>
+One basic pattern for recursive directory traversal with operations on files at each node. This gets the largest file in each subdirectory. Toggling some small details will make it return the smallest, or traverse breadth-first instead of depth-first.
+</p>
+
+<p>
+<pre class="code bash"><span class="co0">#!/usr/bin/env bash</span>
+<span class="co0"># GNU find + bash4 / ksh93v / zsh</span>
+<span class="co0"># Get the largest file matching pattern in the given directories recursively</span>
+<span class="co1">${ZSH_VERSION+false}</span> <span class="sy0">||</span> emulate ksh
+<span class="co1">${BASH_VERSION+shopt -s lastpipe extglob}</span>
+&nbsp;
+<span class="kw1">function</span> getLargest <span class="br0">&#123;</span>
+    <span class="kw3">typeset</span> <span class="re5">-A</span> cur top <span class="sy0">||</span> <span class="kw3">return</span>
+    <span class="kw3">typeset</span> <span class="kw2">dir</span> x
+	<span class="kw1">for</span> <span class="kw2">dir</span> <span class="kw1">in</span> <span class="st0">&quot;$2&quot;</span><span class="sy0">/*/</span>; <span class="kw1">do</span>
+		<span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-d</span> <span class="re1">$dir</span> <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">||</span> <span class="kw3">return</span> <span class="nu0">0</span>
+		getLargest <span class="st0">&quot;$1&quot;</span> <span class="st0">&quot;<span class="es3">${dir%/}</span>&quot;</span> <span class="sy0">||</span> <span class="kw3">return</span>
+		top<span class="br0">&#91;</span><span class="kw2">size</span><span class="br0">&#93;</span>=-<span class="nu0">1</span>
+		<span class="kw2">find</span> <span class="st0">&quot;<span class="es2">$dir</span>&quot;</span> <span class="re5">-maxdepth</span> <span class="nu0">1</span> <span class="re5">-type</span> f <span class="re5">-name</span> <span class="st0">&quot;$1&quot;</span> <span class="re5">-printf</span> <span class="st_h">'%s\0%f\0'</span> <span class="sy0">|</span> <span class="br0">&#123;</span>
+			<span class="kw1">while</span> :; <span class="kw1">do</span>
+				<span class="kw1">for</span> x <span class="kw1">in</span> cur\<span class="br0">&#91;</span><span class="br0">&#123;</span><span class="kw2">size</span>,name<span class="br0">&#125;</span>\<span class="br0">&#93;</span>; <span class="kw1">do</span>
+					<span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-rd</span> <span class="st_h">''</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span> <span class="sy0">||</span> <span class="kw3">break</span> <span class="nu0">2</span>
+				<span class="kw1">done</span>
+				<span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> cur<span class="br0">&#91;</span><span class="kw2">size</span><span class="br0">&#93;</span> <span class="sy0">&gt;</span> top<span class="br0">&#91;</span><span class="kw2">size</span><span class="br0">&#93;</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>; <span class="kw1">then</span>
+					top<span class="br0">&#91;</span><span class="kw2">size</span><span class="br0">&#93;</span>=<span class="co1">${cur[size]}</span> top<span class="br0">&#91;</span>name<span class="br0">&#93;</span>=<span class="co1">${cur[name]}</span>
+				<span class="kw1">fi</span>
+			<span class="kw1">done</span>
+			<span class="kw3">printf</span> <span class="st_h">'%q\n'</span> <span class="st0">&quot;<span class="es3">${dir}</span><span class="es3">${top[name]}</span>&quot;</span>
+		<span class="br0">&#125;</span>
+    <span class="kw1">done</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co0"># main pattern dir [ dir ... ]</span>
+<span class="kw1">function</span> main <span class="br0">&#123;</span>
+	<span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-n</span> <span class="re4">$1</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>; <span class="kw1">then</span>
+		<span class="kw3">typeset</span> <span class="kw2">dir</span> <span class="re2">pattern</span>=<span class="re4">$1</span>
+		<span class="kw3">shift</span>
+		<span class="kw1">for</span> <span class="kw2">dir</span>; <span class="kw1">do</span>
+			<span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-d</span> <span class="re1">$dir</span> <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">||</span> <span class="kw3">return</span>
+			getLargest <span class="st0">&quot;<span class="es2">$pattern</span>&quot;</span> <span class="st0">&quot;<span class="es2">$dir</span>&quot;</span>
+		<span class="kw1">done</span>
+	<span class="kw1">else</span>
+		<span class="kw3">return</span> <span class="nu0">1</span>
+	<span class="kw1">fi</span>
+<span class="br0">&#125;</span>
+&nbsp;
+main <span class="st0">&quot;$@&quot;</span>
+&nbsp;
+<span class="co0"># vim: set fenc=utf-8 ff=unix ft=sh :</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Get largest file&quot;,&quot;hid&quot;:&quot;get_largest_file&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1428&quot;} -->
+<h2 class="sectionedit3" id="more_examples">More examples</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/003" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/003" rel="nofollow">http://mywiki.wooledge.org/BashFAQ/003</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/UsingFind" class="urlextern" title="http://mywiki.wooledge.org/UsingFind" rel="nofollow">http://mywiki.wooledge.org/UsingFind</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;More examples&quot;,&quot;hid&quot;:&quot;more_examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;1429-&quot;} --></div>
+</body>
+</html>

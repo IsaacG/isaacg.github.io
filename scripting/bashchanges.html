@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:bashchanges</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,bashchanges"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/bashchanges?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/bashchanges"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/bashchanges"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/bashchanges"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:bashchanges","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#bash_changes">Bash changes</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#shell_options">Shell options</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#general_allmany_builtins">General (all/many builtins)</a></div></li>
+<li class="level3"><div class="li"><a href="#printf">printf</a></div></li>
+<li class="level3"><div class="li"><a href="#conditional_expressions_and_test_command">Conditional expressions and test command</a></div></li>
+<li class="level3"><div class="li"><a href="#other_builtins_and_keywords">Other builtins and keywords</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#builtin_variables">Builtin variables</a></div></li>
+<li class="level2"><div class="li"><a href="#quoting_expansions_substitutions_and_related">Quoting, expansions, substitutions and related</a></div></li>
+<li class="level2"><div class="li"><a href="#arithmetic">Arithmetic</a></div></li>
+<li class="level2"><div class="li"><a href="#redirection_and_related">Redirection and related</a></div></li>
+<li class="level2"><div class="li"><a href="#misc">Misc</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="bash_changes">Bash changes</h1>
+<div class="level1">
+
+<p>
+This article is an <strong>incomplete overview</strong> of changes to Bash over time. Not all changes are listed, just the ones most likely to be useful for normal scripting. The overviews are categorized by topic and ordered by version.
+</p>
+
+<p>
+A useful starting point is the <a href="https://github.com/bminor/bash/blob/master/NEWS" class="urlextern" title="https://github.com/bminor/bash/blob/master/NEWS" rel="nofollow">NEWS file</a> in bash sources. If you have more detailed information, or historical information about Bash versions earlier than V2, feel free to mail me, or use the discussion below.
+</p>
+
+<p>
+Status: 5.1 (alpha)
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash changes&quot;,&quot;hid&quot;:&quot;bash_changes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-539&quot;} -->
+<h2 class="sectionedit2" id="shell_options">Shell options</h2>
+<div class="level2">
+
+<p>
+Note that the <code>shopt</code> builtin command first appeared in Bash 2.0.
+</p>
+
+<p>
+For this topic, see also
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/internals/shell_options" class="wikilink1" title="internals:shell_options">List of shell options</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set">The set builtin command</a></div>
+</li>
+</ul>
+<div class="table sectionedit3"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Feature or change description      </th><th class="col1 leftalign"> Appeared in Bash version  </th><th class="col2 leftalign"> See also/remarks                                                                 </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>posix</code> (for <code>set -o</code>)         </td><td class="col1 leftalign"> 1.14.0                    </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>hostcomplete</code>                   </td><td class="col1 leftalign"> 2.0-alpha3                </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>expand_aliases</code>                 </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>huponexit</code>                      </td><td class="col1 leftalign"> 2.02-alpha1               </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>nocaseglob</code>                     </td><td class="col1 leftalign"> 2.02-alpha1               </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>extglob</code>                        </td><td class="col1 leftalign"> 2.02-alpha1               </td><td class="col2 leftalign"> together with extended globbing, KSH88                                           </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>restricted_shell</code>               </td><td class="col1 leftalign"> 2.03-alpha                </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>xpg_echo</code>                       </td><td class="col1 leftalign"> 2.04-beta1                </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> <code>progcomp</code>                       </td><td class="col1 leftalign"> 2.04-alpha1               </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"> <code>no_empty_command_completion</code>    </td><td class="col1 leftalign"> 2.04                      </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign"> <code>login_shell</code>                    </td><td class="col1 leftalign"> 2.05a-alpha1              </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 leftalign"> <code>nolog</code> (for <code>set -o</code>)         </td><td class="col1 leftalign"> 2.05a                     </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 leftalign"> <code>gnu_errfmt</code>                     </td><td class="col1 leftalign"> 3.0-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 leftalign"> <code>force_fignore</code>                  </td><td class="col1 leftalign"> 3.0-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0 leftalign"> <code>failglob</code>                       </td><td class="col1 leftalign"> 3.0-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0 leftalign"> <code>extquote</code>                       </td><td class="col1 leftalign"> 3.0-alpha                 </td><td class="col2 leftalign"> unsure – verify!                                                                </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0 leftalign"> <code>extdebug</code>                       </td><td class="col1 leftalign"> 3.0-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row18">
+		<td class="col0 leftalign"> <code>pipefail</code> (for <code>set -o</code>)      </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row19">
+		<td class="col0 leftalign"> <code>functrace</code> (for <code>set -o</code>)     </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row20">
+		<td class="col0 leftalign"> <code>errtrace</code> (for <code>set -o</code>)      </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row21">
+		<td class="col0 leftalign"> <code>nocasematch</code>                    </td><td class="col1 leftalign"> 3.1-alpha1                </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row22">
+		<td class="col0 leftalign"> <code>dirspell</code>                       </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row23">
+		<td class="col0 leftalign"> <code>globstar</code>                       </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row24">
+		<td class="col0 leftalign"> <code>checkjobs</code>                      </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row25">
+		<td class="col0 leftalign"> <code>autocd</code>                         </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row26">
+		<td class="col0 leftalign"> <code>set -e</code> effects more intuitive  </td><td class="col1 leftalign"> 4.0                       </td><td class="col2 leftalign"> not directly specified by POSIX, but in consensus with POSIX WG                  </td>
+	</tr>
+	<tr class="row27">
+		<td class="col0 leftalign"> <code>compat40</code>                       </td><td class="col1 leftalign"> 4.1-beta                  </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row28">
+		<td class="col0 leftalign"> <code>lastpipe</code>                       </td><td class="col1 leftalign"> 4.2-alpha                 </td><td class="col2 leftalign"> only works with job control disabled                                             </td>
+	</tr>
+	<tr class="row29">
+		<td class="col0 leftalign"> <code>compat41</code>                       </td><td class="col1 leftalign"> 4.2-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row30">
+		<td class="col0 leftalign"> <code>globasciiranges</code>                </td><td class="col1 leftalign"> 4.3-alpha                 </td><td class="col2 leftalign"> enable &quot;character range globbing&quot; to always act as if in <code>C</code> locale            </td>
+	</tr>
+	<tr class="row31">
+		<td class="col0 leftalign"> <code>compat42</code>                       </td><td class="col1 leftalign"> 4.3-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row32">
+		<td class="col0 leftalign"> <code>compat43</code>                       </td><td class="col1 leftalign"> 4.4-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row33">
+		<td class="col0 leftalign"> <code>compat44</code>                       </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign">                                                                                  </td>
+	</tr>
+	<tr class="row34">
+		<td class="col0 leftalign"> <code>localvar_inherit</code>               </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign"> local variables inherit preceeding scope values if they have the same name       </td>
+	</tr>
+	<tr class="row35">
+		<td class="col0 leftalign"> <code>syslog_history</code>                 </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign"> send history lines to syslog (undocumented, default off) if syslog is supported  </td>
+	</tr>
+	<tr class="row36">
+		<td class="col0 leftalign"> <code>assoc_expand_once</code>              </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign"> expand associative array subscripts only one                                     </td>
+	</tr>
+	<tr class="row37">
+		<td class="col0 leftalign"> <code>globasciiranges</code>                </td><td class="col1 leftalign"> 5.0-beta                  </td><td class="col2 leftalign"> New default: on (default may be configured at compile time)                      </td>
+	</tr>
+	<tr class="row38">
+		<td class="col0 leftalign"> <code>localvar_inherit</code>               </td><td class="col1 leftalign"> 5.0-beta                  </td><td class="col2 leftalign"> guard code against inheriting from an incompatible data type                     </td>
+	</tr>
+	<tr class="row39">
+		<td class="col0 leftalign"> <code>checkwinsize</code>                   </td><td class="col1 leftalign"> 5.0-beta2                 </td><td class="col2 leftalign"> New default: on                                                                  </td>
+	</tr>
+	<tr class="row40">
+		<td class="col0 leftalign"> <code>shift_verbose</code>                  </td><td class="col1 leftalign"> 5.0-beta2                 </td><td class="col2 leftalign"> Default on when in POSIX mode                                                    </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;722-6871&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Shell options&quot;,&quot;hid&quot;:&quot;shell_options&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;540-6872&quot;} -->
+<h3 class="sectionedit4" id="general_allmany_builtins">General (all/many builtins)</h3>
+<div class="level3">
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Feature or change description  </th><th class="col1 leftalign">Appeared in Bash version  </th><th class="col2 leftalign">See also/remarks  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">generally return 2 on usage error  </td><td class="col1 leftalign">2.0  </td><td class="col2 leftalign">  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">generally accept <code>--</code> (end of options)  </td><td class="col1 leftalign">2.0  </td><td class="col2 leftalign">  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">(where applicable) implement a <code>-p</code> option to produce reusable output  </td><td class="col1 leftalign">2.0  </td><td class="col2 leftalign"><code>shopt</code> and <code>umask</code> builtins were fixed to support that in 2.02  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;6911-7260&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;General (all\/many builtins)&quot;,&quot;hid&quot;:&quot;general_allmany_builtins&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;6873-7261&quot;} -->
+<h3 class="sectionedit6" id="printf">printf</h3>
+<div class="level3">
+
+<p>
+For this topic, see also
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf">The printf command</a></div>
+</li>
+</ul>
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Feature or change description                                  </th><th class="col1 leftalign"> Appeared in Bash version  </th><th class="col2 leftalign"> See also/remarks                              </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> new <code>printf</code> command                                         </td><td class="col1 leftalign"> 2.02-alpha1               </td><td class="col2 leftalign">                                               </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> respects <code>0..</code> and <code>0x..</code> prefixed numbers                 </td><td class="col1 leftalign"> 2.04-beta1                </td><td class="col2 leftalign"> consistency with arithmetic                   </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> POSIX® length specifiers <code>j</code>, <code>t</code> and <code>z</code>              </td><td class="col1 leftalign"> 2.05a-alpha1              </td><td class="col2 leftalign"> ISO C99                                       </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> POSIX® flag <code>&#039;</code>                                        </td><td class="col1 leftalign"> 2.05a-alpha1              </td><td class="col2 leftalign">                                               </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> conversion <code>a</code> and <code>A</code>                                     </td><td class="col1 leftalign"> 2.05a-rc1                 </td><td class="col2 leftalign"> if provided by the underlying printf(3)       </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> conversion <code>F</code>                                               </td><td class="col1 leftalign"> 2.05a-rc1                 </td><td class="col2 leftalign">                                               </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> conversion <code>n</code>                                               </td><td class="col1 leftalign"> 2.05a-rc1                 </td><td class="col2 leftalign">                                               </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> new option <code>-v</code>                                              </td><td class="col1 leftalign"> 3.1-alpha1                </td><td class="col2 leftalign">                                               </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> escape sequences <code>\&quot;</code> and <code>\?</code>                             </td><td class="col1 leftalign"> 3.0-beta1                 </td><td class="col2 leftalign">                                               </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"> modified option <code>-v</code> to assign to individual array elements  </td><td class="col1 leftalign"> 4.1-alpha                 </td><td class="col2 leftalign">                                               </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign"> conversion <code>(…)T</code>                                          </td><td class="col1 leftalign"> 4.2-alpha                 </td><td class="col2"> support stftime(3) date/time format; uses current time </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 leftalign"> <code>\uNNNN</code> and <code>\UNNNNNNNN</code> escape sequences                 </td><td class="col1 leftalign"> 4.2-alpha                 </td><td class="col2 leftalign"> for: <code>printf</code>, <code>echo -e</code>, <code>$&#039;...&#039;</code>  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;7338-9205&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;printf&quot;,&quot;hid&quot;:&quot;printf&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;7262-9210&quot;} -->
+<h3 class="sectionedit8" id="conditional_expressions_and_test_command">Conditional expressions and test command</h3>
+<div class="level3">
+
+<p>
+For this topic, see also
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/conditional_expression" class="wikilink1" title="syntax:ccmd:conditional_expression">The conditional expression</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/classictest" class="wikilink1" title="commands:classictest">The classic test command</a></div>
+</li>
+</ul>
+<div class="table sectionedit9"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Feature or change description                                               </th><th class="col1 leftalign"> Appeared in Bash version  </th><th class="col2 leftalign"> See also/remarks                                                                     </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>test</code>: <code>-o</code>, <code>==</code>, <code>&lt;</code> and <code>&gt;</code>                                   </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                      </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>test</code>: <code>-N</code>                                                            </td><td class="col1 leftalign"> 2.02                      </td><td class="col2 leftalign">                                                                                      </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>[[...]]</code>: new                                                        </td><td class="col1 leftalign"> 2.02-alpha1               </td><td class="col2 leftalign"> KSH93                                                                                </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>[[...]]</code>: regex support (<code>=~</code>)                                     </td><td class="col1 leftalign"> 3.0-alpha                 </td><td class="col2 leftalign">                                                                                      </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>[[...]]</code>: quotable right-hand-side of <code>=~</code> forces string matching  </td><td class="col1 leftalign"> 3.2-alpha                 </td><td class="col2 leftalign"> for consistency with pattern matching                                                </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>[[...]]</code>: <code>&lt;</code> and <code>&gt;</code> operators respect locale                   </td><td class="col1 leftalign"> 4.1-alpha                 </td><td class="col2 leftalign"> for consistency, since 4.1-beta: ensure you have set compatiblity to &gt;4.0 (default)  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>test</code>/<code>[</code>/<code>[[</code>: <code>-v</code>                                       </td><td class="col1 leftalign"> 4.2-alpha                 </td><td class="col2 leftalign"> check if a variable is set                                                           </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>test</code>/<code>[</code>/<code>[[</code>: <code>-v</code>                                       </td><td class="col1 leftalign"> 4.2-alpha                 </td><td class="col2 leftalign"> support array syntax to check for elements                                           </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> <code>test</code>/<code>[</code>/<code>[[</code>: <code>-N</code> accepts nanoseconds                   </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign">                                                                                      </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"> <code>test</code>/<code>[</code>/<code>[[</code>: <code>-v</code> accepts positional parameters         </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign">                                                                                      </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;9361-11505&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Conditional expressions and test command&quot;,&quot;hid&quot;:&quot;conditional_expressions_and_test_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;9211-11506&quot;} -->
+<h3 class="sectionedit10" id="other_builtins_and_keywords">Other builtins and keywords</h3>
+<div class="level3">
+<div class="table sectionedit11"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Builtin                      </th><th class="col1 leftalign"> Feature or change description                                                                                                                     </th><th class="col2 leftalign"> Appeared in Bash version  </th><th class="col3 leftalign"> See also/remarks                                                                                     </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>bashbug</code>                  </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 1.14.0                    </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>select</code>                   </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 1.14.0                    </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>disown</code>                   </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 2.0                       </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>shopt</code>                    </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 2.0                       </td><td class="col3 leftalign"> <a href="/commands/builtin/shopt" class="wikilink1" title="commands:builtin:shopt">The shopt builtin command</a>                                                                           </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>declare</code>                  </td><td class="col1 leftalign"> new options <code>-a</code> and <code>-F</code>                                                                                                                     </td><td class="col2 leftalign"> 2.0                       </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>enable</code>                   </td><td class="col1 leftalign"> builtin has basic plugin support (dlopen)                                                                                                         </td><td class="col2 leftalign"> 2.0                       </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>exec</code>                     </td><td class="col1 leftalign"> options <code>-l</code>, <code>-c</code> and <code>-a</code>                                                                                                                 </td><td class="col2 leftalign"> 2.0                       </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> options <code>-p</code>, <code>-e</code> and <code>-a</code>                                                                                                                 </td><td class="col2 leftalign"> 2.0                       </td><td class="col3 leftalign"> <a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read">The read builtin command</a>                                                                            </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> <code>readonly</code>                 </td><td class="col1 leftalign"> option <code>-a</code>                                                                                                                                     </td><td class="col2 leftalign"> 2.0                       </td><td class="col3 leftalign"> <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">Arrays</a>                                                                                    </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"> <code>time</code>                     </td><td class="col1 leftalign"> new keyword                                                                                                                                       </td><td class="col2 leftalign"> 2.0                       </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign"> <code>shopt</code>                    </td><td class="col1 leftalign"> <code>-p</code> (reusable output)                                                                                                                          </td><td class="col2 leftalign"> 2.02                      </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 leftalign"> <code>umask</code>                    </td><td class="col1 leftalign"> <code>-p</code> (reusable output)                                                                                                                          </td><td class="col2 leftalign"> 2.02                      </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 leftalign"> <code>complete</code>                 </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 2.04-devel                </td><td class="col3 leftalign"> for and together with support for programmable completion                                            </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 leftalign"> <code>compgen</code>                  </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 2.04-devel                </td><td class="col3 leftalign"> for and together with support for programmable completion                                            </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> options <code>-t</code>, <code>-n</code>, <code>-d</code>, <code>-s</code>                                                                                                            </td><td class="col2 leftalign"> 2.04-devel                </td><td class="col3 leftalign"> <a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read">The read builtin command</a>                                                                            </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0 leftalign"> <code>for ((...;...;...))</code>  </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 2.04-devel                </td><td class="col3 leftalign"> KSH93                                                                                                </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0 leftalign"> <code>set</code>                      </td><td class="col1 leftalign"> print shell functions in a format reusable as input                                                                                               </td><td class="col2 leftalign"> 2.05-beta1                </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row18">
+		<td class="col0 leftalign"> <code>for</code>                      </td><td class="col1 leftalign"> allow an empty word list                                                                                                                          </td><td class="col2 leftalign"> 2.05a-alpha1              </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row19">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> new option <code>-u</code>                                                                                                                                 </td><td class="col2 leftalign"> 2.05b-alpha1              </td><td class="col3 leftalign"> <a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read">The read builtin command</a>                                                                            </td>
+	</tr>
+	<tr class="row20">
+		<td class="col0 leftalign"> <code>caller</code>                   </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 3.0                       </td><td class="col3 leftalign"> <a href="/commands/builtin/caller" class="wikilink1" title="commands:builtin:caller">The caller builtin command</a>                                                                          </td>
+	</tr>
+	<tr class="row21">
+		<td class="col0 leftalign"> <code>coproc</code>                   </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 4.0-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row22">
+		<td class="col0 leftalign"> <code>declare</code>                  </td><td class="col1 leftalign"> new options <code>-l</code> and <code>-u</code>                                                                                                                     </td><td class="col2 leftalign"> 4.0-alpha                 </td><td class="col3 leftalign"> together with case-changing expansion forms                                                          </td>
+	</tr>
+	<tr class="row23">
+		<td class="col0 leftalign"> <code>case</code>                     </td><td class="col1 leftalign"> new action list terminators <code>;;&amp; and </code>;&amp;                                                                                                </td><td class="col2 leftalign"> 4.0-alpha                 </td><td class="col3 leftalign"> ksh93: only <code>;&amp;</code>. zsh and mksh: <code>;|</code>. mksh: all 4, (<code>;;&amp;</code> is undocumented Bash compatibility)  </td>
+	</tr>
+	<tr class="row24">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> changed <code>-t</code> (fractional seconds)                                                                                                               </td><td class="col2 leftalign"> 4.0-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row25">
+		<td class="col0 leftalign"> <code>mapfile</code>                  </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 4.0-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row26">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> new option <code>-i</code>                                                                                                                                 </td><td class="col2 leftalign"> 4.0-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row27">
+		<td class="col0 leftalign"> <code>compopt</code>                  </td><td class="col1 leftalign"> new                                                                                                                                               </td><td class="col2 leftalign"> 4.0-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row28">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> modified option <code>-t</code> to test for data                                                                                                           </td><td class="col2 leftalign"> 4.0-beta                  </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row29">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> new option <code>-N</code>                                                                                                                                 </td><td class="col2 leftalign"> 4.1-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row30">
+		<td class="col0 leftalign"> <code>mapfile</code>                  </td><td class="col1 leftalign"> changed behaviour regarding history spamming                                                                                                      </td><td class="col2 leftalign"> 4.1-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row31">
+		<td class="col0 leftalign"> <code>declare</code>                  </td><td class="col1 leftalign"> new option <code>-g</code>                                                                                                                                 </td><td class="col2 leftalign"> 4.2-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row32">
+		<td class="col0 leftalign"> <code>mapfile</code>                  </td><td class="col1 leftalign"> calls the callback with an additional argument: The line (data)                                                                                   </td><td class="col2 leftalign"> 4.2-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row33">
+		<td class="col0 leftalign"> <code>cd</code>                       </td><td class="col1 leftalign"> new option <code>-e</code>                                                                                                                                 </td><td class="col2 leftalign"> 4.2-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row34">
+		<td class="col0 leftalign"> <code>echo</code>                     </td><td class="col1 leftalign"> <code>\uNNNN</code> and <code>\UNNNNNNNN</code> escape sequences                                                                                                    </td><td class="col2 leftalign"> 4.2-alpha                 </td><td class="col3 leftalign"> for: <code>printf</code>, <code>echo -e</code>, <code>$&#039;...&#039;</code>                                                         </td>
+	</tr>
+	<tr class="row35">
+		<td class="col0 leftalign"> <code>exec</code>                     </td><td class="col1 leftalign"> option <code>-a</code> to give a <code>argv[0]</code> string                                                                                                        </td><td class="col2 leftalign"> 4.2-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row36">
+		<td class="col0 leftalign"> <code>time</code>                     </td><td class="col1 leftalign"> allowed as a command by itself to display timing values of the shell and its children                                                             </td><td class="col2 leftalign"> 4.2-alpha                 </td><td class="col3 leftalign"> POSIX change                                                                                         </td>
+	</tr>
+	<tr class="row37">
+		<td class="col0 leftalign"> <code>help</code>                     </td><td class="col1 leftalign"> <code>help</code> now searches exact topic-strings (i.e. <code>help read</code> won&#039;t find <code>readonly</code> anymore)                                                    </td><td class="col2 leftalign"> 4.3-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row38">
+		<td class="col0 leftalign"> <code>return</code>                   </td><td class="col1 leftalign"> accept negative values as return value (e.g. <code>return -1</code> will show as (8 bit) 255 in the caller)                                                </td><td class="col2 leftalign"> 4.3-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row39">
+		<td class="col0 leftalign"> <code>exit</code>                     </td><td class="col1 leftalign"> accept negative values as return value (e.g. <code>return -1</code> will show as (8 bit) 255 in the caller)                                                </td><td class="col2 leftalign"> 4.3-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row40">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> <code>read</code> skips <code>NUL</code> (<abbr title="American Standard Code for Information Interchange">ASCII</abbr> Code 0) in input                                                                                                    </td><td class="col2 leftalign"> 4.3-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row41">
+		<td class="col0 leftalign"> <code>declare</code>                  </td><td class="col1 leftalign"> new option <code>-n</code>/<code>+n</code> to support nameref variable type                                                                                         </td><td class="col2 leftalign"> 4.3-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row42">
+		<td class="col0 leftalign"> <code>wait</code>                     </td><td class="col1 leftalign"> new option <code>-n</code> to wait for the next background job to finish, returning its exit status.                                                       </td><td class="col2 leftalign"> 4.3-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row43">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> <code>read</code> checks first variable argument for validity before trying to read inout                                                                  </td><td class="col2 leftalign"> 4.3-beta                  </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row44">
+		<td class="col0 leftalign"> <code>help</code>                     </td><td class="col1 leftalign"> attempts substring matching (as it did through bash-4.2) if exact string matching fails                                                           </td><td class="col2 leftalign"> 4.3-beta2                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row45">
+		<td class="col0 leftalign"> <code>fc</code>                       </td><td class="col1 leftalign"> interprets option <code>-0</code> (zero) as the current command line                                                                                       </td><td class="col2 leftalign"> 4.3-beta2                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row46">
+		<td class="col0 leftalign"> <code>cd</code>                       </td><td class="col1 leftalign"> new option <code>-@</code> to browse a file&#039;s extended attributes (on systems that support <code>O_XATTR</code>)                                                    </td><td class="col2 leftalign"> 4.3-rc1                   </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row47">
+		<td class="col0 leftalign"> <code>kill</code>                     </td><td class="col1 leftalign"> new option <code>-L</code> (upper case ell) to list signals like the normal lowercase option <code>-l</code> (compatiblity with some standalone <code>kill</code> commands)  </td><td class="col2 leftalign"> 4.4-beta                  </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row48">
+		<td class="col0 leftalign"> <code>mapfile</code>                  </td><td class="col1 leftalign"> new option <code>-d</code>                                                                                                                                 </td><td class="col2 leftalign"> 4.4-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row49">
+		<td class="col0 leftalign"> <code>wait</code>                     </td><td class="col1 leftalign"> new option <code>-f</code>                                                                                                                                 </td><td class="col2 leftalign"> 5.0-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row50">
+		<td class="col0 leftalign"> <code>history</code>                  </td><td class="col1 leftalign"> option <code>-d</code> allows negative numbers to index from the end of the history list                                                                   </td><td class="col2 leftalign"> 5.0-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row51">
+		<td class="col0 leftalign"> <code>umask</code>                    </td><td class="col1 leftalign"> allows modes greater than octal 777                                                                                                               </td><td class="col2 leftalign"> 5.0-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row52">
+		<td class="col0 leftalign"> <code>times</code>                    </td><td class="col1 leftalign"> honors current locale settings when printing decimal points                                                                                       </td><td class="col2 leftalign"> 5.0-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row53">
+		<td class="col0 leftalign"> <code>kill</code>                     </td><td class="col1 leftalign"> New options <code>-n SIGNUMBER</code> and <code>-s SIGNAME</code>                                                                                                   </td><td class="col2 leftalign"> 5.0-beta2                 </td><td class="col3 leftalign"> <a href="/commands/builtin/kill" class="wikilink1" title="commands:builtin:kill">The kill builtin command</a>                                                                            </td>
+	</tr>
+	<tr class="row54">
+		<td class="col0 leftalign"> <code>select</code>                   </td><td class="col1 leftalign"> Support for an empty wordlist following <code>in</code>                                                                                                    </td><td class="col2 leftalign"> 5.0-beta2                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row55">
+		<td class="col0 leftalign"> <code>read</code>                     </td><td class="col1 leftalign"> Option <code>-e</code> (use ReadLine to obtain input) now works with arbitrary file descriptors (given by <code>-u</code> option)                                   </td><td class="col2 leftalign"> 5.1-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row56">
+		<td class="col0 leftalign"> <code>trap</code>                     </td><td class="col1 leftalign"> <code>-p</code> option prints signals with SIG_DFL/SIG_IGN on shell start (POSIX mode)                                                                     </td><td class="col2 leftalign"> 5.1-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row57">
+		<td class="col0 leftalign"> <code>unset</code>                    </td><td class="col1 leftalign"> automatically tries to unset a function if the given name is an invalid variable name                                                             </td><td class="col2 leftalign"> 5.1-aplha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row58">
+		<td class="col0 leftalign"> <code>wait</code>                     </td><td class="col1 leftalign"> option <code>-n</code> now accepts a list of jobs                                                                                                          </td><td class="col2 leftalign"> 5.1-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row59">
+		<td class="col0 leftalign"> <code>wait</code>                     </td><td class="col1 leftalign"> new option <code>-p NAME</code> to store PID/JobID (useful when waiting for a list of jobs)                                                                </td><td class="col2 leftalign"> 5.1-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row60">
+		<td class="col0 leftalign"> <code>local</code>                    </td><td class="col1 leftalign"> new option <code>-p</code> to print local variables in the current scope                                                                                   </td><td class="col2 leftalign"> 5.1-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+	<tr class="row61">
+		<td class="col0 leftalign"> <code>ulimit</code>                   </td><td class="col1 leftalign"> new option <code>-R</code> to get/set <code>RLIMIT_RTTIME</code> resource                                                                                           </td><td class="col2 leftalign"> 5.1-alpha                 </td><td class="col3 leftalign">                                                                                                      </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table4&quot;,&quot;secid&quot;:11,&quot;range&quot;:&quot;11545-30888&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Other builtins and keywords&quot;,&quot;hid&quot;:&quot;other_builtins_and_keywords&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:10,&quot;range&quot;:&quot;11507-30890&quot;} -->
+<h2 class="sectionedit12" id="builtin_variables">Builtin variables</h2>
+<div class="level2">
+<div class="table sectionedit13"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Feature or change description                           </th><th class="col1 leftalign"> Appeared in Bash version  </th><th class="col2 leftalign"> See also                                                                            </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>HISTCMD</code>                                             </td><td class="col1 leftalign"> 1.14.0                    </td><td class="col2 leftalign"> interactive usage                                                                   </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>PS1</code>, <code>PS2</code>, <code>PATH</code>, and <code>IFS</code> are unsettable  </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>DIRSTACK</code> array variable                             </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>PIPESTATUS</code> array variable                           </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>BASH_VERSINFO</code> array variable                        </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>HOSTNAME</code>                                            </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>SHELLOPTS</code>                                           </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>MACHTYPE</code>                                            </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> <code>GLOBIGNORE</code>                                          </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"> <code>HISTIGNORE</code>                                          </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign"> respect <code>LC_ALL</code>                                      </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 leftalign"> respect <code>LC_MESSAGES</code>                                 </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 leftalign"> respect <code>LC_CTYPE</code>                                    </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 leftalign"> respect <code>LC_COLLATE</code>                                  </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0 leftalign"> respect <code>LANG</code>                                        </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0 leftalign"> <code>GROUPS</code> array variable                               </td><td class="col1 leftalign"> 2.01                      </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0 leftalign"> <code>GROUPS</code> unsettable/takes (discarded) assignments     </td><td class="col1 leftalign"> 2.04                      </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row18">
+		<td class="col0 leftalign"> <code>FUNCNAME</code>                                            </td><td class="col1 leftalign"> 2.04                      </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row19">
+		<td class="col0 leftalign"> respect <code>LC_NUMERIC</code>                                  </td><td class="col1 leftalign"> 2.04                      </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row20">
+		<td class="col0 leftalign"> <code>TMOUT</code>                                               </td><td class="col1 leftalign"> 2.05b                     </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row21">
+		<td class="col0 leftalign"> <code>BASH_REMATCH</code>                                        </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign"> together with regex support in <code>[[...]]</code>                                      </td>
+	</tr>
+	<tr class="row22">
+		<td class="col0 leftalign"> <code>BASH_ARGC</code>                                           </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign"> debugger support                                                                    </td>
+	</tr>
+	<tr class="row23">
+		<td class="col0 leftalign"> <code>BASH_ARGV</code>                                           </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign"> debugger support                                                                    </td>
+	</tr>
+	<tr class="row24">
+		<td class="col0 leftalign"> <code>BASH_SOURCE</code>                                         </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign"> debugger support                                                                    </td>
+	</tr>
+	<tr class="row25">
+		<td class="col0 leftalign"> <code>BASH_LINENO</code>                                         </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign"> debugger support                                                                    </td>
+	</tr>
+	<tr class="row26">
+		<td class="col0 leftalign"> <code>BASH_SUBSHELL</code>                                       </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign"> debugger support                                                                    </td>
+	</tr>
+	<tr class="row27">
+		<td class="col0 leftalign"> <code>BASH_EXECUTION_STRING</code>                               </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign"> debugger support                                                                    </td>
+	</tr>
+	<tr class="row28">
+		<td class="col0 leftalign"> <code>BASH_COMMAND</code>                                        </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign"> debugger support                                                                    </td>
+	</tr>
+	<tr class="row29">
+		<td class="col0 leftalign"> <code>HISTTIMEFORMAT</code>                                      </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row30">
+		<td class="col0 leftalign"> <code>COMP_WORDBREAKS</code>                                     </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row31">
+		<td class="col0 leftalign"> respect <code>LC_TIME</code>                                     </td><td class="col1 leftalign"> 3.1                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row32">
+		<td class="col0 leftalign"> <code>BASHPID</code>                                             </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign"> Added to mksh R41.                                                                  </td>
+	</tr>
+	<tr class="row33">
+		<td class="col0 leftalign"> <code>PROMPT_DIRTRIM</code>                                      </td><td class="col1 leftalign"> 4.0                       </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row34">
+		<td class="col0 leftalign"> <code>BASH_XTRACEFD</code>                                       </td><td class="col1 leftalign"> 4.1-alpha                 </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row35">
+		<td class="col0 leftalign"> <code>BASHOPTS</code>                                            </td><td class="col1 leftalign"> 4.1-alpha                 </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row36">
+		<td class="col0 leftalign"> <code>FUNCNEST</code>                                            </td><td class="col1 leftalign"> 4.2-alpha                 </td><td class="col2 leftalign">                                                                                     </td>
+	</tr>
+	<tr class="row37">
+		<td class="col0 leftalign"> <code>HISTSIZE</code>                                            </td><td class="col1 leftalign"> 4.3-alpha                 </td><td class="col2 leftalign"> can be set to negative values for unlimited history length                          </td>
+	</tr>
+	<tr class="row38">
+		<td class="col0 leftalign"> <code>HISTFILESIZE</code>                                        </td><td class="col1 leftalign"> 4.3-alpha                 </td><td class="col2 leftalign"> can be set to negative values for unlimit history file size                         </td>
+	</tr>
+	<tr class="row39">
+		<td class="col0 leftalign"> <code>CHILD_MAX</code>                                           </td><td class="col1 leftalign"> 4.3-alpha                 </td><td class="col2 leftalign"> max. number of exit status of children the shell remembers                          </td>
+	</tr>
+	<tr class="row40">
+		<td class="col0 leftalign"> <code>BASH_COMPAT</code>                                         </td><td class="col1 leftalign"> 4.3-alpha                 </td><td class="col2 leftalign"> set shell compatiblity levels                                                       </td>
+	</tr>
+	<tr class="row41">
+		<td class="col0 leftalign"> <code>EPOCHSECONDS</code>                                        </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign"> expands to the time in seconds since Unix epoch                                     </td>
+	</tr>
+	<tr class="row42">
+		<td class="col0 leftalign"> <code>EPOCHREALTIME</code>                                       </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign"> expands to the time in seconds since Unix epoch with microsecond granularity        </td>
+	</tr>
+	<tr class="row43">
+		<td class="col0 leftalign"> <code>BASH_ARGV0</code>                                          </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign"> get/set <code>$0</code>                                                                      </td>
+	</tr>
+	<tr class="row44">
+		<td class="col0 leftalign"> <code>PATH</code>                                                </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign"> Possibility to set a static path for use in a restricted shell (at compile time)    </td>
+	</tr>
+	<tr class="row45">
+		<td class="col0 leftalign"> <code>HISTSIZE</code>                                            </td><td class="col1 leftalign"> 5.0-beta                  </td><td class="col2 leftalign"> Default can now be set at runtime                                                   </td>
+	</tr>
+	<tr class="row46">
+		<td class="col0 leftalign"> <code>SRANDOM</code>                                             </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign"> New random generator for 32bit numbers (using various methods in the backend)       </td>
+	</tr>
+	<tr class="row47">
+		<td class="col0 leftalign"> <code>ARGV0</code>                                               </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign"> Respected when set in initial shell environment, then initially used to set <code>$0</code>  </td>
+	</tr>
+	<tr class="row48">
+		<td class="col0 leftalign"> <code>BASH_REMATCH</code>                                        </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign"> Not readonly anymore                                                                </td>
+	</tr>
+	<tr class="row49">
+		<td class="col0 leftalign"> <code>PROMPT_COMMANDS</code>                                     </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign"> New array variable. List of commands to be executed like <code>PROMPT_COMMAND</code>         </td>
+	</tr>
+	<tr class="row50">
+		<td class="col0 leftalign"> <code>SECONDS</code>                                             </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign"> Assignment using arithmetic expressions (is nominally an integer variabnle)         </td>
+	</tr>
+	<tr class="row51">
+		<td class="col0 leftalign"> <code>RANDOM</code>                                              </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign"> Assignment using arithmetic expressions (is nominally an integer variabnle)         </td>
+	</tr>
+	<tr class="row52">
+		<td class="col0 leftalign"> <code>LINENO</code>                                              </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign"> Not an integer variabe                                                              </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table5&quot;,&quot;secid&quot;:13,&quot;range&quot;:&quot;30921-40142&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Builtin variables&quot;,&quot;hid&quot;:&quot;builtin_variables&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:12,&quot;range&quot;:&quot;30891-40143&quot;} -->
+<h2 class="sectionedit14" id="quoting_expansions_substitutions_and_related">Quoting, expansions, substitutions and related</h2>
+<div class="level2">
+
+<p>
+For this topic, see also
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/pe" class="wikilink1" title="syntax:pe">Parameter expansion</a>.</div>
+</li>
+</ul>
+<div class="table sectionedit15"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Feature or change description                                                                                 </th><th class="col1 leftalign"> Appeared in Bash version  </th><th class="col2 leftalign"> Remarks                                                                                                          </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> Support for integer-indexed arrays                                                                            </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign"> relevant builtins also got array support                                                                         </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>${PARAMETER//PATTERN/REPLACEMENT}</code>                                                                     </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> <code>${PARAMETER:OFFSET:LENGTH}</code>                                                                            </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>${!PARAMETER}</code> (indirection)                                                                           </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>$&quot;...&quot;</code> (localized strings)                                                                            </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>$&#039;...&#039;</code> (ANSI-C-like strings)                                                                          </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>\xNNN</code> in <code>$&#039;...&#039;</code> (and <code>echo -e</code>)                                                             </td><td class="col1 leftalign"> 2.02-alpha1               </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>$(&lt; FILENAME)</code> (file content)                                                                          </td><td class="col1 leftalign"> 2.02-alpha1               </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> globbing (<code>fnmatch()</code>) capable of POSIX® character classes etc.                                           </td><td class="col1 leftalign"> 2.02-alpha1               </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"> extended globbing                                                                                             </td><td class="col1 leftalign"> 2.02-alpha1               </td><td class="col2 leftalign"> KSH88                                                                                                            </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign"> globbing inside array mass-assignment: <code>ARRAY=(*.txt)</code>                                                      </td><td class="col1 leftalign"> 2.03-alpha                </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 leftalign"> <code>$&#039;...\&#039;...&#039;</code> escaped single quote inside ANSI-C-like strings                                           </td><td class="col1 leftalign"> 2.04-devel                </td><td class="col2 leftalign"> KSH93                                                                                                            </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 leftalign"> <code>${!PREFIX*}</code> (parameter name expansion)                                                                </td><td class="col1 leftalign"> 2.04                      </td><td class="col2 leftalign"> KSH93                                                                                                            </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 leftalign"> <code>$&#039;...&#039;</code> expands <code>\cx</code> (Control-x)                                                                    </td><td class="col1 leftalign"> 2.05b                     </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0 leftalign"> <code>[:class:]</code> syntax for pattern matching                                                                     </td><td class="col1 leftalign"> 2.05b                     </td><td class="col2 leftalign"> KSH93                                                                                                            </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0 leftalign"> <code>${!ARRAY[@]}</code> (array index expansion)                                                                      </td><td class="col1 leftalign"> 3.0-alpha                 </td><td class="col2 leftalign"> KSH93                                                                                                            </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0 leftalign"> <code>{x..y}</code> (range brace expansion)                                                                            </td><td class="col1 leftalign"> 3.0-alpha                 </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row18">
+		<td class="col0 leftalign"> <code>$&#039;...&#039;</code> expands <code>\xNNN</code> (Hexdigits)                                                                  </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row19">
+		<td class="col0 leftalign"> <code>+=</code> operator for arrays and strings                                                                        </td><td class="col1 leftalign"> 3.1-alpha1                </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row20">
+		<td class="col0 leftalign"> <code>${PARAMETER//PATTERN/REPLACEMENT}</code> behaviour changed                                                   </td><td class="col1 leftalign"> 3.2-alpha                 </td><td class="col2 leftalign"> anchoring for global substitution is no longer allowed, changes the way old syntax may work                      </td>
+	</tr>
+	<tr class="row21">
+		<td class="col0 leftalign"> <code>${@:0:x}</code> includes <code>$0</code>                                                                                  </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row22">
+		<td class="col0 leftalign"> Support for associative arrays                                                                                </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign"> relevant builtins also got associative array support                                                             </td>
+	</tr>
+	<tr class="row23">
+		<td class="col0 leftalign"> case modification operators for expansions                                                                    </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row24">
+		<td class="col0 leftalign"> <code>{0x..0y}</code> (zeropadding brace expansion)                                                                    </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row25">
+		<td class="col0 leftalign"> numerically indexed arrays can be accessed (on expansion time) from the end using negative indexes            </td><td class="col1 leftalign"> 4.1-alpha                 </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row26">
+		<td class="col0 leftalign"> <code>\uNNNN</code> and <code>\uNNNNNNNN</code> in <code>$&#039;...&#039;</code>                                                       </td><td class="col1 leftalign"> 4.2-alpha                 </td><td class="col2 leftalign"> for: <code>printf</code>, <code>echo -e</code>, <code>$&#039;...&#039;</code>                                                                     </td>
+	</tr>
+	<tr class="row27">
+		<td class="col0 leftalign"> <code>${PARAMETER:OFFSET:LENGTH}</code>: Negative <code>LENGTH</code> values are used as offset from the end of the string  </td><td class="col1 leftalign"> 4.2-alpha                 </td><td class="col2 leftalign"> Substrings only for Bash and ksh93. Works also for argument expansions in zsh. ksh93 can use <code>${arr[n..-m]}</code>.  </td>
+	</tr>
+	<tr class="row28">
+		<td class="col0 leftalign"> Word expansions like <code>${foo##bar}</code> understand indirect variable references                                  </td><td class="col1 leftalign"> 4.3-beta                  </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row29">
+		<td class="col0 leftalign"> Transformations                                                                                               </td><td class="col1 leftalign"> 4.4                       </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row30">
+		<td class="col0 leftalign"> Process substitution now works in POSIX mode                                                                  </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign">                                                                                                                  </td>
+	</tr>
+	<tr class="row31">
+		<td class="col0 leftalign"> New transformations: <code>U</code>, <code>u</code>, <code>L</code>                                                                      </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign"> Case-transformation                                                                                              </td>
+	</tr>
+	<tr class="row32">
+		<td class="col0 leftalign"> New transformation: <code>K</code>                                                                                     </td><td class="col1 leftalign"> 5.1-alpha                 </td><td class="col2 leftalign"> Display associative arrays as key/value pairs                                                                    </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table6&quot;,&quot;secid&quot;:15,&quot;range&quot;:&quot;40248-48728&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Quoting, expansions, substitutions and related&quot;,&quot;hid&quot;:&quot;quoting_expansions_substitutions_and_related&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:14,&quot;range&quot;:&quot;40144-48732&quot;} -->
+<h2 class="sectionedit16" id="arithmetic">Arithmetic</h2>
+<div class="level2">
+
+<p>
+For this topic, see also
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr">Arithmetic expressions</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith">Arithmetic expansion</a></div>
+</li>
+</ul>
+<div class="table sectionedit17"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Feature or change description  </th><th class="col1 leftalign">Appeared in Bash version  </th><th class="col2 leftalign">Remarks  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>((...))</code>  </td><td class="col1 leftalign">2.0-beta2  </td><td class="col2 leftalign">KSH93  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">ternary operator  </td><td class="col1 leftalign">2.0  </td><td class="col2 leftalign">  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">base 64 integer constants  </td><td class="col1 leftalign">2.0  </td><td class="col2 leftalign">the max. base before is unknown. Anybody?  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">deprecated <code>$[…]</code> in favor of <code>$((...))</code>  </td><td class="col1 leftalign">2.0  </td><td class="col2 leftalign">  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">exponentiaition operator (<code>**</code>)  </td><td class="col1 leftalign">2.02-alpha1  </td><td class="col2 leftalign">  </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">comma operator <code>EXPR,EXPR</code>  </td><td class="col1 leftalign">2.04-devel  </td><td class="col2 leftalign">  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign">pre- and postfix operators  </td><td class="col1 leftalign">2.04-devel  </td><td class="col2 leftalign">  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table7&quot;,&quot;secid&quot;:17,&quot;range&quot;:&quot;48839-49317&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Arithmetic&quot;,&quot;hid&quot;:&quot;arithmetic&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:16,&quot;range&quot;:&quot;48733-49319&quot;} -->
+<h2 class="sectionedit18" id="redirection_and_related">Redirection and related</h2>
+<div class="level2">
+
+<p>
+For this topic, see also
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/redirection" class="wikilink1" title="syntax:redirection">Redirection</a></div>
+</li>
+</ul>
+<div class="table sectionedit19"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Feature or change description                                                     </th><th class="col1 leftalign"> Appeared in Bash version  </th><th class="col2 leftalign"> Remarks  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> socket redirection (<code>/dev/tcp/</code>, <code>/dev/udp/</code>)                                 </td><td class="col1 leftalign"> 2.04-devel                </td><td class="col2 leftalign">          </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <abbr title="Operating System">OS</abbr>/filesystem-independent support for <code>/dev/std(in|out|err)</code> and <code>/dev/fd/*</code>  </td><td class="col1 leftalign"> 2.04                      </td><td class="col2 leftalign">          </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> socket redirection accepts service names                                          </td><td class="col1 leftalign"> 2.05                      </td><td class="col2 leftalign">          </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>[n]&lt;&amp;word-</code> and <code>[n]&gt;&amp;word-</code> FD-duplicate/closing                            </td><td class="col1 leftalign"> 2.05b-alpha1              </td><td class="col2 leftalign"> KSH93    </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> Here strings: <code>&lt;&lt;&lt; WORD</code>                                                    </td><td class="col1 leftalign"> 2.05b-alpha1              </td><td class="col2 leftalign">          </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> <code>|&amp;</code> (synonym for <code>2&gt;&amp;1 |</code>)                                                   </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">          </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>&amp;&gt;&gt;</code> (equiv. to <code>&gt;&gt;FILE 2&gt;&amp;1</code>)                                       </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">          </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <code>{varname}</code> style automatic file descriptor allocation         </td><td class="col1 leftalign"> 4.1-alpha                 </td><td class="col2 leftalign"> ksh93    </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> <code>{varname[idx]}</code> fd allocation accepts array subscripts and special-meaning variables       </td><td class="col1 leftalign"> 4.3-alpha                 </td><td class="col2 leftalign"> ksh93    </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table8&quot;,&quot;secid&quot;:19,&quot;range&quot;:&quot;49409-50687&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Redirection and related&quot;,&quot;hid&quot;:&quot;redirection_and_related&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:18,&quot;range&quot;:&quot;49320-50689&quot;} -->
+<h2 class="sectionedit20" id="misc">Misc</h2>
+<div class="level2">
+<div class="table sectionedit21"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Feature or change description                                                                                    </th><th class="col1 leftalign"> Appeared in Bash version  </th><th class="col2 leftalign"> See also/remarks                                                                                                                           </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>DEBUG</code> trap                                                                                                   </td><td class="col1 leftalign"> 2.0                       </td><td class="col2 leftalign">                                                                                                                                            </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>ERR</code> trap                                                                                                     </td><td class="col1 leftalign"> 2.05a                     </td><td class="col2 leftalign"> KSH93                                                                                                                                      </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> Support for multibyte characters: Unicode / UTF8                                                                 </td><td class="col1 leftalign"> 2.05b                     </td><td class="col2 leftalign">                                                                                                                                            </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> <code>RETURN</code> trap                                                                                                  </td><td class="col1 leftalign"> 3.0                       </td><td class="col2 leftalign"> ksh93 <code>EXIT</code> trap evaluates in caller scope (for <code>function name {</code>). Bash <code>RETURN</code> in same scope.                                    </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> <code>command_not_found_handle</code> handler function                                                                    </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign">                                                                                                                                            </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> official introduction of switchable &quot;compatiblity levels&quot;                                                        </td><td class="col1 leftalign"> 4.0-alpha                 </td><td class="col2 leftalign"> <code>compat31</code> was introduced in a 3.2 version, mainly because of the incompatibilities that were introduced by the changed <code>=~</code> operator  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"> <code>[[...]]</code> and <code>((...))</code> conditional commands are subject to the <code>ERR</code> trap and <code>set -e</code> feature  </td><td class="col1 leftalign"> 4.1-alpha                 </td><td class="col2 leftalign">                                                                                                                                            </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> <abbr title="Access Control List">ACL</abbr> support for file status checks                                                                               </td><td class="col1 leftalign"> 4.1-alpha                 </td><td class="col2 leftalign">                                                                                                                                            </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"> Assignment to negative array indices                                                                             </td><td class="col1 leftalign"> 4.3-alpha                 </td><td class="col2 leftalign"> ksh93, zsh                                                                                                                                 </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"> <code>declare</code>/<code>typeset -n</code>                                                                                       </td><td class="col1 leftalign"> 4.3-alpha                 </td><td class="col2 leftalign"> Support for nameref variable type, a variable referencing another one by name                                                              </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign"> shells started to run process substitutions now run any trap set on <code>EXIT</code>                                     </td><td class="col1 leftalign"> 4.3-beta                  </td><td class="col2 leftalign">                                                                                                                                            </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 leftalign"> process substitution does not inherit the <code>v</code> flag                                                             </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign">                                                                                                                                            </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 leftalign"> <code>ERR</code> trap                                                                                                     </td><td class="col1 leftalign"> 5.0-alpha                 </td><td class="col2 leftalign"> Reports more reliable line numbers                                                                                                         </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 leftalign"> Variable assignment                                                                                              </td><td class="col1 leftalign"> 5.0-beta                  </td><td class="col2 leftalign"> Assignments preceeding a special builtin that chages variable attributes are not propagated back unless compatiblity mode is 44 or lower   </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table9&quot;,&quot;secid&quot;:21,&quot;range&quot;:&quot;50708-54997&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Misc&quot;,&quot;hid&quot;:&quot;misc&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:20,&quot;range&quot;:&quot;50690-&quot;} --></div>
+</body>
+</html>

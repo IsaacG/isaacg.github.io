@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>howto:pax</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="howto,pax,bash,shell,scripting,POSIX,archive,tar,packing,zip"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/howto/pax?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=howto"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/howto/pax"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/howto/pax"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/howto/pax"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='howto';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"howto:pax","namespace":"howto","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#pax_-_the_posix_archiver">pax - the POSIX archiver</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#introduction">Introduction</a></div></li>
+<li class="level2"><div class="li"><a href="#overview">Overview</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#operation_modes">Operation modes</a></div></li>
+<li class="level3"><div class="li"><a href="#archive_data">Archive data</a></div></li>
+<li class="level3"><div class="li"><a href="#matching_archive_members">Matching archive members</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#using_pax">Using pax</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#creating_an_archive">Creating an archive</a></div></li>
+<li class="level3"><div class="li"><a href="#listing_archive_contents">Listing archive contents</a></div></li>
+<li class="level3"><div class="li"><a href="#extracting_from_an_archive">Extracting from an archive</a></div></li>
+<li class="level3"><div class="li"><a href="#copying_files">Copying files</a></div></li>
+<li class="level3"><div class="li"><a href="#copying_files_via_ssh">Copying files via ssh</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#advanced_usage">Advanced usage</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#backup_your_daily_work">Backup your daily work</a></div></li>
+<li class="level3"><div class="li"><a href="#changing_filenames_while_archiving">Changing filenames while archiving</a></div></li>
+<li class="level3"><div class="li"><a href="#excluding_files_from_an_archive">Excluding files from an archive</a></div></li>
+<li class="level3"><div class="li"><a href="#getting_archive_filenames_from_stdin">Getting archive filenames from STDIN</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#from_tar_to_pax">From tar to pax</a></div></li>
+<li class="level2"><div class="li"><a href="#implementations">Implementations</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="pax_-_the_posix_archiver">pax - the POSIX archiver</h1>
+<div class="level1">
+
+<p>
+pax can do a lot of fancy stuff, feel free to contribute more awesome pax tricks!
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;pax - the POSIX archiver&quot;,&quot;hid&quot;:&quot;pax_-_the_posix_archiver&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-188&quot;} -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+The POSIX archiver, <code>pax</code>, is an attempt at a standardized archiver with
+the best features of <code>tar</code> and <code>cpio</code>, able to handle all common archive types.
+</p>
+
+<p>
+However, this is <strong>not a manpage</strong>, it will <strong>not</strong> list all possible options,
+it will <strong>not</strong> you detailed information about <code>pax</code>. It&#039;s only an introduction.
+</p>
+
+<p>
+This article is based on the debianized Berkeley implementation of <code>pax</code>, but implementation-specific things should be tagged as such. Unfortunately, the Debian package doesn&#039;t seem to be maintained anymore.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;189-749&quot;} -->
+<h2 class="sectionedit3" id="overview">Overview</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Overview&quot;,&quot;hid&quot;:&quot;overview&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;750-771&quot;} -->
+<h3 class="sectionedit4" id="operation_modes">Operation modes</h3>
+<div class="level3">
+
+<p>
+There are four basic operation modes to <em>list</em>, <em>read</em>, <em>write</em> and
+<em>copy</em> archives. They&#039;re switched with combinations of <code>-r</code> and <code>-w</code>
+command line options:
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> Mode </th><th class="col1"> RW-Options </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> List </td><td class="col1"> <em>no RW-options</em> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> Read </td><td class="col1"> <code>-r</code> </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> Write </td><td class="col1"> <code>-w</code> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> Copy </td><td class="col1"> <code>-r -w</code> </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;971-1079&quot;} -->
+</div>
+
+<h4 id="list">List</h4>
+<div class="level4">
+
+<p>
+In <em>list mode</em>, <code>pax</code> writes the list of archive members to standard
+output (a table of contents). If a pattern match is specified on the
+command line, only matching filenames are printed.
+</p>
+
+</div>
+
+<h4 id="read">Read</h4>
+<div class="level4">
+
+<p>
+<em>Read</em> an archive. <code>pax</code> will read archive data and extract the members to the
+current directory. If a pattern match is specified on the command line, only matching
+filenames are extracted.
+</p>
+
+<p>
+When reading an archive, the archive type is determined from the archive data.
+</p>
+
+</div>
+
+<h4 id="write">Write</h4>
+<div class="level4">
+
+<p>
+<em>Write</em> an archive, which means create a new one or append to an
+existing one. All files and directories specified on the command line are inserted into
+the archive. The archive is written to standard output by default.
+</p>
+
+<p>
+If no files are specified on the command line, filenames are read from <code>STDIN</code>.
+</p>
+
+<p>
+The write mode is the only mode where you need to specify the archive type
+with <code>-x &lt;TYPE&gt;</code>, e.g. <code>-x ustar</code>.
+</p>
+
+</div>
+
+<h4 id="copy">Copy</h4>
+<div class="level4">
+
+<p>
+<em>Copy</em> mode is similar to <code>cpio</code> passthrough mode.  It provides a way to replicate a complete or partial file hierarchy
+(with all the <code>pax</code> options, e.g. rewriting groups) to another location.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Operation modes&quot;,&quot;hid&quot;:&quot;operation_modes&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;772-2228&quot;} -->
+<h3 class="sectionedit6" id="archive_data">Archive data</h3>
+<div class="level3">
+
+<p>
+When you don&#039;t specify anything special, <code>pax</code> will attempt to read archive
+data from standard input (read/list modes) and write archive data to
+standard output (write mode). This ensures <code>pax</code> can be easily
+used as part of a shell pipe construct, e.g. to read a compressed
+archive that&#039;s decompressed in the pipe.
+</p>
+
+<p>
+The option to specify the pathname of a file to be archived is <code>-f</code>
+This file will be used as input or output, depending on the operation
+(read/write/list).
+</p>
+
+<p>
+When pax reads an archive, it tries to guess the archive type.
+However, in <em>write</em> mode, you must specify which type of archive
+to append using the <code>-x &lt;TYPE&gt;</code> switch. If you omit this switch,
+a default archive will be created (POSIX says it&#039;s implementation defined,
+Berkeley <code>pax</code> creates <code>ustar</code> if no options are specified).
+</p>
+
+<p>
+The following archive formats are supported (Berkeley implementation):
+</p>
+<div class="table sectionedit7"><table class="inline">
+	<tr class="row0">
+		<td class="col0 leftalign">ustar  </td><td class="col1">POSIX TAR format (default)</td>
+	</tr>
+	<tr class="row1">
+		<td class="col0 leftalign">cpio  </td><td class="col1 leftalign">POSIX CPIO format  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">tar  </td><td class="col1 leftalign">classic BSD TAR format  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">bcpio  </td><td class="col1 leftalign">old binary CPIO format  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">sv4cpio  </td><td class="col1 leftalign">SVR4 CPIO format  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">sv4crc  </td><td class="col1 leftalign">SVR4 CPIO format with CRC  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;3142-3345&quot;} -->
+<p>
+Berkeley <code>pax</code> supports options <code>-z</code> and <code>-j</code>, similar to GNU <code>tar</code>, to filter archive files through GZIP/BZIP2.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Archive data&quot;,&quot;hid&quot;:&quot;archive_data&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;2229-3468&quot;} -->
+<h3 class="sectionedit8" id="matching_archive_members">Matching archive members</h3>
+<div class="level3">
+
+<p>
+In <em>read</em> and <em>list</em> modes, you can specify patterns to determine which files to list or extract.
+</p>
+<ul>
+<li class="level1"><div class="li"> the pattern notation is the one known by a POSIX-shell, i.e. the one known by Bash without <code>extglob</code></div>
+</li>
+<li class="level1"><div class="li"> if the specified pattern matches a complete directory, it affects all files and subdirectories of the specified directory</div>
+</li>
+<li class="level1"><div class="li"> if you specify the <code>-c</code> option, <code>pax</code> will invert the matches, i.e. it matches all filenames <strong>except</strong> those matching the specified patterns</div>
+</li>
+<li class="level1"><div class="li"> if no patterns are given, <code>pax</code> will &quot;match&quot; (list or extract) all files from the archive</div>
+</li>
+<li class="level1"><div class="li"> <strong>To avoid conflicts with shell pathname expansion, it&#039;s wise to quote patterns!</strong></div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="some_assorted_examples_of_patterns">Some assorted examples of patterns</h4>
+<div class="level4">
+
+<p>
+<pre class="code">pax -r &lt;myarchive.tar &#039;data/sales/*.txt&#039; &#039;data/products/*.png&#039;</pre>
+
+</p>
+
+<p>
+<pre class="code">pax -r &lt;myarchive.tar &#039;data/sales/year_200[135].txt&#039;
+# should be equivalent to
+pax -r &lt;myarchive.tar &#039;data/sales/year_2001.txt&#039; &#039;data/sales/year_2003.txt&#039; &#039;data/sales/year_2005.txt&#039;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Matching archive members&quot;,&quot;hid&quot;:&quot;matching_archive_members&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:8,&quot;range&quot;:&quot;3469-4495&quot;} -->
+<h2 class="sectionedit9" id="using_pax">Using pax</h2>
+<div class="level2">
+
+<p>
+This is a brief description of using <code>pax</code> as a normal archiver
+system, like you would use <code>tar</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using pax&quot;,&quot;hid&quot;:&quot;using_pax&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:9,&quot;range&quot;:&quot;4496-4622&quot;} -->
+<h3 class="sectionedit10" id="creating_an_archive">Creating an archive</h3>
+<div class="level3">
+
+<p>
+This task is done with basic syntax
+<pre class="code"># archive contents to stdout
+pax -w &gt;archive.tar README.txt *.png data/
+
+# equivalent, extract archive contents directly to a file
+pax -w -x ustar -f archive.tar README.txt *.png data/</pre>
+
+</p>
+
+<p>
+<code>pax</code> is in <em>write</em> mode, the given filenames are packed into an
+archive:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>README.txt</code> is a normal file, it will be packed</div>
+</li>
+<li class="level1"><div class="li"> <code>*.png</code> is a pathname glob <strong>for your shell</strong>, the shell will substitute all matching filenames <strong>before</strong> <code>pax</code> is executed. The result is a list of filenames that will be packed like the <code>README.txt</code> example above</div>
+</li>
+<li class="level1"><div class="li"> <code>data/</code> is a directory. <strong>Everything</strong> in this directory will be packed into the archive, i.e. not just an empty directory</div>
+</li>
+</ul>
+
+<p>
+When you specify the <code>-v</code> option, <code>pax</code> will write the pathnames of the
+files inserted into the archive to <code>STDERR</code>.
+</p>
+
+<p>
+When, and only when, no filename arguments are specified, <code>pax</code> attempts to
+read filenames from <code>STDIN</code>, separated by newlines.
+This way you can easily combine <code>find</code> with <code>pax</code>:
+<pre class="code">find . -name &#039;*.txt&#039; | pax -wf textfiles.tar -x ustar</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Creating an archive&quot;,&quot;hid&quot;:&quot;creating_an_archive&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:10,&quot;range&quot;:&quot;4623-5760&quot;} -->
+<h3 class="sectionedit11" id="listing_archive_contents">Listing archive contents</h3>
+<div class="level3">
+
+<p>
+The standard output format to list archive members simply is to print each
+filename to a separate line. But the output format can be customized to include
+permissions, timestamps, etc. with the <code>-o listopt=&lt;FORMAT&gt;</code> specification.
+The syntax of the format specification is strongly derived from the
+<code>printf(3)</code> format specification.
+</p>
+
+<p>
+<strong>Unfortunately</strong> the <code>pax</code> utility delivered with Debian doesn&#039;t seem to
+support these extended listing formats.
+</p>
+
+<p>
+However, <code>pax</code> lists archive members in a <code>ls -l</code>-like format, when you
+give the <code>-v</code> option:
+<pre class="code">pax -v &lt;myarchive.tar
+# or, of course
+pax -vf myarchive.tar</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Listing archive contents&quot;,&quot;hid&quot;:&quot;listing_archive_contents&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:11,&quot;range&quot;:&quot;5761-6427&quot;} -->
+<h3 class="sectionedit12" id="extracting_from_an_archive">Extracting from an archive</h3>
+<div class="level3">
+
+<p>
+You can extract all files, or files (not) matching specific patterns from an
+archive using constructs like:
+<pre class="code"># &quot;normal&quot; extraction
+pax -rf myarchive.tar &#039;*.txt&#039;</pre>
+
+</p>
+
+<p>
+<pre class="code"># with inverted pattern
+pax -rf myarchive.tar -c &#039;*.txt&#039;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Extracting from an archive&quot;,&quot;hid&quot;:&quot;extracting_from_an_archive&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:12,&quot;range&quot;:&quot;6428-6715&quot;} -->
+<h3 class="sectionedit13" id="copying_files">Copying files</h3>
+<div class="level3">
+
+<p>
+To copy directory contents to another directory, similar to a
+<code>cp -a</code> command, use:
+<pre class="code">mkdir destdir
+pax -rw dir destdir #creates a copy of dir in destdir/, i.e. destdir/dir </pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Copying files&quot;,&quot;hid&quot;:&quot;copying_files&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:13,&quot;range&quot;:&quot;6716-6933&quot;} -->
+<h3 class="sectionedit14" id="copying_files_via_ssh">Copying files via ssh</h3>
+<div class="level3">
+
+<p>
+To copy directory contents to another directory on a remote system, use:
+<pre class="code">pax -w localdir | ssh user@host &quot;cd distantdest &amp;&amp; pax -r -v&quot;
+pax -w localdir | gzip | ssh user@host &quot;cd distantdir &amp;&amp; gunzip | pax -r -v&quot; #compress the sent data</pre>
+
+These commands create a copy of localdir in distandir (distantdir/dir) on the remote machine. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Copying files via ssh&quot;,&quot;hid&quot;:&quot;copying_files_via_ssh&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:14,&quot;range&quot;:&quot;6934-7313&quot;} -->
+<h2 class="sectionedit15" id="advanced_usage">Advanced usage</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Advanced usage&quot;,&quot;hid&quot;:&quot;advanced_usage&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:15,&quot;range&quot;:&quot;7314-7342&quot;} -->
+<h3 class="sectionedit16" id="backup_your_daily_work">Backup your daily work</h3>
+<div class="level3">
+
+<p>
+<em class="u"><strong>Note:</strong></em> <code>-T</code> is an extension and is not defined by POSIX.
+</p>
+
+<p>
+Say you have write-access to a fileserver mounted on your filesystem tree.
+In <em>copy</em> mode, you can tell <code>pax</code> to copy only files that were
+modified today:
+<pre class="code">mkdir /n/mybackups/$(date +%A)/
+pax -rw -T 0000 data/ /n/mybackups/$(date +%A)/</pre>
+
+This is done using the <code>-T</code> switch, which normally allows you to specify a
+time window, but in this case, only the start time which means &quot;today at midnight&quot;.
+</p>
+
+<p>
+When you execute this &quot;very simple backup&quot; after your daily work,
+you will have a copy of the modified files.
+</p>
+
+<p>
+<em class="u"><strong>Note:</strong></em> The <code>%A</code> format from <code>date</code> expands to the name of the
+current day, localized, e.g. &quot;Friday&quot; (en) or &quot;Mittwoch&quot; (de).
+</p>
+
+<p>
+The same, but with an archive, can be accomplished by:
+<pre class="code">pax -w -T 0000 -f /n/mybackups/$(date +%A)</pre>
+
+In this case, the day-name is an archive-file (you don&#039;t need a filename
+extension like <code>.tar</code> but you can add one, if desired).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Backup your daily work&quot;,&quot;hid&quot;:&quot;backup_your_daily_work&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:16,&quot;range&quot;:&quot;7343-8354&quot;} -->
+<h3 class="sectionedit17" id="changing_filenames_while_archiving">Changing filenames while archiving</h3>
+<div class="level3">
+
+<p>
+<code>pax</code> is able to rewrite filenames while archiving or while extracting from an archive. This example creates a tar archive containing the <code>holiday_2007/</code> directory, but the directory name inside the archive will be <code>holiday_pics/</code>:
+<pre class="code">pax -x ustar -w -f holiday_pictures.tar -s &#039;/^holiday_2007/holiday_pics/&#039; holiday_2007/</pre>
+
+</p>
+
+<p>
+The option responsible for the string manipulation is the <code>-s &lt;REWRITE-SPECIFICATION&gt;</code>. It takes the string rewrite specification as an argument, in the form <code>/OLD/NEW/[gp]</code>, which is an <code>ed(1)</code>-like regular expression (BRE) for <code>old</code> and generally can be used like the popular sed construct <code>s/from/to/</code>. Any non-null character can be used as a delimiter, so to mangle pathnames (containing slashes), you could use <code>#/old/path#/new/path#</code>.
+</p>
+
+<p>
+The optional <code>g</code> and <code>p</code> flags are used to apply substitution <strong>(g)</strong>lobally to the line or to <strong>(p)</strong>rint the original and rewritten strings to <code>STDERR</code>.
+</p>
+
+<p>
+Multiple <code>-s</code> options can be specified on the command line. They are applied to the pathname strings of the files or archive members. This happens in the order they are specified.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Changing filenames while archiving&quot;,&quot;hid&quot;:&quot;changing_filenames_while_archiving&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:17,&quot;range&quot;:&quot;8355-9541&quot;} -->
+<h3 class="sectionedit18" id="excluding_files_from_an_archive">Excluding files from an archive</h3>
+<div class="level3">
+
+<p>
+The -s command seen above can be used to exclude a file. The substitution must result in a null string:
+For example, let&#039;s say that you want to exclude all the CVS directories to create a source code archive.
+We are going to replace the names containing /CVS/ with nothing, note the .* they are needed because we need to match the entire pathname.
+<pre class="code">  pax -w -x ustar -f release.tar -s&#039;,.*/CVS/.*,,&#039; myapplication </pre>
+
+You can use several -s options, for instance, let&#039;s say you also want to remove files ending in ~:
+<pre class="code">  pax -w -x ustar -f release.tar -&#039;s,.*/CVS/.*,,&#039; -&#039;s/.*~//&#039; myapplication </pre>
+
+</p>
+
+<p>
+This can also be done while reading an archive, for instance, suppose you have an archive containing a &quot;usr&quot; and a &quot;etc&quot; directory but that you want to extract only the &quot;usr&quot; directory:
+<pre class="code">pax -r -f archive.tar -s&#039;,^etc/.*,,&#039; #the etc/ dir is not extracted</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Excluding files from an archive&quot;,&quot;hid&quot;:&quot;excluding_files_from_an_archive&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:18,&quot;range&quot;:&quot;9542-10473&quot;} -->
+<h3 class="sectionedit19" id="getting_archive_filenames_from_stdin">Getting archive filenames from STDIN</h3>
+<div class="level3">
+
+<p>
+Like <code>cpio</code>, pax can read filenames from standard input (<code>stdin</code>).  This provides great flexibility - for example, a <code>find(1)</code> command may select files/directories in ways pax can&#039;t do itself.  In <strong>write</strong> mode (creating an archive) or <strong>copy</strong> mode, when no filenames are given, pax expects to read filenames from standard input. For example:
+</p>
+
+<p>
+<pre class="code"># Back up config files changed less than 3 days ago
+find /etc -type f -mtime -3 | pax -x ustar -w -f /backups/etc.tar
+
+# Copy only the directories, not the files
+mkdir /target
+find . -type d -print | pax -r -w -d /target
+
+# Back up anything that changed since the last backup
+find . -newer /var/run/mylastbackup -print0 |
+    pax -0 -x ustar -w -d -f /backups/mybackup.tar
+touch /var/run/mylastbackup</pre>
+
+</p>
+
+<p>
+The <code>-d</code> option tells pax <code>not</code> to recurse into directories it reads (<code>cpio</code>-style).  Without <code>-d</code>, pax recurses into all directories (<code>tar</code>-style).
+</p>
+
+<p>
+<strong>Note</strong>: the <code>-0</code> option is not standard, but is present in some implementations.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Getting archive filenames from STDIN&quot;,&quot;hid&quot;:&quot;getting_archive_filenames_from_stdin&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:19,&quot;range&quot;:&quot;10474-11536&quot;} -->
+<h2 class="sectionedit20" id="from_tar_to_pax">From tar to pax</h2>
+<div class="level2">
+
+<p>
+<code>pax</code> can handle the <code>tar</code> archive format, if you want to switch to the standard tool an alias like:
+<pre class="code">alias tar=&#039;echo USE PAX, idiot. pax is the standard archiver!; # &#039;</pre>
+
+in your <code>~/.bashrc</code> can be useful <img src="/lib/images/smileys/icon_biggrin.gif" class="icon" alt=":-D" />.
+</p>
+
+<p>
+Here is a quick table comparing (GNU) <code>tar</code> and <code>pax</code> to help you to make the switch:
+</p>
+<div class="table sectionedit21"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0"> TAR </th><th class="col1"> PAX </th><th class="col2"> Notes </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> <code>tar xzvf file.tar.gz</code> </td><td class="col1"> <code>pax -rvz -f  file.tar.gz</code> </td><td class="col2"> <code>-z</code> is an extension, POSIXly: <code>gunzip &lt;file.tar.gz | pax -rv</code> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <code>tar czvf archive.tar.gz path …</code> </td><td class="col1"> <code>pax  -wvz -f archive.tar.gz path …</code></td><td class="col2"> <code>-z</code> is an extension, POSIXly: <code>pax -wv  path | gzip &gt; archive.tar.gz</code> </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <code>tar xjvf file.tar.bz2</code> </td><td class="col1"> <code>bunzip2 &lt;file.tar.bz2 | pax -rv</code> </td><td class="col2"> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> <code>tar cjvf archive.tar.bz2 path …</code> </td><td class="col1"> <code>pax -wv  path | bzip2 &gt; archive.tar.bz2</code> </td><td class="col2"> </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> <code>tar tzvf file.tar.gz</code> </td><td class="col1"> <code>pax -vz -f  file.tar.gz</code> </td><td class="col2"> <code>-z</code> is an extension, POSIXly: <code>gunzip &lt;file.tar.gz | pax -v</code> </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:21,&quot;range&quot;:&quot;11885-12503&quot;} -->
+<p>
+<code>pax</code> might not create ustar (<code>tar</code>) archives by default but its own pax format, add <code>-x ustar</code> if you want to ensure pax creates tar archives!
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;From tar to pax&quot;,&quot;hid&quot;:&quot;from_tar_to_pax&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:20,&quot;range&quot;:&quot;11537-12655&quot;} -->
+<h2 class="sectionedit22" id="implementations">Implementations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www2.research.att.com/sw/download/" class="urlextern" title="http://www2.research.att.com/sw/download/" rel="nofollow"> AT&amp;T AST toolkit</a> | <a href="http://www2.research.att.com/~gsf/man/man1/pax.html" class="urlextern" title="http://www2.research.att.com/~gsf/man/man1/pax.html" rel="nofollow"> manpage</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://heirloom.sourceforge.net/index.html" class="urlextern" title="http://heirloom.sourceforge.net/index.html" rel="nofollow"> Heirloom toolchest</a> | <a href="http://heirloom.sourceforge.net/man/pax.1.html" class="urlextern" title="http://heirloom.sourceforge.net/man/pax.1.html" rel="nofollow"> manpage</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.openbsd.org/cgi-bin/cvsweb/src/bin/pax/" class="urlextern" title="http://www.openbsd.org/cgi-bin/cvsweb/src/bin/pax/" rel="nofollow"> OpenBSD pax</a> | <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=pax&amp;apropos=0&amp;sektion=0&amp;manpath=OpenBSD+Current&amp;arch=i386&amp;format=html" class="urlextern" title="http://www.openbsd.org/cgi-bin/man.cgi?query=pax&amp;apropos=0&amp;sektion=0&amp;manpath=OpenBSD+Current&amp;arch=i386&amp;format=html" rel="nofollow"> manpage</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://launchpad.net/paxmirabilis" class="urlextern" title="https://launchpad.net/paxmirabilis" rel="nofollow"> MirBSD pax</a> | <a href="https://www.mirbsd.org/htman/i386/man1/pax.htm" class="urlextern" title="https://www.mirbsd.org/htman/i386/man1/pax.htm" rel="nofollow"> manpage</a> - Debian bases their package upon this.</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pax.html" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pax.html" rel="nofollow"> SUS pax specification</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Implementations&quot;,&quot;hid&quot;:&quot;implementations&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:22,&quot;range&quot;:&quot;12656-&quot;} --></div>
+</body>
+</html>

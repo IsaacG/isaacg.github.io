@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>dict:terms:hardlink</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="dict,terms,hardlink"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/dict/terms/hardlink?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=dict:terms"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/dict/terms/hardlink"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/dict/terms/hardlink"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/dict/terms/hardlink"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='dict:terms';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"dict:terms:hardlink","namespace":"dict:terms","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="hardlink">Hardlink</h1>
+<div class="level1">
+
+<p>
+Also the article for:
+</p>
+<ul>
+<li class="level1"><div class="li"> filename</div>
+</li>
+</ul>
+
+<p>
+A hardlink associates a <em>filename</em> with a <a href="/dict/terms/file" class="wikilink1" title="dict:terms:file"> file</a>. That name is an entry in a directory listing. Of course a file can have more hardlinks to it (usually the number of hardlinks to a file is limited), but all hardlinks to a file must reside on the same <a href="/dict/terms/filesystem" class="wikilink2" title="dict:terms:filesystem" rel="nofollow"> filesystem</a> as the file itself!
+</p>
+
+<p>
+What you usually call a file is just a name for that file, and thus, a hardlink.
+</p>
+
+<p>
+The difference between a <a href="/dict/terms/symlink" class="wikilink1" title="dict:terms:symlink"> symbolic link</a> and a hard link is that there is no easy way to differentiate between a &#039;real&#039; file and a hard link, let&#039;s take a look at the example:
+</p>
+
+<p>
+* create an empty file
+</p>
+
+<p>
+<pre class="code">$ touch a</pre>
+
+</p>
+
+<p>
+* create a hard link &#039;b&#039; and sym link &#039;c&#039; to empty file
+</p>
+
+<p>
+<pre class="code">$ ln a b
+$ ln -s a c</pre>
+
+</p>
+
+<p>
+as you can see file(1) can&#039;t differentiate between a real file &#039;a&#039; and a hard link &#039;b&#039;, but it can tell &#039;c&#039; is a sym link
+</p>
+
+<p>
+<pre class="code">$ file *
+a: empty
+b: empty
+c: symbolic link to `a&#039;</pre>
+
+</p>
+
+<p>
+<code>ls -i</code> prints out the inode numbers of files, if two files have the same inode number AND are on the same file system it means they are <strong>hardlinked</strong>.
+</p>
+
+<p>
+<pre class="code">$ ls -i *
+5262 a  5262 b  5263 c</pre>
+
+</p>
+
+<p>
+hard links don&#039;t consume additional space on the filesystem, the space is freed when the last hard link pointing to it is deleted.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Hardlink&quot;,&quot;hid&quot;:&quot;hardlink&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1339&quot;} -->
+<h2 class="sectionedit2" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/dict/terms/file" class="wikilink1" title="dict:terms:file"> file</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/dict/terms/filesystem" class="wikilink2" title="dict:terms:filesystem" rel="nofollow"> filesystem</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/dict/terms/symlink" class="wikilink1" title="dict:terms:symlink"> symlink</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:2,&quot;range&quot;:&quot;1340-&quot;} --></div>
+</body>
+</html>

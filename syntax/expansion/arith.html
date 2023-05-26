@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:expansion:arith</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,expansion,arith"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/expansion/arith?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:expansion"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/expansion/arith"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/expansion/arith"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/expansion/arith"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:expansion';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:expansion:arith","namespace":"syntax:expansion","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#arithmetic_expansion">Arithmetic expansion</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#bugs_and_portability_considerations">Bugs and Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="arithmetic_expansion">Arithmetic expansion</h1>
+<div class="level1">
+
+<p>
+<pre class="code">$(( &lt;EXPRESSION&gt; ))
+
+$[ &lt;EXPRESSION&gt; ]</pre>
+
+</p>
+
+<p>
+The <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expression</a> <code>&lt;EXPRESSION&gt;</code> is evaluated and expands to the result. The output of the arithmetic expansion is guaranteed to be one word and a digit in Bash.
+</p>
+
+<p>
+Please <strong>do not use the second form <code>$[ … ]</code></strong>! It&#039;s deprecated. The preferred and standardized form is <code>$(( ... ))</code>!
+</p>
+
+<p>
+Example
+<pre class="code bash"><span class="kw1">function</span> printSum <span class="br0">&#123;</span>
+    <span class="kw3">typeset</span> <span class="re5">-A</span> args
+    <span class="kw3">typeset</span> name
+    <span class="kw1">for</span> name <span class="kw1">in</span> first second; <span class="kw1">do</span>
+        <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re5">-t</span> <span class="nu0">0</span> <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">printf</span> <span class="st_h">'Enter %s positive integer: '</span> <span class="st0">&quot;<span class="es2">$name</span>&quot;</span> <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>
+        <span class="kw2">read</span> <span class="re5">-r</span> <span class="co1">${BASH_VERSION+-e}</span> <span class="st0">&quot;args[<span class="es2">$name</span>]&quot;</span>
+        <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="co1">${args[$name]}</span> == +<span class="br0">&#40;</span><span class="br0">&#91;</span><span class="br0">&#91;</span>:digit:<span class="br0">&#93;</span><span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">||</span> <span class="kw3">return</span> <span class="nu0">1</span> <span class="co0"># Validation is extremely important whenever user input is used in arithmetic.</span>
+    <span class="kw1">done</span>
+    <span class="kw3">printf</span> <span class="st_h">'The sum is %d.'</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="co1">${args[first]}</span> + <span class="co1">${args[second]}</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="br0">&#125;</span></pre>
+
+</p>
+
+<p>
+<strong>Note</strong> that in Bash you don&#039;t need the arithmetic expansion to check for the boolean value of an arithmetic expression. This can be done using the <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic evaluation compound command</a>:
+</p>
+
+<p>
+<pre class="code bash"><span class="kw3">printf</span> <span class="sy0">%</span>s <span class="st_h">'Enter a number: '</span> <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>
+<span class="kw2">read</span> <span class="re5">-r</span> number
+<span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>number == <span class="nu0">1234</span><span class="br0">&#41;</span><span class="br0">&#41;</span>; <span class="kw1">then</span>
+    <span class="kw3">echo</span> <span class="st_h">'Good guess'</span>
+<span class="kw1">else</span>
+    <span class="kw3">echo</span> <span class="st_h">'Haha... :-P'</span>
+<span class="kw1">fi</span></pre>
+
+</p>
+
+<p>
+<strong>Variables</strong> used inside the arithmetic expansion, as in all arithmetic contexts, can be used with or without variable expansion:
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">x</span>=<span class="nu0">1</span>
+&nbsp;
+<span class="kw3">echo</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span>x<span class="br0">&#41;</span><span class="br0">&#41;</span>       <span class="co0"># Good.</span>
+<span class="kw3">echo</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="re1">$x</span><span class="br0">&#41;</span><span class="br0">&#41;</span>      <span class="co0"># Ok. Avoid expansions within arithmetic. Use variables directly.</span>
+<span class="kw3">echo</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="st0">&quot;<span class="es2">$x</span>&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>    <span class="co0"># Error. There is no quote-removal in arithmetic contexts. It expands to $((&quot;1&quot;)), which is an invalid arithmetic expression.</span>
+<span class="kw3">echo</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span>x<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>    <span class="co0"># Good.</span>
+<span class="kw3">echo</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="co1">${x[0]}</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="co0"># Ok. Nested expansion again.</span>
+<span class="kw3">echo</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="co1">${x[$((${x[!$x]}</span>-<span class="re1">$x</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#93;</span><span class="br0">&#125;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="co0"># Same as above but more ridiculous.</span>
+<span class="kw3">echo</span> $<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="re1">$x</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>   <span class="co0"># Error. This expands to $((1[0])), an invalid expression.</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Arithmetic expansion&quot;,&quot;hid&quot;:&quot;arithmetic_expansion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1892&quot;} -->
+<h2 class="sectionedit2" id="bugs_and_portability_considerations">Bugs and Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> The original Bourne shell doesn&#039;t have arithmetic expansions. You have to use something like <code>expr(1)</code> within backticks instead. Since <code>expr</code> is horrible (as are backticks), and arithmetic expansion is required by POSIX, you should not worry about this, and preferably fix any code you find that&#039;s still using <code>expr</code>.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bugs and Portability considerations&quot;,&quot;hid&quot;:&quot;bugs_and_portability_considerations&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:2,&quot;range&quot;:&quot;1893-2269&quot;} -->
+<h2 class="sectionedit3" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expressions</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic evaluation compound command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansion and substitution</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_04" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_04" rel="nofollow"> POSIX definition</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:3,&quot;range&quot;:&quot;2270-&quot;} --></div>
+</body>
+</html>

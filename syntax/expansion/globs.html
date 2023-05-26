@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:expansion:globs</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,expansion,globs"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/expansion/globs?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:expansion"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/expansion/globs"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/expansion/globs"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/expansion/globs"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:expansion';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:expansion:globs","namespace":"syntax:expansion","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#pathname_expansion_globbing">Pathname expansion (globbing)</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#general">General</a></div></li>
+<li class="level2"><div class="li"><a href="#normal_behaviour">Normal behaviour</a></div></li>
+<li class="level2"><div class="li"><a href="#customization">Customization</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#nullglob">nullglob</a></div></li>
+<li class="level3"><div class="li"><a href="#glob_characters">Glob characters</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="pathname_expansion_globbing">Pathname expansion (globbing)</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Pathname expansion (globbing)&quot;,&quot;hid&quot;:&quot;pathname_expansion_globbing&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-45&quot;} -->
+<h2 class="sectionedit2" id="general">General</h2>
+<div class="level2">
+
+<p>
+Unlike on other platforms you may have seen, on UNIX®, the shell is responsible for interpreting and expanding globs (&quot;filename wildcards&quot;). A called program will never see the glob itself; it will only see the expanded filenames as its arguments (here, all filenames matching <code>*.log</code>):
+<pre class="code">grep &quot;changes:&quot; *.log</pre>
+
+</p>
+
+<p>
+The base syntax for the pathname expansion is the <a href="/syntax/pattern" class="wikilink1" title="syntax:pattern"> pattern matching</a> syntax. The pattern you describe is matched against all existing filenames and the matching ones are substituted. Since this substitution happens <strong>after <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> word splitting</a></strong>, all resulting filenames are literal and treated as separate words, no matter how many spaces or other <code>IFS</code>-characters they contain.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;General&quot;,&quot;hid&quot;:&quot;general&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;46-825&quot;} -->
+<h2 class="sectionedit3" id="normal_behaviour">Normal behaviour</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> with <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> the set command</a> (<code>-f</code>, <code>noglob</code>) you can entirely disable pathname expansion</div>
+</li>
+<li class="level1"><div class="li"> when matching a pathname, the slash-character (<code>/</code>) always needs to be matched explicitly</div>
+</li>
+<li class="level1"><div class="li"> the dot at the beginning of a filename must be matched explicitly (also one following a <code>/</code> in the glob)</div>
+</li>
+<li class="level1"><div class="li"> a glob that doesn&#039;t match a filename is unchanged and remains what it is</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Normal behaviour&quot;,&quot;hid&quot;:&quot;normal_behaviour&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;826-1260&quot;} -->
+<h2 class="sectionedit4" id="customization">Customization</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> when the shell option <code><a href="/internals/shell_options#nullglob" class="wikilink1" title="internals:shell_options"> nullglob</a></code> is set, non-matching globs are removed, rather than preserved</div>
+</li>
+<li class="level1"><div class="li"> when the shell option <code><a href="/internals/shell_options#failglob" class="wikilink1" title="internals:shell_options"> failglob</a></code> is set, non-matching globs produce an error message and the current command is not executed</div>
+</li>
+<li class="level1"><div class="li"> when the shell option <code><a href="/internals/shell_options#nocaseglob" class="wikilink1" title="internals:shell_options"> nocaseglob</a></code> is set, the match is performed case-insensitive</div>
+</li>
+<li class="level1"><div class="li"> when the shell option <code><a href="/internals/shell_options#dotglob" class="wikilink1" title="internals:shell_options"> dotglob</a></code> is set, wildcard-characters can match a dot at the beginning of a filename</div>
+</li>
+<li class="level1"><div class="li"> when the shell option <code><a href="/internals/shell_options#dirspell" class="wikilink1" title="internals:shell_options"> dirspell</a></code> is set, Bash performs spelling corrections when matching directory names</div>
+</li>
+<li class="level1"><div class="li"> when the shell option <code><a href="/internals/shell_options#globstar" class="wikilink1" title="internals:shell_options"> globstar</a></code> is set, the glob <code>**</code> will recursively match all files and directories. This glob isn&#039;t &quot;configurable&quot;, i.e. you <strong>can&#039;t</strong> do something like <code>**.c</code> to recursively get all <code>*.c</code> filenames.</div>
+</li>
+<li class="level1"><div class="li"> when the shell option <code><a href="/internals/shell_options#globasciiranges" class="wikilink1" title="internals:shell_options"> globasciiranges</a></code> is set, the bracket-range globs (e.g. <code>[A-Z]</code>) use C locale order rather than the configured locale&#039;s order (i.e. <code>ABC…abc…</code> instead of e.g. <code>AaBbCc…</code>) - since 4.3-alpha</div>
+</li>
+<li class="level1"><div class="li"> the variable <a href="/syntax/shellvars#globignore" class="wikilink1" title="syntax:shellvars">GLOBIGNORE</a> can be set to a colon-separated list of patterns to be removed from the list before it is returned</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Customization&quot;,&quot;hid&quot;:&quot;customization&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1261-2769&quot;} -->
+<h3 class="sectionedit5" id="nullglob">nullglob</h3>
+<div class="level3">
+
+<p>
+Normally, when no glob specified matches an existing filename, no pathname expansion is performed, and the globs are <em class="u"><strong>not</strong></em> removed:
+<pre class="code">$ echo &quot;Textfiles here:&quot; *.txt
+Textfiles here: *.txt</pre>
+
+In this example, no files matched the pattern, so the glob was left intact (a literal asterisk, followed by dot-txt).
+</p>
+
+<p>
+This can be very annoying, for example when you drive a <a href="/syntax/ccmd/classic_for" class="wikilink1" title="syntax:ccmd:classic_for"> for-loop</a> using the pathname expansion:
+<pre class="code">for filename in *.txt; do
+  echo &quot;=== BEGIN: $filename ===&quot;
+  cat &quot;$filename&quot;
+  echo &quot;=== END: $filename ===&quot;
+done</pre>
+
+When no file name matches the glob, the loop will not only output stupid text (&quot;<code>BEGIN: *.txt</code>&quot;), but also will make the <code>cat</code>-command fail with an error, since no file named <code>*.txt</code> exists.
+</p>
+
+<p>
+Now, when the shell option <code><a href="/internals/shell_options#nullglob" class="wikilink1" title="internals:shell_options"> nullglob</a></code> is set, Bash will remove the entire glob from the command line. In case of the for-loop here, not even one iteration will be done. It just won&#039;t run.
+</p>
+
+<p>
+So in our first example:
+<pre class="code">$ shopt -s nullglob
+$ echo &quot;Textfiles here:&quot; *.txt
+Textfiles here:</pre>
+
+</p>
+
+<p>
+and the glob is gone.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;nullglob&quot;,&quot;hid&quot;:&quot;nullglob&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;2770-3929&quot;} -->
+<h3 class="sectionedit6" id="glob_characters">Glob characters</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> * - means &#039;match any number of characters&#039;.  &#039;/&#039; is not matched (and depending on your settings, things like &#039;.&#039; may or may not be matched, see above)</div>
+</li>
+<li class="level1"><div class="li"> ? - means &#039;match any single character&#039;</div>
+</li>
+<li class="level1"><div class="li"> [abc] - match any of the characters listed. This syntax also supports ranges, like [0-9]</div>
+</li>
+</ul>
+
+<p>
+For example, to match something beginning with either &#039;S&#039; or &#039;K&#039; followed by two numbers, followed by at least 3 more characters:
+</p>
+
+<p>
+<pre class="code">[SK][0-9][0-9]???*</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Glob characters&quot;,&quot;hid&quot;:&quot;glob_characters&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;3930-4417&quot;} -->
+<h2 class="sectionedit7" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansion and substitution</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/pattern" class="wikilink1" title="syntax:pattern"> pattern matching syntax</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> the set builtin command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/builtin/shopt" class="wikilink1" title="commands:builtin:shopt"> the shopt builtin command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/internals/shell_options" class="wikilink1" title="internals:shell_options"> list of shell options</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;4418-&quot;} --></div>
+</body>
+</html>

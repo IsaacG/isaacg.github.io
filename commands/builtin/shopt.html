@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:shopt</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,shopt"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/shopt?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/shopt"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/shopt"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/shopt"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:shopt","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_shopt_builtin_command">The shopt builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#options">Options</a></div></li>
+<li class="level3"><div class="li"><a href="#exit_code">Exit code</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_shopt_builtin_command">The shopt builtin command</h1>
+<div class="level1">
+
+<p>
+The <code>shopt</code> builtin manages <a href="/internals/shell_options" class="wikilink1" title="internals:shell_options"> shell options</a>, a set of boolean (<code>on</code>/<code>off</code>) configuration variables that control the behaviour of the shell.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The shopt builtin command&quot;,&quot;hid&quot;:&quot;the_shopt_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-216&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">shopt [-pqsu] [-o] &lt;OPTNAME...&gt;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;217-286&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+Note: Some of these options and other shell options can also be set with <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> the set builtin</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;287-429&quot;} -->
+<h3 class="sectionedit4" id="options">Options</h3>
+<div class="level3">
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Option</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>-o</code></td><td class="col1">Restrict the values of <code>&lt;OPTNAME…&gt;</code> to only those also known by <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> the set builtin</a></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>-p</code></td><td class="col1">Print all shell options and their current value. <strong>Default</strong>.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>-q</code></td><td class="col1">Quiet mode. Set exit code if named option is set. For multiple options: <code>TRUE</code> if all options are set, <code>FALSE</code> otherwise</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>-s</code></td><td class="col1">Enable (<em class="u">s</em>et) the shell options named by <code>&lt;OPTNAME…&gt;</code> or list all <em>enabled</em> options if no names are given</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>-u</code></td><td class="col1">Disabe (<em class="u">u</em>nset) the shell options named by <code>&lt;OPTNAME…&gt;</code> or list all <em>disabled</em> options if no names are given</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;449-1045&quot;} -->
+<p>
+As noted above, if only <code>-s</code> or <code>-u</code> are given without any option names, only the currently enabled (<code>-s</code>) or disabled (<code>-u</code>) options are printed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;430-1202&quot;} -->
+<h3 class="sectionedit6" id="exit_code">Exit code</h3>
+<div class="level3">
+
+<p>
+When listing options, the exit code is <code>TRUE</code> (0), if all options are enabled, <code>FALSE</code> otherwise.
+</p>
+
+<p>
+When setting/unsetting an option, the exit code is <code>TRUE</code> unless the named option doesn&#039;t exitst.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Exit code&quot;,&quot;hid&quot;:&quot;exit_code&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;1203-1427&quot;} -->
+<h2 class="sectionedit7" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+Enable the <code>nullglob</code> option:
+<pre class="code">shopt -s nullglob</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:7,&quot;range&quot;:&quot;1428-1516&quot;} -->
+<h2 class="sectionedit8" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+
+<p>
+The <code>shopt</code> command is not portable accross different shells.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:8,&quot;range&quot;:&quot;1517-1622&quot;} -->
+<h2 class="sectionedit9" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> The set builtin command</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/internals/shell_options" class="wikilink1" title="internals:shell_options"> List of shell options</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:9,&quot;range&quot;:&quot;1623-&quot;} --></div>
+</body>
+</html>

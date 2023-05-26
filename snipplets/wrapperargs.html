@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>snipplets:wrapperargs</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="snipplets,wrapperargs"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/snipplets/wrapperargs?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=snipplets"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/snipplets/wrapperargs"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/snipplets/wrapperargs"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/snipplets/wrapperargs"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='snipplets';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"snipplets:wrapperargs","namespace":"snipplets","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#generate_code_with_own_arguments_properly_quoted">Generate code with own arguments properly quoted</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#using_singlequoted_string">Using singlequoted string</a></div></li>
+<li class="level2"><div class="li"><a href="#using_printf">Using printf</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="generate_code_with_own_arguments_properly_quoted">Generate code with own arguments properly quoted</h1>
+<div class="level1">
+<div class="inline dataplugin_entry snipplet sectionedit2"><dl><dt class="snipplet">snipplet<span class="sep">: </span></dt><dd class="snipplet"><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Darguments" title="Show pages matching 'arguments'" class="wikilink1">arguments</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dquoting" title="Show pages matching 'quoting'" class="wikilink1">quoting</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Descaping" title="Show pages matching 'escaping'" class="wikilink1">escaping</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dwrapper" title="Show pages matching 'wrapper'" class="wikilink1">wrapper</a></dd><dt class="lastupdate">LastUpdate<span class="sep">: </span></dt><dd class="lastupdate">2010-07-31</dd><dt class="contributor">Contributor<span class="sep">: </span></dt><dd class="contributor">Jan Schampera</dd><dt class="type">type<span class="sep">: </span></dt><dd class="type">snipplet</dd></dl></div><!-- EDIT{&quot;target&quot;:&quot;plugin_data&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;65-220&quot;} --><div class="table sectionedit3"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Keywords: </th><td class="col1"> arguments,escape,quote,wrapper,generate </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0"> Contributor: </th><td class="col1"> self </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;222-301&quot;} -->
+<p>
+There are situations where Bash code needs to generate Bash code. A script that writes out another script the user or cron may start, for example.
+</p>
+
+<p>
+The general issue is easy, just write out text to the file.
+</p>
+
+<p>
+A specific detail of it is tricky: If the generated script needs to call a command using the arguments the first original script got, you have problem in writing out the correct code.
+</p>
+
+<p>
+I.e. if you run your generator script like
+<pre class="code">./myscript &quot;give me &#039;some&#039; water&quot;</pre>
+
+then this script should generate code that looks like
+<pre class="code">echo give me &#039;some&#039; water&quot;</pre>
+
+you need correct escapes or quotes to not generate shell special characters out of normal text (like embedded dollar signs <code>$</code>).
+</p>
+
+<p>
+<strong><em class="u">Solution:</em></strong>
+</p>
+
+<p>
+A loop over the own arguments that writes out properly quoted/escaped code to the generated script file
+</p>
+
+<p>
+There are two (maybe more) easy options:
+</p>
+<ul>
+<li class="level1"><div class="li"> writing out singlequoted strings and handle the embedded singlequotes</div>
+</li>
+<li class="level1"><div class="li"> the <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf"> printf command</a> knows the <code>%q</code> format specification, which will print a string (like <code>%s</code> does), but with all shell special characters escaped</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generate code with own arguments properly quoted&quot;,&quot;hid&quot;:&quot;generate_code_with_own_arguments_properly_quoted&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1437&quot;} -->
+<h2 class="sectionedit4" id="using_singlequoted_string">Using singlequoted string</h2>
+<div class="level2">
+
+<p>
+<pre class="code">#!/bin/bash
+
+# first option:
+# generate singlequoted strings out of your own arguments and handle embedded singlequotes
+# here to call &#039;echo&#039; in the generated script
+
+{
+printf &quot;#!/bin/bash\n\n&quot;
+printf &quot;echo &quot;
+for arg; do
+  arg=${arg/\&#039;/\&#039;\\\&#039;\&#039;}
+  printf &quot;&#039;%s&#039; &quot; &quot;${arg}&quot;
+done
+
+printf &quot;\n&quot;
+} &gt;s2</pre>
+
+</p>
+
+<p>
+The generated script will look like:
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+
+echo &#039;fir$t&#039; &#039;seco &quot;ond&quot;&#039; &#039;thir&#039;\&#039;&#039;d&#039; </pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using singlequoted string&quot;,&quot;hid&quot;:&quot;using_singlequoted_string&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;1438-1894&quot;} -->
+<h2 class="sectionedit5" id="using_printf">Using printf</h2>
+<div class="level2">
+
+<p>
+The second method is easier, though more or less Bash-only (due to the <code>%q</code> in printf):
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+
+{
+printf &quot;#!/bin/bash\n\n&quot;
+printf &quot;echo &quot;
+for arg; do
+  printf &#039;%q &#039; &quot;$arg&quot;
+done
+
+printf &quot;\n&quot;
+} &gt;s2</pre>
+
+</p>
+
+<p>
+The generated script will look like:
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+
+echo fir\$t seco\ \&quot;ond\&quot; thir\&#039;d </pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using printf&quot;,&quot;hid&quot;:&quot;using_printf&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;1895-&quot;} --></div>
+</body>
+</html>

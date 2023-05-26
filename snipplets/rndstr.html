@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>snipplets:rndstr</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="snipplets,rndstr"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/snipplets/rndstr?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=snipplets"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/snipplets/rndstr"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/snipplets/rndstr"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/snipplets/rndstr"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='snipplets';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"snipplets:rndstr","namespace":"snipplets","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="print_a_random_string_or_select_random_elements">Print a random string or select random elements</h1>
+<div class="level1">
+<div class="inline dataplugin_entry snipplet sectionedit2"><dl><dt class="snipplet">snipplet<span class="sep">: </span></dt><dd class="snipplet"><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dterminal" title="Show pages matching 'terminal'" class="wikilink1">terminal</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dline" title="Show pages matching 'line'" class="wikilink1">line</a></dd><dt class="lastupdate">LastUpdate<span class="sep">: </span></dt><dd class="lastupdate">2013-04-30</dd><dt class="contributor">Contributor<span class="sep">: </span></dt><dd class="contributor">Dan Douglas (ormaaj)</dd><dt class="type">type<span class="sep">: </span></dt><dd class="type">snipplet</dd></dl></div><!-- EDIT{&quot;target&quot;:&quot;plugin_data&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;64-203&quot;} -->
+<p>
+First off, here is a fast / reliable random string function for scripts or libraries which can optionally assign directly to a variable.
+</p>
+
+<p>
+<pre class="code bash"><span class="co0"># Print or assign a random alphanumeric string of a given length.</span>
+<span class="co0"># rndstr len [ var ]</span>
+<span class="kw1">function</span> rndstr <span class="br0">&#123;</span>
+    <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re1">$FUNCNAME</span> == <span class="st0">&quot;<span class="es3">${FUNCNAME[1]}</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>; <span class="kw1">then</span>
+        <span class="kw3">unset</span> <span class="re5">-v</span> a
+        <span class="kw3">printf</span> <span class="st0">&quot;$@&quot;</span>
+    <span class="kw1">elif</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re4">$1</span> <span class="sy0">!</span>= +<span class="br0">&#40;</span><span class="br0">&#91;</span><span class="br0">&#91;</span>:digit:<span class="br0">&#93;</span><span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>; <span class="kw1">then</span>
+        <span class="kw3">return</span> <span class="nu0">1</span>
+    <span class="kw1">elif</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re4">$1</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>; <span class="kw1">then</span>
+        <span class="kw3">typeset</span> <span class="re5">-a</span> <span class="re2">a</span>=<span class="br0">&#40;</span><span class="br0">&#123;</span>a..z<span class="br0">&#125;</span> <span class="br0">&#123;</span>A..Z<span class="br0">&#125;</span> <span class="br0">&#123;</span><span class="nu0">0</span>..<span class="nu0">9</span><span class="br0">&#125;</span><span class="br0">&#41;</span>
+        <span class="kw3">eval</span> <span class="st_h">'${2:+&quot;$FUNCNAME&quot; -v} &quot;${2:-printf}&quot; -- %s &quot;${a[RANDOM%'</span><span class="st0">&quot;<span class="es3">${#a[@]}</span>&quot;</span><span class="st_h">']&quot;{1..'</span><span class="st0">&quot;$1&quot;</span><span class="st_h">'}&quot;}&quot;'</span>
+    <span class="kw1">fi</span>
+<span class="br0">&#125;</span></pre>
+
+</p>
+
+<p>
+This example prints 10 random positional parameters and operates on basically the same principle as the <code>rndstr</code> function above.
+</p>
+
+<p>
+<pre class="code"> ~ $ ( set -- foo bar baz bork; printf &#039;%s &#039; &quot;${!_[_=RANDOM%$#+1,0]&quot;{0..10}&quot;}&quot;; echo )
+bork bar baz baz foo baz baz baz baz baz bork </pre>
+
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_hide plugin_wrap">
+<p>
+This has some interesting option parsing concepts, but is overly complex. This is a good example of working too hard to avoid an eval for no benefit and some performance penalty. :/
+<pre class="code bash"><span class="co0"># Print or assign a random alphanumeric string of a given length.</span>
+<span class="co0"># rndstr [ -v var ] len</span>
+<span class="co0"># Bash-only</span>
+rndstr<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re1">$FUNCNAME</span> == <span class="st0">&quot;<span class="es3">${FUNCNAME[1]}</span>&quot;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>; <span class="kw1">then</span>
+        <span class="co0"># On recursion, this branch unsets the outer scope's locals and assigns the result.</span>
+        <span class="kw3">unset</span> <span class="re5">-v</span> a b
+        <span class="kw3">printf</span> <span class="re5">-v</span> <span class="st0">&quot;$1&quot;</span> <span class="sy0">%</span>s <span class="st0">&quot;<span class="es3">${@:2}</span>&quot;</span>
+    <span class="kw1">elif</span> <span class="sy0">!</span> <span class="br0">&#123;</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re4">$1</span> == <span class="re5">-v</span> <span class="br0">&#93;</span><span class="br0">&#93;</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">shift</span>; <span class="br0">&#125;</span>; <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re4">$?</span>+<span class="nu0">1</span> <span class="re5">-ne</span> <span class="re4">$#</span> <span class="sy0">||</span> <span class="co1">${!#}</span> <span class="sy0">!</span>= +<span class="br0">&#40;</span><span class="br0">&#91;</span><span class="br0">&#91;</span>:digit:<span class="br0">&#93;</span><span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="sy0">||</span> <span class="br0">&#40;</span> <span class="re4">$?</span> <span class="re5">-gt</span> <span class="nu0">0</span> <span class="sy0">&amp;&amp;</span> <span class="re5">-z</span> <span class="re4">$1</span> <span class="br0">&#41;</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>; <span class="kw1">then</span>
+        <span class="co0"># This branch does input validation, strips -v, and guarantees we're left with either 1 or 2 args.</span>
+        <span class="kw3">return</span> <span class="nu0">1</span>
+    <span class="kw1">elif</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="sy0">!</span> <span class="co1">${!#}</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>; <span class="kw1">then</span>
+        <span class="co0"># If a zero-length string is requested, return success.</span>
+        <span class="kw3">return</span>
+    <span class="kw1">else</span>
+        <span class="co0"># This line generates the string and assigns it to &quot;b&quot;.</span>
+        <span class="kw3">local</span> <span class="re5">-a</span> <span class="re2">a</span>=<span class="br0">&#40;</span><span class="br0">&#123;</span>a..z<span class="br0">&#125;</span> <span class="br0">&#123;</span>A..Z<span class="br0">&#125;</span> <span class="br0">&#123;</span><span class="nu0">0</span>..<span class="nu0">9</span><span class="br0">&#125;</span><span class="br0">&#41;</span> <span class="st_h">'b=(&quot;${a[RANDOM%'</span><span class="st0">&quot;<span class="es3">${#a[@]}</span>&quot;</span><span class="st_h">']&quot;{1..'</span><span class="st0">&quot;<span class="es3">${!#}</span>&quot;</span><span class="st_h">'}&quot;}&quot;)'</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re4">$#</span> == <span class="nu0">2</span> <span class="br0">&#41;</span><span class="br0">&#41;</span>; <span class="kw1">then</span>
+            <span class="co0"># If -v, then pass a variable name and value to assign and recurse once.</span>
+            <span class="st0">&quot;<span class="es2">$FUNCNAME</span>&quot;</span> <span class="st0">&quot;$1&quot;</span> <span class="st0">&quot;<span class="es3">${b[@]}</span>&quot;</span>
+        <span class="kw1">else</span>
+            <span class="co0"># If no -v, write to stdout.</span>
+            <span class="kw3">printf</span> <span class="sy0">%</span>s <span class="st0">&quot;<span class="es3">${b[@]}</span>&quot;</span>
+        <span class="kw1">fi</span>
+    <span class="kw1">fi</span></pre>
+
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+The remaining examples don&#039;t use quite the same tricks, which will hopefully be explained elsewhere eventually. See <a href="/commands/builtin/unset#scope" class="wikilink1" title="commands:builtin:unset"> unset</a> for why doing assignments in this way works well.
+</p>
+
+<p>
+This next example is a variation on <a href="/snipplets/print_horizontal_line" class="wikilink1" title="snipplets:print_horizontal_line">Print a horizontal line</a>. We&#039;re using the printf field width specifier to truncate the values of a <code>sequence expansion</code> to one character.
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">a</span>=<span class="br0">&#40;</span><span class="br0">&#123;</span>a..z<span class="br0">&#125;</span> <span class="br0">&#123;</span>A..Z<span class="br0">&#125;</span> <span class="br0">&#123;</span><span class="nu0">0</span>..<span class="nu0">9</span><span class="br0">&#125;</span><span class="br0">&#41;</span>
+<span class="kw3">printf</span> <span class="st_h">'%.1s'</span> <span class="st0">&quot;<span class="es3">${a[RANDOM%${#a[@]}</span>]}&quot;</span><span class="br0">&#123;</span><span class="nu0">0</span>..<span class="nu0">9</span><span class="br0">&#125;</span> $<span class="st_h">'\n'</span></pre>
+
+</p>
+
+<p>
+The extra detail that makes this work is to notice that in Bash, <a href="/syntax/expansion/brace" class="wikilink1" title="syntax:expansion:brace"> brace expansion</a> is usually the very first type of expansion to be processed, always before parameter expansion. Bash is unique in this respect – all other shells with a brace expansion feature perform it almost last, just before pathname expansion. First the sequence expansion generates ten parameters, then the parameters are expanded left-to-right causing the <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr">arithmetic</a> for each to be evaluated individually, resulting in independent selection of random element of <code>a</code>. To get ten of the same element, put the array selection inside the format string where it will only be evaluated once, just like the dashed-line trick:
+</p>
+
+<p>
+<pre class="code bash"><span class="kw3">printf</span> <span class="st0">&quot;%.s<span class="es3">${a[RANDOM%${#a[@]}</span>]}&quot;</span> <span class="br0">&#123;</span><span class="nu0">0</span>..<span class="nu0">9</span><span class="br0">&#125;</span> </pre>
+
+</p>
+
+<p>
+Selecting random elements whose lengths are not fixed is harder.
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">a</span>=<span class="br0">&#40;</span>one two three four five six seven eight nine ten<span class="br0">&#41;</span>
+<span class="kw3">printf</span> <span class="st_h">'%.*s '</span> $<span class="br0">&#40;</span><span class="kw3">printf</span> <span class="st_h">'%s '</span> <span class="st0">&quot;<span class="es3">${#a[x=RANDOM%${#a[@]}</span>]} <span class="es3">${a[x]}</span>&quot;</span><span class="br0">&#123;</span><span class="nu0">1</span>..<span class="nu0">10</span><span class="br0">&#125;</span><span class="br0">&#41;</span></pre>
+
+</p>
+
+<p>
+This generates each parameter and it&#039;s length in pairs. The &#039;*&#039; modifier instructs printf to use the value preceding each parameter as the field width. Note the space between the parameters. This example unfortunately relies upon the unquoted command substitution to perform unsafe wordsplitting so that the outer printf gets each argument. Values in the array can&#039;t contain characters in IFS, or anything that might be interpreted as a pattern without using <code>set -f</code>.
+</p>
+
+<p>
+Lastly, empty brace expansions can be used which don&#039;t generate any output that would need to be filtered. The disadvantage of course is that you must construct the brace expansion syntax to add up to the number of arguments to be generated, where the most optimal solution is its set of prime factors.
+<pre class="code bash"><span class="re2">a</span>=<span class="br0">&#40;</span>one two three<span class="br0">&#41;</span>
+<span class="kw3">echo</span> <span class="st0">&quot;<span class="es3">${a[RANDOM%${#a[@]}</span>]}&quot;</span><span class="br0">&#123;</span>,<span class="br0">&#125;</span><span class="br0">&#123;</span>,,,,<span class="br0">&#125;</span></pre>
+
+</p>
+
+</div>
+</div>
+</body>
+</html>

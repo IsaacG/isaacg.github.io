@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>snipplets:add_color_to_your_scripts</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="snipplets,add_color_to_your_scripts"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/snipplets/add_color_to_your_scripts?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=snipplets"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/snipplets/add_color_to_your_scripts"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/snipplets/add_color_to_your_scripts"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/snipplets/add_color_to_your_scripts"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='snipplets';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"snipplets:add_color_to_your_scripts","namespace":"snipplets","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="add_color_to_your_scripts">Add Color to your scripts</h1>
+<div class="level1">
+<div class="inline dataplugin_entry snipplet sectionedit2"><dl><dt class="snipplet">snipplet<span class="sep">: </span></dt><dd class="snipplet"><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dterminal" title="Show pages matching 'terminal'" class="wikilink1">terminal</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dcolor" title="Show pages matching 'color'" class="wikilink1">color</a></dd><dt class="lastupdate">LastUpdate<span class="sep">: </span></dt><dd class="lastupdate">2013-03-23</dd><dt class="contributor">Contributor<span class="sep">: </span></dt><dd class="contributor">Frank Lazzarini<span class="sep">, </span>Dan Douglas</dd><dt class="type">type<span class="sep">: </span></dt><dd class="type">snipplet</dd></dl></div><!-- EDIT{&quot;target&quot;:&quot;plugin_data&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;42-204&quot;} -->
+<p>
+Make your scripts output more readable using bash colors. Simply add these variables to your script, and you will be able to echo in color. (I haven&#039;t added all the colors available, just some basics)
+</p>
+
+<p>
+<pre class="code"># Colors
+ESC_SEQ=&quot;\x1b[&quot;
+COL_RESET=$ESC_SEQ&quot;39;49;00m&quot;
+COL_RED=$ESC_SEQ&quot;31;01m&quot;
+COL_GREEN=$ESC_SEQ&quot;32;01m&quot;
+COL_YELLOW=$ESC_SEQ&quot;33;01m&quot;
+COL_BLUE=$ESC_SEQ&quot;34;01m&quot;
+COL_MAGENTA=$ESC_SEQ&quot;35;01m&quot;
+COL_CYAN=$ESC_SEQ&quot;36;01m&quot;</pre>
+
+</p>
+
+<p>
+Now if you want to output some text in color use <em>echo -e</em> instead of just echo. And always remember to use the <em>$COL_RESET</em> variable to reset the color changes in bash. Like so ….
+</p>
+
+<p>
+<pre class="code">echo -e &quot;$COL_RED This is red $COL_RESET&quot;
+echo -e &quot;$COL_BLUE This is blue $COL_RESET&quot;
+echo -e &quot;$COL_YELLOW This is yellow $COL_RESET&quot;</pre>
+
+</p>
+
+<p>
+But also see the notes in <a href="/scripting/terminalcodes" class="wikilink1" title="scripting:terminalcodes"> the article about using terminalcodes</a> about generating codes and hardwiring codes.
+</p>
+
+<p>
+This snipplet sets up associative arrays for basic color codes using <code>tput</code> for Bash, ksh93 or zsh. You can pass it variable names to correspond with a collection of codes. There&#039;s a <code>main</code> function with example usage.
+<pre class="code bash"><span class="co0">#!/usr/bin/env bash</span>
+&nbsp;
+<span class="co1">${ZSH_VERSION+false}</span> <span class="sy0">||</span> emulate ksh
+<span class="co1">${BASH_VERSION+shopt -s lastpipe extglob}</span>
+&nbsp;
+<span class="co0"># colorSet [ --setaf | --setab | --misc ] var</span>
+<span class="co0"># Assigns the selected set of escape mappings to the given associative array names.</span>
+<span class="kw1">function</span> colorSet <span class="br0">&#123;</span>
+	<span class="kw3">typeset</span> <span class="re5">-a</span> clrs msc
+	<span class="kw3">typeset</span> x
+	<span class="re2">clrs</span>=<span class="br0">&#40;</span>black <span class="kw2">red</span> green orange blue magenta cyan grey darkgrey ltred ltgreen yellow ltblue ltmagenta ltcyan white<span class="br0">&#41;</span>
+	<span class="re2">msc</span>=<span class="br0">&#40;</span>sgr0 bold dim smul blink <span class="kw2">rev</span> invis<span class="br0">&#41;</span>
+&nbsp;
+	<span class="kw1">while</span> <span class="sy0">!</span> <span class="co1">${2:+false}</span>; <span class="kw1">do</span>
+		<span class="co1">${KSH_VERSION:+eval typeset -n &quot;$2&quot;=\$2}</span>
+		<span class="kw1">case</span> <span class="co1">${1#--}</span> <span class="kw1">in</span>
+			setaf<span class="sy0">|</span>setab<span class="br0">&#41;</span>
+				<span class="kw1">for</span> x <span class="kw1">in</span> <span class="st0">&quot;<span class="es3">${!clrs[@]}</span>&quot;</span>; <span class="kw1">do</span>
+					<span class="kw3">eval</span> <span class="st0">&quot;$2&quot;</span><span class="st_h">'[${clrs[x]}]=$(tput &quot;${1#--}&quot; &quot;$x&quot;)'</span>
+				<span class="kw1">done</span>
+				<span class="sy0">;;</span>
+			misc<span class="br0">&#41;</span>
+				<span class="kw1">for</span> x <span class="kw1">in</span> <span class="st0">&quot;<span class="es3">${msc[@]}</span>&quot;</span>; <span class="kw1">do</span>
+					<span class="kw3">eval</span> <span class="st0">&quot;$2&quot;</span><span class="st_h">'[$x]=$(tput &quot;$x&quot;)'</span>
+				<span class="kw1">done</span>
+				<span class="sy0">;;</span>
+			<span class="sy0">*</span><span class="br0">&#41;</span>
+				<span class="kw3">return</span> <span class="nu0">1</span>
+		<span class="kw1">esac</span>
+		<span class="kw3">shift</span> <span class="nu0">2</span>
+	<span class="kw1">done</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co0"># Example code</span>
+<span class="kw1">function</span> main <span class="br0">&#123;</span>
+	<span class="kw3">typeset</span> <span class="re5">-A</span> fgColors bgColors miscEscapes
+	<span class="kw1">if</span> colorSet <span class="re5">--setaf</span> fgColors <span class="re5">--setab</span> bgColors <span class="re5">--misc</span> miscEscapes; <span class="kw1">then</span>
+		<span class="kw1">if</span> <span class="sy0">!</span> <span class="co1">${1:+${fgColors[$1]:+false}</span><span class="br0">&#125;</span>; <span class="kw1">then</span>
+			<span class="kw3">printf</span> <span class="st_h">'%s%s%s\n'</span> <span class="st0">&quot;<span class="es3">${fgColors[$1]}</span>&quot;</span> <span class="st0">&quot;this text is <span class="es3">${1}</span>&quot;</span> <span class="st0">&quot;<span class="es3">${miscEscapes[sgr0]}</span>&quot;</span> <span class="sy0">&gt;&amp;</span><span class="nu0">3</span>
+		<span class="kw1">else</span>
+			<span class="kw3">printf</span> <span class="st_h">'%s, %s\n'</span> <span class="st0">&quot;<span class="es3">${1:-Empty}</span>&quot;</span> <span class="st_h">'no such color.'</span>
+			<span class="kw3">typeset</span> x y
+			<span class="kw1">for</span> x <span class="kw1">in</span> fgColors bgColors miscEscapes; <span class="kw1">do</span>
+				<span class="kw3">typeset</span> <span class="re5">-a</span> keys
+				<span class="kw3">eval</span> <span class="st_h">'keys=(&quot;${!'</span><span class="st0">&quot;<span class="es2">$x</span>&quot;</span><span class="st_h">'[@]}&quot;)'</span>
+				<span class="kw3">printf</span> <span class="st_h">'%s=( '</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span>
+				<span class="kw1">for</span> y <span class="kw1">in</span> <span class="st0">&quot;<span class="es3">${keys[@]}</span>&quot;</span>; <span class="kw1">do</span>
+					<span class="kw3">eval</span> <span class="st_h">'printf &quot;[%q]=%q &quot; &quot;$y&quot; &quot;${'</span><span class="st0">&quot;<span class="es2">$x</span>&quot;</span><span class="st_h">'[$y]}&quot;'</span>
+				<span class="kw1">done</span>
+				<span class="kw3">printf</span> <span class="st_h">')\n'</span>
+			<span class="kw1">done</span>
+			<span class="kw3">return</span> <span class="nu0">1</span>
+		<span class="kw1">fi</span>
+	<span class="kw1">else</span>
+		<span class="kw3">echo</span> <span class="st_h">'Failed setting color arrays.'</span>
+		<span class="kw3">return</span> <span class="nu0">1</span>
+	<span class="kw1">fi</span> <span class="nu0">3</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span> <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>
+<span class="br0">&#125;</span>
+&nbsp;
+main <span class="st0">&quot;$@&quot;</span>
+&nbsp;
+<span class="co0"># vim: set fenc=utf-8 ff=unix ft=sh :</span></pre>
+
+</p>
+
+</div>
+</div>
+</body>
+</html>

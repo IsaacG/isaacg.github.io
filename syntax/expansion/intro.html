@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:expansion:intro</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,expansion,intro,bash,shell,scripting,expansion,substitution,text,variable,filename,macro,wildcard"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/expansion/intro?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:expansion"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/expansion/intro"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/expansion/intro"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/expansion/intro"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:expansion';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:expansion:intro","namespace":"syntax:expansion","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#expansions_and_substitutions">Expansions and substitutions</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#overview">Overview</a></div></li>
+<li class="level2"><div class="li"><a href="#order">Order</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="expansions_and_substitutions">Expansions and substitutions</h1>
+<div class="level1">
+
+<p>
+Before executing your commands, Bash checks whether there are any syntax elements in the command line that should be interpreted rather than taken literally.  After splitting the command line into tokens (words), Bash scans for these special elements and interprets them,  resulting in a changed command line: the elements are said to be <strong>expanded</strong> to or <strong>substituted</strong> to <strong>new text and maybe new tokens</strong> (words).
+</p>
+
+<p>
+The most simple example of this behaviour is a referenced variable:
+<pre class="code">mystring=&quot;Hello world&quot;
+echo &quot;$mystring&quot;</pre>
+
+The <code>echo</code> program definitely doesn&#039;t care about what a shell variable is. It is Bash&#039;s job to deal with the variable. Bash <strong>expands</strong> the string &quot;<code>$mystring</code>&quot; to &quot;<code>Hello world</code>&quot;, so that <code>echo</code> will only see <code>Hello world</code>, not the variable or anything else!
+</p>
+
+<p>
+After all these expansions and substitutions are done, all quotes that are not meant literally (i.e., <a href="/syntax/quoting" class="wikilink1" title="syntax:quoting"> the quotes that marked contiguous words</a>, as part of the shell syntax) are removed from the commandline text, so the called program won&#039;t see them. This step is called <strong>quote-removal</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Expansions and substitutions&quot;,&quot;hid&quot;:&quot;expansions_and_substitutions&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1264&quot;} -->
+<h2 class="sectionedit2" id="overview">Overview</h2>
+<div class="level2">
+
+<p>
+Saw a possible expansion syntax but don&#039;t know what it is? Here&#039;s a small list.
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> Parameter expansion</a> (it has its own <a href="/syntax/pe#overview" class="wikilink1" title="syntax:pe"> overview section</a>)</div>
+<ul>
+<li class="level2"><div class="li"> <code>$WORD</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${STUFF…}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> Pathname expansion</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>*.txt</code></div>
+</li>
+<li class="level2"><div class="li"> <code>page_1?.html</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> Arithmetic expansion</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>$(( EXPRESSION ))</code></div>
+</li>
+<li class="level2"><div class="li"> <code>$[ EXPRESSION ]</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> Command substitution</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>$( COMMAND )</code></div>
+</li>
+<li class="level2"><div class="li"> <code>` COMMAND `</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="/syntax/expansion/tilde" class="wikilink1" title="syntax:expansion:tilde"> Tilde expansion</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>~</code></div>
+</li>
+<li class="level2"><div class="li"> <code>~+</code></div>
+</li>
+<li class="level2"><div class="li"> <code>~-</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="/syntax/expansion/brace" class="wikilink1" title="syntax:expansion:brace"> Brace expansion</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>{X,Y,Z}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>{X..Y}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>{X..Y..Z}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="/syntax/expansion/proc_subst" class="wikilink1" title="syntax:expansion:proc_subst"> Process substitution</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>&lt;( COMMAND )</code></div>
+</li>
+<li class="level2"><div class="li"> <code>&gt;( COMMAND )</code></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Overview&quot;,&quot;hid&quot;:&quot;overview&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:2,&quot;range&quot;:&quot;1265-2119&quot;} -->
+<h2 class="sectionedit3" id="order">Order</h2>
+<div class="level2">
+
+<p>
+Bash performs expansions and substitutions in a defined order. This explains why globbing (pathname expansion), for example, is safe to use on filenames with spaces (because it happens <strong>after</strong> the final word splitting!).
+</p>
+
+<p>
+The order is (from first to last):
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/brace" class="wikilink1" title="syntax:expansion:brace"> Brace expansion</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/tilde" class="wikilink1" title="syntax:expansion:tilde"> Tilde expansion</a></div>
+</li>
+<li class="level1 node"><div class="li"> The following expansions happen at the same time, in a left-to-right fashion on the commandline (see below)</div>
+<ul>
+<li class="level2"><div class="li"> <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> Parameter expansion</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> Arithmetic expansion</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> Command substitution</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> Word splitting</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> Pathname expansion</a></div>
+</li>
+</ul>
+
+<p>
+<a href="/syntax/expansion/proc_subst" class="wikilink1" title="syntax:expansion:proc_subst"> Process substitution</a> is performed <strong>simultaneously</strong> with <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansion</a>, <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> command substitution</a> and <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> arithmetic expansion</a>. It is only performed when the underlying operating system supports it.
+</p>
+
+<p>
+The 3 steps <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansion</a>, <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> arithmetic expansion</a> and <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> command substitution</a> happen at the same time in a left-to-right fashion on nthe commandline. This means
+<pre class="code">i=1
+echo $i $((i++)) $i</pre>
+
+will output <code>1 1 2</code> and not <code>1 1 1</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Order&quot;,&quot;hid&quot;:&quot;order&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;2120-&quot;} --></div>
+</body>
+</html>

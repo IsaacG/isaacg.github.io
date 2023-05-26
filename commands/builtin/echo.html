@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:echo</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,echo"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/echo?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/echo"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/echo"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/echo"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:echo","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_echo_builtin_command">The echo builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#options">Options</a></div></li>
+<li class="level3"><div class="li"><a href="#escape_sequences">Escape sequences</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_echo_builtin_command">The echo builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The echo builtin command&quot;,&quot;hid&quot;:&quot;the_echo_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-40&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">echo [-neE] [arg ...]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;41-99&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+<code>echo</code> outputs it&#039;s args to stdout, separated by spaces, followed by a newline. The return status is always <code>0</code>. If the <a href="/commands/builtin/shopt" class="wikilink1" title="commands:builtin:shopt">shopt</a> option <code>xpg_echo</code> is set, Bash dynamically determines whether echo should expand escape characters (listed below) by default based on the current platform. <code>echo</code> doesn&#039;t interpret <code>--</code> as the end of options, and will simply print this string if given.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;100-557&quot;} -->
+<h3 class="sectionedit4" id="options">Options</h3>
+<div class="level3">
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Option  </th><th class="col1 leftalign">Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> <code>-n</code> </td><td class="col1"> The trailing newline is suppressed. </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <code>-e</code> </td><td class="col1"> Interpretation of the following backslash-escaped characters (below) is enabled. </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <code>-E</code> </td><td class="col1"> Disables the interpretation of these escape characters, even on systems where they are interpreted by default. </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;576-867&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;558-868&quot;} -->
+<h3 class="sectionedit6" id="escape_sequences">Escape sequences</h3>
+<div class="level3">
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Escape  </th><th class="col1 leftalign">Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"> <code>\a</code> </td><td class="col1"> alert (bell) </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <code>\b</code> </td><td class="col1"> backspace </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <code>\c</code> </td><td class="col1"> suppress further output </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> <code>\e</code> </td><td class="col1"> </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> <code>\E</code> </td><td class="col1"> an escape character </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> <code>\f</code> </td><td class="col1"> form feed </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> <code>\n</code> </td><td class="col1"> new line </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"> <code>\r</code> </td><td class="col1"> carriage return </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"> <code>\t</code> </td><td class="col1"> horizontal tab </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0"> <code>\v</code> </td><td class="col1"> vertical tab </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0"> <code>\\</code> </td><td class="col1"> backslash </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0"> <code>\0nnn</code> </td><td class="col1"> the eight-bit character whose value is the octal value nnn (zero to three octal digits) </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0"> <code>\xHH</code> </td><td class="col1"> the eight-bit character whose value is the hexadecimal value HH (one or two hex digits) </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0"> <code>\uHHHH</code> </td><td class="col1"> the Unicode (ISO/IEC 10646) character whose value is the hexadecimal value HHHH (one to four hex digits) </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0"> <code>\UHHHHHHHH</code> </td><td class="col1"> the Unicode (ISO/IEC 10646) character whose value is the hexadecimal value HHHHHHHH (one to eight hex digits) </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;896-1663&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Escape sequences&quot;,&quot;hid&quot;:&quot;escape_sequences&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;869-1664&quot;} -->
+<h2 class="sectionedit8" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:8,&quot;range&quot;:&quot;1665-1687&quot;} -->
+<h2 class="sectionedit9" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>echo</code> is a portability train wreck. No major shell follows POSIX completely, and any shell that attempts to do so should be considered horribly broken. <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/echo.html#tag_20_37" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/echo.html#tag_20_37" rel="nofollow">SUSv4</a> specifies that <code>echo</code> <strong>shall not</strong> include any options. Further, it specifies that the behavior of <code>-n</code> as a first argument shall be determined by the implementation, unless XSI is followed, in which case <code>-n</code> is always treated as a string, and backslash escapes are interpreted by default. <code>dash</code> has the misfeature of following this and interpreting escapes by default, but includes a <code>-n</code> feature for suppressing newlines nevertheless.<br/>
+<br/>
+In practice, if you&#039;re able to assume a korn-like shell including bash, mksh, or zsh, <code>echo</code> when used in simple cases is generally reliable. For example, in the very common situation in which echo is supplied with a single argument and whose output is to have a newline appended, using <code>echo</code> is considered common practice. </div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <strong>Never use options to <code>echo</code>! <em>Ever</em>!</strong> Any time you feel tempted to use <code>echo -e</code>, <code>-n</code>, or any other special feature of echo, <strong>use <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf">printf</a> instead!</strong> If portability is a requirement, you should consider using <code>printf</code> <em>exclusively</em> and just ignore that <code>echo</code> even exists. If you must use <code>echo  -e</code> and refuse to use <code>printf</code>, it is usually acceptable to use <code>echo $&#039;…&#039; </code>if targeting only shells that support this special quoting style.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <code>ksh93</code> has a <code>print</code> command, which if coding specifically for <code>ksh93</code> should be preferred over <code>echo</code>. <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf">printf</a> still includes most of the functionality of both, and should usually be the most preferred option.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:9,&quot;range&quot;:&quot;1688-3507&quot;} -->
+<h2 class="sectionedit10" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf">The printf command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://cfajohnson.com/shell/cus-faq.html#Q0b" class="urlextern" title="http://cfajohnson.com/shell/cus-faq.html#Q0b" rel="nofollow">http://cfajohnson.com/shell/cus-faq.html#Q0b</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.in-ulm.de/~mascheck/various/echo+printf/" class="urlextern" title="http://www.in-ulm.de/~mascheck/various/echo+printf/" rel="nofollow">http://www.in-ulm.de/~mascheck/various/echo+printf/</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:10,&quot;range&quot;:&quot;3508-&quot;} --></div>
+</body>
+</html>

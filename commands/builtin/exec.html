@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:exec</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,exec"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/exec?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/exec"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/exec"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/exec"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:exec","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_exec_builtin_command">The exec builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#options">Options</a></div></li>
+<li class="level3"><div class="li"><a href="#exit_status">Exit status</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#wrapper_around_a_program">Wrapper around a program</a></div></li>
+<li class="level3"><div class="li"><a href="#open_a_file_as_input_for_the_script">Open a file as input for the script</a></div></li>
+<li class="level3"><div class="li"><a href="#overall_script_logfile">Overall script logfile</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_exec_builtin_command">The exec builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The exec builtin command&quot;,&quot;hid&quot;:&quot;the_exec_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-40&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">exec [-a NAME] [-cl] [COMMAND] [ARG...] [REDIRECTION...]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;41-132&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>exec</code> builtin command is used to
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>replace</strong> the shell with a given program (executing it, <strong>not as new process</strong>)</div>
+</li>
+<li class="level1"><div class="li"> set redirections for the program to execute or for the current shell</div>
+</li>
+</ul>
+
+<p>
+If only redirections are given, the redirections affect the current shell without executing any program.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;133-462&quot;} -->
+<h3 class="sectionedit4" id="options">Options</h3>
+<div class="level3">
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Option</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>-a NAME</code>  </td><td class="col1 leftalign">Passes <code>NAME</code> as zeroth argument for the program to be executed  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>-c</code>  </td><td class="col1 leftalign">Execute the program with an empty (cleared) environment  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>-l</code>  </td><td class="col1 leftalign">Prepends a dash (<code>-</code>) to the zeroth argument of the program to be executed, similar to what the <code>login</code> program does  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;482-789&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;463-790&quot;} -->
+<h3 class="sectionedit6" id="exit_status">Exit status</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> on redirection errors it returns 1, otherwise 0</div>
+</li>
+<li class="level1 node"><div class="li"> on exec failures:</div>
+<ul>
+<li class="level2"><div class="li"> a non-interactive shell terminates; if the <a href="/internals/shell_options#execfail" class="wikilink1" title="internals:shell_options"> shell option execfail</a> is set <code>exec</code> returns failure</div>
+</li>
+<li class="level2"><div class="li"> in an interactive shell, <code>exec</code> returns failure</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Exit status&quot;,&quot;hid&quot;:&quot;exit_status&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;791-1086&quot;} -->
+<h2 class="sectionedit7" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:7,&quot;range&quot;:&quot;1087-1108&quot;} -->
+<h3 class="sectionedit8" id="wrapper_around_a_program">Wrapper around a program</h3>
+<div class="level3">
+
+<p>
+<pre class="code bash"><span class="re2">myprog</span>=<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw2">ls</span>
+<span class="kw3">echo</span> <span class="st0">&quot;This is the wrapper script, it will exec <span class="es2">$myprog</span>&quot;</span>
+&nbsp;
+<span class="co0"># do some vodoo here, probably change the arguments etc.</span>
+<span class="co0"># well, stuff a wrapper is there for</span>
+&nbsp;
+<span class="kw3">exec</span> <span class="st0">&quot;<span class="es2">$myprog</span>&quot;</span> <span class="st0">&quot;$@&quot;</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Wrapper around a program&quot;,&quot;hid&quot;:&quot;wrapper_around_a_program&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:8,&quot;range&quot;:&quot;1109-1351&quot;} -->
+<h3 class="sectionedit9" id="open_a_file_as_input_for_the_script">Open a file as input for the script</h3>
+<div class="level3">
+
+<p>
+<pre class="code bash"><span class="co0"># open it</span>
+<span class="kw3">exec</span> <span class="nu0">3</span><span class="sy0">&lt;</span> input.txt
+&nbsp;
+<span class="co0"># for example: read one line from the file(-descriptor)</span>
+<span class="kw2">read</span> <span class="re5">-u</span> <span class="nu0">3</span> LINE
+<span class="co0"># or</span>
+<span class="kw2">read</span> LINE <span class="sy0">&lt;&amp;</span><span class="nu0">3</span>
+&nbsp;
+<span class="co0"># finally, close it</span>
+<span class="kw3">exec</span> <span class="nu0">3</span><span class="sy0">&lt;&amp;</span>-</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Open a file as input for the script&quot;,&quot;hid&quot;:&quot;open_a_file_as_input_for_the_script&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:9,&quot;range&quot;:&quot;1352-1568&quot;} -->
+<h3 class="sectionedit10" id="overall_script_logfile">Overall script logfile</h3>
+<div class="level3">
+
+<p>
+To redirect the whole <code>stdout</code> and <code>stderr</code> of the shell or shellscript to a file, you can use the <code>exec</code> builtin command:
+<pre class="code bash"><span class="kw3">exec</span> <span class="sy0">&gt;/</span>var<span class="sy0">/</span>adm<span class="sy0">/</span>my.log <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span>
+&nbsp;
+<span class="co0"># script continues here...</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Overall script logfile&quot;,&quot;hid&quot;:&quot;overall_script_logfile&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:10,&quot;range&quot;:&quot;1569-1807&quot;} -->
+<h2 class="sectionedit11" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1 node"><div class="li">POSIX® specifies error code ranges:</div>
+<ul>
+<li class="level2"><div class="li"> if <code>exec</code> can&#039;t find the program to execute, the error code shall be 126</div>
+</li>
+<li class="level2"><div class="li"> on a redirection error, the error code shall be between 1 and 125</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> the <code>-a NAME</code> option appeared in Bash 4.2-alpha</div>
+</li>
+<li class="level1"><div class="li"> POSIX® does <strong>not</strong> specify any options for <code>exec</code> (like <code>-c</code>, <code>-l</code>, <code>-a NAME</code>).</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:11,&quot;range&quot;:&quot;1808-2191&quot;} -->
+<h2 class="sectionedit12" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/redirection" class="wikilink1" title="syntax:redirection">Redirection</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:12,&quot;range&quot;:&quot;2192-&quot;} --></div>
+</body>
+</html>

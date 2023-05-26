@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:redirection</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,redirection"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/redirection?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/redirection"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/redirection"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/redirection"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:redirection","namespace":"syntax","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#redirection">Redirection</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#valid_redirection_targets_and_sources">Valid redirection targets and sources</a></div></li>
+<li class="level2"><div class="li"><a href="#redirecting_output">Redirecting output</a></div></li>
+<li class="level2"><div class="li"><a href="#appending_redirected_output">Appending redirected output</a></div></li>
+<li class="level2"><div class="li"><a href="#redirecting_output_and_error_output">Redirecting output and error output</a></div></li>
+<li class="level2"><div class="li"><a href="#appending_redirected_output_and_error_output">Appending redirected output and error output</a></div></li>
+<li class="level2"><div class="li"><a href="#transporting_stdout_and_stderr_through_a_pipe">Transporting stdout and stderr through a pipe</a></div></li>
+<li class="level2"><div class="li"><a href="#redirecting_input">Redirecting input</a></div></li>
+<li class="level2"><div class="li"><a href="#here_documents">Here documents</a></div></li>
+<li class="level2"><div class="li"><a href="#here_strings">Here strings</a></div></li>
+<li class="level2"><div class="li"><a href="#multiple_redirections">Multiple redirections</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="redirection">Redirection</h1>
+<div class="level1">
+
+<p>
+<span class="wrap_left wrap_todo ">Fix me: To be continued</span>
+<br/>
+
+</p>
+
+<p>
+Redirection makes it possible to control where the output of a command goes to, and where the input of a command comes from. It&#039;s a mighty tool that, together with pipelines, makes the shell powerful. The redirection operators are checked whenever a <a href="/syntax/grammar/parser_exec" class="wikilink1" title="syntax:grammar:parser_exec"> simple command is about to be executed</a>.
+</p>
+
+<p>
+Under normal circumstances, there are 3 files open, accessible by the file descriptors 0, 1 and 2, all connected to your terminal:
+</p>
+<div class="table sectionedit2"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Name</th><th class="col1">FD</th><th class="col2">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>stdin</code></td><td class="col1">0</td><td class="col2">standard input stream (e.g. keyboard)</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>stdout</code></td><td class="col1">1</td><td class="col2">standard output stream (e.g. monitor)</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>stderr</code></td><td class="col1">2</td><td class="col2">standard error output stream (usually also on monitor)</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;534-730&quot;} -->
+<p>
+<span class="wrap_center wrap_info ">The terms &quot;monitor&quot; and &quot;keyboard&quot; refer to the same device, the <strong>terminal</strong> here. Check your preferred UNIX®-<abbr title="Frequently Asked Questions">FAQ</abbr> for details, I&#039;m too lazy to explain what a terminal is <img src="/lib/images/smileys/icon_wink.gif" class="icon" alt=";-)" /> </span>
+</p>
+
+<p>
+Both, <code>stdout</code> and <code>stderr</code> are output file descriptors. Their difference is the <strong>convention</strong> that a program outputs payload on <code>stdout</code> and diagnostic- and error-messages on <code>stderr</code>. If you write a script that outputs error messages, please make sure you follow this convention!
+</p>
+
+<p>
+Whenever you <strong>name</strong> such a filedescriptor, i.e. you want to redirect this descriptor, you just use the number:
+<pre class="code"># this executes the cat-command and redirects its error messages (stderr) to the bit bucket
+cat some_file.txt 2&gt;/dev/null</pre>
+
+Whenever you <strong>reference</strong> a descriptor, to point to its current target file, then you use a &quot;<code>&amp;</code>&quot; followed by a the descriptor number:
+<pre class="code"># this executes the echo-command and redirects its normal output (stdout) to the standard error target
+echo &quot;There was an error&quot; 1&gt;&amp;2</pre>
+
+</p>
+
+<p>
+The redirection operation can be <strong>anywhere</strong> in a simple command, so these examples are equivalent:
+<pre class="code">cat foo.txt bar.txt &gt;new.txt
+cat &gt;new.txt foo.txt bar.txt
+&gt;new.txt cat foo.txt bar.txt</pre>
+
+<span class="wrap_center wrap_important ">Every redirection operator takes one or two words as operands. If you have to use operands (e.g. filenames to redirect to) that contain spaces you <strong>must</strong> quote them!</span>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Redirection&quot;,&quot;hid&quot;:&quot;redirection&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-2167&quot;} -->
+<h2 class="sectionedit3" id="valid_redirection_targets_and_sources">Valid redirection targets and sources</h2>
+<div class="level2">
+
+<p>
+This syntax is recognized whenever a <code>TARGET</code> or a <code>SOURCE</code> specification (like below in the details descriptions) is used.
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Syntax</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>FILENAME</code></td><td class="col1">references a normal, ordinary filename from the filesystem (which can of course be a FIFO, too. Simply everything you can reference in the filesystem)</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>&amp;N</code></td><td class="col1">references the current target/source of the filedescriptor <code>N</code> (&quot;duplicates&quot; the filedescriptor)</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>&amp;-</code></td><td class="col1">closes the redirected filedescriptor, useful instead of <code>&gt; /dev/null</code> constructs (<code>&gt; &amp;-</code>)</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>/dev/fd/N</code></td><td class="col1">duplicates the filedescriptor <code>N</code>, if <code>N</code> is a valid integer</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>/dev/stdin</code></td><td class="col1">duplicates filedescriptor 0 (<code>stdin</code>)</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>/dev/stdout</code></td><td class="col1">duplicates filedescriptor 1 (<code>stdout</code>)</td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>/dev/stderr</code></td><td class="col1">duplicates filedescriptor 2 (<code>stderr</code>)</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><code>/dev/tcp/HOST/PORT</code></td><td class="col1">assuming <code>HOST</code> is a valid hostname or IP address, and <code>PORT</code> is a valid port number or service name: redirect from/to the corresponding TCP socket</td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"><code>/dev/udp/HOST/PORT</code></td><td class="col1">assuming <code>HOST</code> is a valid hostname or IP address, and <code>PORT</code> is a valid port number or service name: redirect from/to the corresponding UDP socket</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;2347-3354&quot;} -->
+<p>
+If a target/source specification fails to open, the whole redirection operation fails. Avoid referencing file descriptors above 9, since you may collide with file descriptors Bash uses internally.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Valid redirection targets and sources&quot;,&quot;hid&quot;:&quot;valid_redirection_targets_and_sources&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:3,&quot;range&quot;:&quot;2168-3556&quot;} -->
+<h2 class="sectionedit5" id="redirecting_output">Redirecting output</h2>
+<div class="level2">
+
+<p>
+<pre class="code">N &gt; TARGET</pre>
+
+</p>
+
+<p>
+This redirects the file descriptor number <code>N</code> to the target <code>TARGET</code>. If <code>N</code> is omitted, <code>stdout</code> is assumed (FD 1). The <code>TARGET</code> is <strong>truncated</strong> before writing starts.
+</p>
+
+<p>
+If the option <code>noclobber</code> is set with <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> the set builtin</a>, with cause the redirection to fail, when <code>TARGET</code> names a regular file that already exists. You can manually override that behaviour by forcing overwrite with the redirection operator <code>&gt;|</code> instead of <code>&gt;</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Redirecting output&quot;,&quot;hid&quot;:&quot;redirecting_output&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:5,&quot;range&quot;:&quot;3557-4092&quot;} -->
+<h2 class="sectionedit6" id="appending_redirected_output">Appending redirected output</h2>
+<div class="level2">
+
+<p>
+<pre class="code">N &gt;&gt; TARGET</pre>
+
+</p>
+
+<p>
+This redirects the file descriptor number <code>N</code> to the target <code>TARGET</code>. If <code>N</code> is omitted, <code>stdout</code> is assumed (FD 1). The <code>TARGET</code> is <strong>not truncated</strong> before writing starts.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Appending redirected output&quot;,&quot;hid&quot;:&quot;appending_redirected_output&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;4093-4345&quot;} -->
+<h2 class="sectionedit7" id="redirecting_output_and_error_output">Redirecting output and error output</h2>
+<div class="level2">
+
+<p>
+<pre class="code">&amp;&gt; TARGET</pre>
+
+</p>
+
+<p>
+<pre class="code">&gt;&amp; TARGET</pre>
+
+</p>
+
+<p>
+This special syntax redirects both, <code>stdout</code> and <code>stderr</code> to the specified target. It&#039;s <strong>equivalent</strong> to
+<pre class="code">&gt; TARGET 2&gt;&amp;1</pre>
+
+</p>
+
+<p>
+Since Bash4, there&#039;s <code>&amp;&gt;&gt;TARGET</code>, which is equivalent to <code>&gt;&gt; TARGET 2&gt;&amp;1</code>.
+</p>
+
+<p>
+<span class="wrap_center wrap_important ">This syntax is deprecated and should not be used. See the page about <a href="/scripting/obsolete" class="wikilink1" title="scripting:obsolete">  obsolete and deprecated syntax</a>.</span>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Redirecting output and error output&quot;,&quot;hid&quot;:&quot;redirecting_output_and_error_output&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;4346-4858&quot;} -->
+<h2 class="sectionedit8" id="appending_redirected_output_and_error_output">Appending redirected output and error output</h2>
+<div class="level2">
+
+<p>
+To append the cumulative redirection of <code>stdout</code> and <code>stderr</code> to a file you simply do
+<pre class="code">&gt;&gt; FILE 2&gt;&amp;1</pre>
+
+</p>
+
+<p>
+<pre class="code">&amp;&gt;&gt; FILE</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Appending redirected output and error output&quot;,&quot;hid&quot;:&quot;appending_redirected_output_and_error_output&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:8,&quot;range&quot;:&quot;4859-5060&quot;} -->
+<h2 class="sectionedit9" id="transporting_stdout_and_stderr_through_a_pipe">Transporting stdout and stderr through a pipe</h2>
+<div class="level2">
+
+<p>
+<pre class="code">COMMAND1 2&gt;&amp;1 | COMMAND2</pre>
+
+</p>
+
+<p>
+<pre class="code">COMMAND1 |&amp; COMMAND2</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Transporting stdout and stderr through a pipe&quot;,&quot;hid&quot;:&quot;transporting_stdout_and_stderr_through_a_pipe&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:9,&quot;range&quot;:&quot;5061-5197&quot;} -->
+<h2 class="sectionedit10" id="redirecting_input">Redirecting input</h2>
+<div class="level2">
+
+<p>
+<pre class="code">N &lt; SOURCE</pre>
+
+</p>
+
+<p>
+The input descriptor <code>N</code> uses <code>SOURCE</code> as its data source. If <code>N</code> is omitted, filedescriptor 0 (<code>stdin</code>) is assumed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Redirecting input&quot;,&quot;hid&quot;:&quot;redirecting_input&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:10,&quot;range&quot;:&quot;5198-5381&quot;} -->
+<h2 class="sectionedit11" id="here_documents">Here documents</h2>
+<div class="level2">
+
+<p>
+<a name="tag_heredoc"></a>
+</p>
+
+<p>
+<pre class="code">&lt;&lt;TAG
+...
+TAG</pre>
+
+</p>
+
+<p>
+<pre class="code">&lt;&lt;-TAG
+...
+TAG</pre>
+
+</p>
+
+<p>
+A here-document is an input redirection using source data specified directly at the command line (or in the script), no &quot;external&quot; source. The redirection-operator <code>&lt;&lt;</code> is used together with a tag <code>TAG</code> that&#039;s used to mark the end of input later:
+</p>
+
+<p>
+<pre class="code"># display help
+
+cat &lt;&lt;EOF
+Sorry...
+No help available yet for $PROGRAM.
+Hehe...
+EOF</pre>
+
+</p>
+
+<p>
+As you see, substitutions are possible. To be precise, the following substitutions and expansions are performed in the here-document data:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> Parameter expansion</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> Command substitution</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> Arithmetic expansion</a></div>
+</li>
+</ul>
+
+<p>
+You can avoid that by quoting the tag:
+<pre class="code">cat &lt;&lt;&quot;EOF&quot;
+This won&#039;t be expanded: $PATH
+EOF</pre>
+
+</p>
+
+<p>
+Last but not least, if the redirection operator <code>&lt;&lt;</code> is followed by a <code>-</code> (dash), all <strong>leading TAB</strong> from the document data will be ignored. This might be useful to have optical nice code also when using here-documents.
+</p>
+
+<p>
+The tag you use <strong>must</strong> be the only word in the line, to be recognized as end-of-here-document marker.
+</p>
+
+<p>
+<span class="wrap_center wrap_info ">It seems that here-documents (tested on versions <code>1.14.7</code>, <code>2.05b</code> and <code>3.1.17</code>) are correctly terminated when there is an <abbr title="End of file">EOF</abbr> before the end-of-here-document tag. The reason is unknown, but it seems to be done on purpose. Bash 4 introduced a warning message when end-of-file is seen before the tag is reached.</span>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Here documents&quot;,&quot;hid&quot;:&quot;here_documents&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:11,&quot;range&quot;:&quot;5382-6946&quot;} -->
+<h2 class="sectionedit12" id="here_strings">Here strings</h2>
+<div class="level2">
+
+<p>
+<pre class="code">&lt;&lt;&lt; WORD</pre>
+
+</p>
+
+<p>
+The here-strings are a variation of the here-documents. The word <code>WORD</code> is taken for the input redirection:
+</p>
+
+<p>
+<pre class="code">cat &lt;&lt;&lt; &quot;Hello world... $NAME is here...&quot;</pre>
+
+</p>
+
+<p>
+Just beware to quote the <code>WORD</code> if it contains spaces. Otherwise the rest will be given as normal parameters.
+</p>
+
+<p>
+The here-string will append a newline (<code>\n</code>) to the data.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Here strings&quot;,&quot;hid&quot;:&quot;here_strings&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:12,&quot;range&quot;:&quot;6947-7340&quot;} -->
+<h2 class="sectionedit13" id="multiple_redirections">Multiple redirections</h2>
+<div class="level2">
+
+<p>
+More redirection operations can occur in a line of course. The order is <strong>important</strong>! They&#039;re evaluated from <strong>left to right</strong>.
+If you want to redirect both, <code>stderr</code> and <code>stdout</code> to the same file (like <code>/dev/null</code>, to hide it), this is <strong>the wrong way</strong>:
+<pre class="code bash"><span class="co0"># { echo OUTPUT; echo ERRORS &gt;&amp;2; } is to simulate something that outputs to STDOUT and STDERR</span>
+<span class="co0"># you can test with it</span>
+<span class="br0">&#123;</span> <span class="kw3">echo</span> OUTPUT; <span class="kw3">echo</span> ERRORS <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>; <span class="br0">&#125;</span> <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span> <span class="nu0">1</span><span class="sy0">&gt;/</span>dev<span class="sy0">/</span>null</pre>
+
+Why? Relatively easy:
+</p>
+<ul>
+<li class="level1"><div class="li"> initially, <code>stdout</code> points to your terminal (you read it)</div>
+</li>
+<li class="level1"><div class="li"> same applies to <code>stderr</code>, it&#039;s connected to your terminal</div>
+</li>
+<li class="level1"><div class="li"> <code>2&gt;&amp;1</code> redirects <code>stderr</code> away from the terminal to the target for <code>stdout</code>: <strong>the terminal</strong> (again…)</div>
+</li>
+<li class="level1"><div class="li"> <code>1&gt;/dev/null</code> redirects <code>stdout</code> away from your terminal to the file <code>/dev/null</code></div>
+</li>
+</ul>
+
+<p>
+What remains? <code>stdout</code> goes to <code>/dev/null</code>, <code>stderr</code> still (or better: &quot;again&quot;) goes to the terminal. You have to swap the order to make it do what you want:
+<pre class="code bash"><span class="br0">&#123;</span> <span class="kw3">echo</span> OUTPUT; <span class="kw3">echo</span> ERRORS <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>; <span class="br0">&#125;</span> <span class="nu0">1</span><span class="sy0">&gt;/</span>dev<span class="sy0">/</span>null <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Multiple redirections&quot;,&quot;hid&quot;:&quot;multiple_redirections&quot;,&quot;codeblockOffset&quot;:19,&quot;secid&quot;:13,&quot;range&quot;:&quot;7341-8419&quot;} -->
+<h2 class="sectionedit14" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+How to make a program quiet (assuming all output goes to <code>STDOUT</code> and <code>STDERR</code>?
+<pre class="code">command &gt;/dev/null 2&gt;&amp;1</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:14,&quot;range&quot;:&quot;8420-8565&quot;} -->
+<h2 class="sectionedit15" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/howto/redirection_tutorial" class="wikilink1" title="howto:redirection_tutorial"> Illustrated Redirection Tutorial</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/commands/builtin/set#tag_noclobber" class="wikilink1" title="commands:builtin:set"> The noclobber option</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/commands/builtin/exec" class="wikilink1" title="commands:builtin:exec"> The exec builtin command</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/grammar/parser_exec" class="wikilink1" title="syntax:grammar:parser_exec"> Simple commands parsing and execution</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/proc_subst" class="wikilink1" title="syntax:expansion:proc_subst"> Process substitution syntax</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/scripting/obsolete" class="wikilink1" title="scripting:obsolete"> Obsolete and deprecated syntax</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/scripting/nonportable" class="wikilink1" title="scripting:nonportable"> Nonportable syntax and command uses</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:22,&quot;secid&quot;:15,&quot;range&quot;:&quot;8566-&quot;} --></div>
+</body>
+</html>

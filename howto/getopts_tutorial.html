@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>howto:getopts_tutorial</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="howto,getopts_tutorial,bash,shell,scripting,arguments,positional,parameters,options,getopt,getopts"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/howto/getopts_tutorial?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=howto"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/howto/getopts_tutorial"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/howto/getopts_tutorial"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/howto/getopts_tutorial"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='howto';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"howto:getopts_tutorial","namespace":"howto","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#small_getopts_tutorial">Small getopts tutorial</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#terminology">Terminology</a></div></li>
+<li class="level3"><div class="li"><a href="#how_it_works">How it works</a></div></li>
+<li class="level3"><div class="li"><a href="#used_variables">Used variables</a></div></li>
+<li class="level3"><div class="li"><a href="#specify_what_you_want">Specify what you want</a></div></li>
+<li class="level3"><div class="li"><a href="#error_reporting">Error Reporting</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#using_it">Using it</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#a_first_example">A first example</a></div></li>
+<li class="level3"><div class="li"><a href="#an_option_with_argument">An option with argument</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="small_getopts_tutorial">Small getopts tutorial</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Small getopts tutorial&quot;,&quot;hid&quot;:&quot;small_getopts_tutorial&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-128&quot;} -->
+<h2 class="sectionedit2" id="description">Description</h2>
+<div class="level2">
+
+<p>
+<strong>Note that</strong> <code>getopts</code> is neither able to parse GNU-style long options (<code>--myoption</code>) nor XF86-style long options (<code>-myoption</code>). So, when you want to parse command line arguments in a professional <img src="/lib/images/smileys/icon_wink.gif" class="icon" alt=";-)" /> way, <code>getopts</code> may or may not work for you. Unlike its older brother <code>getopt</code> (note the missing <em>s</em>!), it&#039;s a shell builtin command. The advantages are:
+</p>
+<ul>
+<li class="level1"><div class="li"> No need to pass the positional parameters through to an external program.</div>
+</li>
+<li class="level1"><div class="li"> Being a builtin, <code>getopts</code> can set shell variables to use for parsing (impossible for an <em>external</em> process!)</div>
+</li>
+<li class="level1"><div class="li"> There&#039;s no need to argue with several <code>getopt</code> implementations which had buggy concepts in the past (whitespace, …)</div>
+</li>
+<li class="level1"><div class="li"> <code>getopts</code> is defined in POSIX®.</div>
+</li>
+</ul>
+<hr />
+
+<p>
+Some other methods to parse positional parameters - using neither <strong>getopt</strong> nor <strong>getopts</strong> - are described in: <a href="/scripting/posparams" class="wikilink1" title="scripting:posparams"> How to handle positional parameters</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;129-1081&quot;} -->
+<h3 class="sectionedit3" id="terminology">Terminology</h3>
+<div class="level3">
+
+<p>
+It&#039;s useful to know what we&#039;re talking about here, so let&#039;s see… Consider the following command line:
+<pre class="code">mybackup -x -f /etc/mybackup.conf -r ./foo.txt ./bar.txt</pre>
+
+</p>
+
+<p>
+These are all positional parameters, but they can be divided into several logical groups:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>-x</code> is an <strong>option</strong> (aka <strong>flag</strong> or <strong>switch</strong>). It consists of a dash (<code>-</code>) followed by <strong>one</strong> character.</div>
+</li>
+<li class="level1"><div class="li"> <code>-f</code> is also an option, but this option has an associated <strong>option argument</strong> (an argument to the option <code>-f</code>): <code>/etc/mybackup.conf</code>. The option argument is usually the argument following the option itself, but that isn&#039;t mandatory. Joining the option and option argument into a single argument <code>-f/etc/mybackup.conf</code> is valid.</div>
+</li>
+<li class="level1"><div class="li"> <code>-r</code> depends on the configuration. In this example, <code>-r</code> doesn&#039;t take arguments so it&#039;s a standalone option like <code>-x</code>.</div>
+</li>
+<li class="level1"><div class="li"> <code>./foo.txt</code> and <code>./bar.txt</code> are remaining arguments without any associated options. These are often used as <strong>mass-arguments</strong>. For example, the filenames specified for <code>cp(1)</code>, or arguments that don&#039;t need an option to be recognized because of the intended behavior of the program. POSIX® calls them <strong>operands</strong>.</div>
+</li>
+</ul>
+
+<p>
+To give you an idea about why <code>getopts</code> is useful, The above command line is equivalent to:
+<pre class="code">mybackup -xrf /etc/mybackup.conf ./foo.txt ./bar.txt</pre>
+
+</p>
+
+<p>
+which is complex to parse without the help of <code>getopts</code>.
+</p>
+
+<p>
+The option flags can be <strong>upper- and lowercase</strong> characters, or <strong>digits</strong>. It may recognize other characters, but that&#039;s not recommended (usability and maybe problems with special characters).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Terminology&quot;,&quot;hid&quot;:&quot;terminology&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1082-2705&quot;} -->
+<h3 class="sectionedit4" id="how_it_works">How it works</h3>
+<div class="level3">
+
+<p>
+In general you need to call <code>getopts</code> several times. Each time it will use the next positional parameter and a possible argument, if parsable, and provide it to you. <code>getopts</code> will not change the set of positional parameters. If you want to shift them, it must be done manually:
+</p>
+
+<p>
+<pre class="code">shift $((OPTIND-1))
+# now do something with $@</pre>
+
+</p>
+
+<p>
+Since <code>getopts</code> sets an exit status of <em>FALSE</em> when there&#039;s nothing left to parse, it&#039;s easy to use in a while-loop:
+</p>
+
+<p>
+<pre class="code">while getopts ...; do
+  ...
+done</pre>
+
+</p>
+
+<p>
+<code>getopts</code> will parse options and their possible arguments. It will stop parsing on the first non-option argument (a string that doesn&#039;t begin with  a hyphen (<code>-</code>) that isn&#039;t an argument for any option in front of it). It will also stop parsing when it sees the <code>--</code> (double-hyphen), which means <a href="/dict/terms/end_of_options" class="wikilink1" title="dict:terms:end_of_options"> end of options</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;How it works&quot;,&quot;hid&quot;:&quot;how_it_works&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;2706-3617&quot;} -->
+<h3 class="sectionedit5" id="used_variables">Used variables</h3>
+<div class="level3">
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">variable</th><th class="col1">description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><a href="/syntax/shellvars#optind" class="wikilink1" title="syntax:shellvars">OPTIND</a></td><td class="col1">Holds the index to the next argument to be processed. This is how <code>getopts</code> &quot;remembers&quot; its own status between invocations. Also useful to shift the positional parameters after processing with <code>getopts</code>. <code>OPTIND</code> is initially set to 1, and <strong>needs to be re-set to 1 if you want to parse anything again with getopts</strong></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><a href="/syntax/shellvars#optarg" class="wikilink1" title="syntax:shellvars">OPTARG</a></td><td class="col1">This variable is set to any argument for an option found by <code>getopts</code>. It also contains the option flag of an unknown option.</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><a href="/syntax/shellvars#opterr" class="wikilink1" title="syntax:shellvars">OPTERR</a></td><td class="col1">(Values 0 or 1) Indicates if Bash should display error messages generated by the <code>getopts</code> builtin. The value is initialized to <strong>1</strong> on every shell startup - so be sure to always set it to <strong>0</strong> if you don&#039;t want to see annoying messages! <strong><code>OPTERR</code> is not specified by POSIX for the <code>getopts</code> builtin utility — only for the C <code>getopt()</code> function in <code>unistd.h</code> (<code>opterr</code>).</strong> <code>OPTERR</code> is bash-specific and not supported by shells such as ksh93, mksh, zsh, or dash. </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;3644-4710&quot;} -->
+<p>
+<code>getopts</code> also uses these variables for error reporting (they&#039;re set to value-combinations which arent possible in normal operation).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Used variables&quot;,&quot;hid&quot;:&quot;used_variables&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;3618-4847&quot;} -->
+<h3 class="sectionedit7" id="specify_what_you_want">Specify what you want</h3>
+<div class="level3">
+
+<p>
+The base-syntax for <code>getopts</code> is:
+<pre class="code">getopts OPTSTRING VARNAME [ARGS...]</pre>
+
+where:
+</p>
+<div class="table sectionedit8"><table class="inline">
+	<tr class="row0">
+		<th class="col0"><code>OPTSTRING</code></th><td class="col1">tells <code>getopts</code> which options to expect and where to expect arguments (see below)</td>
+	</tr>
+	<tr class="row1">
+		<th class="col0"><code>VARNAME</code></th><td class="col1">tells <code>getopts</code> which shell-variable to use for option reporting</td>
+	</tr>
+	<tr class="row2">
+		<th class="col0"><code>ARGS</code></th><td class="col1">tells <code>getopts</code> to parse these optional words instead of the positional parameters</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;4975-5251&quot;} -->
+</div>
+
+<h4 id="the_option-string">The option-string</h4>
+<div class="level4">
+
+<p>
+The option-string tells <code>getopts</code> which options to expect and which of them must have an argument. The syntax is very simple — every option character is simply named as is, this example-string would tell <code>getopts</code> to look for <code>-f</code>, <code>-A</code> and <code>-x</code>:
+<pre class="code">getopts fAx VARNAME</pre>
+
+</p>
+
+<p>
+When you want <code>getopts</code> to expect an argument for an option, just place a <code>:</code> (colon) after the proper option flag. If you want <code>-A</code> to expect an argument (i.e. to become <code>-A SOMETHING</code>) just do:
+<pre class="code">getopts fA:x VARNAME</pre>
+
+</p>
+
+<p>
+If the <strong>very first character</strong> of the option-string is a <code>:</code> (colon), which would normally be nonsense because there&#039;s no option letter preceding it, <code>getopts</code> switches to &quot;<strong>silent error reporting mode</strong>&quot;. In productive scripts, this is usually what you want because it allows you to handle errors yourself without being disturbed by annoying messages.
+</p>
+
+</div>
+
+<h4 id="custom_arguments_to_parse">Custom arguments to parse</h4>
+<div class="level4">
+
+<p>
+The <code>getopts</code> utility parses the <a href="/scripting/posparams" class="wikilink1" title="scripting:posparams">positional parameters</a> of the current shell or function by default (which means it parses <code>&quot;$@&quot;</code>).
+</p>
+
+<p>
+You can give your own set of arguments to the utility to parse. Whenever additional arguments are given after the <code>VARNAME</code> parameter, <code>getopts</code> doesn&#039;t try to parse the positional parameters, but these given words.
+</p>
+
+<p>
+This way, you are able to parse any option set you like, here for example from an array:
+</p>
+
+<p>
+<pre class="code">while getopts :f:h opt &quot;${MY_OWN_SET[@]}&quot;; do
+  ...
+done</pre>
+
+</p>
+
+<p>
+A call to <code>getopts</code> <strong>without</strong> these additional arguments is <strong>equivalent</strong> to explicitly calling it with <code>&quot;$@&quot;</code>:
+<pre class="code">getopts ... &quot;$@&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Specify what you want&quot;,&quot;hid&quot;:&quot;specify_what_you_want&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;4848-6902&quot;} -->
+<h3 class="sectionedit9" id="error_reporting">Error Reporting</h3>
+<div class="level3">
+
+<p>
+Regarding error-reporting, there are two modes <code>getopts</code> can run in:
+</p>
+<ul>
+<li class="level1"><div class="li"> verbose mode</div>
+</li>
+<li class="level1"><div class="li"> silent mode</div>
+</li>
+</ul>
+
+<p>
+For productive scripts I recommend to use the silent mode, since everything looks more professional, when you don&#039;t see annoying standard messages. Also it&#039;s easier to handle, since the failure cases are indicated in an easier way.
+</p>
+
+</div>
+
+<h4 id="verbose_mode">Verbose Mode</h4>
+<div class="level4">
+<div class="table sectionedit10"><table class="inline">
+	<tr class="row0">
+		<th class="col0">invalid option</th><td class="col1"><code>VARNAME</code> is set to <code>?</code> (question-mark) and <code>OPTARG</code> is unset</td>
+	</tr>
+	<tr class="row1">
+		<th class="col0">required argument not found</th><td class="col1"><code>VARNAME</code> is set to <code>?</code> (question-mark), <code>OPTARG</code> is unset and an <em>error message is printed</em></td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:10,&quot;range&quot;:&quot;7290-7505&quot;} -->
+</div>
+
+<h4 id="silent_mode">Silent Mode</h4>
+<div class="level4">
+<div class="table sectionedit11"><table class="inline">
+	<tr class="row0">
+		<th class="col0">invalid option</th><td class="col1"><code>VARNAME</code> is set to <code>?</code> (question-mark) and <code>OPTARG</code> is set to the (invalid) option character</td>
+	</tr>
+	<tr class="row1">
+		<th class="col0">required argument not found</th><td class="col1"><code>VARNAME</code> is set to <code>:</code> (colon) and <code>OPTARG</code> contains the option-character in question</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:11,&quot;range&quot;:&quot;7529-7768&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Error Reporting&quot;,&quot;hid&quot;:&quot;error_reporting&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:9,&quot;range&quot;:&quot;6903-7769&quot;} -->
+<h2 class="sectionedit12" id="using_it">Using it</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using it&quot;,&quot;hid&quot;:&quot;using_it&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:12,&quot;range&quot;:&quot;7770-7791&quot;} -->
+<h3 class="sectionedit13" id="a_first_example">A first example</h3>
+<div class="level3">
+
+<p>
+Enough said - action!
+</p>
+
+<p>
+Let&#039;s play with a very simple case: only one option (<code>-a</code>) expected, without any arguments. Also we disable the <em>verbose error handling</em> by preceding the whole option string with a colon (<code>:</code>):
+<pre class="code bash"><span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="kw1">while</span> <span class="kw3">getopts</span> <span class="st0">&quot;:a&quot;</span> opt; <span class="kw1">do</span>
+  <span class="kw1">case</span> <span class="re1">$opt</span> <span class="kw1">in</span>
+    a<span class="br0">&#41;</span>
+      <span class="kw3">echo</span> <span class="st0">&quot;-a was triggered!&quot;</span> <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>
+      <span class="sy0">;;</span>
+    \?<span class="br0">&#41;</span>
+      <span class="kw3">echo</span> <span class="st0">&quot;Invalid option: -<span class="es2">$OPTARG</span>&quot;</span> <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>
+      <span class="sy0">;;</span>
+  <span class="kw1">esac</span>
+<span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+I put that into a file named <code>go_test.sh</code>, which is the name you&#039;ll see below in the examples.
+</p>
+
+<p>
+Let&#039;s do some tests:
+</p>
+
+</div>
+
+<h4 id="calling_it_without_any_arguments">Calling it without any arguments</h4>
+<div class="level4">
+
+<p>
+<pre class="code">$ ./go_test.sh
+$ </pre>
+
+Nothing happened? Right. <code>getopts</code> didn&#039;t see any valid or invalid options (letters preceded by a dash), so it wasn&#039;t triggered.
+</p>
+
+</div>
+
+<h4 id="calling_it_with_non-option_arguments">Calling it with non-option arguments</h4>
+<div class="level4">
+
+<p>
+<pre class="code">$ ./go_test.sh /etc/passwd
+$ </pre>
+
+Again — nothing happened. The <strong>very same</strong> case: <code>getopts</code> didn&#039;t see any valid or invalid options (letters preceded by a dash), so it wasn&#039;t triggered.
+</p>
+
+<p>
+The arguments given to your script are of course accessible as <code>$1</code> - <code>${N}</code>.
+</p>
+
+</div>
+
+<h4 id="calling_it_with_option-arguments">Calling it with option-arguments</h4>
+<div class="level4">
+
+<p>
+Now let&#039;s trigger <code>getopts</code>: Provide options.
+</p>
+
+<p>
+First, an <strong>invalid</strong> one:
+<pre class="code">$ ./go_test.sh -b
+Invalid option: -b
+$ </pre>
+
+As expected, <code>getopts</code> didn&#039;t accept this option and acted like told above: It placed <code>?</code> into <code>$opt</code> and the invalid option character (<code>b</code>) into <code>$OPTARG</code>. With our <code>case</code> statement, we were able to detect this.
+</p>
+
+<p>
+Now, a <strong>valid</strong> one (<code>-a</code>):
+<pre class="code">$ ./go_test.sh -a
+-a was triggered!
+$ </pre>
+
+You see, the detection works perfectly. The <code>a</code> was put into the variable <code>$opt</code> for our case statement.
+</p>
+
+<p>
+Of course it&#039;s possible to <strong>mix valid and invalid</strong> options when calling:
+<pre class="code">$ ./go_test.sh -a -x -b -c
+-a was triggered!
+Invalid option: -x
+Invalid option: -b
+Invalid option: -c
+$ </pre>
+
+</p>
+
+<p>
+Finally, it&#039;s of course possible, to give our option <strong>multiple times</strong>:
+<pre class="code">$ ./go_test.sh -a -a -a -a
+-a was triggered!
+-a was triggered!
+-a was triggered!
+-a was triggered!
+$ </pre>
+
+</p>
+
+<p>
+The last examples lead us to some points you may consider:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>invalid options don&#039;t stop the processing</strong>: If you want to stop the script, you have to do it yourself (<code>exit</code> in the right place)</div>
+</li>
+<li class="level1"><div class="li"> <strong>multiple identical options are possible</strong>: If you want to disallow these, you have to check manually (e.g. by setting a variable or so)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;A first example&quot;,&quot;hid&quot;:&quot;a_first_example&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:13,&quot;range&quot;:&quot;7792-10222&quot;} -->
+<h3 class="sectionedit14" id="an_option_with_argument">An option with argument</h3>
+<div class="level3">
+
+<p>
+Let&#039;s extend our example from above. Just a little bit:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>-a</code> now takes an argument</div>
+</li>
+<li class="level1"><div class="li"> on an error, the parsing exits with <code>exit 1</code></div>
+</li>
+</ul>
+
+<p>
+<pre class="code bash"><span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="kw1">while</span> <span class="kw3">getopts</span> <span class="st0">&quot;:a:&quot;</span> opt; <span class="kw1">do</span>
+  <span class="kw1">case</span> <span class="re1">$opt</span> <span class="kw1">in</span>
+    a<span class="br0">&#41;</span>
+      <span class="kw3">echo</span> <span class="st0">&quot;-a was triggered, Parameter: <span class="es2">$OPTARG</span>&quot;</span> <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>
+      <span class="sy0">;;</span>
+    \?<span class="br0">&#41;</span>
+      <span class="kw3">echo</span> <span class="st0">&quot;Invalid option: -<span class="es2">$OPTARG</span>&quot;</span> <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>
+      <span class="kw3">exit</span> <span class="nu0">1</span>
+      <span class="sy0">;;</span>
+    :<span class="br0">&#41;</span>
+      <span class="kw3">echo</span> <span class="st0">&quot;Option -<span class="es2">$OPTARG</span> requires an argument.&quot;</span> <span class="sy0">&gt;&amp;</span><span class="nu0">2</span>
+      <span class="kw3">exit</span> <span class="nu0">1</span>
+      <span class="sy0">;;</span>
+  <span class="kw1">esac</span>
+<span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+Let&#039;s do the very same tests we did in the last example:
+</p>
+
+</div>
+
+<h4 id="calling_it_without_any_arguments1">Calling it without any arguments</h4>
+<div class="level4">
+
+<p>
+<pre class="code">$ ./go_test.sh
+$ </pre>
+
+</p>
+
+<p>
+As above, nothing happened. It wasn&#039;t triggered.
+</p>
+
+</div>
+
+<h4 id="calling_it_with_non-option_arguments1">Calling it with non-option arguments</h4>
+<div class="level4">
+
+<p>
+<pre class="code">$ ./go_test.sh /etc/passwd
+$ </pre>
+
+</p>
+
+<p>
+The <strong>very same</strong> case: It wasn&#039;t triggered.
+</p>
+
+</div>
+
+<h4 id="calling_it_with_option-arguments1">Calling it with option-arguments</h4>
+<div class="level4">
+
+<p>
+<strong>Invalid</strong> option:
+</p>
+
+<p>
+<pre class="code">$ ./go_test.sh -b
+Invalid option: -b
+$ </pre>
+
+</p>
+
+<p>
+As expected, as above, <code>getopts</code> didn&#039;t accept this option and acted like programmed.
+</p>
+
+<p>
+<strong>Valid</strong> option, but without the mandatory <strong>argument</strong>:
+</p>
+
+<p>
+<pre class="code">$ ./go_test.sh -a
+Option -a requires an argument.
+$ </pre>
+
+</p>
+
+<p>
+The option was okay, but there is an argument missing.
+</p>
+
+<p>
+Let&#039;s provide <strong>the argument</strong>:
+</p>
+
+<p>
+<pre class="code">$ ./go_test.sh -a /etc/passwd
+-a was triggered, Parameter: /etc/passwd
+$</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;An option with argument&quot;,&quot;hid&quot;:&quot;an_option_with_argument&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:14,&quot;range&quot;:&quot;10223-11549&quot;} -->
+<h2 class="sectionedit15" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/scripting/posparams" class="wikilink1" title="scripting:posparams">Handling positional parameters</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/case" class="wikilink1" title="syntax:ccmd:case">The case statement</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/while_loop" class="wikilink1" title="syntax:ccmd:while_loop">The while-loop</a></div>
+</li>
+<li class="level1"><div class="li"> POSIX <a href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/getopts.html#tag_20_54" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/getopts.html#tag_20_54" rel="nofollow">getopts(1)</a> and <a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/getopt.html" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/functions/getopt.html" rel="nofollow">getopt(3)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash" class="urlextern" title="https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash" rel="nofollow"> parse CLI ARGV </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/035" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/035" rel="nofollow">handle command-line arguments (options) to a script</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:22,&quot;secid&quot;:15,&quot;range&quot;:&quot;11550-&quot;} --></div>
+</body>
+</html>

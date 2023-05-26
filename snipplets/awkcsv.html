@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>snipplets:awkcsv</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="snipplets,awkcsv"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/snipplets/awkcsv?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=snipplets"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/snipplets/awkcsv"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/snipplets/awkcsv"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/snipplets/awkcsv"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='snipplets';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"snipplets:awkcsv","namespace":"snipplets","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="using_awk_to_deal_with_csv_that_uses_quotedunquoted_delimiters">Using &#039;&#039;awk&#039;&#039; to deal with CSV that uses quoted/unquoted delimiters</h1>
+<div class="level1">
+<div class="inline dataplugin_entry snipplet sectionedit2"><dl><dt class="snipplet">snipplet<span class="sep">: </span></dt><dd class="snipplet"><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dawk" title="Show pages matching 'awk'" class="wikilink1">awk</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dcsv" title="Show pages matching 'csv'" class="wikilink1">csv</a></dd><dt class="lastupdate">LastUpdate<span class="sep">: </span></dt><dd class="lastupdate">2010-07-31</dd><dt class="contributor">Contributor<span class="sep">: </span></dt><dd class="contributor">SiegX (IRC)</dd><dt class="type">type<span class="sep">: </span></dt><dd class="type">snipplet</dd></dl></div><!-- EDIT{&quot;target&quot;:&quot;plugin_data&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;84-222&quot;} -->
+<p>
+CSV files are a mess, yes.
+</p>
+
+<p>
+Assume you have CSV files that use the comma as delimiter and quoted data fields that can contain the delimiter.
+</p>
+
+<p>
+<pre class="code">&quot;first&quot;, &quot;second&quot;, &quot;last&quot;
+&quot;fir,st&quot;, &quot;second&quot;, &quot;last&quot;
+&quot;firtst one&quot;, &quot;sec,ond field&quot;, &quot;final,ly&quot;</pre>
+
+</p>
+
+<p>
+Simply using the comma as separator for <code>awk</code> won&#039;t work here, of course.
+</p>
+
+<p>
+Solution:
+Use the field separator <code>&quot;, &quot;|^&quot;|&quot;$</code> for <code>awk</code>.
+</p>
+
+<p>
+This is an OR-ed list of 3 possible separators:
+</p>
+<div class="table sectionedit3"><table class="inline">
+	<tr class="row0">
+		<td class="col0"><code>&quot;, &quot;</code></td><td class="col1">matches the area between the datafields</td>
+	</tr>
+	<tr class="row1">
+		<td class="col0"><code>^&quot;</code></td><td class="col1">matches the area left of the first datafield</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>&quot;$</code></td><td class="col1">matches the area right of the last data field</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:3,&quot;range&quot;:&quot;665-824&quot;} -->
+<p>
+You can tune these delimiters if you have other needs (for example if you don&#039;t have a space after the commas).
+</p>
+
+<p>
+Test:
+</p>
+
+<p>
+The <code>awk</code> command used for the CSV above just prints the fileds separated by <code>###</code> to see what&#039;s going on:
+<pre class="code">$ awk -v FS=&#039;&quot;, &quot;|^&quot;|&quot;$&#039; &#039;{print $2&quot;###&quot;$3&quot;###&quot;$4}&#039; data.csv
+first###second###last
+fir,st###second###last
+firtst one###sec,ond field###final,ly</pre>
+
+</p>
+
+<p>
+<strong>ATTENTION</strong> If the CSV data changes its format every now and then (for example it only quotes the data fields if needed, not always), then this way will not work.
+</p>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:keywords:coproc</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,keywords,coproc"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/keywords/coproc?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:keywords"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/keywords/coproc"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/keywords/coproc"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/keywords/coproc"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:keywords';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:keywords:coproc","namespace":"syntax:keywords","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_coproc_keyword">The coproc keyword</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+<li class="level3"><div class="li"><a href="#redirections">Redirections</a></div></li>
+<li class="level3"><div class="li"><a href="#pitfalls">Pitfalls</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#anonymous_coprocess">Anonymous Coprocess</a></div></li>
+<li class="level3"><div class="li"><a href="#named_coprocess">Named Coprocess</a></div></li>
+<li class="level3"><div class="li"><a href="#redirecting_the_output_of_a_script_to_a_file_and_to_the_screen">Redirecting the output of a script to a file and to the screen</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#other_shells">Other shells</a></div></li>
+<li class="level3"><div class="li"><a href="#only_one_coprocess_at_a_time">Only one coprocess at a time</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_coproc_keyword">The coproc keyword</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The coproc keyword&quot;,&quot;hid&quot;:&quot;the_coproc_keyword&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-34&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code"> coproc [NAME] command [redirections]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;35-110&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+Bash 4.0 introduced <em>coprocesses</em>, a feature certainly familiar to ksh users. The <code>coproc</code> keyword starts a command as a background job, setting up pipes connected to both its stdin and stdout so that you can interact with it bidirectionally. Optionally, the co-process can have a name <code>NAME</code>. If <code>NAME</code> is given, the command that follows <strong>must be a compound command</strong>. If no <code>NAME</code> is given, then the command can be either simple or compound.
+</p>
+
+<p>
+The process ID of the shell spawned to execute the coprocess is available through the value of the variable named by <code>NAME</code> followed by a <code>_PID</code> suffix. For example, the variable name used to store the PID of a coproc started with no <code>NAME</code> given would be <code>COPROC_PID</code> (because <code>COPROC</code> is the default <code>NAME</code>). <a href="/commands/builtin/wait" class="wikilink1" title="commands:builtin:wait">The wait builtin command</a> may be used to wait for the coprocess to terminate. Additionally, coprocesses may be manipulated through their <code>jobspec</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;111-1065&quot;} -->
+<h3 class="sectionedit4" id="return_status">Return status</h3>
+<div class="level3">
+
+<p>
+The return status of a coprocess is the exit status of its command.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1066-1159&quot;} -->
+<h3 class="sectionedit5" id="redirections">Redirections</h3>
+<div class="level3">
+
+<p>
+The optional redirections are applied after the pipes have been set up. Some examples:
+</p>
+
+<p>
+<pre class="code bash"><span class="co0"># redirecting stderr in the pipe</span>
+$ coproc <span class="br0">&#123;</span> <span class="kw2">ls</span> thisfiledoesntexist; <span class="kw2">read</span>; <span class="br0">&#125;</span> <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span>
+<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> <span class="nu0">23084</span>
+$ <span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-ru</span> <span class="co1">${COPROC[0]}</span> x; <span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span>
+ls: cannot access thisfiledoesntexist: No such <span class="kw2">file</span> or directory</pre>
+
+</p>
+
+<p>
+<pre class="code bash"><span class="co0">#let the output of the coprocess go to stdout</span>
+$ <span class="br0">&#123;</span> coproc mycoproc <span class="br0">&#123;</span> <span class="kw2">awk</span> <span class="st_h">'{print &quot;foo&quot; $0;fflush()}'</span>; <span class="br0">&#125;</span> <span class="sy0">&gt;&amp;</span><span class="nu0">3</span>; <span class="br0">&#125;</span> <span class="nu0">3</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span>
+<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> <span class="nu0">23092</span>
+$ <span class="kw3">echo</span> bar <span class="sy0">&gt;&amp;</span><span class="co1">${mycoproc[1]}</span>
+$ foobar</pre>
+
+</p>
+
+<p>
+Here we need to save the previous file descriptor of stdout, because by the time we redirect the fds of the coprocess, stdout has already been redirected to the pipe. 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Redirections&quot;,&quot;hid&quot;:&quot;redirections&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1160-1851&quot;} -->
+<h3 class="sectionedit6" id="pitfalls">Pitfalls</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="avoid_the_final_pipeline_subshell">Avoid the final pipeline subshell</h4>
+<div class="level4">
+
+<p>
+The traditional Ksh workaround to avoid the subshell when doing <code>command | while read</code> is to use a coprocess. Unfortunately, Bash&#039;s behavior differs.
+</p>
+
+<p>
+In Ksh you would do:
+<pre class="code bash"><span class="co0"># ksh93 or mksh/pdksh derivatives</span>
+<span class="kw2">ls</span> <span class="sy0">|&amp;</span> <span class="co0"># start a coprocess</span>
+<span class="kw1">while</span> <span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-rp</span> <span class="kw2">file</span>; <span class="kw1">do</span> print <span class="re5">-r</span> <span class="re5">--</span> <span class="st0">&quot;<span class="es2">$file</span>&quot;</span>; <span class="kw1">done</span> <span class="co0"># read its output</span></pre>
+
+</p>
+
+<p>
+In bash:
+<pre class="code bash"><span class="co0">#DOESN'T WORK</span>
+$ coproc <span class="kw2">ls</span>
+<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="nu0">23232</span>
+$ <span class="kw1">while</span> <span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-ru</span> <span class="co1">${COPROC[0]}</span> line; <span class="kw1">do</span> <span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;<span class="es2">$line</span>&quot;</span>; <span class="kw1">done</span>
+bash: read: line: invalid <span class="kw2">file</span> descriptor specification
+<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>+  Done                    coproc COPROC <span class="kw2">ls</span></pre>
+
+</p>
+
+<p>
+By the time we start reading from the output of the coprocess, the file descriptor has been closed.
+</p>
+
+<p>
+See <a href="http://mywiki.wooledge.org/BashFAQ/024" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/024" rel="nofollow"> this FAQ entry on Greg&#039;s wiki</a> for other pipeline subshell workarounds.
+</p>
+
+</div>
+
+<h4 id="buffering">Buffering</h4>
+<div class="level4">
+
+<p>
+In the first example, we GNU awk&#039;s <code>fflush()</code> command. As always, when you use pipes the I/O operations are buffered. Let&#039;s see what happens with <code>sed</code>:
+</p>
+
+<p>
+<pre class="code bash">$ coproc <span class="kw2">sed</span> s<span class="sy0">/</span>^<span class="sy0">/</span>foo<span class="sy0">/</span>
+<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="nu0">22981</span>
+$ <span class="kw3">echo</span> bar <span class="sy0">&gt;&amp;</span><span class="co1">${COPROC[1]}</span>
+$ <span class="kw2">read</span> <span class="re5">-t</span> <span class="nu0">3</span> <span class="re5">-ru</span> <span class="co1">${COPROC[0]}</span> _; <span class="br0">&#40;</span><span class="br0">&#40;</span> <span class="re4">$?</span> <span class="sy0">&gt;</span> <span class="nu0">127</span> <span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">&amp;&amp;</span> <span class="kw3">echo</span> <span class="st0">&quot;nothing read&quot;</span>
+nothing <span class="kw2">read</span></pre>
+
+</p>
+
+<p>
+Even though this example is the same as the first <code>awk</code> example, the <code>read</code> doesn&#039;t return because the output is waiting in a buffer.
+</p>
+
+<p>
+See <a href="http://mywiki.wooledge.org/BashFAQ/009" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/009" rel="nofollow"> this faq entry on Greg&#039;s wiki</a> for some workarounds and more information on buffering issues.
+</p>
+
+</div>
+
+<h4 id="background_processes">background processes</h4>
+<div class="level4">
+
+<p>
+A coprocess&#039; file descriptors are accessible only to the process from which the <code>coproc</code> was started. They are not inherited by subshells.
+</p>
+
+<p>
+Here is a not-so-meaningful illustration. Suppose we want to continuously read the output of a coprocess and <code>echo</code> the result:
+</p>
+
+<p>
+<pre class="code bash"><span class="co0">#NOT WORKING</span>
+$ coproc <span class="kw2">awk</span> <span class="st_h">'{print &quot;foo&quot; $0;fflush()}'</span>
+<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> <span class="nu0">23100</span>
+$ <span class="kw1">while</span> <span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-ru</span> <span class="co1">${COPROC[0]}</span> x; <span class="kw1">do</span> <span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span>; <span class="kw1">done</span> <span class="sy0">&amp;</span>
+<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span> <span class="nu0">23104</span>
+bash: line <span class="nu0">243</span>: read: <span class="nu0">61</span>: invalid <span class="kw2">file</span> descriptor: Bad <span class="kw2">file</span> descriptor</pre>
+
+</p>
+
+<p>
+This fails because the file descriptors created by the parent are not available to the subshell created by &amp;.
+</p>
+
+<p>
+A possible workaround:
+</p>
+
+<p>
+<pre class="code bash"><span class="co0">#WARNING: for illustration purpose ONLY</span>
+<span class="co0"># this is not the way to make the coprocess print its output</span>
+<span class="co0"># to stdout, see the redirections above.</span>
+$ coproc <span class="kw2">awk</span> <span class="st_h">'{print &quot;foo&quot; $0;fflush()}'</span>
+<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> <span class="nu0">23109</span>
+$ <span class="kw3">exec</span> <span class="nu0">3</span><span class="sy0">&lt;&amp;</span><span class="co1">${COPROC[0]}</span>
+$ <span class="kw1">while</span> <span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-ru</span> <span class="nu0">3</span> x; <span class="kw1">do</span> <span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span>; <span class="kw1">done</span> <span class="sy0">&amp;</span>
+<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span> <span class="nu0">23110</span>
+$ <span class="kw3">echo</span> bar <span class="sy0">&gt;&amp;</span><span class="co1">${COPROC[1]}</span>
+$ foobar</pre>
+
+</p>
+
+<p>
+Here, fd 3 is inherited.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Pitfalls&quot;,&quot;hid&quot;:&quot;pitfalls&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;1852-4363&quot;} -->
+<h2 class="sectionedit7" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:7,&quot;range&quot;:&quot;4364-4385&quot;} -->
+<h3 class="sectionedit8" id="anonymous_coprocess">Anonymous Coprocess</h3>
+<div class="level3">
+
+<p>
+Unlike ksh, Bash doesn&#039;t have true anonymous coprocesses. Instead, Bash assigns FDs to a default array named <code>COPROC</code> if no <code>NAME</code> is supplied. Here&#039;s an example:
+</p>
+
+<p>
+<pre class="code bash">$ coproc <span class="kw2">awk</span> <span class="st_h">'{print &quot;foo&quot; $0;fflush()}'</span>
+<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="nu0">22978</span></pre>
+
+</p>
+
+<p>
+This command starts in the background, and <code>coproc</code> returns immediately. Two new file descriptors are now available via the <code>COPROC</code> array. We can send data to our command:
+</p>
+
+<p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw3">echo</span> bar <span class="sy0">&gt;&amp;</span><span class="co1">${COPROC[1]}</span></pre>
+
+</p>
+
+<p>
+And then read its output:
+</p>
+
+<p>
+<pre class="code bash">$ <span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-ru</span> <span class="co1">${COPROC[0]}</span> x; <span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span>
+foobar</pre>
+
+</p>
+
+<p>
+When we don&#039;t need our command anymore, we can kill it via its pid:
+</p>
+
+<p>
+<pre class="code">$ kill $COPROC_PID
+$
+[1]+  Terminated              coproc COPROC awk &#039;{print &quot;foo&quot; $0;fflush()}&#039;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Anonymous Coprocess&quot;,&quot;hid&quot;:&quot;anonymous_coprocess&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:8,&quot;range&quot;:&quot;4386-5169&quot;} -->
+<h3 class="sectionedit9" id="named_coprocess">Named Coprocess</h3>
+<div class="level3">
+
+<p>
+Using a named coprocess is simple. We just need a compound command (like when defining a function), and the resulting FDs will be assigned to the indexed array <code>NAME</code> we supply instead.
+</p>
+
+<p>
+<pre class="code bash">$ coproc mycoproc <span class="br0">&#123;</span> <span class="kw2">awk</span> <span class="st_h">'{print &quot;foo&quot; $0;fflush()}'</span> ;<span class="br0">&#125;</span>
+<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="nu0">23058</span>
+$ <span class="kw3">echo</span> bar <span class="sy0">&gt;&amp;</span><span class="co1">${mycoproc[1]}</span>
+$ <span class="re2">IFS</span>= <span class="kw2">read</span> <span class="re5">-ru</span> <span class="co1">${mycoproc[0]}</span> x; <span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;<span class="es2">$x</span>&quot;</span>
+foobar
+$ <span class="kw2">kill</span> <span class="re1">$mycoproc_PID</span>
+$
+<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>+  Terminated              coproc mycoproc <span class="br0">&#123;</span> <span class="kw2">awk</span> <span class="st_h">'{print &quot;foo&quot; $0;fflush()}'</span>; <span class="br0">&#125;</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Named Coprocess&quot;,&quot;hid&quot;:&quot;named_coprocess&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:9,&quot;range&quot;:&quot;5170-5665&quot;} -->
+<h3 class="sectionedit10" id="redirecting_the_output_of_a_script_to_a_file_and_to_the_screen">Redirecting the output of a script to a file and to the screen</h3>
+<div class="level3">
+
+<p>
+<pre class="code bash"><span class="co0">#!/bin/bash</span>
+<span class="co0"># we start tee in the background</span>
+<span class="co0"># redirecting its output to the stdout of the script</span>
+<span class="br0">&#123;</span> coproc <span class="kw2">tee</span> <span class="br0">&#123;</span> <span class="kw2">tee</span> logfile ;<span class="br0">&#125;</span> <span class="sy0">&gt;&amp;</span><span class="nu0">3</span> ;<span class="br0">&#125;</span> <span class="nu0">3</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span> 
+<span class="co0"># we redirect stding and stdout of the script to our coprocess</span>
+<span class="kw3">exec</span> <span class="sy0">&gt;&amp;</span><span class="co1">${tee[1]}</span> <span class="nu0">2</span><span class="sy0">&gt;&amp;</span><span class="nu0">1</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Redirecting the output of a script to a file and to the screen&quot;,&quot;hid&quot;:&quot;redirecting_the_output_of_a_script_to_a_file_and_to_the_screen&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:10,&quot;range&quot;:&quot;5666-5986&quot;} -->
+<h2 class="sectionedit11" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> The <code>coproc</code> keyword is not specified by POSIX(R)</div>
+</li>
+<li class="level1"><div class="li"> The <code>coproc</code> keyword appeared in Bash version 4.0-alpha</div>
+</li>
+<li class="level1"><div class="li"> The <code>-p</code> option to Bash&#039;s <code>print</code> loadable is a NOOP and not connected to Bash coprocesses in any way. It is only recognized as an option for ksh compatibility, and has no effect.</div>
+</li>
+<li class="level1"><div class="li"> The <code>-p</code> option to Bash&#039;s <code><a href="/commands/builtin/read" class="wikilink1" title="commands:builtin:read"> read</a></code> builtin conflicts with that of all kshes and zsh. The equivalent in those shells is to add a <code>\?prompt</code> suffix to the first variable name argument to <code>read</code>. i.e., if the first variable name given contains a <code>?</code> character, the remainder of the argument is used as the prompt string. Since this feature is pointless and redundant, I suggest not using it in either shell. Simply precede the <code>read</code> command with a <code>printf %s prompt &gt;&amp;2</code>. </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:11,&quot;range&quot;:&quot;5987-6848&quot;} -->
+<h3 class="sectionedit12" id="other_shells">Other shells</h3>
+<div class="level3">
+
+<p>
+ksh93, mksh, zsh, and Bash all support something called &quot;coprocesses&quot; which all do approximately the same thing. ksh93 and mksh have virtually identical syntax and semantics for coprocs. A <em>list</em> operator: <code>|&amp;</code> is added to the language which runs the preceding <em>pipeline</em> as a coprocess (This is another reason not to use the special <code>|&amp;</code> pipe operator in Bash – its syntax is conflicting). The <code>-p</code> option to the <code>read</code> and <code>print</code> builtins can then be used to read and write to the pipe of the coprocess (whose FD isn&#039;t yet known). Special redirects are added to move the last spawned coprocess to a different FD: <code>&lt;&amp;p</code> and <code>&gt;&amp;p</code>, at which point it can be accessed at the new FD using ordinary redirection, and another coprocess may then be started, again using <code>|&amp;</code>.
+</p>
+
+<p>
+zsh coprocesses are very similar to ksh except in the way they are started. zsh adds the shell reserved word <code>coproc</code> to the pipeline syntax (similar to the way Bash&#039;s <code>time</code> keyword works), so that the pipeline that follows is started as a coproc. The coproc&#039;s input and output FDs can then be accessed and moved using the same <code>read</code>/<code>print</code> <code>-p</code> and redirects used by the ksh shells.
+</p>
+
+<p>
+It is unfortunate that Bash chose to go against existing practice in their coproc implementation, especially considering it was the last of the major shells to incorporate this feature. However, Bash&#039;s method accomplishes the same without requiring nearly as much additional syntax. The <code>coproc</code> keyword is easy enough to wrap in a function such that it takes Bash code as an ordinary argument and/or stdin like <code>eval</code>. Coprocess functionality in other shells can be similarly wrapped to create a <code>COPROC</code> array automatically.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Other shells&quot;,&quot;hid&quot;:&quot;other_shells&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:12,&quot;range&quot;:&quot;6849-8598&quot;} -->
+<h3 class="sectionedit13" id="only_one_coprocess_at_a_time">Only one coprocess at a time</h3>
+<div class="level3">
+
+<p>
+The title says it all, complain to the bug-bash mailing list if you want more. See <a href="http://lists.gnu.org/archive/html/bug-bash/2011-04/msg00056.html" class="urlextern" title="http://lists.gnu.org/archive/html/bug-bash/2011-04/msg00056.html" rel="nofollow">http://lists.gnu.org/archive/html/bug-bash/2011-04/msg00056.html</a> for more details
+</p>
+
+<p>
+The ability to use multiple coprocesses in Bash is considered &quot;experimental&quot;. Bash will throw an error if you attempt to start more than one. This may be overridden at compile-time with the <code>MULTIPLE_COPROCS</code> option. However, at this time there are still issues – see the above mailing list discussion.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Only one coprocess at a time&quot;,&quot;hid&quot;:&quot;only_one_coprocess_at_a_time&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:13,&quot;range&quot;:&quot;8599-9111&quot;} -->
+<h2 class="sectionedit14" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.ict.griffith.edu.au/anthony/info/shell/co-processes.hints" class="urlextern" title="http://www.ict.griffith.edu.au/anthony/info/shell/co-processes.hints" rel="nofollow">Anthony Thyssen&#039;s Coprocess Hints</a> - excellent summary of everything around the topic</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:14,&quot;range&quot;:&quot;9112-&quot;} --></div>
+</body>
+</html>

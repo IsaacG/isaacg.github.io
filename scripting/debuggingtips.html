@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>scripting:debuggingtips</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="scripting,debuggingtips,bash,shell,scripting,bug,debug,debugging"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/scripting/debuggingtips?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=scripting"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/scripting/debuggingtips"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/scripting/debuggingtips"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/scripting/debuggingtips"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='scripting';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"scripting:debuggingtips","namespace":"scripting","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#debugging_a_script">Debugging a script</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#use_a_unique_name_for_your_script">Use a unique name for your script</a></div></li>
+<li class="level2"><div class="li"><a href="#read_the_error_messages">Read the error messages</a></div></li>
+<li class="level2"><div class="li"><a href="#use_a_good_editor">Use a good editor</a></div></li>
+<li class="level2"><div class="li"><a href="#write_logfiles">Write logfiles</a></div></li>
+<li class="level2"><div class="li"><a href="#inject_debugging_code">Inject debugging code</a></div></li>
+<li class="level2"><div class="li"><a href="#use_shell_debug_output">Use shell debug output</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#simple_example_of_how_to_interpret_xtrace_output">Simple example of how to interpret xtrace output</a></div></li>
+<li class="level3"><div class="li"><a href="#making_xtrace_more_useful">Making xtrace more useful</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#debugging_commands_depending_on_a_set_variable">Debugging commands depending on a set variable</a></div></li>
+<li class="level2"><div class="li"><a href="#dry-run_stdin_driven_commands">Dry-run STDIN driven commands</a></div></li>
+<li class="level2"><div class="li"><a href="#common_error_messages">Common error messages</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#unexpected_end_of_file">Unexpected end of file</a></div></li>
+<li class="level3"><div class="li"><a href="#unexpected_end_of_file_while_looking_for_matching">Unexpected end of file while looking for matching ...</a></div></li>
+<li class="level3"><div class="li"><a href="#too_many_arguments">Too many arguments</a></div></li>
+<li class="level3"><div class="li"><a href="#event_not_found">!&quot;: event not found</a></div></li>
+<li class="level3"><div class="li"><a href="#syntax_error_near_unexpected_token">syntax error near unexpected token `(&#039;</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#the_crlf_issue">The CRLF issue</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#what_is_the_crlf_issue">What is the CRLF issue?</a></div></li>
+<li class="level3"><div class="li"><a href="#how_did_a_cr_end_up_in_my_file">How did a CR end up in my file?</a></div></li>
+<li class="level3"><div class="li"><a href="#why_do_crs_hurt">Why do CRs hurt?</a></div></li>
+<li class="level3"><div class="li"><a href="#how_can_i_find_and_eliminate_them">How can I find and eliminate them?</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="debugging_a_script">Debugging a script</h1>
+<div class="level1">
+
+<p>
+These few lines are not intended as a full-fledged debugging tutorial, but as hints and comments about debugging a Bash script.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Debugging a script&quot;,&quot;hid&quot;:&quot;debugging_a_script&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-220&quot;} -->
+<h2 class="sectionedit2" id="use_a_unique_name_for_your_script">Use a unique name for your script</h2>
+<div class="level2">
+
+<p>
+Do <strong>not</strong> name your script <code>test</code>, for example! <em>Why?</em> <code>test</code> is the name of a UNIX®-command, and <em class="u">most likely built into your shell</em> (it&#039;s a built-in in Bash) - so you won&#039;t be able to run a script with the name <code>test</code> in a normal way.
+</p>
+
+<p>
+<strong>Don&#039;t laugh!</strong> This is a classic mistake <img src="/lib/images/smileys/icon_smile.gif" class="icon" alt=":-)" />
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use a unique name for your script&quot;,&quot;hid&quot;:&quot;use_a_unique_name_for_your_script&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;221-566&quot;} -->
+<h2 class="sectionedit3" id="read_the_error_messages">Read the error messages</h2>
+<div class="level2">
+
+<p>
+Many people come into <abbr title="Internet Relay Chat">IRC</abbr> and ask something like <em>&quot;Why does my script fail? I get an error!&quot;</em>.  And when you ask them what the error message is, they don&#039;t even know.  Beautiful.
+</p>
+
+<p>
+Reading and interpreting error messages is 50% of your job as debugger! Error messages actually <strong>mean</strong> something. At the very least, they can give you hints as to where to start debugging. <strong>READ YOUR ERROR MESSAGES!</strong>
+</p>
+
+<p>
+You may ask yourself why is this mentioned as debugging tip? Well, <em class="u">you would be surprised how many shell users ignore the text of error messages!</em> When I find some time, I&#039;ll paste 2 or 3 <abbr title="Internet Relay Chat">IRC</abbr> log-snips here, just to show you that annoying fact.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Read the error messages&quot;,&quot;hid&quot;:&quot;read_the_error_messages&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;567-1258&quot;} -->
+<h2 class="sectionedit4" id="use_a_good_editor">Use a good editor</h2>
+<div class="level2">
+
+<p>
+Your choice of editor is a matter of personal preference, but one with <strong>Bash syntax highlighting</strong> is highly recommended! Syntax highlighting helps you see (you guessed it) syntax errors, such as unclosed quotes and braces, typos, etc.
+</p>
+
+<p>
+From my personal experience, I can suggest <code>vim</code> or <code>GNU emacs</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use a good editor&quot;,&quot;hid&quot;:&quot;use_a_good_editor&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1259-1597&quot;} -->
+<h2 class="sectionedit5" id="write_logfiles">Write logfiles</h2>
+<div class="level2">
+
+<p>
+For more complex scripts, it&#039;s useful to write to a log file, or to the system log. Nobody can debug your script without knowing what actually happened and what went wrong.
+</p>
+
+<p>
+An available syslog interface is <code>logger</code> (<a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?logger+1" class="urlextern" title="http://unixhelp.ed.ac.uk/CGI/man-cgi?logger+1" rel="nofollow"> online manpage</a>).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Write logfiles&quot;,&quot;hid&quot;:&quot;write_logfiles&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1598-1917&quot;} -->
+<h2 class="sectionedit6" id="inject_debugging_code">Inject debugging code</h2>
+<div class="level2">
+
+<p>
+Insert <strong>echos</strong> everywhere you can, and print to <code>stderr</code>:
+<pre class="code">echo &quot;DEBUG: current i=$i&quot; &gt;&amp;2</pre>
+
+</p>
+
+<p>
+If you read input from <strong>anywhere</strong>, such as a file or <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> command substitution</a>, print the debug output with literal quotes, to see leading and trailing spaces!
+</p>
+
+<p>
+<pre class="code">pid=$(&lt; fooservice.pid)
+echo &quot;DEBUG: read from file: pid=\&quot;$pid\&quot;&quot; &gt;&amp;2</pre>
+
+</p>
+
+<p>
+Bash&#039;s <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf"> printf</a> command has the <code>%q</code> format, which is handy for verifying whether strings are what they appear to be.
+<pre class="code">foo=$(&lt; inputfile)
+printf &quot;DEBUG: foo is |%q|\n&quot; &quot;$foo&quot; &gt;&amp;2
+# exposes whitespace (such as CRs, see below) and non-printing characters</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Inject debugging code&quot;,&quot;hid&quot;:&quot;inject_debugging_code&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;1918-2636&quot;} -->
+<h2 class="sectionedit7" id="use_shell_debug_output">Use shell debug output</h2>
+<div class="level2">
+
+<p>
+There are two useful debug outputs for that task (both are written to <code>stderr</code>):
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <code>set -v</code> mode (<code>set -o verbose</code>)</div>
+<ul>
+<li class="level2"><div class="li"> print commands to be executed to <code>stderr</code> as if they were read from input (script file or keyboard)</div>
+</li>
+<li class="level2"><div class="li"> print everything <strong>before</strong> any (<a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> substitution and expansion</a>, …) is applied</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <code>set -x</code> mode (<code>set -o xtrace</code>)</div>
+<ul>
+<li class="level2"><div class="li"> print everything as if it were executed, after <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> substitution and expansion</a> is applied</div>
+</li>
+<li class="level2"><div class="li"> indicate the depth-level of the subshell (by default by prefixing a <code>+</code> (plus) sign to the displayed command)</div>
+</li>
+<li class="level2"><div class="li"> indicate the recognized words after <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> word splitting</a> by marking them like <code>&#039;x y&#039;</code></div>
+</li>
+<li class="level2"><div class="li"> in shell version 4.1, this debug output can be printed to a configurable file descriptor, rather than sdtout by setting the <a href="/syntax/shellvars#bash_xtracefd" class="wikilink1" title="syntax:shellvars">BASH_XTRACEFD</a> variable.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+<strong><em class="u">Hint:</em></strong> These modes can be entered when calling Bash:
+</p>
+<ul>
+<li class="level1"><div class="li"> from commandline: <code>bash -vx ./myscript</code></div>
+</li>
+<li class="level1"><div class="li"> from shebang (<abbr title="Operating System">OS</abbr> dependant): <code>#!/bin/bash -vx</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use shell debug output&quot;,&quot;hid&quot;:&quot;use_shell_debug_output&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:7,&quot;range&quot;:&quot;2637-3784&quot;} -->
+<h3 class="sectionedit8" id="simple_example_of_how_to_interpret_xtrace_output">Simple example of how to interpret xtrace output</h3>
+<div class="level3">
+
+<p>
+Here&#039;s a simple command (a string comparison using the <a href="/commands/classictest" class="wikilink1" title="commands:classictest"> classic test command</a>) executed while in <code>set -x</code> mode: 
+<pre class="code">set -x
+foo=&quot;bar baz&quot;
+[ $foo = test ]</pre>
+
+</p>
+
+<p>
+That fails. Why? Let&#039;s see the <code>xtrace</code> output:
+</p>
+
+<p>
+<pre class="code">+ &#039;[&#039; bar baz = test &#039;]&#039;</pre>
+
+</p>
+
+<p>
+And now you see that it&#039;s (&quot;bar&quot; and &quot;baz&quot;) recognized as two separate words (which you would have realized if you READ THE ERROR MESSAGES ;) ). Let&#039;s check it…
+<pre class="code"># next try
+[ &quot;$foo&quot; = test ]</pre>
+
+</p>
+
+<p>
+<code>xtrace</code> now gives
+<pre class="code">+ &#039;[&#039; &#039;bar baz&#039; = test &#039;]&#039;
+      ^       ^
+    word markers!</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple example of how to interpret xtrace output&quot;,&quot;hid&quot;:&quot;simple_example_of_how_to_interpret_xtrace_output&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:8,&quot;range&quot;:&quot;3785-4439&quot;} -->
+<h3 class="sectionedit9" id="making_xtrace_more_useful">Making xtrace more useful</h3>
+<div class="level3">
+
+<p>
+(by AnMaster)
+</p>
+
+<p>
+<code>xtrace</code> output would be more useful if it contained source file and line number. Add this assignment <a href="/syntax/shellvars#ps4" class="wikilink1" title="syntax:shellvars">PS4</a> at the beginning of your script to enable the inclusion of that information:
+<pre class="code">export PS4=&#039;+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }&#039;</pre>
+
+<strong>Be sure to use single quotes here!</strong>
+</p>
+
+<p>
+The output would look like this when you trace code <em>outside a function</em>:
+<pre class="code">+(somefile.bash:412): echo &#039;Hello world&#039;</pre>
+
+…and like this when you trace code <em>inside a function</em>:
+<pre class="code">+(somefile.bash:412): myfunc(): echo &#039;Hello world&#039;</pre>
+
+</p>
+
+<p>
+That helps a lot when the script is long, or when the main script sources many other files.
+</p>
+
+</div>
+
+<h4 id="set_flag_variables_with_descriptive_words">Set flag variables with descriptive words</h4>
+<div class="level4">
+
+<p>
+If you test variables that flag the state of options, such as with <code>if [[ -n $option ]];</code>, consider using descriptive words rather than short codes, such as 0, 1, Y, N, because xtrace will show <code>[[ -n word ]]</code> rather than <code>[[ -n 1 ]]</code> when the option is set.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Making xtrace more useful&quot;,&quot;hid&quot;:&quot;making_xtrace_more_useful&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:9,&quot;range&quot;:&quot;4440-5512&quot;} -->
+<h2 class="sectionedit10" id="debugging_commands_depending_on_a_set_variable">Debugging commands depending on a set variable</h2>
+<div class="level2">
+
+<p>
+For general debugging purposes you can also define a function and a variable to use:
+<pre class="code">debugme() {
+ [[ $script_debug = 1 ]] &amp;&amp; &quot;$@&quot; || :
+ # be sure to append || : or || true here or use return 0, since the return code
+ # of this function should always be 0 to not influence anything else with an unwanted
+ # &quot;false&quot; return code (for example the script&#039;s exit code if this function is used
+ # as the very last command in the script)
+}</pre>
+
+</p>
+
+<p>
+This function does nothing when <code>script_debug</code> is unset or empty, but it executes the given parameters as commands when <code>script_debug</code> is set. Use it like this:
+<pre class="code">script_debug=1
+# to turn it off, set script_debug=0
+
+debugme logger &quot;Sorting the database&quot;
+database_sort
+debugme logger &quot;Finished sorting the database, exit code $?&quot;</pre>
+
+</p>
+
+<p>
+Of course this can be used to execute something other than echo during debugging:
+<pre class="code">debugme set -x
+# ... some code ...
+debugme set +x</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Debugging commands depending on a set variable&quot;,&quot;hid&quot;:&quot;debugging_commands_depending_on_a_set_variable&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:10,&quot;range&quot;:&quot;5513-6515&quot;} -->
+<h2 class="sectionedit11" id="dry-run_stdin_driven_commands">Dry-run STDIN driven commands</h2>
+<div class="level2">
+
+<p>
+Imagine you have a script that runs <abbr title="File Transfer Protocol">FTP</abbr> commands using the standard <abbr title="File Transfer Protocol">FTP</abbr> client:
+</p>
+
+<p>
+<pre class="code bash"><span class="kw2">ftp</span> user<span class="sy0">@</span>host <span class="co2">&lt;&lt;FTP
+cd /data
+get current.log
+dele current.log
+FTP</span></pre>
+
+</p>
+
+<p>
+A method to dry-run this with debug output is:
+<pre class="code bash"><span class="kw1">if</span> <span class="br0">&#91;</span><span class="br0">&#91;</span> <span class="re1">$DRY_RUN</span> = <span class="kw2">yes</span> <span class="br0">&#93;</span><span class="br0">&#93;</span>; <span class="kw1">then</span>
+  <span class="kw2">sed</span> <span class="st_h">'s/^/DRY_RUN FTP: /'</span>
+<span class="kw1">else</span>
+  <span class="kw2">ftp</span> user<span class="sy0">@</span>host
+<span class="kw1">fi</span> <span class="co2">&lt;&lt;FTP
+cd /data
+get current.log
+dele current.log
+FTP</span></pre>
+
+</p>
+
+<p>
+This can be wrapped in a shell function for more readable code.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Dry-run STDIN driven commands&quot;,&quot;hid&quot;:&quot;dry-run_stdin_driven_commands&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:11,&quot;range&quot;:&quot;6516-6992&quot;} -->
+<h2 class="sectionedit12" id="common_error_messages">Common error messages</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Common error messages&quot;,&quot;hid&quot;:&quot;common_error_messages&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:12,&quot;range&quot;:&quot;6993-7029&quot;} -->
+<h3 class="sectionedit13" id="unexpected_end_of_file">Unexpected end of file</h3>
+<div class="level3">
+
+<p>
+<pre class="code">script.sh: line 100: syntax error: unexpected end of file</pre>
+
+</p>
+
+<p>
+Usually indicates exactly what it says: An unexpected end of file. It&#039;s unexpected because Bash waits for the closing of a <a href="/syntax/ccmd/intro" class="wikilink1" title="syntax:ccmd:intro"> compound command</a>:
+</p>
+<ul>
+<li class="level1"><div class="li"> did you close your <code>do</code> with a <code>done</code>?</div>
+</li>
+<li class="level1"><div class="li"> did you close your <code>if</code> with a <code>fi</code>?</div>
+</li>
+<li class="level1"><div class="li"> did you close your <code>case</code> with a <code>esac</code>?</div>
+</li>
+<li class="level1"><div class="li"> did you close your <code>{</code> with a <code>}</code>?</div>
+</li>
+<li class="level1"><div class="li"> did you close your <code>(</code> with a <code>)</code>?</div>
+</li>
+</ul>
+
+<p>
+<strong><em class="u">Note:</em></strong> It seems that here-documents (tested on versions <code>1.14.7</code>, <code>2.05b</code>, <code>3.1.17</code> and <code>4.0</code>) are correctly terminated when there is an <abbr title="End of file">EOF</abbr> before the end-of-here-document tag (see <a href="/syntax/redirection" class="wikilink1" title="syntax:redirection"> redirection</a>). The reason is unknown, but it seems to be deliberate. Bash 4.0 added an extra message for this: <code>warning: here-document at line &lt;N&gt; delimited by end-of-file (wanted `&lt;MARKER&gt;&#039;)</code>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Unexpected end of file&quot;,&quot;hid&quot;:&quot;unexpected_end_of_file&quot;,&quot;codeblockOffset&quot;:15,&quot;secid&quot;:13,&quot;range&quot;:&quot;7030-7951&quot;} -->
+<h3 class="sectionedit14" id="unexpected_end_of_file_while_looking_for_matching">Unexpected end of file while looking for matching ...</h3>
+<div class="level3">
+
+<p>
+<pre class="code">script.sh: line 50: unexpected EOF while looking for matching `&quot;&#039;
+script.sh: line 100: syntax error: unexpected end of file</pre>
+
+</p>
+
+<p>
+This one indicates the double-quote opened in line 50 does not have a matching closing quote.
+</p>
+
+<p>
+These <em>unmatched errors</em> occur with:
+</p>
+<ul>
+<li class="level1"><div class="li"> double-quote pairs</div>
+</li>
+<li class="level1"><div class="li"> single-quote pairs (also <code>$&#039;string&#039;</code>!)</div>
+</li>
+<li class="level1"><div class="li"> missing a closing <code>}</code> with <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansion syntax</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Unexpected end of file while looking for matching ...&quot;,&quot;hid&quot;:&quot;unexpected_end_of_file_while_looking_for_matching&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:14,&quot;range&quot;:&quot;7952-8454&quot;} -->
+<h3 class="sectionedit15" id="too_many_arguments">Too many arguments</h3>
+<div class="level3">
+
+<p>
+<pre class="code">bash: test: too many arguments</pre>
+
+</p>
+
+<p>
+You most likely forgot to quote a variable expansion somewhere. See the example for <code>xtrace</code> output from above. External commands may display such an error message though in our example, it was the <strong>internal</strong> test-command that yielded the error.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Too many arguments&quot;,&quot;hid&quot;:&quot;too_many_arguments&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:15,&quot;range&quot;:&quot;8455-8783&quot;} -->
+<h3 class="sectionedit16" id="event_not_found">!&quot;: event not found</h3>
+<div class="level3">
+
+<p>
+<pre class="code">$ echo &quot;Hello world!&quot;
+bash: !&quot;: event not found</pre>
+
+</p>
+
+<p>
+This is not an error per se. It happens in interactive shells, when the C-Shell-styled history expansion (&quot;<code>!searchword</code>&quot;) is enabled. This is the default. Disable it like this:
+<pre class="code">set +H
+# or
+set +o histexpand</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;!\&quot;: event not found&quot;,&quot;hid&quot;:&quot;event_not_found&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:16,&quot;range&quot;:&quot;8784-9104&quot;} -->
+<h3 class="sectionedit17" id="syntax_error_near_unexpected_token">syntax error near unexpected token `(&#039;</h3>
+<div class="level3">
+
+<p>
+When this happens during a script <strong>function definition</strong> or on the commandline, e.g.
+</p>
+
+<p>
+<pre class="code">$ foo () { echo &quot;Hello world&quot;; }
+bash: syntax error near unexpected token `(&#039;</pre>
+
+</p>
+
+<p>
+you most likely have an alias defined with the same name as the function (here: <code>foo</code>). Alias expansion happens before the real language interpretion, thus the alias is expanded and makes your function definition invalid.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;syntax error near unexpected token `(&#039;&quot;,&quot;hid&quot;:&quot;syntax_error_near_unexpected_token&quot;,&quot;codeblockOffset&quot;:20,&quot;secid&quot;:17,&quot;range&quot;:&quot;9105-9560&quot;} -->
+<h2 class="sectionedit18" id="the_crlf_issue">The CRLF issue</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The CRLF issue&quot;,&quot;hid&quot;:&quot;the_crlf_issue&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:18,&quot;range&quot;:&quot;9561-9588&quot;} -->
+<h3 class="sectionedit19" id="what_is_the_crlf_issue">What is the CRLF issue?</h3>
+<div class="level3">
+
+<p>
+There&#039;s a big difference in the way that UNIX® and Microsoft® (and possibly others) handle the <strong>line endings</strong> of plain text files.  The difference lies in the use of the CR (Carriage Return) and LF (Line Feed) characters.
+</p>
+<ul>
+<li class="level1"><div class="li"> MSDOS uses: <code>\r\n</code> (<abbr title="American Standard Code for Information Interchange">ASCII</abbr> <code>CR</code> #13 <code>^M</code>, <abbr title="American Standard Code for Information Interchange">ASCII</abbr> LF #10)</div>
+</li>
+<li class="level1"><div class="li"> UNIX® uses: <code>\n</code> (<abbr title="American Standard Code for Information Interchange">ASCII</abbr> <code>LF</code> #10)</div>
+</li>
+</ul>
+
+<p>
+Keep in mind your script is a <strong>plain text file</strong>, and the <code>CR</code> character means nothing special to UNIX® - it is treated like any other character. If it&#039;s printed to your terminal, a carriage return will effectively place the cursor at the beginning of the <em>current</em> line. This can cause much confusion and many headaches, since lines containing CRs are not what they appear to be when printed. In summary, CRs are a pain.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is the CRLF issue?&quot;,&quot;hid&quot;:&quot;what_is_the_crlf_issue&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:19,&quot;range&quot;:&quot;9589-10392&quot;} -->
+<h3 class="sectionedit20" id="how_did_a_cr_end_up_in_my_file">How did a CR end up in my file?</h3>
+<div class="level3">
+
+<p>
+Some possible sources of CRs:
+</p>
+<ul>
+<li class="level1"><div class="li"> a DOS/Windows text editor</div>
+</li>
+<li class="level1"><div class="li"> a UNIX® text editor that is &quot;too smart&quot; when determining the file content type (and thinks &quot;<em>it&#039;s a DOS text file</em>&quot;)</div>
+</li>
+<li class="level1"><div class="li"> a direct copy and paste from certain webpages (some pastebins are known for this)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;How did a CR end up in my file?&quot;,&quot;hid&quot;:&quot;how_did_a_cr_end_up_in_my_file&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:20,&quot;range&quot;:&quot;10393-10708&quot;} -->
+<h3 class="sectionedit21" id="why_do_crs_hurt">Why do CRs hurt?</h3>
+<div class="level3">
+
+<p>
+CRs can be a nuisance in various ways. They are especially bad when present in the shebang/interpreter specified with <code>#!</code> in the very first line of a script. Consider the following script, written with a  Windows® text editor (<code>^M</code> is a symbolic representation of the <code>CR</code> carriage return character!):
+<pre class="code">#!/bin/bash^M
+^M
+echo &quot;Hello world&quot;^M
+...</pre>
+
+</p>
+
+<p>
+Here&#039;s what happens because of the <code>#!/bin/bash^M</code> in our shebang:
+</p>
+<ul>
+<li class="level1"><div class="li"> the file <code>/bin/bash^M</code> doesn&#039;t exist (hopefully)</div>
+</li>
+<li class="level1"><div class="li"> So Bash prints an error message which (depending on the terminal, the Bash version, or custom patches!) may or may not expose the problem.</div>
+</li>
+<li class="level1"><div class="li"> the script can&#039;t be executed</div>
+</li>
+</ul>
+
+<p>
+The error message can vary. If you&#039;re lucky, you&#039;ll get:
+<pre class="code">bash: ./testing.sh: /bin/bash^M: bad interpreter: No such file or directory</pre>
+
+which alerts you to the CR.  But you may also get the following:
+<pre class="code">: bad interpreter: No such file or directory</pre>
+
+Why? Because when printed literally, the <code>^M</code> makes the cursor go back to the beginning of the line. The whole error message is <em>printed</em>, but you <em>see</em> only part of it!
+</p>
+<div class="plugin_note notewarning">It&#039;s easy to imagine the <code>^M</code> is bad in other places too. If you get weird and illogical messages from your script, rule out the possibility that<code>^M</code> is involved. Find and eliminate it!
+
+</div>
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Why do CRs hurt?&quot;,&quot;hid&quot;:&quot;why_do_crs_hurt&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:21,&quot;range&quot;:&quot;10709-12070&quot;} -->
+<h3 class="sectionedit22" id="how_can_i_find_and_eliminate_them">How can I find and eliminate them?</h3>
+<div class="level3">
+
+<p>
+<strong>To display</strong> CRs (these are only a few examples)
+</p>
+<ul>
+<li class="level1"><div class="li"> in VI/VIM: <code>:set list</code></div>
+</li>
+<li class="level1"><div class="li"> with <code>cat(1)</code>: <code>cat -v FILE</code></div>
+</li>
+</ul>
+
+<p>
+<strong>To eliminate</strong> them (only a few examples)
+</p>
+<ul>
+<li class="level1"><div class="li"> blindly with <code>tr(1)</code>: <code>tr -d &#039;\r&#039; &lt;FILE &gt;FILE.new</code></div>
+</li>
+<li class="level1"><div class="li"> controlled with <code>recode(1)</code>: <code>recode MSDOS..latin1 FILE</code></div>
+</li>
+<li class="level1"><div class="li"> controlled with <code>dos2unix(1)</code>: <code>dos2unix FILE</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;How can I find and eliminate them?&quot;,&quot;hid&quot;:&quot;how_can_i_find_and_eliminate_them&quot;,&quot;codeblockOffset&quot;:24,&quot;secid&quot;:22,&quot;range&quot;:&quot;12071-12475&quot;} -->
+<h2 class="sectionedit23" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> the set builtin command</a> (for <code>-v</code> and <code>-x</code>)</div>
+</li>
+</ul>
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" />
+</p>
+<ul>
+<li class="level1"><div class="li"> DEBUG trap</div>
+</li>
+<li class="level1"><div class="li"> BASH Debugger <a href="http://bashdb.sourceforge.net/" class="urlextern" title="http://bashdb.sourceforge.net/" rel="nofollow">http://bashdb.sourceforge.net/</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:24,&quot;secid&quot;:23,&quot;range&quot;:&quot;12476-&quot;} --></div>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:declare</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,declare"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/declare?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/declare"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/declare"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/declare"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:declare","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_declare_builtin_command">The declare builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#options">Options</a></div></li>
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#notes">Notes</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#display_defined_functions">Display defined functions</a></div></li>
+<li class="level3"><div class="li"><a href="#nameref">Nameref</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_declare_builtin_command">The declare builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The declare builtin command&quot;,&quot;hid&quot;:&quot;the_declare_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-43&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">declare [-aAfFgilnrtux] [-p] [NAME[=VALUE] ...]
+
+# obsolete typeset synonym
+typeset [-aAfFgilnrtux] [-p] [NAME[=VALUE] ...]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;44-204&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+<code>declare</code> is used to display or set variables along with variable attributes. When used to display variables/functions and their value, the output is re-usable as input for the shell.
+</p>
+
+<p>
+If no <code>NAME</code> is given, it displays the values of all variables or functions when restricted by the <code>-f</code> option.
+</p>
+
+<p>
+If <code>NAME</code> is followed by <code>=VALUE</code>, <code>declare</code> also sets the value for a variable.
+</p>
+
+<p>
+When used in a function, <code>declare</code> makes <code>NAMEs</code> local variables, unless used with the <code>-g</code> option.
+</p>
+
+<p>
+Don&#039;t use it&#039;s synonym <code>typeset</code> when coding for Bash, since it&#039;s tagged as obsolete.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;205-817&quot;} -->
+<h3 class="sectionedit4" id="options">Options</h3>
+<div class="level3">
+
+<p>
+Below, <code>[-+]X</code> indicates an attribute, use <code>-X</code> to set the attribute, <code>+X</code> to remove it.
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Option  </th><th class="col1 leftalign">Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>[-+]a</code>  </td><td class="col1 leftalign">make NAMEs indexed arrays (removing with <code>+a</code> is valid syntax, but leads to an error message)  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>[-+]A</code>  </td><td class="col1 leftalign">make NAMEs associative arrays  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>[-+]c</code>  </td><td class="col1 leftalign"> <strong>Undocumented</strong> convert NAMEs to &quot;capcase&quot; on assignment (makes the first letter upper-case and the rest lower). Requires Bash built with <code>-DCASEMOD_CAPCASE</code>  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"><code>-f</code>  </td><td class="col1 leftalign">restrict action or display to function names and definitions (removing with <code>+f</code> is valid syntax, but leads to an error message)  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"><code>-F</code>  </td><td class="col1 leftalign">restrict display to function names only (plus line number and source file when debugging)  </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"><code>-g</code>  </td><td class="col1 leftalign">create global variables when used in a shell function; otherwise ignored (by default, <code>declare</code> declares local scope variables when used in shell functions)  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign"><code>[-+]i</code>  </td><td class="col1 leftalign">make NAMEs have the &quot;integer&quot; attribute  </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"><code>[-+]l</code>  </td><td class="col1 leftalign">convert NAMEs to lower case on assignment (makes sure the variable contains only lower case letters)  </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign"><code>[-+]n</code>  </td><td class="col1">make NAME a reference to the variable named by its value. Introduced in Bash 4.3-alpha.<br/>
+<code> ${!NAME}</code> reveals the reference variable name, VALUE.<br/>
+Use <code>unset -n NAME</code> to unset the variable. (<code>unset -v NAME</code> unsets the VALUE variable.)<br/>
+Use <code>[[ -R NAME ]]</code> to test if NAME has been set to a VALUE, another variable&#039;s name.</td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"><code>-p</code>  </td><td class="col1 leftalign">display the attributes and value of each NAME  </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign"><code>[-+]r</code>  </td><td class="col1 leftalign">make NAMEs readonly (removing with <code>+r</code> is valid syntax, but not possible)  </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 leftalign"><code>[-+]t</code>  </td><td class="col1 leftalign">make NAMEs have the &quot;trace&quot; attribute (effective only for functions)  </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 leftalign"><code>[-+]u</code>  </td><td class="col1 leftalign">convert NAMEs to upper case on assignment (makes sure the variable contains only upper case letters)  </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 leftalign"><code>[-+]x</code>  </td><td class="col1 leftalign">make NAMEs exported  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;933-2629&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;818-2630&quot;} -->
+<h3 class="sectionedit6" id="return_status">Return status</h3>
+<div class="level3">
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Status  </th><th class="col1 leftalign">Reason  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">0  </td><td class="col1 leftalign">no error  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">!= 0  </td><td class="col1 leftalign">invalid option  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">!= 0  </td><td class="col1 leftalign">invalid variable name given  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign">!= 0  </td><td class="col1 leftalign">attempt to <strong>define</strong> a function using <code>-f</code>  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign">!= 0  </td><td class="col1 leftalign">assignment to a readonly variable  </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign">!= 0  </td><td class="col1 leftalign">removing the readonly-attribute from a readonly variable  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 leftalign">!= 0  </td><td class="col1 leftalign">assignment to an array variable without the compound assignment syntax (<code>array=(…)</code>)  </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign">!= 0  </td><td class="col1 leftalign">attempt to use <code>+a</code> to &quot;destroy&quot; an array  </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0 leftalign">!= 0  </td><td class="col1 leftalign">attemt to display a non-existent function with <code>-f</code>  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;2656-3147&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:6,&quot;range&quot;:&quot;2631-3148&quot;} -->
+<h2 class="sectionedit8" id="notes">Notes</h2>
+<div class="level2">
+
+<p>
+Unix shells offer very few datatypes. Bash and some other shells extend this by allowing &quot;attributes&quot; to be set on variable names. The only attributes specified by POSIX are <code>export</code> and <code>readonly</code>, which are set by their own dedicated builtins. Datatypes in bash have a few other interesting capabilities such as the ability to modify data on assignment.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Notes&quot;,&quot;hid&quot;:&quot;notes&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:8,&quot;range&quot;:&quot;3149-3528&quot;} -->
+<h2 class="sectionedit9" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:9,&quot;range&quot;:&quot;3529-3550&quot;} -->
+<h3 class="sectionedit10" id="display_defined_functions">Display defined functions</h3>
+<div class="level3">
+
+<p>
+<code>declare -f</code> can be used to display all defined functions…
+<pre class="code">$ declare -f
+foo () 
+{ 
+    echo &quot;FOO is BAR&quot;
+}
+world () 
+{ 
+    echo &quot;Hello World!&quot;
+}</pre>
+
+…or just a specific defined function.
+<pre class="code">$ declare -f foo
+foo () 
+{ 
+    echo &quot;FOO is BAR&quot;
+}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Display defined functions&quot;,&quot;hid&quot;:&quot;display_defined_functions&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:10,&quot;range&quot;:&quot;3551-3859&quot;} -->
+<h3 class="sectionedit11" id="nameref">Nameref</h3>
+<div class="level3">
+
+<p>
+Bash 4.3 adds a new way to indirectly reference variables. <code>typeset -n</code> or <code>declare -n</code> can be used to make a variable indirectly refer to another. In Bash, the lvalue of the assignment given to <code>typeset -n</code> or <code>declare -n</code> will refer to the variable whose name is expanded on the RHS.
+</p>
+
+<p>
+<code>typeset -n</code> is used in the example below.  See notes below.
+</p>
+
+<p>
+<pre class="code"># Sum a set of arrays and assign the result indirectly, also printing each intermediary result (without portability workarounds)
+# sum name arrname [ arrname ... ]
+function sum {
+    typeset -n _result=$1 _arr
+    typeset IFS=+
+    _result=0
+    for _arr in &quot;${@:2}&quot;; do                        # Demonstrate the special property of &quot;for&quot; on a nameref.
+        (( _result += ${_arr[*]} ))
+        printf &#039;%s = %d\n&#039; &quot;${!_result}&quot; &quot;$_result&quot; # Demonstrate the special property of ${!ref} on a nameref.
+    done
+}
+
+a=(1 2 3) b=(6 5 4) c=(2 4 6)
+sum total a b c
+printf &#039;Final value of &quot;total&quot; is: %d\n&#039; &quot;$total&quot;</pre>
+
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:12,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_hide plugin_wrap">
+<p>
+function sum {
+</p>
+<pre class="code">typeset -n _result=$1
+shift
+typeset IFS=+ _arrx
+_result=0
+for _arrx in &quot;$@&quot;; do                        # Demonstrate the special property of &quot;for&quot; on a nameref.
+	typeset -n _arr=$_arrx
+	(( _result += ${_arr[*]} ))
+	printf &#039;%s = %d\n&#039; &quot;${!_result}&quot; &quot;$_result&quot; # Demonstrate the special property of ${!ref} on a nameref.
+done</pre>
+
+<p>
+}
+</p>
+
+<p>
+a=(1 2 3); b=(6 5 4); c=(2 4 6)
+sum total a b c
+printf &#039;Final value of &quot;total&quot; is: %d\n&#039; &quot;$total&quot;
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:13,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+<code>typeset -n</code> is currently implemented in ksh93, mksh, and Bash 4.3. Bash and mksh&#039;s implementations are quite similar, but much different from ksh93&#039;s. See <a href="#portability_considerations" title="commands:builtin:declare ↵" class="wikilink1"> Portability considerations</a> for details. ksh93 namerefs are much more powerful than Bash&#039;s.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Nameref&quot;,&quot;hid&quot;:&quot;nameref&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:11,&quot;range&quot;:&quot;3860-5612&quot;} -->
+<h2 class="sectionedit14" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>declare</code> is not specified by POSIX®</div>
+</li>
+<li class="level1"><div class="li"> <code>declare</code> is unique to Bash and totally non-portable with the possible exception of Zsh in Bash compatibility mode. Bash marks the synonym <code>typeset</code> as obsolete, which in Bash behaves identically to <code>declare</code>. All other Korn-like shells use <code>typeset</code>, so it probably isn&#039;t going away any time soon. Unfortunately, being a non-standard builtin, <code>typeset</code> differs significantly between shells. ksh93 also considers <code>typeset</code> a special builtin, while Bash does not - even in POSIX mode. If you use <code>typeset</code>, you should attempt to only use it in portable ways.</div>
+</li>
+<li class="level1"><div class="li"> <strong>todo</strong> nameref portability…</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:14,&quot;range&quot;:&quot;5613-6310&quot;} -->
+<h2 class="sectionedit15" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">Arrays</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/builtin/readonly" class="wikilink1" title="commands:builtin:readonly">The readonly builtin command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/commands/builtin/unset" class="wikilink1" title="commands:builtin:unset">The unset builtin command</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://austingroupbugs.net/view.php?id=351" class="urlextern" title="http://austingroupbugs.net/view.php?id=351" rel="nofollow"> declaration commands</a> will change the behavior of certain builtins such as <code>export</code> in the next version of POSIX.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:15,&quot;range&quot;:&quot;6311-&quot;} --></div>
+</body>
+</html>

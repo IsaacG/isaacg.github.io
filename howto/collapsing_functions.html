@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>howto:collapsing_functions</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="howto,collapsing_functions,bash,shell,scripting,example,function,collapse"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/howto/collapsing_functions?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=howto"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/howto/collapsing_functions"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/howto/collapsing_functions"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/howto/collapsing_functions"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='howto';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"howto:collapsing_functions","namespace":"howto","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#collapsing_functions">Collapsing Functions</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#what_is_a_collapsing_function">What is a &quot;Collapsing Function&quot;?</a></div></li>
+<li class="level2"><div class="li"><a href="#how_do_i_make_a_function_collapse">How do I make a function collapse?</a></div></li>
+<li class="level2"><div class="li"><a href="#how_does_it_work">How does it work?</a></div></li>
+<li class="level2"><div class="li"><a href="#more_examples">More examples</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="collapsing_functions">Collapsing Functions</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Collapsing Functions&quot;,&quot;hid&quot;:&quot;collapsing_functions&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-97&quot;} -->
+<h2 class="sectionedit2" id="what_is_a_collapsing_function">What is a &quot;Collapsing Function&quot;?</h2>
+<div class="level2">
+
+<p>
+A collapsing function is a function whose behavior changes depending upon the circumstances under which it&#039;s run. Function collapsing is useful when you find yourself repeatedly checking a variable whose value never changes.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;What is a \&quot;Collapsing Function\&quot;?&quot;,&quot;hid&quot;:&quot;what_is_a_collapsing_function&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;98-368&quot;} -->
+<h2 class="sectionedit3" id="how_do_i_make_a_function_collapse">How do I make a function collapse?</h2>
+<div class="level2">
+
+<p>
+Function collapsing requires some static feature in the environment. A common example is a script that gives the user the option of having &quot;verbose&quot; output.
+<pre class="code">#!/bin/bash
+
+[[ $1 = -v || $1 = --verbose ]] &amp;&amp; verbose=1
+
+chatter() {
+  if [[ $verbose ]]; then
+    chatter() {
+      echo &quot;$@&quot;
+    }
+    chatter &quot;$@&quot;
+  else
+    chatter() {
+      :
+    }
+  fi
+}
+
+echo &quot;Waiting for 10 seconds.&quot;
+for i in {1..10}; do
+  chatter &quot;$i&quot;
+  sleep 1
+done</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;How do I make a function collapse?&quot;,&quot;hid&quot;:&quot;how_do_i_make_a_function_collapse&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;369-867&quot;} -->
+<h2 class="sectionedit4" id="how_does_it_work">How does it work?</h2>
+<div class="level2">
+
+<p>
+The first time you run chatter(), the function redefines itself based on the value of verbose. Thereafter, chatter doesn&#039;t check $verbose, it simply is. Further calls to the function reflect its collapsed nature. If verbose is unset, chatter will echo nothing, with no extra effort from the developer.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;How does it work?&quot;,&quot;hid&quot;:&quot;how_does_it_work&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;868-1199&quot;} -->
+<h2 class="sectionedit5" id="more_examples">More examples</h2>
+<div class="level2">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> Add more examples!
+<pre class="code"># Somewhat more portable find -executable
+# FIXME/UNTESTED (I don&#039;t have access to all of the different versions of find.)
+# Usage: find PATH ARGS -- use find like normal, except use -executable instead of
+# various versions of -perm /+ blah blah and hacks
+find() {
+  hash find || { echo &#039;find not found!&#039;; exit 1; }
+  # We can be pretty sure &quot;$0&quot; should be executable.
+  if [[ $(command find &quot;$0&quot; -executable 2&gt; /dev/null) ]]; then
+    unset -f find # We can just use the command find
+  elif [[ $(command find &quot;$0&quot; -perm /u+x 2&gt; /dev/null) ]]; then
+    find() {
+      typeset arg args
+      for arg do
+        [[ $arg = -executable ]] &amp;&amp; args+=(-perm /u+x) || args+=(&quot;$arg&quot;)
+      done
+      command find &quot;${args[@]}&quot;
+    }
+  elif [[ $(command find &quot;$0&quot; -perm +u+x 2&gt; /dev/null) ]]; then
+    find() {
+      typeset arg args
+      for arg do
+        [[ $arg = -executable ]] &amp;&amp; args+=(-perm +u+x) || args+=(&quot;$arg&quot;)
+      done
+      command find &quot;${args[@]}&quot;
+    }
+  else # Last resort
+    find() {
+      typeset arg args
+      for arg do
+        [[ $arg = -executable ]] &amp;&amp; args+=(-exec test -x {} \; -print) || args+=(&quot;$arg&quot;)
+      done
+      command find &quot;${args[@]}&quot;
+    }
+  fi
+  find &quot;$@&quot;
+}</pre>
+
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+# Using collapsing functions to turn debug messages on/off
+
+[ &quot;--debug&quot; = &quot;$1&quot; ] &amp;&amp; dbg=echo || dbg=:
+
+
+# From now on if you use $dbg instead of echo, you can select if messages will be shown
+
+$dbg &quot;This message will only be displayed if --debug is specified at the command line
+</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;More examples&quot;,&quot;hid&quot;:&quot;more_examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1200-&quot;} --></div>
+</body>
+</html>

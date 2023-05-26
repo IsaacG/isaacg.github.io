@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:ccmd:c_for</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,ccmd,c_for"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/ccmd/c_for?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:ccmd"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/ccmd/c_for"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/ccmd/c_for"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/ccmd/c_for"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:ccmd';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:ccmd:c_for","namespace":"syntax:ccmd","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_c-style_for-loop">The C-style for-loop</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#alternate_syntax">Alternate syntax</a></div></li>
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#alternatives_and_best_practice">Alternatives and best practice</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#simple_counter">Simple counter</a></div></li>
+<li class="level3"><div class="li"><a href="#stepping_counter">Stepping counter</a></div></li>
+<li class="level3"><div class="li"><a href="#bits_analyzer">Bits analyzer</a></div></li>
+<li class="level3"><div class="li"><a href="#up_down_up_down">Up, down, up, down...</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#bugs">Bugs</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_c-style_for-loop">The C-style for-loop</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The C-style for-loop&quot;,&quot;hid&quot;:&quot;the_c-style_for-loop&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-36&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">for (( &lt;EXPR1&gt; ; &lt;EXPR2&gt; ; &lt;EXPR3&gt; )); do
+  &lt;LIST&gt;
+done</pre>
+
+</p>
+
+<p>
+<pre class="code"># as a special case: without semicolon after ((...))
+for (( &lt;EXPR1&gt; ; &lt;EXPR2&gt; ; &lt;EXPR3&gt; )) do
+  &lt;LIST&gt;
+done</pre>
+
+</p>
+
+<p>
+<pre class="code"># alternative, historical and undocumented syntax
+for (( &lt;EXPR1&gt; ; &lt;EXPR2&gt; ; &lt;EXPR3&gt; )) {
+  &lt;LIST&gt;
+}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;37-370&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The C-style for-loop is a <a href="/syntax/basicgrammar#compound_commands" class="wikilink1" title="syntax:basicgrammar"> compound command</a> derived from the equivalent ksh88 feature, which is in turn derived from the C &quot;for&quot; keyword. Its purpose is to provide a convenient way to evaluate arithmetic expressions in a loop, plus initialize any required arithmetic variables. It is one of the main &quot;loop with a counter&quot; mechanisms available in the language. 
+</p>
+
+<p>
+The <code>((;;))</code> syntax at the top of the loop is not an ordinary <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic compound command</a>, but is part of the C-style for-loop&#039;s own syntax. The three sections separated by semicolons are <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expression</a> contexts. Each time one of the sections is to be evaluated, the section is first processed for: brace, parameter, command, arithmetic, and process substitution/expansion as usual for arithmetic contexts. When the loop is entered for the first time, <code>&lt;EXPR1&gt;</code> is evaluated, then <code>&lt;EXPR2&gt;</code> is evaluated and checked. If <code>&lt;EXPR2&gt;</code> is true, then the loop body is executed. After the first and all subsequent iterations, <code>&lt;EXPR1&gt;</code> is skipped, <code>&lt;EXPR3&gt;</code> is evaluated, then <code>&lt;EXPR2&gt;</code> is evaluated and checked again. This process continues until <code>&lt;EXPR2&gt;</code> is false.
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>&lt;EXPR1&gt;</code> is to <strong>initialize variables</strong> before the first run.</div>
+</li>
+<li class="level1"><div class="li"> <code>&lt;EXPR2&gt;</code> is to <strong>check</strong> for a termination condition. This is always the last section to evaluate prior to leaving the loop.</div>
+</li>
+<li class="level1"><div class="li"> <code>&lt;EXPR3&gt;</code> is to <strong>change</strong> conditions after every iteration. For example, incrementing a counter.</div>
+</li>
+</ul>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> If one of these arithmetic expressions in the for-loop is empty, it behaves as if it would be 1 (<strong>TRUE</strong> in arithmetic context).
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Like all loops (Both types of <code>for</code>-loop, <code>while</code> and <code>until</code>), this loop can be:
+</p>
+<ul>
+<li class="level1"><div class="li"> Terminated (broken) by the <a href="/commands/builtin/continuebreak" class="wikilink2" title="commands:builtin:continuebreak" rel="nofollow"> break</a> builtin, optionally as <code>break N</code> to break out of <code>N</code> levels of nested loops.</div>
+</li>
+<li class="level1"><div class="li"> Forced immediately to the next iteration using the <a href="/commands/builtin/continuebreak" class="wikilink2" title="commands:builtin:continuebreak" rel="nofollow"> continue</a> builtin, optionally as the <code>continue N</code> analog to <code>break N</code>.</div>
+</li>
+</ul>
+
+<p>
+The equivalent construct using a <a href="/syntax/ccmd/while_loop" class="wikilink1" title="syntax:ccmd:while_loop"> while loop</a> and the <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> arithmetic expression compound command</a> would be structured as:
+<pre class="code">(( &lt;EXPR1&gt; ))
+while (( &lt;EXPR2&gt; )); do
+  &lt;LIST&gt;
+  (( &lt;EXPR3&gt; ))
+done</pre>
+
+The equivalent <code>while</code> construct isn&#039;t exactly the same, because both, the <code>for</code> and the <code>while</code> loop behave differently in case you use the <a href="/commands/builtin/continuebreak" class="wikilink2" title="commands:builtin:continuebreak" rel="nofollow"> continue</a> command.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:3,&quot;range&quot;:&quot;371-2979&quot;} -->
+<h3 class="sectionedit4" id="alternate_syntax">Alternate syntax</h3>
+<div class="level3">
+
+<p>
+Bash, Ksh93, Mksh, and Zsh also provide an alternate syntax for the <code>for</code> loop - enclosing the loop body in <code>{...}</code> instead of <code>do ... done</code>:
+</p>
+
+<p>
+<pre class="code">for ((x=1; x&lt;=3; x++))
+{
+  echo $x
+}</pre>
+
+</p>
+
+<p>
+This syntax is <strong>not documented</strong> and shouldn&#039;t be used. I found the parser definitions for it in 1.x code, and in modern 4.x code. My guess is that it&#039;s there for compatibility reasons. Unlike the other aforementioned shells, Bash does not support the analogous syntax for <a href="/syntax/ccmd/case#portability_considerations" class="wikilink1" title="syntax:ccmd:case"> case..esac</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Alternate syntax&quot;,&quot;hid&quot;:&quot;alternate_syntax&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;2980-3580&quot;} -->
+<h3 class="sectionedit5" id="return_status">Return status</h3>
+<div class="level3">
+
+<p>
+The return status is that of the last command executed from <code>&lt;LIST&gt;</code>, or <code>FALSE</code> if any of the arithmetic expressions failed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:5,&quot;range&quot;:&quot;3581-3736&quot;} -->
+<h2 class="sectionedit6" id="alternatives_and_best_practice">Alternatives and best practice</h2>
+<div class="level2">
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_center wrap_round wrap_todo plugin_wrap" style="width: 60%;">
+<p>
+TODO: Show some alternate usages involving functions and local variables for initialization.
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;0-&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Alternatives and best practice&quot;,&quot;hid&quot;:&quot;alternatives_and_best_practice&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:6,&quot;range&quot;:&quot;3737-3905&quot;} -->
+<h2 class="sectionedit9" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:9,&quot;range&quot;:&quot;3906-3927&quot;} -->
+<h3 class="sectionedit10" id="simple_counter">Simple counter</h3>
+<div class="level3">
+
+<p>
+A simple counter, the loop iterates 101 times (&quot;0&quot; to &quot;100&quot; are 101 numbers → 101 runs!), and everytime the variable <code>x</code> is set to the current value.
+</p>
+<ul>
+<li class="level1"><div class="li"> It <strong>initializes</strong> <code>x = 0</code></div>
+</li>
+<li class="level1"><div class="li"> Before every iteration it <strong>checks</strong> if <code>x ≤ 100</code></div>
+</li>
+<li class="level1"><div class="li"> After every iteration it <strong>changes</strong> <code>x++</code></div>
+</li>
+</ul>
+
+<p>
+<pre class="code">for ((x = 0 ; x &lt;= 100 ; x++)); do
+  echo &quot;Counter: $x&quot;
+done</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple counter&quot;,&quot;hid&quot;:&quot;simple_counter&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:10,&quot;range&quot;:&quot;3928-4325&quot;} -->
+<h3 class="sectionedit11" id="stepping_counter">Stepping counter</h3>
+<div class="level3">
+
+<p>
+This is the very same counter (compare it to the simple counter example above), but the <strong>change</strong> that is made is a <code>x += 10</code>. That means, it will count from 0 to 100, but with a <strong>step of 10</strong>.
+<pre class="code">for ((x = 0 ; x &lt;= 100 ; x += 10)); do
+  echo &quot;Counter: $x&quot;
+done</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Stepping counter&quot;,&quot;hid&quot;:&quot;stepping_counter&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:11,&quot;range&quot;:&quot;4326-4632&quot;} -->
+<h3 class="sectionedit12" id="bits_analyzer">Bits analyzer</h3>
+<div class="level3">
+
+<p>
+This example loops through the bit-values of a Byte, beginning from 128, ending at 1. If that bit is set in the <code>testbyte</code>, it prints &quot;<code>1</code>&quot;, else &quot;<code>0</code>&quot; ⇒ it prints the binary representation of the <code>testbyte</code> value (8 bits).
+<pre class="code">#!/usr/bin/env bash
+# Example written for http://wiki.bash-hackers.org/syntax/ccmd/c_for#bits_analyzer
+# Based on TheBonsai&#039;s original.
+
+function toBin {
+	typeset m=$1 n=2 x=&#039;x[(n*=2)&gt;m]&#039;
+	for ((x = x; n /= 2;)); do
+		printf %d $(( m &amp; n &amp;&amp; 1))
+	done
+}
+
+function main {
+	[[ $1 == +([0-9]) ]] || return
+	typeset result
+	if (( $(ksh -c &#039;printf %..2d $1&#039; _ &quot;$1&quot;) == ( result = $(toBin &quot;$1&quot;) ) )); then
+		printf &#039;%s is %s in base 2!\n&#039; &quot;$1&quot; &quot;$result&quot;
+	else
+		echo &#039;Oops, something went wrong with our calculation.&#039; &gt;&amp;2
+		exit 1
+	fi
+}
+
+main &quot;${1:-123}&quot;
+
+# vim: set fenc=utf-8 ff=unix ft=sh :</pre>
+
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:13,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_hide plugin_wrap">
+<p>
+<pre class="code">testbyte=123
+for (( n = 128 ; n &gt;= 1 ; n /= 2 )); do
+  if (( testbyte &amp; n )); then
+    printf %d 1
+  else
+    printf %s 0
+  fi
+done
+echo</pre>
+
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:14,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+Why that one begins at 128 (highest value, on the left) and not 1 (lowest value, on the right)? It&#039;s easier to print from left to right…
+</p>
+
+<p>
+We arrive at 128 for <code>n</code> through the recursive arithmetic expression stored in <code>x</code>, which calculates the next-greatest power of 2 after <code>m</code>. To show that it works, we use ksh93 to double-check the answer, because it has a built-in feature for <code>printf</code> to print a representation of any number in an arbitrary base (up to 64). Very few languages have that ability built-in, even things like Python.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bits analyzer&quot;,&quot;hid&quot;:&quot;bits_analyzer&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:12,&quot;range&quot;:&quot;4633-6211&quot;} -->
+<h3 class="sectionedit15" id="up_down_up_down">Up, down, up, down...</h3>
+<div class="level3">
+
+<p>
+This counts up and down from <code>0</code> to <code>${1:-5}</code>, <code>${2:-4}</code> times, demonstrating more complicated arithmetic expressions with multiple variables.
+</p>
+
+<p>
+<pre class="code">for (( incr = 1, n=0, times = ${2:-4}, step = ${1:-5}; (n += incr) % step || (incr *= -1, --times);)); do
+    printf &#039;%*s\n&#039; &quot;$((n+1))&quot; &quot;$n&quot;
+done</pre>
+
+<pre class="code"> ~ $ bash &lt;(xclip -o)
+ 1
+  2
+   3
+    4
+     5
+    4
+   3
+  2
+ 1
+0
+ 1
+  2
+   3
+    4
+     5
+    4
+   3
+  2
+ 1</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Up, down, up, down...&quot;,&quot;hid&quot;:&quot;up_down_up_down&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:15,&quot;range&quot;:&quot;6212-6680&quot;} -->
+<h2 class="sectionedit16" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> C-style for loops aren&#039;t POSIX. They are available in Bash, ksh93, and zsh. All 3 have essentially the same syntax and behavior.</div>
+</li>
+<li class="level1"><div class="li"> C-style for loops aren&#039;t available in mksh.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:16,&quot;range&quot;:&quot;6681-6902&quot;} -->
+<h2 class="sectionedit17" id="bugs">Bugs</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <em>Fixed in 4.3</em>. <del>There appears to be a bug as of Bash 4.2p10 in which command lists can&#039;t be distinguished from the for loop&#039;s arithmetic argument delimiter (both semicolons), so command substitutions within the C-style for loop expression can&#039;t contain more than one command.</del></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bugs&quot;,&quot;hid&quot;:&quot;bugs&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:17,&quot;range&quot;:&quot;6903-7214&quot;} -->
+<h2 class="sectionedit18" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> Arithmetic expressions</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/classic_for" class="wikilink1" title="syntax:ccmd:classic_for"> The classic for-loop</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/while_loop" class="wikilink1" title="syntax:ccmd:while_loop"> The while-loop</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:18,&quot;range&quot;:&quot;7215-&quot;} --></div>
+</body>
+</html>

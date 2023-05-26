@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:expansion:wordsplit</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,expansion,wordsplit"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/expansion/wordsplit?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:expansion"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/expansion/wordsplit"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/expansion/wordsplit"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/expansion/wordsplit"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:expansion';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:expansion:wordsplit","namespace":"syntax:expansion","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#word_splitting">Word splitting</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#internal_field_separator_ifs">Internal Field Separator IFS</a></div></li>
+<li class="level2"><div class="li"><a href="#behaviour">Behaviour</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="word_splitting">Word splitting</h1>
+<div class="level1">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> to be continued!
+</p>
+
+<p>
+Word splitting occurs once any of the following expansions are done (and only then!)
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> Parameter expansion</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/cmdsubst" class="wikilink1" title="syntax:expansion:cmdsubst"> Command substitution</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> Arithmetic expansion</a></div>
+</li>
+</ul>
+
+<p>
+Bash will scan the results of these expansions for special <code>IFS</code> characters that mark word boundaries. This is only done on results that are <strong>not double-quoted</strong>!
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Word splitting&quot;,&quot;hid&quot;:&quot;word_splitting&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-457&quot;} -->
+<h2 class="sectionedit2" id="internal_field_separator_ifs">Internal Field Separator IFS</h2>
+<div class="level2">
+
+<p>
+The <code>IFS</code> variable holds the characters that Bash sees as word boundaries in this step. The default contains the characters
+</p>
+<ul>
+<li class="level1"><div class="li"> &lt;space&gt;</div>
+</li>
+<li class="level1"><div class="li"> &lt;tab&gt;</div>
+</li>
+<li class="level1"><div class="li"> &lt;newline&gt;</div>
+</li>
+</ul>
+
+<p>
+These characters are also assumed when IFS is <strong>unset</strong>. When <code>IFS</code> is <strong>empty</strong> (nullstring), no word splitting is performed at all.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Internal Field Separator IFS&quot;,&quot;hid&quot;:&quot;internal_field_separator_ifs&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;458-801&quot;} -->
+<h2 class="sectionedit3" id="behaviour">Behaviour</h2>
+<div class="level2">
+
+<p>
+The results of the expansions mentioned above are scanned for <code>IFS</code>-characters. If <strong>one or more</strong> (in a sequence) of them is found, the expansion result is split at these positions into multiple words.
+</p>
+
+<p>
+This doesn&#039;t happen when the expansion results were <strong>double-quoted</strong>.
+</p>
+
+<p>
+When a null-string (e.g., something that before expanded to »nothing«) is found, it is removed, unless it is quoted (<code>&#039;&#039;</code> or <code>&quot;&quot;</code>).
+</p>
+
+<p>
+<em class="u"><strong>Again note:</strong></em> Without any expansion beforehand, Bash won&#039;t perform word splitting! In this case, the initial token parsing is solely responsible.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Behaviour&quot;,&quot;hid&quot;:&quot;behaviour&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;802-1412&quot;} -->
+<h2 class="sectionedit4" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansion and substitution</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="/syntax/quoting" class="wikilink1" title="syntax:quoting"> Quoting and escaping</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/WordSplitting" class="urlextern" title="http://mywiki.wooledge.org/WordSplitting" rel="nofollow"> WordSplitting</a>, <a href="http://mywiki.wooledge.org/IFS" class="urlextern" title="http://mywiki.wooledge.org/IFS" rel="nofollow"> IFS</a>, and <a href="http://mywiki.wooledge.org/DontReadLinesWithFor" class="urlextern" title="http://mywiki.wooledge.org/DontReadLinesWithFor" rel="nofollow"> DontReadLinesWithFor</a> - Greg&#039;s wiki</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1413-&quot;} --></div>
+</body>
+</html>

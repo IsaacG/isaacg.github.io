@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:trap</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,trap"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/trap?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/trap"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/trap"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/trap"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:trap","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_trap_builtin_command">The trap builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#options">Options</a></div></li>
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#list_installed_traps">List installed traps</a></div></li>
+<li class="level3"><div class="li"><a href="#ignore_terminal_interrupt_ctrl-c_sigint">Ignore terminal interrupt (Ctrl-C, SIGINT)</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_trap_builtin_command">The trap builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The trap builtin command&quot;,&quot;hid&quot;:&quot;the_trap_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-40&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">trap [-lp] [[ARGUMENT] SIGNAL]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;41-106&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <code>trap</code> command is used to &quot;trap&quot; signals and other events. In this context, &quot;trapping&quot; means to install handler code.
+</p>
+
+<p>
+The shell code <code>ARGUMENT</code> is to be read and executed whenever the shell receives a signal or another event <code>SIGNAL</code>. The given <code>SIGNAL</code> specification can be
+</p>
+<ul>
+<li class="level1"><div class="li"> the name of a signal with the SIG prefix, e.g. <code>SIGTERM</code></div>
+</li>
+<li class="level1"><div class="li"> the name of a signal without the SIG prefix, e.g. <code>TERM</code></div>
+</li>
+<li class="level1"><div class="li"> the number of a signal (see <code>trap -l</code>), e.g. <code>15</code></div>
+</li>
+<li class="level1"><div class="li"> the name or number of a special event (see table below), e.g. <code>EXIT</code></div>
+</li>
+</ul>
+
+<p>
+Without any options or operands, <code>trap</code> prints a list of installed traps in a reusable format (equivalent to the <code>-p</code> option).
+</p>
+
+<p>
+Special <code>ARGUMENT</code>s
+</p>
+<ul>
+<li class="level1"><div class="li"> if <code>ARGUMENT</code> is absent or <code>-</code> (dash), the signal/event handler is reset to its original value</div>
+</li>
+<li class="level1"><div class="li"> if <code>ARGUMENT</code> is the null string, the signal/event is ignored</div>
+</li>
+</ul>
+
+<p>
+Special events
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Name       </th><th class="col1 leftalign">Code  </th><th class="col2 leftalign">Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>EXIT</code>    </td><td class="col1 leftalign">0     </td><td class="col2 leftalign">executed on shell exit  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>DEBUG</code>   </td><td class="col1 leftalign">      </td><td class="col2 leftalign">executed before every simple command  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"><code>RETURN</code>  </td><td class="col1 leftalign">      </td><td class="col2 leftalign">executed when a shell function or a sourced code finishes executing  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"><code>ERR</code>     </td><td class="col1 leftalign">      </td><td class="col2 leftalign">executed each time a command&#039;s failure would cause the shell to exit when the <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set">&#039;&#039;-e&#039;&#039; option (&#039;&#039;errexit&#039;&#039;)</a> is enabled  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;1020-1420&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;107-1421&quot;} -->
+<h3 class="sectionedit5" id="options">Options</h3>
+<div class="level3">
+<div class="table sectionedit6"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Option  </th><th class="col1 leftalign">Description  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"><code>-l</code>  </td><td class="col1 leftalign">print a list of signal names and their corresponding numbers  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"><code>-p</code>  </td><td class="col1 leftalign">display the trap commands associated with each signal specification in a reusable format  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;1441-1641&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Options&quot;,&quot;hid&quot;:&quot;options&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;1422-1642&quot;} -->
+<h3 class="sectionedit7" id="return_status">Return status</h3>
+<div class="level3">
+<div class="table sectionedit8"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign">Status  </th><th class="col1 leftalign">Reason  </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign">0       </td><td class="col1 leftalign">no error/success    </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign">!=0     </td><td class="col1 leftalign">invalid option  </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign">!=0     </td><td class="col1 leftalign">invalid signal specification  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;1668-1789&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:7,&quot;range&quot;:&quot;1643-1790&quot;} -->
+<h2 class="sectionedit9" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:9,&quot;range&quot;:&quot;1791-1812&quot;} -->
+<h3 class="sectionedit10" id="list_installed_traps">List installed traps</h3>
+<div class="level3">
+
+<p>
+<pre class="code">trap</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;List installed traps&quot;,&quot;hid&quot;:&quot;list_installed_traps&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:10,&quot;range&quot;:&quot;1813-1865&quot;} -->
+<h3 class="sectionedit11" id="ignore_terminal_interrupt_ctrl-c_sigint">Ignore terminal interrupt (Ctrl-C, SIGINT)</h3>
+<div class="level3">
+
+<p>
+<pre class="code">trap &#039;&#039; INT</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ignore terminal interrupt (Ctrl-C, SIGINT)&quot;,&quot;hid&quot;:&quot;ignore_terminal_interrupt_ctrl-c_sigint&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:11,&quot;range&quot;:&quot;1866-1947&quot;} -->
+<h2 class="sectionedit12" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>trap</code> is specified by POSIX(R) without the <code>-l</code> and <code>-p</code> options</div>
+</li>
+<li class="level1"><div class="li"> in POSIX(R), beside signals, only <code>EXIT</code> (0) is valid as an event</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:12,&quot;range&quot;:&quot;1948-2136&quot;} -->
+<h2 class="sectionedit13" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set">the set command</a> for the <code>-e</code> (<code>errexit</code>) option</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:13,&quot;range&quot;:&quot;2137-&quot;} --></div>
+</body>
+</html>

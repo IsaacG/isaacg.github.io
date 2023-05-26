@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:ccmd:grouping_plain</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,ccmd,grouping_plain"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/ccmd/grouping_plain?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:ccmd"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/ccmd/grouping_plain"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/ccmd/grouping_plain"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/ccmd/grouping_plain"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:ccmd';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:ccmd:grouping_plain","namespace":"syntax:ccmd","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#grouping_commands">Grouping commands</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#a_try-catch_block">A Try-Catch block</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="grouping_commands">Grouping commands</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Grouping commands&quot;,&quot;hid&quot;:&quot;grouping_commands&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-33&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">{ &lt;LIST&gt;; }</pre>
+
+</p>
+
+<p>
+<pre class="code">{
+&lt;LIST&gt;
+}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;34-107&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+The <a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar">list</a> <code>&lt;LIST&gt;</code> is simply executed in the <strong>current</strong> shell environment. The list must be terminated with a <strong>newline</strong> or <strong>semicolon</strong>. For parsing reasons, the curly braces must be separated from <code>&lt;LIST&gt;</code> by a <strong>semicolon</strong> and <strong>blanks</strong> if they&#039;re in the same line! <sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup><sup><a href="#fn__2" id="fnt__2" class="fn_top">2)</a></sup>
+</p>
+
+<p>
+This is known as a <strong>group command</strong>. The return status is the <a href="/scripting/basics#exit_codes" class="wikilink1" title="scripting:basics">exit status (exit code)</a> of the list.
+</p>
+
+<p>
+The input and output <strong>filedescriptors</strong> are cumulative:
+<pre class="code">{
+  echo &quot;PASSWD follows&quot;
+  cat /etc/passwd
+  echo
+  echo &quot;GROUPS follows&quot;
+  cat /etc/group
+} &gt;output.txt</pre>
+
+</p>
+
+<p>
+This compound command also usually is the body of a <a href="/syntax/basicgrammar#shell_function_definitions" class="wikilink1" title="syntax:basicgrammar"> function definition</a>, though not the only compound command that&#039;s valid there:
+<pre class="code">print_help() {
+  echo &quot;Options:&quot;
+  echo &quot;-h           This help text&quot;
+  echo &quot;-f FILE      Use config file FILE&quot;
+  echo &quot;-u USER      Run as user USER&quot;
+}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;108-1583&quot;} -->
+<h2 class="sectionedit4" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;1584-1604&quot;} -->
+<h3 class="sectionedit5" id="a_try-catch_block">A Try-Catch block</h3>
+<div class="level3">
+<pre class="code">  try_catch() {
+      { # Try-block:
+          eval &quot;$@&quot;
+      } ||
+      { # Catch-block:
+          echo &quot;An error occurred&quot;
+          return -1
+      }
+  }</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;A Try-Catch block&quot;,&quot;hid&quot;:&quot;a_try-catch_block&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;1605-1809&quot;} -->
+<h2 class="sectionedit6" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;1810-1850&quot;} -->
+<h2 class="sectionedit7" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/grouping_subshell" class="wikilink1" title="syntax:ccmd:grouping_subshell"> grouping commands in a subshell</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;1851-&quot;} --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<div class="content">Actually any properly terminated compound command will work without extra separator (also in some other shells), <strong>example</strong>: <code>{ while sleep 1; do echo ZzZzzZ; done }</code> is valid. But this is not documented, infact the documentation explicitly says that a semicolon or a newline must separate the enclosed list. – thanks <code>geirha</code> at Freenode</div></div>
+<div class="fn"><sup><a href="#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+<div class="content">The main reason is the fact that in shell grammar, the curly braces are not control operators but reserved words – TheBonsai</div></div>
+</div>
+</div>
+</body>
+</html>

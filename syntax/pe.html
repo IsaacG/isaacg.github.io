@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:pe</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,pe,bash,shell,scripting,expansion,substitution,text,variable,parameter,mangle,substitute,change,check,defined,null,array,arrays"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/pe?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/pe"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/pe"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/pe"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:pe","namespace":"syntax","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#parameter_expansion">Parameter expansion</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#introduction">Introduction</a></div></li>
+<li class="level2"><div class="li"><a href="#overview">Overview</a></div></li>
+<li class="level2"><div class="li"><a href="#simple_usage">Simple usage</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#simple_usagearrays">Simple usage: Arrays</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#indirection">Indirection</a></div></li>
+<li class="level2"><div class="li"><a href="#case_modification">Case modification</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#case_modificationarrays">Case modification: Arrays</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#variable_name_expansion">Variable name expansion</a></div></li>
+<li class="level2"><div class="li"><a href="#substring_removal">Substring removal</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#from_the_beginning">From the beginning</a></div></li>
+<li class="level3"><div class="li"><a href="#from_the_end">From the end</a></div></li>
+<li class="level3"><div class="li"><a href="#common_use">Common use</a></div></li>
+<li class="level3"><div class="li"><a href="#substring_removalarrays">Substring removal: Arrays</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#search_and_replace">Search and replace</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#search_and_replacearrays">Search and replace: Arrays</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#string_length">String length</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#string_lengtharrays">(String) length: Arrays</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#substring_expansion">Substring expansion</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#using_only_offset">Using only Offset</a></div></li>
+<li class="level3"><div class="li"><a href="#using_offset_and_length">Using Offset and Length</a></div></li>
+<li class="level3"><div class="li"><a href="#negative_offset_value">Negative Offset Value</a></div></li>
+<li class="level3"><div class="li"><a href="#negative_length_value">Negative Length Value</a></div></li>
+<li class="level3"><div class="li"><a href="#substringelement_expansionarrays">Substring/Element expansion: Arrays</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#use_a_default_value">Use a default value</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#use_a_default_valuearrays">Use a default value: Arrays</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#assign_a_default_value">Assign a default value</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#assign_a_default_valuearrays">Assign a default value: Arrays</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#use_an_alternate_value">Use an alternate value</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#use_an_alternate_valuearrays">Use an alternate value: Arrays</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#display_error_if_null_or_unset">Display error if null or unset</a></div></li>
+<li class="level2"><div class="li"><a href="#code_examples">Code examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#substring_removal1">Substring removal</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#bugs_and_portability_considerations">Bugs and Portability considerations</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#quote_nesting">Quote Nesting</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="parameter_expansion">Parameter expansion</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Parameter expansion&quot;,&quot;hid&quot;:&quot;parameter_expansion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-175&quot;} -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+One core functionality of Bash is to manage <strong>parameters</strong>. A parameter is an entity that stores values and is referenced by a <strong>name</strong>, a <strong>number</strong> or a <strong>special symbol</strong>.
+</p>
+<ul>
+<li class="level1"><div class="li"> parameters referenced by a name are called <strong>variables</strong> (this also applies to <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">arrays</a>)</div>
+</li>
+<li class="level1"><div class="li"> parameters referenced by a number are called <strong>positional parameters</strong> and reflect the arguments given to a shell</div>
+</li>
+<li class="level1"><div class="li"> parameters referenced by a <strong>special symbol</strong> are auto-set parameters that have different special meanings and uses</div>
+</li>
+</ul>
+
+<p>
+<strong>Parameter expansion</strong> is the procedure to get the value from the referenced entity, like expanding a variable to print its value. On expansion time you can do very nasty things with the parameter or its value. These things are described here.
+</p>
+
+<p>
+<strong>If you saw</strong> some parameter expansion syntax somewhere, and need to check what it can be, try the overview section below!
+</p>
+
+<p>
+<strong>Arrays</strong> can be special cases for parameter expansion, every applicable description mentions arrays below. Please also see the <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">article about arrays</a>.
+</p>
+
+<p>
+For a more technical view what a parameter is and which types exist, <a href="/dict/terms/parameter" class="wikilink1" title="dict:terms:parameter"> see the dictionary entry for &quot;parameter&quot;</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;176-1404&quot;} -->
+<h2 class="sectionedit3" id="overview">Overview</h2>
+<div class="level2">
+
+<p>
+Looking for a specific syntax you saw, without knowing the name?
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <a href="#simple_usage" title="syntax:pe ↵" class="wikilink1"> Simple usage</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>$PARAMETER</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#indirection" title="syntax:pe ↵" class="wikilink1"> Indirection</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${!PARAMETER}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#case_modification" title="syntax:pe ↵" class="wikilink1"> Case modification </a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${PARAMETER^}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER^^}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER,}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER,,}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER~}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER~~}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#variable_name_expansion" title="syntax:pe ↵" class="wikilink1"> Variable name expansion</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${!PREFIX*}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${!PREFIX@}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#substring_removal" title="syntax:pe ↵" class="wikilink1"> Substring removal</a> (also for <strong>filename manipulation</strong>!)</div>
+<ul>
+<li class="level2"><div class="li"> <code>${PARAMETER#PATTERN}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER##PATTERN}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER%PATTERN}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER%%PATTERN}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#search_and_replace" title="syntax:pe ↵" class="wikilink1"> Search and replace</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${PARAMETER/PATTERN/STRING}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER//PATTERN/STRING}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER/PATTERN}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER//PATTERN}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#string_length" title="syntax:pe ↵" class="wikilink1"> String length </a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${#PARAMETER}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#substring_expansion" title="syntax:pe ↵" class="wikilink1"> Substring expansion</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${PARAMETER:OFFSET}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER:OFFSET:LENGTH}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#use_a_default_value" title="syntax:pe ↵" class="wikilink1"> Use a default value</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${PARAMETER:-WORD}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER-WORD}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#assign_a_default_value" title="syntax:pe ↵" class="wikilink1"> Assign a default value</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${PARAMETER:=WORD}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER=WORD}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#use_an_alternate_value" title="syntax:pe ↵" class="wikilink1"> Use an alternate value</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${PARAMETER:+WORD}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER+WORD}</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <a href="#display_error_if_null_or_unset" title="syntax:pe ↵" class="wikilink1"> Display error if null or unset</a></div>
+<ul>
+<li class="level2"><div class="li"> <code>${PARAMETER:?WORD}</code></div>
+</li>
+<li class="level2"><div class="li"> <code>${PARAMETER?WORD}</code></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Overview&quot;,&quot;hid&quot;:&quot;overview&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1405-3028&quot;} -->
+<h2 class="sectionedit4" id="simple_usage">Simple usage</h2>
+<div class="level2">
+
+<p>
+<code>$PARAMETER</code>
+</p>
+
+<p>
+<code>${PARAMETER}</code>
+</p>
+
+<p>
+The easiest form is to just use a parameter&#039;s name within braces. This is identical to using <code>$FOO</code> like you see it everywhere, but has the advantage that it can be immediately followed by characters that would be interpreted as part of the parameter name otherwise. Compare these two expressions (<code>WORD=&quot;car&quot;</code> for example), where we want to print a word with a trailing &quot;s&quot;:
+</p>
+
+<p>
+<pre class="code">echo &quot;The plural of $WORD is most likely $WORDs&quot;
+echo &quot;The plural of $WORD is most likely ${WORD}s&quot;</pre>
+
+</p>
+
+<p>
+<em class="u">Why does the first one fail?</em> It prints nothing, because a parameter (variable) named &quot;<code>WORDs</code>&quot; is undefined and thus printed as &quot;&quot; (<em>nothing</em>). Without using braces for parameter expansion, Bash will interpret the sequence of all valid characters from the introducing &quot;<code>$</code>&quot; up to the last valid character as name of the parameter. When using braces you just force Bash to <strong>only interpret the name inside your braces</strong>.
+</p>
+
+<p>
+Also, please remember, that <strong>parameter names are</strong> (like nearly everything in UNIX®) <strong>case sensitive!</strong>
+</p>
+
+<p>
+The second form with the curly braces is also needed to access positional parameters (arguments to a script) beyond <code>$9</code>:
+<pre class="code">echo &quot;Argument  1 is: $1&quot;
+echo &quot;Argument 10 is: ${10}&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple usage&quot;,&quot;hid&quot;:&quot;simple_usage&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;3029-4319&quot;} -->
+<h3 class="sectionedit5" id="simple_usagearrays">Simple usage: Arrays</h3>
+<div class="level3">
+
+<p>
+See also the <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">article about general array syntax</a>
+</p>
+
+<p>
+For arrays you always need the braces. The arrays are expanded by individual indexes or mass arguments. An individual index behaves like a normal parameter, for the mass expansion, please read the article about arrays linked above.
+</p>
+<ul>
+<li class="level1"><div class="li"> ${array[5]}</div>
+</li>
+<li class="level1"><div class="li"> ${array[*]}</div>
+</li>
+<li class="level1"><div class="li"> ${array[@]}</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple usage: Arrays&quot;,&quot;hid&quot;:&quot;simple_usagearrays&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;4320-4700&quot;} -->
+<h2 class="sectionedit6" id="indirection">Indirection</h2>
+<div class="level2">
+
+<p>
+<code>${!PARAMETER}</code>
+</p>
+
+<p>
+In some cases, like for example
+</p>
+
+<p>
+<pre class="code">${PARAMETER}
+
+${PARAMETER:0:3}</pre>
+
+</p>
+
+<p>
+you can instead use the form
+</p>
+
+<p>
+<pre class="code">${!PARAMETER}</pre>
+
+</p>
+
+<p>
+to enter a level of indirection. The referenced parameter is not <code>PARAMETER</code> itself, but the parameter whose name is stored as the value of <code>PARAMETER</code>. If the parameter <code>PARAMETER</code> has the value &quot;<code>TEMP</code>&quot;, then <code>${!PARAMETER}</code> will expand to the value of the parameter named <code>TEMP</code>:
+<pre class="code">read -rep &#039;Which variable do you want to inspect? &#039; look_var
+
+printf &#039;The value of &quot;%s&quot; is: &quot;%s&quot;\n&#039; &quot;$look_var&quot; &quot;${!look_var}&quot; </pre>
+
+</p>
+
+<p>
+Of course the indirection also works with special variables:
+</p>
+
+<p>
+<pre class="code"># set some fake positional parameters
+set one two three four
+
+# get the LAST argument (&quot;#&quot; stores the number of arguments, so &quot;!#&quot; will reference the LAST argument)
+echo ${!#}</pre>
+
+</p>
+
+<p>
+You can think of this mechanism as being roughly equivalent to taking any parameter expansion that begins with the parameter name, and substituting the <code>!PARAMETER</code> part with the value of PARAMETER.
+</p>
+
+<p>
+<pre class="code">echo &quot;${!var^^}&quot;
+# ...is equivalent to
+eval &#039;echo &quot;${&#039;&quot;$var&quot;&#039;^^}&quot;&#039;</pre>
+
+</p>
+
+<p>
+It was an unfortunate design decision to use the <code>!</code> prefix for indirection, as it introduces parsing ambiguity with other parameter expansions that begin with <code>!</code>. Indirection is not possible in combination with any parameter expansion whose modifier requires a prefix to the parameter name. Specifically, indirection isn&#039;t possible on the <code>${!var@}</code>, <code>${!var*}</code>, <code>${!var[@]}</code>, <code>${!var[*]}</code>, and <code>${#var}</code> forms. This means the <code>!</code> prefix can&#039;t be used to retrieve the indices of an array, the length of a string, or number of elements in an array indirectly (see <a href="/syntax/arrays#indirection" class="wikilink1" title="syntax:arrays">indirection</a> for workarounds). Additionally, the <code>!</code>-prefixed parameter expansion conflicts with ksh-like shells which have the more powerful &quot;name-reference&quot; form of indirection, where the exact same syntax is used to expand to the name of the variable being referenced.
+</p>
+
+<p>
+Indirect references to <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">array names</a> are also possible since the Bash 3 series (exact version unknown), but undocumented. See <a href="/syntax/arrays#indirection" class="wikilink1" title="syntax:arrays">indirection</a> for details.
+</p>
+
+<p>
+Chet has added an initial implementation of the ksh <code>nameref</code> declaration command to the git devel branch. (<code>declare -n</code>, <code>local -n</code>, etc, will be supported). This will finally address many issues around passing and returning complex datatypes to/from functions.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Indirection&quot;,&quot;hid&quot;:&quot;indirection&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:6,&quot;range&quot;:&quot;4701-7189&quot;} -->
+<h2 class="sectionedit7" id="case_modification">Case modification</h2>
+<div class="level2">
+
+<p>
+<code>${PARAMETER^}</code>
+</p>
+
+<p>
+<code>${PARAMETER^^}</code>
+</p>
+
+<p>
+<code>${PARAMETER,}</code>
+</p>
+
+<p>
+<code>${PARAMETER,,}</code>
+</p>
+
+<p>
+<code>${PARAMETER~}</code>
+</p>
+
+<p>
+<code>${PARAMETER~~}</code>
+</p>
+
+<p>
+These expansion operators modify the case of the letters in the expanded text.
+</p>
+
+<p>
+The <code>^</code> operator modifies the first character to uppercase, the <code>,</code> operator to lowercase. When using the double-form (<code>^^</code> and <code>,,</code>), all characters are converted.
+</p>
+
+<p>
+<span class="wrap_center wrap_round wrap_info " style="width: 60%;">
+
+The (<strong>currently undocumented</strong>) operators <code>~</code> and <code>~~</code> reverse the case of the given text (in <code>PARAMETER</code>).<code>~</code> reverses the case of first letter of words in the variable while <code>~~</code> reverses case for all.  Thanks to <code>Bushmills</code> and <code>geirha</code> on the Freenode <abbr title="Internet Relay Chat">IRC</abbr> channel for this finding.
+
+</span>
+</p>
+
+<p>
+<em class="u"><strong>Example: Rename all <code>*.txt</code> filenames to lowercase</strong></em>
+<pre class="code">for file in *.txt; do
+  mv &quot;$file&quot; &quot;${file,,}&quot;
+done</pre>
+
+</p>
+
+<p>
+<em class="u"><strong>Note:</strong></em>  Case modification is a handy feature you can apply to a name or a title.   Or is it?  Case modification was an important aspect of the Bash 4 release. Bash version 4, RC1 would perform word splitting, and then case modification, resulting in title case (where every word is capitalized).  It was decided to apply case modification to values, not words, for the Bash 4 release.  Thanks Chet.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Case modification&quot;,&quot;hid&quot;:&quot;case_modification&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:7,&quot;range&quot;:&quot;7190-8470&quot;} -->
+<h3 class="sectionedit8" id="case_modificationarrays">Case modification: Arrays</h3>
+<div class="level3">
+
+<p>
+Case modification can be used to create the proper capitalization for names or titles.  Just assign it to an array:
+</p>
+
+<p>
+<code>declare -a title=(my hello world john smith)</code>
+</p>
+
+<p>
+For <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">array</a> expansion, the case modification applies to <strong>every expanded element, no matter if you expand an individual index or mass-expand</strong> the whole array using <code>@</code> or <code>*</code> subscripts. Some examples:
+</p>
+
+<p>
+Assume: <code>array=(This is some Text)</code>
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <code>echo &quot;${array[@],}&quot;</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>this is some text</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <code>echo &quot;${array[@],,}&quot;</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>this is some text</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <code>echo &quot;${array[@]^}&quot;</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>This Is Some Text</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <code>echo &quot;${array[@]^^}&quot;</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>THIS IS SOME TEXT</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <code>echo &quot;${array[2]^^}&quot;</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>SOME</code></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Case modification: Arrays&quot;,&quot;hid&quot;:&quot;case_modificationarrays&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:8,&quot;range&quot;:&quot;8471-9225&quot;} -->
+<h2 class="sectionedit9" id="variable_name_expansion">Variable name expansion</h2>
+<div class="level2">
+
+<p>
+<code>${!PREFIX*}</code>
+</p>
+
+<p>
+<code>${!PREFIX@}</code>
+</p>
+
+<p>
+This expands to a list of all set <strong>variable names</strong> beginning with the string <code>PREFIX</code>. The elements of the list are separated by the first character in the <code>IFS</code>-variable (&lt;space&gt; by default).
+</p>
+
+<p>
+This will show all defined variable names (not values!) beginning with &quot;BASH&quot;:
+<pre class="code">$ echo ${!BASH*}
+BASH BASH_ARGC BASH_ARGV BASH_COMMAND BASH_LINENO BASH_SOURCE BASH_SUBSHELL BASH_VERSINFO BASH_VERSION</pre>
+
+</p>
+
+<p>
+This list will also include <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">array names</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Variable name expansion&quot;,&quot;hid&quot;:&quot;variable_name_expansion&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:9,&quot;range&quot;:&quot;9226-9771&quot;} -->
+<h2 class="sectionedit10" id="substring_removal">Substring removal</h2>
+<div class="level2">
+
+<p>
+<code>${PARAMETER#PATTERN}</code>
+</p>
+
+<p>
+<code>${PARAMETER##PATTERN}</code>
+</p>
+
+<p>
+<code>${PARAMETER%PATTERN}</code>
+</p>
+
+<p>
+<code>${PARAMETER%%PATTERN}</code>
+</p>
+
+<p>
+This one can <strong>expand only a part</strong> of a parameter&#039;s value, <strong>given a pattern to describe what to remove</strong> from the string. The pattern is interpreted just like a pattern to describe a filename to match (globbing). See <a href="/syntax/pattern" class="wikilink1" title="syntax:pattern"> Pattern matching</a> for more.
+</p>
+
+<p>
+Example string (<em>just a quote from a big man</em>):
+<pre class="code">MYSTRING=&quot;Be liberal in what you accept, and conservative in what you send&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Substring removal&quot;,&quot;hid&quot;:&quot;substring_removal&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:10,&quot;range&quot;:&quot;9772-10335&quot;} -->
+<h3 class="sectionedit11" id="from_the_beginning">From the beginning</h3>
+<div class="level3">
+
+<p>
+<code>${PARAMETER#PATTERN}</code> and <code>${PARAMETER##PATTERN}</code>
+</p>
+
+<p>
+This form is to remove the described <a href="/syntax/pattern" class="wikilink1" title="syntax:pattern"> pattern</a> trying to <strong>match it from the beginning of the string</strong>.
+The operator &quot;<code>#</code>&quot; will try to remove the shortest text matching the pattern, while &quot;<code>##</code>&quot; tries to do it with the longest text matching. Look at the following examples to get the idea (matched text <del>marked striked</del>, remember it will be removed!):
+</p>
+<div class="table sectionedit12"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Syntax</th><th class="col1">Result</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>${MYSTRING#*in}</code></td><td class="col1"><del>Be liberal in</del> what you accept, and conservative in what you send</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>${MYSTRING##*in}</code></td><td class="col1"><del>Be liberal in what you accept, and conservative in</del> what you send</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:12,&quot;range&quot;:&quot;10805-11017&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;From the beginning&quot;,&quot;hid&quot;:&quot;from_the_beginning&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:11,&quot;range&quot;:&quot;10336-11018&quot;} -->
+<h3 class="sectionedit13" id="from_the_end">From the end</h3>
+<div class="level3">
+
+<p>
+<code>${PARAMETER%PATTERN}</code> and <code>${PARAMETER%%PATTERN}</code>
+</p>
+
+<p>
+In the second form everything will be the same, except that Bash now tries to match the pattern from the end of the string:
+</p>
+<div class="table sectionedit14"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0 leftalign"> Syntax                                 </th><th class="col1 leftalign"> Result                                                                          </th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0 leftalign"> <code>${MYSTRING%in*}</code>                    </td><td class="col1 leftalign"> Be liberal in what you accept, and conservative <del>in what you send</del>  </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> <code>${MYSTRING%%in*}</code>  </td><td class="col1 leftalign"> Be liberal <del>in what you accept, and conservative in what you send</del>  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:14,&quot;range&quot;:&quot;11239-11607&quot;} -->
+<p>
+The second form nullifies variables that begin with <code>in</code>, by working from the end.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;From the end&quot;,&quot;hid&quot;:&quot;from_the_end&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:13,&quot;range&quot;:&quot;11019-11693&quot;} -->
+<h3 class="sectionedit15" id="common_use">Common use</h3>
+<div class="level3">
+
+<p>
+<em class="u"><strong>How the heck does that help to make my life easier?</strong></em>
+</p>
+
+<p>
+Well, maybe the most common use for it is to <strong>extract parts of a filename</strong>. Just look at the following list with examples:
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <strong>Get name without extension</strong></div>
+<ul>
+<li class="level2"><div class="li"> <code>${FILENAME%.*}</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code>bash_hackers<del>.txt</del></code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <strong>Get extension</strong></div>
+<ul>
+<li class="level2"><div class="li"> <code>${FILENAME##*.}</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code><del>bash_hackers.</del>txt</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <strong>Get directory name</strong></div>
+<ul>
+<li class="level2"><div class="li"> <code>${PATHNAME%/*}</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code>/home/bash<del>/bash_hackers.txt</del></code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <strong>Get filename</strong></div>
+<ul>
+<li class="level2"><div class="li"> <code>${PATHNAME##*/}</code></div>
+</li>
+<li class="level2"><div class="li"> ⇒ <code><del>/home/bash/</del>bash_hackers.txt</code></div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+These are the syntaxes for filenames with a single extension. Depending on your needs, you might need to adjust shortest/longest match.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Common use&quot;,&quot;hid&quot;:&quot;common_use&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:15,&quot;range&quot;:&quot;11694-12432&quot;} -->
+<h3 class="sectionedit16" id="substring_removalarrays">Substring removal: Arrays</h3>
+<div class="level3">
+
+<p>
+As for most parameter expansion features, working on <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">arrays</a> <strong>will handle each expanded element</strong>, for individual expansion and also for mass expansion.
+</p>
+
+<p>
+Simple example, removing a trailing <code>is</code> from all array elements (on expansion):
+</p>
+
+<p>
+Assume: <code>array=(This is a text)</code>
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <code>echo &quot;${array[@]%is}&quot;</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>Th  a text</code></div>
+</li>
+<li class="level2"><div class="li"> (it was: <code>Th<del>is</del> <del>is</del> a text</code>)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+All other variants of this expansion behave the same.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Substring removal: Arrays&quot;,&quot;hid&quot;:&quot;substring_removalarrays&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:16,&quot;range&quot;:&quot;12433-12930&quot;} -->
+<h2 class="sectionedit17" id="search_and_replace">Search and replace</h2>
+<div class="level2">
+
+<p>
+<code>${PARAMETER/PATTERN/STRING}</code>
+</p>
+
+<p>
+<code>${PARAMETER//PATTERN/STRING}</code>
+</p>
+
+<p>
+<code>${PARAMETER/PATTERN}</code>
+</p>
+
+<p>
+<code>${PARAMETER//PATTERN}</code>
+</p>
+
+<p>
+This one can substitute (<em>replace</em>) a substring <a href="/syntax/pattern" class="wikilink1" title="syntax:pattern"> matched by a pattern</a>, on expansion time. The matched substring will be entirely removed and the given string will be inserted. Again some example string for the tests:
+<pre class="code">MYSTRING=&quot;Be liberal in what you accept, and conservative in what you send&quot;</pre>
+
+</p>
+
+<p>
+The two main forms only differ in <strong>the number of slashes</strong> after the parameter name: <code>${PARAMETER/PATTERN/STRING}</code> and <code>${PARAMETER//PATTERN/STRING}</code>
+</p>
+
+<p>
+The first one (<em>one slash</em>) is to only substitute <strong>the first occurrence</strong> of the given pattern, the second one (<em>two slashes</em>) is to substitute <strong>all occurrences</strong> of the pattern.
+</p>
+
+<p>
+First, let&#039;s try to say &quot;happy&quot; instead of &quot;conservative&quot; in our example string:
+<pre class="code">${MYSTRING//conservative/happy}</pre>
+
+⇒ <code>Be liberal in what you accept, and <del>conservative</del>happy in what you send</code>
+</p>
+
+<p>
+Since there is only one &quot;conservative&quot; in that example, it really doesn&#039;t matter which of the two forms we use.
+</p>
+
+<p>
+Let&#039;s play with the word &quot;in&quot;, I don&#039;t know if it makes any sense, but let&#039;s substitute it with &quot;by&quot;.
+</p>
+
+<p>
+<em class="u"><strong>First form: Substitute first occurrence</strong></em>
+<pre class="code">${MYSTRING/in/by}</pre>
+
+⇒ <code>Be liberal <del>in</del>by what you accept, and conservative in what you send</code>
+</p>
+
+<p>
+<em class="u"><strong>Second form: Substitute all occurrences</strong></em>
+<pre class="code">${MYSTRING//in/by}</pre>
+
+⇒ <code>Be liberal <del>in</del>by what you accept, and conservative <del>in</del>by what you send</code>
+</p>
+
+<p>
+<em class="u"><strong>Anchoring</strong></em>
+Additionally you can &quot;anchor&quot; an expression:
+A <code>#</code> (hashmark) will indicate that your expression is matched against the beginning portion of the string, a <code>%</code> (percent-sign) will do it for the end portion.
+</p>
+
+<p>
+<pre class="code">MYSTRING=xxxxxxxxxx
+echo ${MYSTRING/#x/y}  # RESULT: yxxxxxxxxx
+echo ${MYSTRING/%x/y}  # RESULT: xxxxxxxxxy</pre>
+
+</p>
+
+<p>
+If the replacement part is completely omitted, the matches are replaced by the nullstring, i.e., they are removed. This is equivalent to specifying an empty replacement:
+<pre class="code">echo ${MYSTRING//conservative/}
+# is equivalent to
+echo ${MYSTRING//conservative}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Search and replace&quot;,&quot;hid&quot;:&quot;search_and_replace&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:17,&quot;range&quot;:&quot;12931-15219&quot;} -->
+<h3 class="sectionedit18" id="search_and_replacearrays">Search and replace: Arrays</h3>
+<div class="level3">
+
+<p>
+This parameter expansion type applied to <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">arrays</a> <strong>applies to all expanded elements</strong>, no matter if an individual element is expanded, or all elements using the mass expansion syntaxes.
+</p>
+
+<p>
+A simple example, changing the (lowercase) letter <code>t</code> to <code>d</code>:
+</p>
+
+<p>
+Assume: <code>array=(This is a text)</code>
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <code>echo &quot;${array[@]/t/d}&quot;</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>This is a dext</code></div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <code>echo &quot;${array[@]//t/d}&quot;</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>This is a dexd</code></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Search and replace: Arrays&quot;,&quot;hid&quot;:&quot;search_and_replacearrays&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:18,&quot;range&quot;:&quot;15220-15701&quot;} -->
+<h2 class="sectionedit19" id="string_length">String length</h2>
+<div class="level2">
+
+<p>
+<code>${#PARAMETER}</code>
+</p>
+
+<p>
+When you use this form, the length of the parameter&#039;s value is expanded. Again, a quote from a big man, to have a test text:
+</p>
+
+<p>
+<pre class="code">MYSTRING=&quot;Be liberal in what you accept, and conservative in what you send&quot;</pre>
+
+</p>
+
+<p>
+Using echo <code>${#MYSTRING}</code>…
+</p>
+
+<p>
+⇒ <code>64</code>
+</p>
+
+<p>
+The length is reported in characters, not in bytes. Depending on your environment this may not always be the same (multibyte-characters, like in UTF8 encoding).
+</p>
+
+<p>
+There&#039;s not much to say about it, mh?
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;String length&quot;,&quot;hid&quot;:&quot;string_length&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:19,&quot;range&quot;:&quot;15702-16206&quot;} -->
+<h3 class="sectionedit20" id="string_lengtharrays">(String) length: Arrays</h3>
+<div class="level3">
+
+<p>
+For  <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">arrays</a>, this expansion type has two meanings:
+</p>
+<ul>
+<li class="level1"><div class="li"> For <strong>individual</strong> elements, it reports the string length of the element (as for every &quot;normal&quot; parameter)</div>
+</li>
+<li class="level1"><div class="li"> For the <strong>mass subscripts</strong> <code>@</code> and <code>*</code> it reports the number of set elements in the array</div>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<p>
+Assume: <code>array=(This is a text)</code>
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <code>echo ${#array[1]}</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ 2 (the word &quot;is&quot; has a length of 2)</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <code>echo ${#array[@]}</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ 4 (the array contains 4 elements)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+<em class="u"><strong>Attention:</strong></em> The number of used elements does not need to conform to the highest index. Sparse arrays are possible in Bash, that means you can have 4 elements, but with indexes 1, 7, 20, 31. <strong>You can&#039;t loop through such an array with a counter loop based on the number of elements!</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;(String) length: Arrays&quot;,&quot;hid&quot;:&quot;string_lengtharrays&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:20,&quot;range&quot;:&quot;16207-17000&quot;} -->
+<h2 class="sectionedit21" id="substring_expansion">Substring expansion</h2>
+<div class="level2">
+
+<p>
+<code>${PARAMETER:OFFSET}</code>
+</p>
+
+<p>
+<code>${PARAMETER:OFFSET:LENGTH}</code>
+</p>
+
+<p>
+This one can expand only a <strong>part</strong> of a parameter&#039;s value, given a <strong>position to start</strong> and maybe a <strong>length</strong>. If <code>LENGTH</code> is omitted, the parameter will be expanded up to the end of the string. If <code>LENGTH</code> is negative, it&#039;s taken as a second offset into the string, counting from the end of the string.
+</p>
+
+<p>
+<code>OFFSET</code> and <code>LENGTH</code> can be <strong>any</strong> <a href="/syntax/arith_expr" class="wikilink1" title="syntax:arith_expr"> arithmetic expression</a>. <strong>Take care:</strong> The <code>OFFSET</code> starts at 0, not at 1!
+</p>
+
+<p>
+Example string (a quote from a big man):
+<code>MYSTRING=&quot;Be liberal in what you accept, and conservative in what you send&quot;</code>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Substring expansion&quot;,&quot;hid&quot;:&quot;substring_expansion&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:21,&quot;range&quot;:&quot;17001-17665&quot;} -->
+<h3 class="sectionedit22" id="using_only_offset">Using only Offset</h3>
+<div class="level3">
+
+<p>
+In the first form, the expansion is used without a length value, note that the offset 0 is the first character:
+<pre class="code">echo ${MYSTRING:35}</pre>
+
+⇒ <code><del>Be liberal in what you accept, and </del>conservative in what you send</code>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using only Offset&quot;,&quot;hid&quot;:&quot;using_only_offset&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:22,&quot;range&quot;:&quot;17666-17922&quot;} -->
+<h3 class="sectionedit23" id="using_offset_and_length">Using Offset and Length</h3>
+<div class="level3">
+
+<p>
+In the second form we also give a length value:
+<pre class="code">echo ${MYSTRING:35:12}</pre>
+
+⇒ <code><del>Be liberal in what you accept, and </del>conservative<del> in what you send</del></code>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using Offset and Length&quot;,&quot;hid&quot;:&quot;using_offset_and_length&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:23,&quot;range&quot;:&quot;17923-18135&quot;} -->
+<h3 class="sectionedit24" id="negative_offset_value">Negative Offset Value</h3>
+<div class="level3">
+
+<p>
+If the given offset is negative, it&#039;s counted from the end of the string, i.e. an offset of -1 is the last character. In that case, the length still counts forward, of course. One special thing is to do when using a negative offset: You need to separate the (negative) number from the colon:
+<pre class="code">${MYSTRING: -10:5}
+${MYSTRING:(-10):5}</pre>
+
+Why? Because it&#039;s interpreted as the parameter expansion syntax to <span class="curid"><a href="/syntax/pe#use_a_default_value" class="wikilink1" title="syntax:pe"> use a default value</a></span>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Negative Offset Value&quot;,&quot;hid&quot;:&quot;negative_offset_value&quot;,&quot;codeblockOffset&quot;:19,&quot;secid&quot;:24,&quot;range&quot;:&quot;18136-18638&quot;} -->
+<h3 class="sectionedit25" id="negative_length_value">Negative Length Value</h3>
+<div class="level3">
+
+<p>
+If the <code>LENGTH</code> value is negative, it&#039;s used as offset from the end of the string. The expansion happens from the first to the second offset then:
+<pre class="code">echo &quot;${MYSTRING:11:-17}&quot;</pre>
+
+⇒ <code><del>Be liberal </del>in what you accept, and conservative<del> in what you send</del></code>
+</p>
+
+<p>
+This works since Bash 4.2-alpha, see also <a href="/scripting/bashchanges" class="wikilink1" title="scripting:bashchanges">Bash changes</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Negative Length Value&quot;,&quot;hid&quot;:&quot;negative_length_value&quot;,&quot;codeblockOffset&quot;:20,&quot;secid&quot;:25,&quot;range&quot;:&quot;18639-19027&quot;} -->
+<h3 class="sectionedit26" id="substringelement_expansionarrays">Substring/Element expansion: Arrays</h3>
+<div class="level3">
+
+<p>
+For <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">arrays</a>, this expansion type has again 2 meanings:
+</p>
+<ul>
+<li class="level1"><div class="li"> For <strong>individual</strong> elements, it expands to the specified substring (as for every “normal” parameter)</div>
+</li>
+<li class="level1"><div class="li"> For the <strong>mass subscripts</strong> <code>@</code> and <code>*</code> it mass-expands individual array elements denoted by the 2 numbers given (<em>starting element</em>, <em>number of elements</em>)</div>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<p>
+Assume: <code>array=(This is a text)</code>
+</p>
+<ul>
+<li class="level1 node"><div class="li"> <code>echo ${array[0]:2:2}</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>is</code> (the &quot;is&quot; in &quot;This&quot;, array element 0)</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> <code>echo ${array[@]:1:2}</code></div>
+<ul>
+<li class="level2"><div class="li"> ⇒ <code>is a</code> (from element 1 inclusive, 2 elements are expanded, i.e. element 1 and 2)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Substring\/Element expansion: Arrays&quot;,&quot;hid&quot;:&quot;substringelement_expansionarrays&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:26,&quot;range&quot;:&quot;19028-19675&quot;} -->
+<h2 class="sectionedit27" id="use_a_default_value">Use a default value</h2>
+<div class="level2">
+
+<p>
+<code>${PARAMETER:-WORD}</code>
+</p>
+
+<p>
+<code>${PARAMETER-WORD}</code>
+</p>
+
+<p>
+If the parameter <code>PARAMETER</code> is unset (never was defined) or null (empty), this one expands to <code>WORD</code>, otherwise it expands to the value of <code>PARAMETER</code>, as if it just was <code>${PARAMETER}</code>. If you omit the <code>:</code> (colon), like shown in the second form, the default value is only used when the parameter was <strong>unset</strong>, not when it was empty.
+</p>
+
+<p>
+<pre class="code">echo &quot;Your home directory is: ${HOME:-/home/$USER}.&quot;
+echo &quot;${HOME:-/home/$USER} will be used to store your personal data.&quot;</pre>
+
+</p>
+
+<p>
+If <code>HOME</code> is unset or empty, everytime you want to print something useful, you need to put that parameter syntax in.
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+
+read -p &quot;Enter your gender (just press ENTER to not tell us): &quot; GENDER
+echo &quot;Your gender is ${GENDER:-a secret}.&quot;</pre>
+
+</p>
+
+<p>
+It will print &quot;Your gender is a secret.&quot; when you don&#039;t enter the gender. Note that the default value is <strong>used on expansion time</strong>, it is <strong>not assigned to the parameter</strong>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use a default value&quot;,&quot;hid&quot;:&quot;use_a_default_value&quot;,&quot;codeblockOffset&quot;:21,&quot;secid&quot;:27,&quot;range&quot;:&quot;19676-20679&quot;} -->
+<h3 class="sectionedit28" id="use_a_default_valuearrays">Use a default value: Arrays</h3>
+<div class="level3">
+
+<p>
+For <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">arrays</a>, the behaviour is very similar. Again, you have to make a difference between expanding an individual element by a given index and mass-expanding the array using the <code>@</code> and <code>*</code> subscripts.
+</p>
+<ul>
+<li class="level1"><div class="li"> For individual elements, it&#039;s the very same: If the expanded element is <code>NULL</code> or unset (watch the <code>:-</code> and <code>-</code> variants), the default text is expanded</div>
+</li>
+<li class="level1 node"><div class="li"> For mass-expansion syntax, the default text is expanded if the array</div>
+<ul>
+<li class="level2"><div class="li"> contains no element or is unset (the <code>:-</code> and <code>-</code> variants mean the <strong>same</strong> here)</div>
+</li>
+<li class="level2"><div class="li"> contains only elements that are the nullstring (the <code>:-</code> variant)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+In other words: The basic meaning of this expansion type is applied as consistent as possible to arrays.
+</p>
+
+<p>
+Example code (please try the example cases yourself):
+</p>
+
+<p>
+<pre class="code">
+####
+# Example cases for unset/empty arrays and nullstring elements
+####
+
+
+### CASE 1: Unset array (no array)
+
+# make sure we have no array at all
+unset array
+
+echo ${array[@]:-This array is NULL or unset}
+echo ${array[@]-This array is NULL or unset}
+
+### CASE 2: Set but empty array (no elements)
+
+# declare an empty array
+array=()
+
+echo ${array[@]:-This array is NULL or unset}
+echo ${array[@]-This array is NULL or unset}
+
+
+### CASE 3: An array with only one element, a nullstring
+array=(&quot;&quot;)
+
+echo ${array[@]:-This array is NULL or unset}
+echo ${array[@]-This array is NULL or unset}
+
+
+### CASE 4: An array with only two elements, a nullstring and a normal word
+array=(&quot;&quot; word)
+
+echo ${array[@]:-This array is NULL or unset}
+echo ${array[@]-This array is NULL or unset}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use a default value: Arrays&quot;,&quot;hid&quot;:&quot;use_a_default_valuearrays&quot;,&quot;codeblockOffset&quot;:23,&quot;secid&quot;:28,&quot;range&quot;:&quot;20680-22295&quot;} -->
+<h2 class="sectionedit29" id="assign_a_default_value">Assign a default value</h2>
+<div class="level2">
+
+<p>
+<code>${PARAMETER:=WORD}</code>
+</p>
+
+<p>
+<code>${PARAMETER=WORD}</code>
+</p>
+
+<p>
+This one works like the <span class="curid"><a href="/syntax/pe#use_a_default_value" class="wikilink1" title="syntax:pe"> using default values</a></span>, but the default text you give is not only expanded, but also <strong>assigned</strong> to the parameter, if it was unset or null. Equivalent to using a default value, when you omit the <code>:</code> (colon), as shown in the second form, the default value will only be assigned when the parameter was <strong>unset</strong>.
+</p>
+
+<p>
+<pre class="code">echo &quot;Your home directory is: ${HOME:=/home/$USER}.&quot;
+echo &quot;$HOME will be used to store your personal data.&quot;</pre>
+
+</p>
+
+<p>
+After the first expansion here (<code>${HOME:=/home/$USER}</code>), <code>HOME</code> is set and usable.
+</p>
+
+<p>
+Let&#039;s change our code example from above:
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+
+read -p &quot;Enter your gender (just press ENTER to not tell us): &quot; GENDER
+echo &quot;Your gender is ${GENDER:=a secret}.&quot;
+echo &quot;Ah, in case you forgot, your gender is really: $GENDER&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Assign a default value&quot;,&quot;hid&quot;:&quot;assign_a_default_value&quot;,&quot;codeblockOffset&quot;:24,&quot;secid&quot;:29,&quot;range&quot;:&quot;22296-23211&quot;} -->
+<h3 class="sectionedit30" id="assign_a_default_valuearrays">Assign a default value: Arrays</h3>
+<div class="level3">
+
+<p>
+For <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">arrays</a> this expansion type is limited. For an individual index, it behaves like for a &quot;normal&quot; parameter, the default value is assigned to this one element. The mass-expansion subscripts <code>@</code> and <code>*</code> <strong>can not be used here</strong> because it&#039;s not possible to assign to them!
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Assign a default value: Arrays&quot;,&quot;hid&quot;:&quot;assign_a_default_valuearrays&quot;,&quot;codeblockOffset&quot;:26,&quot;secid&quot;:30,&quot;range&quot;:&quot;23212-23549&quot;} -->
+<h2 class="sectionedit31" id="use_an_alternate_value">Use an alternate value</h2>
+<div class="level2">
+
+<p>
+<code>${PARAMETER:+WORD}</code>
+</p>
+
+<p>
+<code>${PARAMETER+WORD}</code>
+</p>
+
+<p>
+This form expands to nothing if the parameter is unset or empty. If it is set, it does not expand to the parameter&#039;s value, <strong>but to some text you can specify</strong>:
+<pre class="code">echo &quot;The Java application was installed and can be started.${JAVAPATH:+ NOTE: JAVAPATH seems to be set}&quot;</pre>
+
+The above code will simply add a warning if <code>JAVAPATH</code> is set (because it could influence the startup behaviour of that imaginary application).
+</p>
+
+<p>
+Some more unrealistic example… Ask for some flags (for whatever reason), and then, if they were set, print a warning and also print the flags:
+<pre class="code">#!/bin/bash
+
+read -p &quot;If you want to use special flags, enter them now: &quot; SPECIAL_FLAGS
+echo &quot;The installation of the application is finished${SPECIAL_FLAGS:+ (NOTE: there are special flags set: $SPECIAL_FLAGS)}.&quot;</pre>
+
+</p>
+
+<p>
+If you omit the colon, as shown in the second form (<code>${PARAMETER+WORD}</code>), the alternate value will be used if the parameter is set (and it can be empty)! You can use it, for example, to complain if variables you need (and that can be empty) are undefined:
+<pre class="code"># test that with the three stages:
+
+# unset foo
+# foo=&quot;&quot;
+# foo=&quot;something&quot;
+
+if [[ ${foo+isset} = isset ]]; then
+  echo &quot;foo is set...&quot;
+else
+  echo &quot;foo is not set...&quot;
+fi</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use an alternate value&quot;,&quot;hid&quot;:&quot;use_an_alternate_value&quot;,&quot;codeblockOffset&quot;:26,&quot;secid&quot;:31,&quot;range&quot;:&quot;23550-24881&quot;} -->
+<h3 class="sectionedit32" id="use_an_alternate_valuearrays">Use an alternate value: Arrays</h3>
+<div class="level3">
+
+<p>
+Similar to the cases for <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">arrays</a> to expand to a default value, this expansion behaves like for a &quot;normal&quot; parameter when using individual array elements by index, but reacts differently when using the mass-expansion subscripts <code>@</code> and <code>*</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"> For individual elements, it&#039;s the very same: If the expanded element is <strong>not</strong> NULL or unset (watch the :+ and + variants), the alternate text is expanded</div>
+</li>
+<li class="level2 node"><div class="li"> For mass-expansion syntax, the alternate text is expanded if the array</div>
+<ul>
+<li class="level3"><div class="li"> contains elements where min. one element is <strong>not</strong> a nullstring (the :+ and + variants mean the same here)</div>
+</li>
+<li class="level3"><div class="li"> contains <strong>only</strong> elements that are <strong>not</strong> the nullstring (the :+ variant)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+For some cases to play with, please see the code examples in the <a href="#use_a_default_valuearrays" title="syntax:pe ↵" class="wikilink1">description for using a default value</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Use an alternate value: Arrays&quot;,&quot;hid&quot;:&quot;use_an_alternate_valuearrays&quot;,&quot;codeblockOffset&quot;:29,&quot;secid&quot;:32,&quot;range&quot;:&quot;24882-25761&quot;} -->
+<h2 class="sectionedit33" id="display_error_if_null_or_unset">Display error if null or unset</h2>
+<div class="level2">
+
+<p>
+<code>${PARAMETER:?WORD}</code>
+</p>
+
+<p>
+<code>${PARAMETER?WORD}</code>
+</p>
+
+<p>
+If the parameter <code>PARAMETER</code> is set/non-null, this form will simply expand it. Otherwise, the expansion of <code>WORD</code> will be used as appendix for an error message:
+<pre class="code">$ echo &quot;The unset parameter is: ${p_unset?not set}&quot;
+bash: p_unset: not set</pre>
+
+</p>
+
+<p>
+After printing this message,
+</p>
+<ul>
+<li class="level1"><div class="li"> an interactive shell has <code>$?</code> to a non-zero value</div>
+</li>
+<li class="level1"><div class="li"> a non-interactive shell exits with a non-zero exit code</div>
+</li>
+</ul>
+
+<p>
+The meaning of the colon (<code>:</code>) is the same as for the other parameter expansion syntaxes: It specifies if
+</p>
+<ul>
+<li class="level1"><div class="li"> only unset or</div>
+</li>
+<li class="level1"><div class="li"> unset and empty parameters</div>
+</li>
+</ul>
+
+<p>
+are taken into account.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Display error if null or unset&quot;,&quot;hid&quot;:&quot;display_error_if_null_or_unset&quot;,&quot;codeblockOffset&quot;:29,&quot;secid&quot;:33,&quot;range&quot;:&quot;25762-26437&quot;} -->
+<h2 class="sectionedit34" id="code_examples">Code examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Code examples&quot;,&quot;hid&quot;:&quot;code_examples&quot;,&quot;codeblockOffset&quot;:30,&quot;secid&quot;:34,&quot;range&quot;:&quot;26438-26464&quot;} -->
+<h3 class="sectionedit35" id="substring_removal1">Substring removal</h3>
+<div class="level3">
+
+<p>
+Removing the first 6 characters from a text string:
+<pre class="code">STRING=&quot;Hello world&quot;
+
+# only print &#039;Hello&#039;
+echo &quot;${STRING%??????}&quot;
+
+# only print &#039;world&#039;
+echo &quot;${STRING#??????}&quot;
+
+# store it into the same variable
+STRING=${STRING#??????}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Substring removal&quot;,&quot;hid&quot;:&quot;substring_removal1&quot;,&quot;codeblockOffset&quot;:30,&quot;secid&quot;:35,&quot;range&quot;:&quot;26465-26733&quot;} -->
+<h2 class="sectionedit36" id="bugs_and_portability_considerations">Bugs and Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <strong>Fixed in 4.2.36</strong> (<a href="ftp://ftp.cwru.edu/pub/bash/bash-4.2-patches/bash42-036" class="urlextern" title="ftp://ftp.cwru.edu/pub/bash/bash-4.2-patches/bash42-036" rel="nofollow"> patch</a>). Bash doesn&#039;t follow either POSIX or its own documentation when expanding either a quoted <code>&quot;$@&quot;</code> or <code>&quot;${arr[@]}&quot;</code> with an adjacent expansion. <code>&quot;$@$x&quot;</code> expands in the same way as <code>&quot;$*$x&quot;</code> - i.e. all parameters plus the adjacent expansion are concatenated into a single argument. As a workaround, each expansion needs to be quoted separately. Unfortunately, this bug took a very long time to notice.<pre class="code">~ $ set -- a b c; x=foo; printf &#039;&lt;%s&gt; &#039; &quot;$@$x&quot; &quot;$*&quot;&quot;$x&quot; &quot;$@&quot;&quot;$x&quot;
+&lt;a b cfoo&gt; &lt;a b cfoo&gt; &lt;a&gt; &lt;b&gt; &lt;cfoo&gt;</pre>
+</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Almost all shells disagree about the treatment of an unquoted <code>$@</code>, <code>${arr[@]}</code>, <code>$*</code>, and <code>${arr[*]}</code> when <a href="http://mywiki.wooledge.org/IFS" class="urlextern" title="http://mywiki.wooledge.org/IFS" rel="nofollow"> IFS</a> is set to null. POSIX is unclear about the expected behavior. A null IFS causes both <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> word splitting</a> and <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> pathname expansion</a> to behave randomly. Since there are few good reasons to leave <code>IFS</code> set to null for more than the duration of a command or two, and even fewer to expand <code>$@</code> and <code>$*</code> unquoted, this should be a rare issue. <strong>Always quote them</strong>!<pre class="code">touch x &#039;y z&#039;
+for sh in bb {{d,b}a,{m,}k,z}sh; do
+    echo &quot;$sh&quot;
+    &quot;$sh&quot; -s a &#039;b c&#039; d \* &lt;/dev/fd/0
+done &lt;&lt;\EOF
+${ZSH_VERSION+:} false &amp;&amp; emulate sh
+IFS=
+printf &#039;&lt;%s&gt; &#039; $*
+echo
+printf &quot;&lt;%s&gt; &quot; $@
+echo
+EOF</pre>
+<pre class="code">bb
+&lt;ab cd*&gt;
+&lt;ab cd*&gt;
+dash
+&lt;ab cd*&gt;
+&lt;ab cd*&gt;
+bash
+&lt;a&gt; &lt;b c&gt; &lt;d&gt; &lt;x&gt; &lt;y z&gt;
+&lt;a&gt; &lt;b c&gt; &lt;d&gt; &lt;x&gt; &lt;y z&gt;
+mksh
+&lt;a b c d *&gt;
+&lt;a b c d *&gt;
+ksh
+&lt;a&gt; &lt;b c&gt; &lt;d&gt; &lt;x&gt; &lt;y z&gt;
+&lt;a&gt; &lt;b c&gt; &lt;d&gt; &lt;x&gt; &lt;y z&gt;
+zsh
+&lt;a&gt; &lt;b c&gt; &lt;d&gt; &lt;x&gt; &lt;y z&gt;
+&lt;a&gt; &lt;b c&gt; &lt;d&gt; &lt;x&gt; &lt;y z&gt;</pre>
+When <code>IFS</code> is set to a non-null value, or unset, all shells behave the same - first expanding into separate args, then applying pathname expansion and word-splitting to the results, except for zsh, which doesn&#039;t do pathname expansion in its default mode.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Additionally, shells disagree about various wordsplitting behaviors, the behavior of inserting delimiter characters from IFS in <code>$*</code>, and the way adjacent arguments are concatenated, when IFS is modified in the middle of expansion through side-effects.<pre class="code">for sh in bb {{d,b}a,po,{m,}k,z}sh; do
+    printf &#039;%-4s: &#039; &quot;$sh&quot;
+    &quot;$sh&quot; &lt;/dev/fd/0
+done &lt;&lt;\EOF
+${ZSH_VERSION+:} false &amp;&amp; emulate sh
+set -f -- a b c
+unset -v IFS
+printf &#039;&lt;%s&gt; &#039; ${*}${IFS=}${*}${IFS:=-}&quot;${*}&quot;
+echo
+EOF</pre>
+<pre class="code">bb  : &lt;a b cabc&gt; &lt;a-b-c&gt;
+dash: &lt;a b cabc&gt; &lt;a-b-c&gt;
+bash: &lt;a&gt; &lt;b&gt; &lt;ca&gt; &lt;b&gt; &lt;c-a b c&gt;
+posh: &lt;a&gt; &lt;b&gt; &lt;ca b c&gt; &lt;a-b-c&gt;
+mksh: &lt;a&gt; &lt;b&gt; &lt;ca b c&gt; &lt;a-b-c&gt;
+ksh : &lt;a&gt; &lt;b&gt; &lt;ca&gt; &lt;b&gt; &lt;c&gt; &lt;a b c&gt;
+zsh : &lt;a&gt; &lt;b&gt; &lt;ca&gt; &lt;b&gt; &lt;c&gt; &lt;a-b-c&gt;</pre>
+ksh93 and mksh can additionally achieve this side effect (and others) via the <code>${ cmds;}</code> expansion. I haven&#039;t yet tested every possible side-effect that can affect expansion halfway through expansion that way.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> As previously mentioned, the Bash form of indirection by prefixing a parameter expansion with a <code>!</code> conflicts with the same syntax used by mksh, zsh, and ksh93 for a different purpose. Bash will &quot;slightly&quot; modify this expansion in the next version with the addition of namerefs.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Bash (and most other shells) don&#039;t allow .&#039;s in identifiers. In ksh93, dots in variable names are used to reference methods (i.e. &quot;Discipline Functions&quot;), attributes, special shell variables, and to define the &quot;real value&quot; of an instance of a class.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> In ksh93, the <code>_</code> parameter has even more uses. It is used in the same way as <code>self</code> in some object-oriented languages; as a placeholder for some data local to a class; and also as the mechanism for class inheritance. In most other contexts, <code>_</code> is compatible with Bash.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Bash only evaluates the subscripts of the slice expansion (<code>${x:y:z}</code>) if the parameter is set (for both nested expansions and arithmetic). For ranges, Bash evaluates as little as possible, i.e., if the first part is out of range, the second won&#039;t be evaluated. ksh93 and mksh always evaluate the subscript parts even if the parameter is unset. <pre class="code"> $ bash -c &#039;n=&quot;y[\$(printf yo &gt;&amp;2)1]&quot; m=&quot;y[\$(printf jo &gt;&amp;2)1]&quot;; x=(); echo &quot;${x[@]:n,6:m}&quot;&#039; # No output
+ $ bash -c &#039;n=&quot;y[\$(printf yo &gt;&amp;2)1]&quot; m=&quot;y[\$(printf jo &gt;&amp;2)1]&quot;; x=([5]=hi); echo &quot;${x[@]:n,6:m}&quot;&#039;
+yo
+ $ bash -c &#039;n=&quot;y[\$(printf yo &gt;&amp;2)1]&quot; m=&quot;y[\$(printf jo &gt;&amp;2)1]&quot;; x=([6]=hi); echo &quot;${x[@]:n,6:m}&quot;&#039;
+yojo
+ $ bash -c &#039;n=&quot;y[\$(printf yo &gt;&amp;2)1]&quot; m=&quot;y[\$(printf jo &gt;&amp;2)1]&quot;; x=12345; echo &quot;${x:n,5:m}&quot;&#039;
+yojo
+ $ bash -c &#039;n=&quot;y[\$(printf yo &gt;&amp;2)1]&quot; m=&quot;y[\$(printf jo &gt;&amp;2)1]&quot;; x=12345; echo &quot;${x:n,6:m}&quot;&#039;
+yo</pre>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bugs and Portability considerations&quot;,&quot;hid&quot;:&quot;bugs_and_portability_considerations&quot;,&quot;codeblockOffset&quot;:31,&quot;secid&quot;:36,&quot;range&quot;:&quot;26734-31330&quot;} -->
+<h3 class="sectionedit37" id="quote_nesting">Quote Nesting</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> In most shells, when dealing with an &quot;alternate&quot; parameter expansion that expands to multiple words, and nesting such expansions, not all combinations of nested quoting are possible.</div>
+</li>
+</ul>
+
+<p>
+<pre class="code"># Bash
+ $ typeset -a a=(meh bleh blerg) b
+ $ IFS=e
+ $ printf &quot;&lt;%s&gt; &quot; &quot;${b[@]-&quot;${a[@]}&quot; &quot;${a[@]}&quot;}&quot;; echo # The entire PE is quoted so Bash considers the inner quotes redundant.
+&lt;meh&gt; &lt;bleh&gt; &lt;blerg meh&gt; &lt;bleh&gt; &lt;blerg&gt;
+ $ printf &quot;&lt;%s&gt; &quot; &quot;${b[@]-${a[@]} ${a[@]}}&quot;; echo # The outer quotes cause the inner expansions to be considered quoted.
+&lt;meh&gt; &lt;bleh&gt; &lt;blerg meh&gt; &lt;bleh&gt; &lt;blerg&gt;
+ $ b=(meep beep)
+ $ printf &quot;&lt;%s&gt; &quot; &quot;${b[@]-&quot;${a[@]}&quot; &quot;${a[@]}&quot;}&quot; &quot;${b[@]-${a[@]} ${a[@]}}&quot;; echo # Again no surprises. Outer quotes quote everything recursively.
+&lt;meep&gt; &lt;beep&gt; &lt;meep&gt; &lt;beep&gt;</pre>
+
+</p>
+
+<p>
+Now lets see what can happen if we leave the outside unquoted.
+<pre class="code"># Bash
+ $ typeset -a a=(meh bleh blerg) b
+ $ IFS=e
+ $ printf &quot;&lt;%s&gt; &quot; ${b[@]-&quot;${a[@]}&quot; &quot;${a[@]}&quot;}; echo # Inner quotes make inner expansions quoted.
+&lt;meh&gt; &lt;bleh&gt; &lt;blerg meh&gt; &lt;bleh&gt; &lt;blerg&gt;
+ $ printf &quot;&lt;%s&gt; &quot; ${b[@]-${a[@]} ${a[@]}}; echo&#039; # No quotes at all wordsplits / globs, like you&#039;d expect.
+&lt;m&gt; &lt;h&gt; &lt;bl&gt; &lt;h&gt; &lt;bl&gt; &lt;rg m&gt; &lt;h&gt; &lt;bl&gt; &lt;h&gt; &lt;bl&gt; &lt;rg&gt;</pre>
+
+</p>
+
+<p>
+This all might be intuitive, and is the most common implementation, but this design sucks for a number of reasons. For one, it means Bash makes it absolutely impossible to expand any part of the inner region <em>unquoted</em> while leaving the outer region quoted. Quoting the outer forces quoting of the inner regions recursively (except nested command substitutions of course). Word-splitting is necessary to split words of the inner region, which cannot be done together with outer quoting. Consider the following (only slightly far-fetched) code:
+</p>
+
+<p>
+<pre class="code"># Bash (non-working example)
+
+unset -v IFS # make sure we have a default IFS
+
+if some crap; then
+    typeset -a someCmd=(myCmd arg1 &#039;arg2 yay!&#039; &#039;third*arg*&#039; 4)
+fi
+
+someOtherCmd=mycommand
+typeset -a otherArgs=(arg3 arg4)
+
+# What do you think the programmer expected to happen here?
+# What do you think will actually happen...
+
+&quot;${someCmd[@]-&quot;$someOtherCmd&quot; arg2 &quot;${otherArgs[@]}&quot;}&quot; arg5</pre>
+
+</p>
+
+<p>
+This final line is perhaps not the most obvious, but I&#039;ve run into cases were this type of logic can be desirable and realistic. We can deduce what was intended:
+</p>
+<ul>
+<li class="level1"><div class="li"> If <code>someCmd</code> is set, then the resulting expansion should run the command: <code>&quot;myCmd&quot; &quot;arg1&quot; &quot;arg2 yay!&quot; &quot;third*arg*&quot; &quot;4&quot; &quot;arg5&quot;</code></div>
+</li>
+<li class="level1"><div class="li"> Otherwise, if <code>someCmd</code> is not set, expand <code>$someOtherCmd</code> and the inner args, to run a different command: <code>&quot;mycommand&quot; &quot;arg2&quot; &quot;arg3&quot; &quot;arg4&quot; &quot;arg5&quot;</code>.</div>
+</li>
+</ul>
+
+<p>
+Unfortunately, it is impossible to get the intended result in Bash (and most other shells) without taking a considerably different approach. The only way to split the literal inner parts is through word-splitting, which requires that the PE be unquoted. But, the only way to expand the outer expansion correctly without word-splitting or globbing is to quote it. Bash will actually expand the command as one of these:
+</p>
+
+<p>
+<pre class="code"># The quoted PE produces a correct result here...
+ $ bash -c &#039;typeset -a someCmd=(myCmd arg1 &quot;arg2 yay!&quot; &quot;third*arg*&quot; 4); printf &quot;&lt;%s&gt; &quot; &quot;${someCmd[@]-&quot;$someOtherCmd&quot; arg2 &quot;${otherArgs[@]}&quot;}&quot; arg5; echo&#039;
+&lt;myCmd&gt; &lt;arg1&gt; &lt;arg2 yay!&gt; &lt;third*arg*&gt; &lt;4&gt; &lt;arg5&gt;
+
+# ...but in the opposite case the first 3 arguments are glued together. There are no workarounds.
+ $ bash -c &#039;typeset -a otherArgs=(arg3 arg4); someOtherCmd=mycommand; printf &quot;&lt;%s&gt; &quot; &quot;${someCmd[@]-&quot;$someOtherCmd&quot; arg2 &quot;${otherArgs[@]}&quot;}&quot; arg5; echo&#039;
+&lt;mycommand arg2 arg3&gt; &lt;arg4&gt; &lt;arg5&gt;
+
+# UNLESS! we unquote the outer expansion allowing the inner quotes to
+# affect the necessary parts while allowing word-splitting to split the literals:
+ $ bash -c &#039;typeset -a otherArgs=(arg3 arg4); someOtherCmd=mycommand; printf &quot;&lt;%s&gt; &quot; ${someCmd[@]-&quot;$someOtherCmd&quot; arg2 &quot;${otherArgs[@]}&quot;} arg5; echo&#039;
+&lt;mycommand&gt; &lt;arg2&gt; &lt;arg3&gt; &lt;arg4&gt; &lt;arg5&gt;
+
+# Success!!!
+ $ bash -c &#039;typeset -a someCmd=(myCmd arg1 &quot;arg2 yay!&quot; &quot;third*arg*&quot; 4); printf &quot;&lt;%s&gt; &quot; ${someCmd[@]-&quot;$someOtherCmd&quot; arg2 &quot;${otherArgs[@]}&quot;} arg5; echo&#039;
+&lt;myCmd&gt; &lt;arg1&gt; &lt;arg2&gt; &lt;yay!&gt; &lt;third*arg*&gt; &lt;4&gt; &lt;arg5&gt;
+
+# ...Ah f^^k. (again, no workaround possible.)</pre>
+
+</p>
+
+</div>
+
+<h4 id="the_ksh93_exception">The ksh93 exception</h4>
+<div class="level4">
+
+<p>
+To the best of my knowledge, ksh93 is the only shell that acts differently. Rather than forcing nested expansions into quoting, a quote at the beginning and end of the nested region will cause the quote state to reverse itself within the nested part. I have no idea whether it&#039;s an intentional or documented effect, but it does solve the problem and consequently adds a lot of potential power to these expansions.
+</p>
+
+<p>
+All we need to do is add two extra double-quotes:
+<pre class="code"># ksh93 passing the two failed tests from above:
+
+ $ ksh -c &#039;otherArgs=(arg3 arg4); someOtherCmd=&quot;mycommand&quot;; printf &quot;&lt;%s&gt; &quot; &quot;${someCmd[@]-&quot;&quot;$someOtherCmd&quot; arg2 &quot;${otherArgs[@]}&quot;&quot;}&quot; arg5; echo&#039;
+&lt;mycommand&gt; &lt;arg2&gt; &lt;arg3&gt; &lt;arg4&gt; &lt;arg5&gt;
+
+ $ ksh -c &#039;typeset -a someCmd=(myCmd arg1 &quot;arg2 yay!&quot; &quot;third*arg*&quot; 4); printf &quot;&lt;%s&gt; &quot; &quot;${someCmd[@]-&quot;&quot;$someOtherCmd&quot; arg2 &quot;${otherArgs[@]}&quot;&quot;}&quot; arg5; echo&#039;
+&lt;myCmd&gt; &lt;arg1&gt; &lt;arg2 yay!&gt; &lt;third*arg*&gt; &lt;4&gt; &lt;arg5&gt;</pre>
+
+</p>
+
+<p>
+This can be used to control the quote state of any part of any expansion to an arbitrary depth. Sadly, it is the only shell that does this and the difference may introduce a possible compatibility problem.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Quote Nesting&quot;,&quot;hid&quot;:&quot;quote_nesting&quot;,&quot;codeblockOffset&quot;:37,&quot;secid&quot;:37,&quot;range&quot;:&quot;31331-36703&quot;} -->
+<h2 class="sectionedit38" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansion and substitution</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">Arrays</a></div>
+</li>
+<li class="level1"><div class="li"> Dictionary, internal: <a href="/dict/terms/parameter" class="wikilink1" title="dict:terms:parameter">Parameter</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:42,&quot;secid&quot;:38,&quot;range&quot;:&quot;36704-&quot;} --></div>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:expansion:cmdsubst</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,expansion,cmdsubst,bash,shell,scripting,expansion,substitution,text,variable,output,execute,stdout,save,result,return,value"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/expansion/cmdsubst?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:expansion"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/expansion/cmdsubst"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/expansion/cmdsubst"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/expansion/cmdsubst"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:expansion';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:expansion:cmdsubst","namespace":"syntax:expansion","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#command_substitution">Command substitution</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#specialities">Specialities</a></div></li>
+<li class="level2"><div class="li"><a href="#a_closer_look_at_the_two_forms">A closer look at the two forms</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="command_substitution">Command substitution</h1>
+<div class="level1">
+
+<p>
+<pre class="code">$( &lt;COMMANDS&gt; )
+
+` &lt;COMMANDS&gt; `</pre>
+
+</p>
+
+<p>
+The command substitution expands to the output of commands. These commands are executed in a subshell, and their <code>stdout</code> data is what the substitution syntax expands to.
+</p>
+
+<p>
+All <strong>trailing</strong> newlines are removed (below is an example for a workaround).
+</p>
+
+<p>
+In later steps, <strong>if not quoted</strong>, the results undergo <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> word splitting</a> and <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> pathname expansion</a>. You have to remember that, because the word splitting will also remove embedded newlines and other <code>IFS</code> characters and break the results up into several words. Also you&#039;ll probably get unexpected pathname matches. <strong>If you need the literal results, quote the command substitution!</strong>
+</p>
+
+<p>
+The second form <code>`COMMAND`</code> is more or less obsolete for Bash, since it has some trouble with nesting (&quot;inner&quot; backticks need to be escaped) and escaping characters. Use <code>$(COMMAND)</code>, it&#039;s also POSIX!
+</p>
+
+<p>
+When you <a href="/syntax/ccmd/grouping_subshell" class="wikilink1" title="syntax:ccmd:grouping_subshell"> call an explicit subshell</a> <code>(COMMAND)</code> inside the command substitution <code>$()</code>, then take care, this way is <strong>wrong</strong>:
+<pre class="code">$((COMMAND))</pre>
+
+Why? because it collides with the syntax for <a href="/syntax/expansion/arith" class="wikilink1" title="syntax:expansion:arith"> arithmetic expansion</a>. You need to separate the command substitution from the inner <code>(COMMAND)</code>:
+<pre class="code">$( (COMMAND) )</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Command substitution&quot;,&quot;hid&quot;:&quot;command_substitution&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-1501&quot;} -->
+<h2 class="sectionedit2" id="specialities">Specialities</h2>
+<div class="level2">
+
+<p>
+When the inner command is only an input redirection, and nothing else, for example
+<pre class="code">$( &lt;FILE )
+# or
+` &lt;FILE `</pre>
+
+then Bash attempts to read the given file and act just if the given command was <code>cat FILE</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Specialities&quot;,&quot;hid&quot;:&quot;specialities&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:2,&quot;range&quot;:&quot;1502-1747&quot;} -->
+<h2 class="sectionedit3" id="a_closer_look_at_the_two_forms">A closer look at the two forms</h2>
+<div class="level2">
+
+<p>
+In general you really should only use the form <code>$()</code>, it&#039;s escaping-neutral, it&#039;s nestable, it&#039;s also POSIX. But take a look at the following code snips to decide yourself which form you need under specific circumstances:
+</p>
+
+<p>
+<strong><em class="u">Nesting</em></strong>
+</p>
+
+<p>
+Backtick form <code>`…`</code> is not directly nestable. You will have to escape the &quot;inner&quot; backticks. Also, the deeper you go, the more escape characters you need. Ugly.
+</p>
+
+<p>
+<pre class="code">echo `echo `ls``      # INCORRECT
+echo `echo \`ls\``    # CORRECT
+echo $(echo $(ls))    # CORRECT</pre>
+
+</p>
+
+<p>
+<strong><em class="u">Parsing</em></strong>
+</p>
+
+<p>
+All is based on the fact that the backquote-form is simple character substitution, while every <code>$()</code>-construct opens an own, subsequent parsing step. Everything inside <code>$()</code> is interpreted as if written normal on a commandline. No special escaping of <strong>nothing</strong> is needed:
+</p>
+
+<p>
+<pre class="code">echo &quot;$(echo &quot;$(ls)&quot;)&quot; # nested double-quotes - no problem</pre>
+
+</p>
+
+<p>
+<strong><em class="u">Constructs you should avoid</em></strong>
+</p>
+
+<p>
+It&#039;s not all shiny with <code>$()</code>, at least for my current Bash (<code>3.1.17(1)-release</code>. <img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> <em class="u"><strong>Update:</strong> Fixed since <code>3.2-beta</code> together with a misinterpretion of &#039;))&#039; being recognized as arithmetic expansion [by redduck666]</em>). This command seems to incorrectly close the substitution step and echo prints &quot;ls&quot; and &quot;)&quot;:
+<pre class="code">echo $(
+# some comment ending with a )
+ls
+)</pre>
+
+</p>
+
+<p>
+It seems that every closing &quot;)&quot; confuses this construct. Also a (very uncommon <img src="/lib/images/smileys/icon_wink.gif" class="icon" alt=";-)" />) construct like:
+<pre class="code">echo $(read VAR; case &quot;$var&quot; in foo) blah ;; esac) # spits out some error, when it sees the &quot;;;&quot;
+
+# fixes it:
+echo $(read VAR; case &quot;$var&quot; in (foo) blah ;; esac) # will work, but just let it be, please ;-)</pre>
+
+</p>
+
+<p>
+<strong><em class="u">Conclusion:</em></strong>
+</p>
+
+<p>
+In general, the <code>$()</code> should be the preferred method:
+</p>
+<ul>
+<li class="level1"><div class="li"> it&#039;s clean syntax</div>
+</li>
+<li class="level1"><div class="li"> it&#039;s intuitive syntax</div>
+</li>
+<li class="level1"><div class="li"> it&#039;s more readable</div>
+</li>
+<li class="level1"><div class="li"> it&#039;s nestable</div>
+</li>
+<li class="level1"><div class="li"> its inner parsing is separate</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;A closer look at the two forms&quot;,&quot;hid&quot;:&quot;a_closer_look_at_the_two_forms&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:3,&quot;range&quot;:&quot;1748-3626&quot;} -->
+<h2 class="sectionedit4" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+<strong>To get the date:</strong>
+<pre class="code">DATE=&quot;$(date)&quot;</pre>
+
+</p>
+
+<p>
+<strong>To copy a file and get <code>cp</code> error output:</strong>
+<pre class="code">COPY_OUTPUT=&quot;$(cp file.txt /some/where 2&gt;&amp;1)&quot;</pre>
+
+Attention: Here, you need to redirect <code>cp</code> <code>STDERR</code> to its <code>STDOUT</code> target, because command substitution only catches <code>STDOUT</code>!
+</p>
+
+<p>
+<strong>Catch stdout and preserve trailing newlines:</strong>
+<pre class="code">var=$(echo -n $&#039;\n&#039;); echo -n &quot;$var&quot;; # $var == &quot;&quot;
+var=$(echo -n $&#039;\n&#039;; echo -n x); var=&quot;${var%x}&quot;; echo -n &quot;$var&quot; # $var == &quot;\n&quot;</pre>
+
+</p>
+
+<p>
+This adds &quot;x&quot; to the output, which prevents the trailing newlines of the previous commands&#039; output from being deleted by $().
+</p>
+
+<p>
+By removing this &quot;x&quot; later on, we are left with the previous commands&#039; output with its trailing newlines.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:4,&quot;range&quot;:&quot;3627-4375&quot;} -->
+<h2 class="sectionedit5" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansion and substitution</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/scripting/obsolete" class="wikilink1" title="scripting:obsolete"> Obsolete and deprecated syntax</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:5,&quot;range&quot;:&quot;4376-&quot;} --></div>
+</body>
+</html>

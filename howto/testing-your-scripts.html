@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>howto:testing-your-scripts</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="howto,testing-your-scripts"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/howto/testing-your-scripts?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=howto"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/howto/testing-your-scripts"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/howto/testing-your-scripts"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/howto/testing-your-scripts"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='howto';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"howto:testing-your-scripts","namespace":"howto","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#write_simple_util">Write simple util</a></div></li>
+<li class="level3"><div class="li"><a href="#create_testsuit">Create testsuit</a></div></li>
+<li class="level3"><div class="li"><a href="#write_bashtests">Write bashtests</a></div></li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<p>
+The one of the simplest way to check your bash/sh scripts is run it and check it output or run it and check the result. This tutorial shows how-to use <a href="https://github.com/pahaz/bashtest" class="urlextern" title="https://github.com/pahaz/bashtest" rel="nofollow">bashtest</a> tool for testing your scripts.
+</p>
+
+<h3 class="sectionedit1" id="write_simple_util">Write simple util</h3>
+<div class="level3">
+
+<p>
+We have a simple <strong>stat.sh</strong> script:
+</p>
+
+<p>
+<pre class="code">#!/usr/bin/env bash
+
+if [ -z &quot;$1&quot; ]
+then
+    DIR=./
+else
+    DIR=$1
+fi
+
+echo &quot;Evaluate *.py statistics&quot;
+FILES=$(find $DIR -name &#039;*.py&#039; | wc -l)
+LINES=$((find $DIR -name &#039;*.py&#039; -print0 | xargs -0 cat) | wc -l)
+echo &quot;PYTHON FILES: $FILES&quot;
+echo &quot;PYTHON LINES: $LINES&quot;</pre>
+
+</p>
+
+<p>
+This script evaluate the number of python files and the number of python code lines in the files.
+We can use it like <strong>./stat.sh &lt;dir&gt;</strong>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Write simple util&quot;,&quot;hid&quot;:&quot;write_simple_util&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;231-716&quot;} -->
+<h3 class="sectionedit2" id="create_testsuit">Create testsuit</h3>
+<div class="level3">
+
+<p>
+Then make test suits for <strong>stat.sh</strong>. We make a directory <strong>testsuit</strong> which contain test python files.
+</p>
+
+<p>
+<strong>testsuit/main.py</strong>
+<pre class="code">import foo
+print(foo)</pre>
+
+</p>
+
+<p>
+<strong>testsuit/foo.py</strong>
+<pre class="code">BAR = 1
+BUZ = BAR + 2</pre>
+
+</p>
+
+<p>
+Ok! Our test suit is ready! 
+We have 2 python files which contains 4 lines of code.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Create testsuit&quot;,&quot;hid&quot;:&quot;create_testsuit&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:2,&quot;range&quot;:&quot;717-1050&quot;} -->
+<h3 class="sectionedit3" id="write_bashtests">Write bashtests</h3>
+<div class="level3">
+
+<p>
+Lets write tests. We just write a shell command for testing our work.
+</p>
+
+<p>
+Create file <strong>tests.bashtest</strong>:
+</p>
+
+<p>
+<pre class="code">$ ./stat.sh testsuit/
+Evaluate *.py statistics
+PYTHON FILES:        2
+PYTHON LINES:        4
+</pre>
+
+</p>
+
+<p>
+This is our test! This is simple. Try to run it.
+</p>
+
+<p>
+<pre class="code"># install bashtest if required!
+$ pip install bashtest</pre>
+
+</p>
+
+<p>
+<pre class="code"># run tests
+$ bashtest *.bashtest
+1 items passed all tests:
+   1 tests in tests.bashtest
+1 tests in 1 items.
+1 passed and 0 failed.
+Test passed.</pre>
+
+</p>
+
+<p>
+Thats all. We wrote one test. You can write more tests if you want.
+</p>
+
+<p>
+<pre class="code">$ ls testsuit/
+foo.py  main.py
+
+$ ./stat.sh testsuit/
+Evaluate *.py statistics
+PYTHON FILES:        2
+PYTHON LINES:        4
+</pre>
+
+</p>
+
+<p>
+And run tests again:
+</p>
+
+<p>
+<pre class="code">$ bashtest *.bashtest
+1 items passed all tests:
+   2 tests in tests.bashtest
+2 tests in 1 items.
+2 passed and 0 failed.
+Test passed.</pre>
+
+</p>
+
+<p>
+You can find more <strong>.bashtest</strong> examples in the <a href="https://github.com/pahaz/bashtest" class="urlextern" title="https://github.com/pahaz/bashtest" rel="nofollow"> bashtest github repo</a>. You can also write your question or report a bug <a href="https://github.com/pahaz/bashtest/issues" class="urlextern" title="https://github.com/pahaz/bashtest/issues" rel="nofollow"> here</a>.
+</p>
+
+<p>
+Happy testing!
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Write bashtests&quot;,&quot;hid&quot;:&quot;write_bashtests&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:3,&quot;range&quot;:&quot;1051-&quot;} --></div>
+</body>
+</html>

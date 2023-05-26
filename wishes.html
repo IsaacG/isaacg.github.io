@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>wishes</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="wishes"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/wishes?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns="/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/wishes"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/wishes"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/wishes"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"wishes","namespace":"","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#wishlist">Wishlist</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#token_recognition_and_shell_grammar">Token Recognition and Shell Grammar</a></div></li>
+<li class="level2"><div class="li"><a href="#general">General</a></div></li>
+<li class="level2"><div class="li"><a href="#some_ideas">Some ideas</a></div></li>
+<li class="level2"><div class="li"><a href="#implemented">Implemented</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#bash_for_loop_multi-word_lines">Bash For Loop Multi-word lines</a></div></li>
+<li class="level3"><div class="li"><a href="#getopts_tutorial">Getopts tutorial</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="wishlist">Wishlist</h1>
+<div class="level1">
+
+<p>
+<strong>NOTE:</strong> Due to neverending SPAM from various IPs (the usual pharmacy-links and whatnot nonsens) this page was made readonly.
+</p>
+
+<p>
+Another way of submitting wishes is the following form:
+</p>
+<div class="level2"><form action="/doku.php" method="post" onsubmit="return validatecontact(this);"><table class="inline"><tr><td>Your Name : </td><td><input type="text" name="name" value="" /></td></tr><tr><td>Your Email : </td><td><input type="text" name="email" value="" /></td></tr><tr><td>Message : </td><td><textarea name="content" wrap="on" cols="40" rows="6" value="" ></textarea></td></tr><tr><td>Enter 'HUMAN' : </td><td><input type="text" name="verify" value="" /></td></tr></table><p><input type="hidden" name="subject" value="Wiki: wishlist" /><input type="hidden" name="do" value="show" /><input type="hidden" name="id" value="wishes" /><input type="hidden" name="purge" value="true" /><input type="hidden" name="contact"   value="true" /><input type="submit" name="submit" value="Submit" /></p></form></div>
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Wishlist&quot;,&quot;hid&quot;:&quot;wishlist&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-242&quot;} -->
+<h2 class="sectionedit2" id="token_recognition_and_shell_grammar">Token Recognition and Shell Grammar</h2>
+<div class="level2">
+
+<p>
+a more human-readable version of the following topics:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_03" class="urlextern" title="http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_03" rel="nofollow">http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_03</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_10" class="urlextern" title="http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_10" rel="nofollow">http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_10</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Token Recognition and Shell Grammar&quot;,&quot;hid&quot;:&quot;token_recognition_and_shell_grammar&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;243-528&quot;} -->
+<h2 class="sectionedit3" id="general">General</h2>
+<div class="level2">
+
+<p>
+A simplified version of `man bash&#039; and interesting bash tricks.<img src="/lib/images/smileys/icon_smile.gif" class="icon" alt=":-)" />
+</p>
+<blockquote><div class="no">
+ The whole site is meant to be like that: a simplified or better human-readable collection of manpage snipplets. Maybe a page with the main topics of bash manpage that link to the proper articles would be good (I just don&#039;t have enough articles heh) - a kind of summary page — Jan</div></blockquote>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;General&quot;,&quot;hid&quot;:&quot;general&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;529-901&quot;} -->
+<h2 class="sectionedit4" id="some_ideas">Some ideas</h2>
+<div class="level2">
+
+<p>
+<strong>hmm maybe some of this stuff could make it somewhere to the wiki…:)</strong>
+</p>
+<ul>
+<li class="level1 node"><div class="li">  an article about how to do ksh coprocess in bash (<img src="/lib/images/smileys/v4logo_short.gif" class="icon" alt=":V4:" /> may be obsolete regarding <a href="/bash4" class="wikilink1" title="bash4"> Bash 4 features</a>)</div>
+<ol>
+<li class="level2"><div class="li"> single way → process substitution </div>
+</li>
+<li class="level2"><div class="li"> 2 way name pipes</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> let&#039;s write a interactive tutorial script that teaches readline/bash (like C-h t in emacs, or vimtutor or vilearn)</div>
+</li>
+<li class="level1"><div class="li"> programmable history: <a href="http://pastebin.bash-hackers.org/index.php?show=22" class="urlextern" title="http://pastebin.bash-hackers.org/index.php?show=22" rel="nofollow">http://pastebin.bash-hackers.org/index.php?show=22</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Some ideas&quot;,&quot;hid&quot;:&quot;some_ideas&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;902-1378&quot;} -->
+<h2 class="sectionedit5" id="implemented">Implemented</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Implemented&quot;,&quot;hid&quot;:&quot;implemented&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;1379-1403&quot;} -->
+<h3 class="sectionedit6" id="bash_for_loop_multi-word_lines">Bash For Loop Multi-word lines</h3>
+<div class="level3">
+
+<p>
+From this solution on modifying the internal Field Separator (IFS) in bash I found here:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://linux.derkeiler.com/Mailing-Lists/Debian/2006-08/msg00462.html" class="urlextern" title="http://linux.derkeiler.com/Mailing-Lists/Debian/2006-08/msg00462.html" rel="nofollow">http://linux.derkeiler.com/Mailing-Lists/Debian/2006-08/msg00462.html</a></div>
+</li>
+</ul>
+<blockquote><div class="no">
+ added to <a href="/syntax/ccmd/classic_for" class="wikilink1" title="syntax:ccmd:classic_for">the for-loop-article</a> as example, but also made some critical comments; thanks — Jan</div></blockquote>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Bash For Loop Multi-word lines&quot;,&quot;hid&quot;:&quot;bash_for_loop_multi-word_lines&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:6,&quot;range&quot;:&quot;1404-1735&quot;} -->
+<h3 class="sectionedit7" id="getopts_tutorial">Getopts tutorial</h3>
+<div class="level3">
+<ul>
+<li class="level1 node"><div class="li"> My school offers a UNIX programming course (C, shell, etc.). I use this site extensively to help my friends taking this course learn concepts such as I/O redirection etc. As it gets more advanced they need to do option parsing. Therefore I would like to see a &quot;getopts illustrated&quot; article or some such, showing the breakdown of how it parses parameters.</div>
+<ul>
+<li class="level2"><div class="li"> &quot;<a href="/howto/getopts_tutorial" class="wikilink1" title="howto:getopts_tutorial">Small getopts tutorial</a>&quot; is a first step for the getopts stuff - provide ideas</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Getopts tutorial&quot;,&quot;hid&quot;:&quot;getopts_tutorial&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;1736-&quot;} --></div>
+</body>
+</html>

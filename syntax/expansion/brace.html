@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:expansion:brace</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,expansion,brace,bash,shell,scripting,expansion,substitution,text,list,brace"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/expansion/brace?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:expansion"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/expansion/brace"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/expansion/brace"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/expansion/brace"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:expansion';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:expansion:brace","namespace":"syntax:expansion","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#brace_expansion">Brace expansion</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#string_lists">String lists</a></div></li>
+<li class="level2"><div class="li"><a href="#ranges">Ranges</a></div></li>
+<li class="level2"><div class="li"><a href="#combining_and_nesting">Combining and nesting</a></div></li>
+<li class="level2"><div class="li"><a href="#common_use_and_examples">Common use and examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#massdownload_from_the_web">Massdownload from the Web</a></div></li>
+<li class="level3"><div class="li"><a href="#generate_a_subdirectory_structure">Generate a subdirectory structure</a></div></li>
+<li class="level3"><div class="li"><a href="#generate_numbers_with_a_prefix_001_002">Generate numbers with a prefix 001 002 ...</a></div></li>
+<li class="level3"><div class="li"><a href="#repeating_arguments_or_words">Repeating arguments or words</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#new_in_bash_40">New in Bash 4.0</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#zero_padded_number_expansion">Zero padded number expansion</a></div></li>
+<li class="level3"><div class="li"><a href="#increment">Increment</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="brace_expansion">Brace expansion</h1>
+<div class="level1">
+
+<p>
+<pre class="code">{string1,string2,...,stringN}
+{&lt;START&gt;..&lt;END&gt;}
+
+{&lt;START&gt;..&lt;END&gt;..&lt;INCR&gt;} (Bash 4)
+
+&lt;PREFIX&gt;{........}
+
+{........}&lt;SUFFIX&gt;
+
+&lt;PREFIX&gt;{........}&lt;SUFFIX&gt;</pre>
+
+</p>
+
+<p>
+Brace expansion is used to generate arbitrary strings. The specified strings are used to generate <strong>all possible combinations</strong> with the optional surrounding prefixes and suffixes.
+</p>
+
+<p>
+Usually it&#039;s used to generate mass-arguments for a command, that follow a specific naming-scheme.
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> It is the very first step in expansion-handling, it&#039;s important to understand that. When you use
+<pre class="code">echo {a,b}$PATH</pre>
+
+then the brace expansion <strong>does not expand the variable</strong> - this is done in a <strong>later step</strong>. Brace expansion just makes it being:
+<pre class="code">echo a$PATH b$PATH</pre>
+
+Another common pitfall is to assume that a range like <code>{1..200}</code> can be expressed with variables using <code>{$a..$b}</code>. Due to what I described above, it <strong>simply is not possible</strong>, because it&#039;s the very first step in doing expansions. A possible way to achieve this, if you really can&#039;t handle this in another way, is using the <code>eval</code> command, which basically evaluates a commandline twice: <pre class="code">eval echo {$a..$b}</pre>
+ For instance, when embedded inside a for loop : <pre class="code">for i in $(eval echo {$a..$b})</pre>
+ This requires that the entire command be properly escaped to avoid unexpected expansions. If the sequence expansion is to be assigned to an array, another method is possible using <a href="/commands/builtin/declare" class="wikilink1" title="commands:builtin:declare">declaration commands</a>: <pre class="code">declare -a &#039;pics=(img{&#039;&quot;$a..$b&quot;&#039;}.png)&#039;; mv &quot;${pics[@]}&quot; ../imgs</pre>
+ This is significantly safer, but one must still be careful to control the values of $a and $b. Both the exact quoting, and explicitly including &quot;-a&quot; are important.
+</p>
+
+<p>
+The brace expansion is present in two basic forms, <strong>string lists</strong> and <strong>ranges</strong>.
+</p>
+
+<p>
+It can be switched on and off under runtime by using the <code>set</code> builtin and the option <code>-B</code> and <code>+B</code> or the long option <code>braceexpand</code>. If brace expansion is enabled, the stringlist in <code>SHELLOPTS</code> contains <code>braceexpand</code>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Brace expansion&quot;,&quot;hid&quot;:&quot;brace_expansion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-2157&quot;} -->
+<h2 class="sectionedit2" id="string_lists">String lists</h2>
+<div class="level2">
+
+<p>
+<pre class="code">{string1,string2,...,stringN}</pre>
+
+</p>
+
+<p>
+Without the optional prefix and suffix strings, the result is just a space-separated list of the given strings:
+<pre class="code">$ echo {I,want,my,money,back}
+I want my money back</pre>
+
+</p>
+
+<p>
+With prefix or suffix strings, the result is a space-separated list of <strong>all possible combinations</strong> of prefix or suffix specified strings:
+<pre class="code">$ echo _{I,want,my,money,back}
+_I _want _my _money _back
+
+$ echo {I,want,my,money,back}_
+I_ want_ my_ money_ back_
+
+$ echo _{I,want,my,money,back}-
+_I- _want- _my- _money- _back-</pre>
+
+</p>
+
+<p>
+The brace expansion is only performed, if the given string list is really a <strong>list of strings</strong>, i.e., if there is a minimum of one &quot;<code>,</code>&quot; (comma)! Something like <code>{money}</code> doesn&#039;t expand to something special, it&#039;s really only the text &quot;<code>{money}</code>&quot;.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;String lists&quot;,&quot;hid&quot;:&quot;string_lists&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:2,&quot;range&quot;:&quot;2158-2998&quot;} -->
+<h2 class="sectionedit3" id="ranges">Ranges</h2>
+<div class="level2">
+
+<p>
+<pre class="code">{&lt;START&gt;..&lt;END&gt;}</pre>
+
+</p>
+
+<p>
+Brace expansion using ranges is written giving the startpoint and the endpoint of the range. This is a &quot;sequence expression&quot;. The sequences can be of two types
+</p>
+<ul>
+<li class="level1"><div class="li"> integers (optionally zero padded, optionally with a given increment)</div>
+</li>
+<li class="level1"><div class="li"> characters</div>
+</li>
+</ul>
+
+<p>
+<pre class="code">$ echo {5..12}
+5 6 7 8 9 10 11 12
+
+$ echo {c..k}
+c d e f g h i j k</pre>
+
+</p>
+
+<p>
+When you mix these both types, brace expansion is <strong>not</strong> performed:
+<pre class="code">$ echo {5..k}
+{5..k}</pre>
+
+</p>
+
+<p>
+When you zero pad one of the numbers (or both) in a range, then the generated range is zero padded, too:
+<pre class="code">$ echo {01..10}
+01 02 03 04 05 06 07 08 09 10</pre>
+
+There&#039;s a chapter of Bash 4 brace expansion changes at <a href="#new_in_bash_40" title="syntax:expansion:brace ↵" class="wikilink1"> the end of this article</a>.
+</p>
+
+<p>
+Similar to the expansion using stringlists, you can add prefix and suffix strings:
+<pre class="code">$ echo 1.{0..9}
+1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9
+
+$ echo ---{A..E}---
+---A--- ---B--- ---C--- ---D--- ---E---</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Ranges&quot;,&quot;hid&quot;:&quot;ranges&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:3,&quot;range&quot;:&quot;2999-3975&quot;} -->
+<h2 class="sectionedit4" id="combining_and_nesting">Combining and nesting</h2>
+<div class="level2">
+
+<p>
+When you combine more brace expansions, you effectively use a brace expansion as prefix or suffix for another one. Let&#039;s generate all possible combinations of uppercase letters and digits:
+<pre class="code">$ echo {A..Z}{0..9}
+A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 B0 B1 B2 B3 B4 B5 B6 B7 B8 B9 C0 C1 C2 C3 C4 C5 C6
+C7 C8 C9 D0 D1 D2 D3 D4 D5 D6 D7 D8 D9 E0 E1 E2 E3 E4 E5 E6 E7 E8 E9 F0 F1 F2 F3
+F4 F5 F6 F7 F8 F9 G0 G1 G2 G3 G4 G5 G6 G7 G8 G9 H0 H1 H2 H3 H4 H5 H6 H7 H8 H9 I0
+I1 I2 I3 I4 I5 I6 I7 I8 I9 J0 J1 J2 J3 J4 J5 J6 J7 J8 J9 K0 K1 K2 K3 K4 K5 K6 K7
+K8 K9 L0 L1 L2 L3 L4 L5 L6 L7 L8 L9 M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 N0 N1 N2 N3 N4
+N5 N6 N7 N8 N9 O0 O1 O2 O3 O4 O5 O6 O7 O8 O9 P0 P1 P2 P3 P4 P5 P6 P7 P8 P9 Q0 Q1
+Q2 Q3 Q4 Q5 Q6 Q7 Q8 Q9 R0 R1 R2 R3 R4 R5 R6 R7 R8 R9 S0 S1 S2 S3 S4 S5 S6 S7 S8
+S9 T0 T1 T2 T3 T4 T5 T6 T7 T8 T9 U0 U1 U2 U3 U4 U5 U6 U7 U8 U9 V0 V1 V2 V3 V4 V5
+V6 V7 V8 V9 W0 W1 W2 W3 W4 W5 W6 W7 W8 W9 X0 X1 X2 X3 X4 X5 X6 X7 X8 X9 Y0 Y1 Y2
+Y3 Y4 Y5 Y6 Y7 Y8 Y9 Z0 Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9</pre>
+
+Hey.. that <strong>saves you writing</strong> 260 strings!
+</p>
+
+<p>
+Brace expansions can be nested, but too much of it usually makes you losing overview a bit <img src="/lib/images/smileys/icon_wink.gif" class="icon" alt=";-)" />
+</p>
+
+<p>
+Here&#039;s a sample to generate the alphabet, first the uppercase letters, then the lowercase ones:
+<pre class="code">$ echo {{A..Z},{a..z}}
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Combining and nesting&quot;,&quot;hid&quot;:&quot;combining_and_nesting&quot;,&quot;codeblockOffset&quot;:14,&quot;secid&quot;:4,&quot;range&quot;:&quot;3976-5396&quot;} -->
+<h2 class="sectionedit5" id="common_use_and_examples">Common use and examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Common use and examples&quot;,&quot;hid&quot;:&quot;common_use_and_examples&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:5,&quot;range&quot;:&quot;5397-5433&quot;} -->
+<h3 class="sectionedit6" id="massdownload_from_the_web">Massdownload from the Web</h3>
+<div class="level3">
+
+<p>
+In this example, <code>wget</code> is used to download documentation that is split over several numbered webpages.
+</p>
+
+<p>
+<code>wget</code> won&#039;t see your braces. It will see <strong>6 different URLs</strong> to download.
+</p>
+
+<p>
+<pre class="code">wget http://docs.example.com/documentation/slides_part{1,2,3,4,5,6}.html</pre>
+
+</p>
+
+<p>
+Of course it&#039;s possible, and even easier, to do that with a sequence:
+</p>
+
+<p>
+<pre class="code">wget http://docs.example.com/documentation/slides_part{1..6}.html</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Massdownload from the Web&quot;,&quot;hid&quot;:&quot;massdownload_from_the_web&quot;,&quot;codeblockOffset&quot;:16,&quot;secid&quot;:6,&quot;range&quot;:&quot;5434-5899&quot;} -->
+<h3 class="sectionedit7" id="generate_a_subdirectory_structure">Generate a subdirectory structure</h3>
+<div class="level3">
+
+<p>
+Your life is hard? Let&#039;s ease it a bit - that&#039;s what shells are here for.
+</p>
+
+<p>
+<pre class="code">mkdir /home/bash/test/{foo,bar,baz,cat,dog}</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generate a subdirectory structure&quot;,&quot;hid&quot;:&quot;generate_a_subdirectory_structure&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:7,&quot;range&quot;:&quot;5900-6081&quot;} -->
+<h3 class="sectionedit8" id="generate_numbers_with_a_prefix_001_002">Generate numbers with a prefix 001 002 ...</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Using a prefix:</div>
+</li>
+</ul>
+
+<p>
+<pre class="code">for i in 0{1..9} 10; do printf &quot;%s\n&quot; &quot;$i&quot;;done</pre>
+
+If you need to create words with the  number embedded, you can use nested brace:
+<pre class="code">printf &quot;%s\n&quot; img{00{1..9},0{10..99},{100..999}}.png</pre>
+
+</p>
+<ul>
+<li class="level1"><div class="li"> Formatting the numbers with printf:</div>
+</li>
+</ul>
+
+<p>
+<pre class="code">echo $(printf &quot;img%02d.png &quot; {1..99})</pre>
+
+</p>
+
+<p>
+See the <a href="#news_in_bash_40" title="syntax:expansion:brace ↵" class="wikilink1"> text below</a> for a new Bash 4 method.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Generate numbers with a prefix 001 002 ...&quot;,&quot;hid&quot;:&quot;generate_numbers_with_a_prefix_001_002&quot;,&quot;codeblockOffset&quot;:19,&quot;secid&quot;:8,&quot;range&quot;:&quot;6082-6529&quot;} -->
+<h3 class="sectionedit9" id="repeating_arguments_or_words">Repeating arguments or words</h3>
+<div class="level3">
+
+<p>
+<pre class="code">somecommand -v -v -v -v -v</pre>
+
+</p>
+
+<p>
+Can be written as
+<pre class="code">somecommand -v{,,,,}</pre>
+
+…which is a kind of a hack, but hey, it works.
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:10,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_round wrap_info plugin_wrap">
+<h4 id="more_fun">More fun</h4>
+
+<p>
+The most optimal possible brace expansion to expand n arguments of course consists of n&#039;s prime factors. We can use the &quot;factor&quot; program bundled with GNU coreutils to emit a brace expansion that will expand any number of arguments.
+</p>
+
+<p>
+<pre class="code">function braceify {
+    [[ $1 == +([[:digit:]]) ]] || return
+    typeset -a a
+    read -ra a &lt; &lt;(factor &quot;$1&quot;)
+    eval &quot;echo $(printf &#039;{$(printf ,%%.s {1..%s})}&#039; &quot;${a[@]:1}&quot;)&quot;
+}
+
+printf &#039;eval printf &quot;$arg&quot;%s&#039; &quot;$(braceify 1000000)&quot;</pre>
+
+</p>
+
+<p>
+&quot;Braceify&quot; generates the expansion code itself. In this example we inject that output into a template which displays the most terse brace expansion code that would expand <code>&quot;$arg&quot;</code> 1,000,000 times if evaluated. In this case, the output is:
+</p>
+
+<p>
+<pre class="code">eval printf &quot;$arg&quot;{,,}{,,}{,,}{,,}{,,}{,,}{,,,,,}{,,,,,}{,,,,,}{,,,,,}{,,,,,}{,,,,,}</pre>
+
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:11,&quot;range&quot;:&quot;0-&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Repeating arguments or words&quot;,&quot;hid&quot;:&quot;repeating_arguments_or_words&quot;,&quot;codeblockOffset&quot;:22,&quot;secid&quot;:9,&quot;range&quot;:&quot;6530-7579&quot;} -->
+<h2 class="sectionedit12" id="new_in_bash_40">New in Bash 4.0</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;New in Bash 4.0&quot;,&quot;hid&quot;:&quot;new_in_bash_40&quot;,&quot;codeblockOffset&quot;:26,&quot;secid&quot;:12,&quot;range&quot;:&quot;7580-7608&quot;} -->
+<h3 class="sectionedit13" id="zero_padded_number_expansion">Zero padded number expansion</h3>
+<div class="level3">
+
+<p>
+Prefix either of the numbers in a numeric range with <code>0</code> to pad the expanded numbers with the correct amount of zeros:
+<pre class="code">$ echo {0001..5}
+0001 0002 0003 0004 0005</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Zero padded number expansion&quot;,&quot;hid&quot;:&quot;zero_padded_number_expansion&quot;,&quot;codeblockOffset&quot;:26,&quot;secid&quot;:13,&quot;range&quot;:&quot;7609-7827&quot;} -->
+<h3 class="sectionedit14" id="increment">Increment</h3>
+<div class="level3">
+
+<p>
+It is now possible to specify an increment using ranges:
+<pre class="code">{&lt;START&gt;..&lt;END&gt;..&lt;INCR&gt;}</pre>
+
+<code>&lt;INCR&gt;</code> is numeric, you can use a negative integer but the correct sign is deduced from the order of <code>&lt;START&gt;</code> and <code>&lt;END&gt;</code> anyways.
+<pre class="code">$ echo {1..10..2}
+1 3 5 7 9
+$ echo {10..1..2}
+10 8 6 4 2</pre>
+
+</p>
+
+<p>
+Interesting feature: The increment specification also works for letter-ranges:
+<pre class="code">$ echo {a..z..3}
+a d g j m p s v y</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Increment&quot;,&quot;hid&quot;:&quot;increment&quot;,&quot;codeblockOffset&quot;:27,&quot;secid&quot;:14,&quot;range&quot;:&quot;7828-8287&quot;} -->
+<h2 class="sectionedit15" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansion and substitution</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:30,&quot;secid&quot;:15,&quot;range&quot;:&quot;8288-&quot;} --></div>
+</body>
+</html>

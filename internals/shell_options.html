@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>internals:shell_options</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="internals,shell_options,bash,shell,scripting,options,runtime,variable,behaviour"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/internals/shell_options?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=internals"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/internals/shell_options"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/internals/shell_options"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/internals/shell_options"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='internals';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"internals:shell_options","namespace":"internals","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#list_of_shell_options">List of shell options</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#shell_options">Shell options</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#autocd">autocd</a></div></li>
+<li class="level3"><div class="li"><a href="#assoc_expand_once">assoc_expand_once</a></div></li>
+<li class="level3"><div class="li"><a href="#cdable_vars">cdable_vars</a></div></li>
+<li class="level3"><div class="li"><a href="#cdspell">cdspell</a></div></li>
+<li class="level3"><div class="li"><a href="#checkhash">checkhash</a></div></li>
+<li class="level3"><div class="li"><a href="#checkjobs">checkjobs</a></div></li>
+<li class="level3"><div class="li"><a href="#checkwinsize">checkwinsize</a></div></li>
+<li class="level3"><div class="li"><a href="#cmdhist">cmdhist</a></div></li>
+<li class="level3"><div class="li"><a href="#compat31">compat31</a></div></li>
+<li class="level3"><div class="li"><a href="#compat32">compat32</a></div></li>
+<li class="level3"><div class="li"><a href="#compat40">compat40</a></div></li>
+<li class="level3"><div class="li"><a href="#compat41">compat41</a></div></li>
+<li class="level3"><div class="li"><a href="#compat42">compat42</a></div></li>
+<li class="level3"><div class="li"><a href="#compat43">compat43</a></div></li>
+<li class="level3"><div class="li"><a href="#compat44">compat44</a></div></li>
+<li class="level3"><div class="li"><a href="#direxpand">direxpand</a></div></li>
+<li class="level3"><div class="li"><a href="#dirspell">dirspell</a></div></li>
+<li class="level3"><div class="li"><a href="#dotglob">dotglob</a></div></li>
+<li class="level3"><div class="li"><a href="#execfail">execfail</a></div></li>
+<li class="level3"><div class="li"><a href="#expand_aliases">expand_aliases</a></div></li>
+<li class="level3"><div class="li"><a href="#extdebug">extdebug</a></div></li>
+<li class="level3"><div class="li"><a href="#extglob">extglob</a></div></li>
+<li class="level3"><div class="li"><a href="#extquote">extquote</a></div></li>
+<li class="level3"><div class="li"><a href="#failglob">failglob</a></div></li>
+<li class="level3"><div class="li"><a href="#force_fignore">force_fignore</a></div></li>
+<li class="level3"><div class="li"><a href="#globasciiranges">globasciiranges</a></div></li>
+<li class="level3"><div class="li"><a href="#globstar">globstar</a></div></li>
+<li class="level3"><div class="li"><a href="#gnu_errfmt">gnu_errfmt</a></div></li>
+<li class="level3"><div class="li"><a href="#histappend">histappend</a></div></li>
+<li class="level3"><div class="li"><a href="#histreedit">histreedit</a></div></li>
+<li class="level3"><div class="li"><a href="#histverify">histverify</a></div></li>
+<li class="level3"><div class="li"><a href="#hostcomplete">hostcomplete</a></div></li>
+<li class="level3"><div class="li"><a href="#huponexit">huponexit</a></div></li>
+<li class="level3"><div class="li"><a href="#interactive_comments">interactive_comments</a></div></li>
+<li class="level3"><div class="li"><a href="#lastpipe">lastpipe</a></div></li>
+<li class="level3"><div class="li"><a href="#lithist">lithist</a></div></li>
+<li class="level3"><div class="li"><a href="#localvar_inherit">localvar_inherit</a></div></li>
+<li class="level3"><div class="li"><a href="#login_shell">login_shell</a></div></li>
+<li class="level3"><div class="li"><a href="#mailwarn">mailwarn</a></div></li>
+<li class="level3"><div class="li"><a href="#no_empty_cmd_completion">no_empty_cmd_completion</a></div></li>
+<li class="level3"><div class="li"><a href="#nocaseglob">nocaseglob</a></div></li>
+<li class="level3"><div class="li"><a href="#nocasematch">nocasematch</a></div></li>
+<li class="level3"><div class="li"><a href="#nullglob">nullglob</a></div></li>
+<li class="level3"><div class="li"><a href="#progcomp">progcomp</a></div></li>
+<li class="level3"><div class="li"><a href="#promptvars">promptvars</a></div></li>
+<li class="level3"><div class="li"><a href="#restricted_shell">restricted_shell</a></div></li>
+<li class="level3"><div class="li"><a href="#shift_verbose">shift_verbose</a></div></li>
+<li class="level3"><div class="li"><a href="#sourcepath">sourcepath</a></div></li>
+<li class="level3"><div class="li"><a href="#syslog_history">syslog_history</a></div></li>
+<li class="level3"><div class="li"><a href="#xpg_echo">xpg_echo</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#parser_configurations">Parser configurations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="list_of_shell_options">List of shell options</h1>
+<div class="level1">
+
+<p>
+This information was taken from a Bash version &quot;<code>4.1</code>&quot;, every now and then new options are added, so likely, this list isn&#039;t complete.
+</p>
+
+<p>
+The shell-options can be set with the <a href="/commands/builtin/shopt" class="wikilink1" title="commands:builtin:shopt"> shopt builtin command</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;List of shell options&quot;,&quot;hid&quot;:&quot;list_of_shell_options&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-336&quot;} -->
+<h2 class="sectionedit2" id="shell_options">Shell options</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Shell options&quot;,&quot;hid&quot;:&quot;shell_options&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;337-363&quot;} -->
+<h3 class="sectionedit3" id="autocd">autocd</h3>
+<div class="level3">
+<div class="table sectionedit4"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>autocd</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.0-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive only  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:4,&quot;range&quot;:&quot;381-478&quot;} -->
+<p>
+If set, a command name that is the name of a directory is executed as if it were the argument to the cd command.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;autocd&quot;,&quot;hid&quot;:&quot;autocd&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;364-593&quot;} -->
+<h3 class="sectionedit5" id="assoc_expand_once">assoc_expand_once</h3>
+<div class="level3">
+<div class="table sectionedit6"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>assoc_expand_once</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">5.0-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;622-717&quot;} -->
+<p>
+If set, Bash attempts to expand associative array options only once.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;assoc_expand_once&quot;,&quot;hid&quot;:&quot;assoc_expand_once&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:5,&quot;range&quot;:&quot;594-789&quot;} -->
+<h3 class="sectionedit7" id="cdable_vars">cdable_vars</h3>
+<div class="level3">
+<div class="table sectionedit8"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>cdable_vars</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table2&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;812-898&quot;} -->
+<p>
+Treat every <strong>non-directory argument</strong> to the <code>cd</code>-command as variable name containing a directory to <code>cd</code> into.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;cdable_vars&quot;,&quot;hid&quot;:&quot;cdable_vars&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:7,&quot;range&quot;:&quot;790-1017&quot;} -->
+<h3 class="sectionedit9" id="cdspell">cdspell</h3>
+<div class="level3">
+<div class="table sectionedit10"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>cdspell</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive only  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table3&quot;,&quot;secid&quot;:10,&quot;range&quot;:&quot;1036-1131&quot;} -->
+<p>
+If set, minor errors in the spelling of a directory component in a cd command will be corrected. The errors checked for are transposed characters, a missing character, and one character too many. If a correction is found, the corrected file name is printed, and the command proceeds.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;cdspell&quot;,&quot;hid&quot;:&quot;cdspell&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:9,&quot;range&quot;:&quot;1018-1417&quot;} -->
+<h3 class="sectionedit11" id="checkhash">checkhash</h3>
+<div class="level3">
+<div class="table sectionedit12"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>checkhash</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table4&quot;,&quot;secid&quot;:12,&quot;range&quot;:&quot;1438-1522&quot;} -->
+<p>
+If set, Bash checks that a command found in the hash table exists before trying to execute it. If a hashed command no longer exists, a normal path search is performed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;checkhash&quot;,&quot;hid&quot;:&quot;checkhash&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:11,&quot;range&quot;:&quot;1418-1692&quot;} -->
+<h3 class="sectionedit13" id="checkjobs">checkjobs</h3>
+<div class="level3">
+<div class="table sectionedit14"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>checkjobs</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.0-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive only  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table5&quot;,&quot;secid&quot;:14,&quot;range&quot;:&quot;1713-1813&quot;} -->
+<p>
+If set, Bash lists the status of any stopped and running jobs before exiting an interactive shell. If any jobs are running, this causes the exit to be deferred until a second exit is attempted without an intervening command. The shell always postpones exiting if any jobs are stopped.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;checkjobs&quot;,&quot;hid&quot;:&quot;checkjobs&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:13,&quot;range&quot;:&quot;1693-2100&quot;} -->
+<h3 class="sectionedit15" id="checkwinsize">checkwinsize</h3>
+<div class="level3">
+<div class="table sectionedit16"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign"> Option:      </th><td class="col1 leftalign"> <code>checkwinsize</code>  </td><th class="col2 leftalign"> Since:    </th><td class="col3 leftalign"> unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign"> Shell mode:  </th><td class="col1 leftalign"> all               </td><th class="col2 leftalign"> Default:  </th><td class="col3 leftalign"> on       </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table6&quot;,&quot;secid&quot;:16,&quot;range&quot;:&quot;2124-2243&quot;} -->
+<p>
+If set, Bash checks the window size after each command and, if necessary, updates the values of the variables <a href="/syntax/shellvars#lines" class="wikilink1" title="syntax:shellvars">LINES</a> and <a href="/syntax/shellvars#columns" class="wikilink1" title="syntax:shellvars">COLUMNS</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;checkwinsize&quot;,&quot;hid&quot;:&quot;checkwinsize&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:15,&quot;range&quot;:&quot;2101-2430&quot;} -->
+<h3 class="sectionedit17" id="cmdhist">cmdhist</h3>
+<div class="level3">
+<div class="table sectionedit18"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>cmdhist</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table7&quot;,&quot;secid&quot;:18,&quot;range&quot;:&quot;2449-2531&quot;} -->
+<p>
+If set, Bash attempts to save all lines of a multiple-line command in the same history entry. This allows easy re-editing of multi-line commands.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;cmdhist&quot;,&quot;hid&quot;:&quot;cmdhist&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:17,&quot;range&quot;:&quot;2431-2679&quot;} -->
+<h3 class="sectionedit19" id="compat31">compat31</h3>
+<div class="level3">
+<div class="table sectionedit20"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>compat31</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.2   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table8&quot;,&quot;secid&quot;:20,&quot;range&quot;:&quot;2699-2779&quot;} -->
+<p>
+Compatiblity mode for Bash 3.1
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;compat31&quot;,&quot;hid&quot;:&quot;compat31&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:19,&quot;range&quot;:&quot;2680-2812&quot;} -->
+<h3 class="sectionedit21" id="compat32">compat32</h3>
+<div class="level3">
+<div class="table sectionedit22"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>compat32</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.0   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table9&quot;,&quot;secid&quot;:22,&quot;range&quot;:&quot;2832-2912&quot;} -->
+<p>
+Compatiblity mode for Bash 3.2
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;compat32&quot;,&quot;hid&quot;:&quot;compat32&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:21,&quot;range&quot;:&quot;2813-2945&quot;} -->
+<h3 class="sectionedit23" id="compat40">compat40</h3>
+<div class="level3">
+<div class="table sectionedit24"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>compat40</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.1-beta   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table10&quot;,&quot;secid&quot;:24,&quot;range&quot;:&quot;2965-3050&quot;} -->
+<p>
+Compatiblity mode for Bash 4.0
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;compat40&quot;,&quot;hid&quot;:&quot;compat40&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:23,&quot;range&quot;:&quot;2946-3083&quot;} -->
+<h3 class="sectionedit25" id="compat41">compat41</h3>
+<div class="level3">
+<div class="table sectionedit26"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>compat41</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.2-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table11&quot;,&quot;secid&quot;:26,&quot;range&quot;:&quot;3103-3189&quot;} -->
+<p>
+Compatiblity mode for Bash 4.1
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;compat41&quot;,&quot;hid&quot;:&quot;compat41&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:25,&quot;range&quot;:&quot;3084-3222&quot;} -->
+<h3 class="sectionedit27" id="compat42">compat42</h3>
+<div class="level3">
+<div class="table sectionedit28"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>compat42</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.3-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table12&quot;,&quot;secid&quot;:28,&quot;range&quot;:&quot;3242-3328&quot;} -->
+<p>
+Compatiblity mode for Bash 4.2
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;compat42&quot;,&quot;hid&quot;:&quot;compat42&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:27,&quot;range&quot;:&quot;3223-3361&quot;} -->
+<h3 class="sectionedit29" id="compat43">compat43</h3>
+<div class="level3">
+<div class="table sectionedit30"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>compat43</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.4-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table13&quot;,&quot;secid&quot;:30,&quot;range&quot;:&quot;3381-3467&quot;} -->
+<p>
+Compatiblity mode for Bash 4.3
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;compat43&quot;,&quot;hid&quot;:&quot;compat43&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:29,&quot;range&quot;:&quot;3362-3500&quot;} -->
+<h3 class="sectionedit31" id="compat44">compat44</h3>
+<div class="level3">
+<div class="table sectionedit32"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>compat44</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">5.0-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table14&quot;,&quot;secid&quot;:32,&quot;range&quot;:&quot;3520-3606&quot;} -->
+<p>
+Compatiblity mode for Bash 4.4
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;compat44&quot;,&quot;hid&quot;:&quot;compat44&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:31,&quot;range&quot;:&quot;3501-3639&quot;} -->
+<h3 class="sectionedit33" id="direxpand">direxpand</h3>
+<div class="level3">
+<div class="table sectionedit34"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>direxpand</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.3-alpha   </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off (unless changed on compile-time with <code>–enable-direxpand-default</code>)  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table15&quot;,&quot;secid&quot;:34,&quot;range&quot;:&quot;3660-3816&quot;} -->
+<p>
+If set, bash replaces directory names with the results of word expansion when performing filename completion. This changes the contents of the readline editing buffer. If not set, bash attempts to preserve what the user typed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;direxpand&quot;,&quot;hid&quot;:&quot;direxpand&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:33,&quot;range&quot;:&quot;3640-4045&quot;} -->
+<h3 class="sectionedit35" id="dirspell">dirspell</h3>
+<div class="level3">
+<div class="table sectionedit36"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>dirspell</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.0-alpha    </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table16&quot;,&quot;secid&quot;:36,&quot;range&quot;:&quot;4065-4152&quot;} -->
+<p>
+If set, Bash will perform spelling corrections on directory names to match a glob.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;dirspell&quot;,&quot;hid&quot;:&quot;dirspell&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:35,&quot;range&quot;:&quot;4046-4237&quot;} -->
+<h3 class="sectionedit37" id="dotglob">dotglob</h3>
+<div class="level3">
+<div class="table sectionedit38"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>dotglob</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table17&quot;,&quot;secid&quot;:38,&quot;range&quot;:&quot;4256-4338&quot;} -->
+<p>
+If set, Bash includes filenames beginning with a <code>.</code> (dot) in the results of <a href="/syntax/expansion/globs" class="wikilink1" title="syntax:expansion:globs"> pathname expansion</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;dotglob&quot;,&quot;hid&quot;:&quot;dotglob&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:37,&quot;range&quot;:&quot;4238-4468&quot;} -->
+<h3 class="sectionedit39" id="execfail">execfail</h3>
+<div class="level3">
+<div class="table sectionedit40"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>execfail</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">non-interactive  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table18&quot;,&quot;secid&quot;:40,&quot;range&quot;:&quot;4488-4583&quot;} -->
+<p>
+If set, a non-interactive shell will not exit if it cannot execute the file specified as an argument to the <code>exec</code>-builtin command. An interactive shell does not exit if <code>exec</code> fails.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;execfail&quot;,&quot;hid&quot;:&quot;execfail&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:39,&quot;range&quot;:&quot;4469-4773&quot;} -->
+<h3 class="sectionedit41" id="expand_aliases">expand_aliases</h3>
+<div class="level3">
+<div class="table sectionedit42"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>expand_aliases</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">on (interactive), off (non-interactive)  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table19&quot;,&quot;secid&quot;:42,&quot;range&quot;:&quot;4799-4924&quot;} -->
+<p>
+If set, aliases are expanded. This option is enabled by default for interactive shells.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;expand_aliases&quot;,&quot;hid&quot;:&quot;expand_aliases&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:41,&quot;range&quot;:&quot;4774-5014&quot;} -->
+<h3 class="sectionedit43" id="extdebug">extdebug</h3>
+<div class="level3">
+<div class="table sectionedit44"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>extdebug</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table20&quot;,&quot;secid&quot;:44,&quot;range&quot;:&quot;5034-5119&quot;} -->
+<p>
+If set, behavior intended for use by debuggers is enabled.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;extdebug&quot;,&quot;hid&quot;:&quot;extdebug&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:43,&quot;range&quot;:&quot;5015-5180&quot;} -->
+<h3 class="sectionedit45" id="extglob">extglob</h3>
+<div class="level3">
+<div class="table sectionedit46"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>extglob</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.02-alpha1  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table21&quot;,&quot;secid&quot;:46,&quot;range&quot;:&quot;5199-5285&quot;} -->
+<p>
+If set, the extended <a href="/syntax/pattern" class="wikilink1" title="syntax:pattern"> pattern matching</a> features are enabled. See the important note below under <a href="#parser_configurations" title="internals:shell_options ↵" class="wikilink1"> Parser configurations</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;extglob&quot;,&quot;hid&quot;:&quot;extglob&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:45,&quot;range&quot;:&quot;5181-5455&quot;} -->
+<h3 class="sectionedit47" id="extquote">extquote</h3>
+<div class="level3">
+<div class="table sectionedit48"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>extquote</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0-alpha (?)  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">on  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table22&quot;,&quot;secid&quot;:48,&quot;range&quot;:&quot;5475-5563&quot;} -->
+<p>
+If set, <code>$&#039;string&#039;</code> and <code>$&quot;string&quot;</code> quoting is performed within <a href="/syntax/pe" class="wikilink1" title="syntax:pe"> parameter expansions</a> enclosed in double quotes. See the important note below under <a href="#parser_configurations" title="internals:shell_options ↵" class="wikilink1"> Parser configurations</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;extquote&quot;,&quot;hid&quot;:&quot;extquote&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:47,&quot;range&quot;:&quot;5456-5801&quot;} -->
+<h3 class="sectionedit49" id="failglob">failglob</h3>
+<div class="level3">
+<div class="table sectionedit50"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>failglob</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table23&quot;,&quot;secid&quot;:50,&quot;range&quot;:&quot;5821-5906&quot;} -->
+<p>
+If set, patterns which fail to match filenames during pathname expansion result in an error message.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;failglob&quot;,&quot;hid&quot;:&quot;failglob&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:49,&quot;range&quot;:&quot;5802-6009&quot;} -->
+<h3 class="sectionedit51" id="force_fignore">force_fignore</h3>
+<div class="level3">
+<div class="table sectionedit52"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>force_fignore</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive    </td><th class="col2">Default: </th><td class="col3 leftalign">on  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table24&quot;,&quot;secid&quot;:52,&quot;range&quot;:&quot;6034-6133&quot;} -->
+<p>
+If set, the suffixes specified by the <a href="/syntax/shellvars#fignore" class="wikilink1" title="syntax:shellvars">FIGNORE</a> shell variable cause words to be ignored when performing word completion even if the ignored words are the only possible completions. This option is enabled by default.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;force_fignore&quot;,&quot;hid&quot;:&quot;force_fignore&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:51,&quot;range&quot;:&quot;6010-6379&quot;} -->
+<h3 class="sectionedit53" id="globasciiranges">globasciiranges</h3>
+<div class="level3">
+<div class="table sectionedit54"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>globasciiranges</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.3-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign"> all             </td><th class="col2">Default: </th><td class="col3 leftalign">on (configurable at compile time)  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table25&quot;,&quot;secid&quot;:54,&quot;range&quot;:&quot;6406-6540&quot;} -->
+<p>
+If set, range expressions used in pattern matching  behave as if in the traditional C locale when performing comparisons.
+That is, the current locale&#039;s collating sequence is not taken into account, so b will not collate between A and B, and upper-case and lower-case <abbr title="American Standard Code for Information Interchange">ASCII</abbr>
+characters will collate together.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;globasciiranges&quot;,&quot;hid&quot;:&quot;globasciiranges&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:53,&quot;range&quot;:&quot;6380-6849&quot;} -->
+<h3 class="sectionedit55" id="globstar">globstar</h3>
+<div class="level3">
+<div class="table sectionedit56"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>globstar</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.0-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table26&quot;,&quot;secid&quot;:56,&quot;range&quot;:&quot;6869-6954&quot;} -->
+<p>
+If set, recursive globbing with <code>**</code> is enabled.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;globstar&quot;,&quot;hid&quot;:&quot;globstar&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:55,&quot;range&quot;:&quot;6850-7024&quot;} -->
+<h3 class="sectionedit57" id="gnu_errfmt">gnu_errfmt</h3>
+<div class="level3">
+<div class="table sectionedit58"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>gnu_errfmt</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.0-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table27&quot;,&quot;secid&quot;:58,&quot;range&quot;:&quot;7046-7133&quot;} -->
+<p>
+If set, shell error messages are written in the &quot;standard GNU error message format&quot;.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;gnu_errfmt&quot;,&quot;hid&quot;:&quot;gnu_errfmt&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:57,&quot;range&quot;:&quot;7025-7220&quot;} -->
+<h3 class="sectionedit59" id="histappend">histappend</h3>
+<div class="level3">
+<div class="table sectionedit60"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>histappend</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive (?)  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table28&quot;,&quot;secid&quot;:60,&quot;range&quot;:&quot;7242-7339&quot;} -->
+<p>
+If set, the history list is appended to the file named by the value of the <a href="/syntax/shellvars#histfile" class="wikilink1" title="syntax:shellvars">HISTFILE</a> variable when the shell exits, rather than overwriting the file.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;histappend&quot;,&quot;hid&quot;:&quot;histappend&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:59,&quot;range&quot;:&quot;7221-7520&quot;} -->
+<h3 class="sectionedit61" id="histreedit">histreedit</h3>
+<div class="level3">
+<div class="table sectionedit62"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>histreedit</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive (?)  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table29&quot;,&quot;secid&quot;:62,&quot;range&quot;:&quot;7542-7639&quot;} -->
+<p>
+If set, and readline is being used, a user is given the opportunity to re-edit a failed history substitution.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;histreedit&quot;,&quot;hid&quot;:&quot;histreedit&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:61,&quot;range&quot;:&quot;7521-7751&quot;} -->
+<h3 class="sectionedit63" id="histverify">histverify</h3>
+<div class="level3">
+<div class="table sectionedit64"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>histverify</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive (?)  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table30&quot;,&quot;secid&quot;:64,&quot;range&quot;:&quot;7773-7870&quot;} -->
+<p>
+Allow to review a history substitution result by loading the resulting line into the editing buffer, rather than directly executing it.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;histverify&quot;,&quot;hid&quot;:&quot;histverify&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:63,&quot;range&quot;:&quot;7752-8008&quot;} -->
+<h3 class="sectionedit65" id="hostcomplete">hostcomplete</h3>
+<div class="level3">
+<div class="table sectionedit66"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>hostcomplete</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.0-alpha3  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive (?)  </td><th class="col2">Default: </th><td class="col3 leftalign">on  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table31&quot;,&quot;secid&quot;:66,&quot;range&quot;:&quot;8032-8133&quot;} -->
+<p>
+If set, Bash completion also completes hostnames. On by default.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;hostcomplete&quot;,&quot;hid&quot;:&quot;hostcomplete&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:65,&quot;range&quot;:&quot;8009-8200&quot;} -->
+<h3 class="sectionedit67" id="huponexit">huponexit</h3>
+<div class="level3">
+<div class="table sectionedit68"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>huponexit</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.02-alpha1  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive login  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table32&quot;,&quot;secid&quot;:68,&quot;range&quot;:&quot;8221-8323&quot;} -->
+<p>
+If set, Bash will send the <code>SIGHUP</code> signal to all jobs when an interactive login shell exits.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;huponexit&quot;,&quot;hid&quot;:&quot;huponexit&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:67,&quot;range&quot;:&quot;8201-8421&quot;} -->
+<h3 class="sectionedit69" id="interactive_comments">interactive_comments</h3>
+<div class="level3">
+<div class="table sectionedit70"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>interactive_comments</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive  </td><th class="col2">Default: </th><td class="col3 leftalign">on  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table33&quot;,&quot;secid&quot;:70,&quot;range&quot;:&quot;8453-8555&quot;} -->
+<p>
+Allow <a href="/scripting/basics#comments" class="wikilink1" title="scripting:basics"> commenting</a> in interactive shells, on by default.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;interactive_comments&quot;,&quot;hid&quot;:&quot;interactive_comments&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:69,&quot;range&quot;:&quot;8422-8644&quot;} -->
+<h3 class="sectionedit71" id="lastpipe">lastpipe</h3>
+<div class="level3">
+<div class="table sectionedit72"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>lastpipe</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">4.2-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table34&quot;,&quot;secid&quot;:72,&quot;range&quot;:&quot;8664-8749&quot;} -->
+<p>
+If set, <strong>and job control is not active</strong>, the shell runs the last command of a pipeline not executed in the background in the current shell environment.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;lastpipe&quot;,&quot;hid&quot;:&quot;lastpipe&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:71,&quot;range&quot;:&quot;8645-8905&quot;} -->
+<h3 class="sectionedit73" id="lithist">lithist</h3>
+<div class="level3">
+<div class="table sectionedit74"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>lithist</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table35&quot;,&quot;secid&quot;:74,&quot;range&quot;:&quot;8924-9014&quot;} -->
+<p>
+If set, and the <a href="#cmdhist" title="internals:shell_options ↵" class="wikilink1">cmdhist</a> option is enabled, multi-line commands are saved to the history with embedded newlines rather than using semicolon separators where possible.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;lithist&quot;,&quot;hid&quot;:&quot;lithist&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:73,&quot;range&quot;:&quot;8906-9187&quot;} -->
+<h3 class="sectionedit75" id="localvar_inherit">localvar_inherit</h3>
+<div class="level3">
+<div class="table sectionedit76"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>localvar_inherit</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">5.0-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table36&quot;,&quot;secid&quot;:76,&quot;range&quot;:&quot;9215-9308&quot;} -->
+<p>
+If this option is set, a local variable inherits the value of a variable with the same name at the nearest preceding scope.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;localvar_inherit&quot;,&quot;hid&quot;:&quot;localvar_inherit&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:75,&quot;range&quot;:&quot;9188-9434&quot;} -->
+<h3 class="sectionedit77" id="login_shell">login_shell</h3>
+<div class="level3">
+<div class="table sectionedit78"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>login_shell</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.05a-alpha1  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">n/a  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table37&quot;,&quot;secid&quot;:78,&quot;range&quot;:&quot;9457-9548&quot;} -->
+<p>
+The option is set when Bash is a login shell. This is a readonly option.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;login_shell&quot;,&quot;hid&quot;:&quot;login_shell&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:77,&quot;range&quot;:&quot;9435-9623&quot;} -->
+<h3 class="sectionedit79" id="mailwarn">mailwarn</h3>
+<div class="level3">
+<div class="table sectionedit80"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>mailwarn</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive (?)  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table38&quot;,&quot;secid&quot;:80,&quot;range&quot;:&quot;9643-9738&quot;} -->
+<p>
+If set, and a file that Bash is checking for mail has been accessed since the last time it was checked, the message &quot;The mail in mailfile has been read&quot; is displayed.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;mailwarn&quot;,&quot;hid&quot;:&quot;mailwarn&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:79,&quot;range&quot;:&quot;9624-9907&quot;} -->
+<h3 class="sectionedit81" id="no_empty_cmd_completion">no_empty_cmd_completion</h3>
+<div class="level3">
+<div class="table sectionedit82"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>mailwarn</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive (?)  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table39&quot;,&quot;secid&quot;:82,&quot;range&quot;:&quot;9942-10037&quot;} -->
+<p>
+If set, and readline is being used, Bash will not attempt to search the PATH for possible completions when completion is attempted on an empty line.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;no_empty_cmd_completion&quot;,&quot;hid&quot;:&quot;no_empty_cmd_completion&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:81,&quot;range&quot;:&quot;9908-10188&quot;} -->
+<h3 class="sectionedit83" id="nocaseglob">nocaseglob</h3>
+<div class="level3">
+<div class="table sectionedit84"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>nocaseglob</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.02-alpha1  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table40&quot;,&quot;secid&quot;:84,&quot;range&quot;:&quot;10210-10299&quot;} -->
+<p>
+If set, Bash matches filenames in a case-insensitive fashion when performing pathname expansion.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;nocaseglob&quot;,&quot;hid&quot;:&quot;nocaseglob&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:83,&quot;range&quot;:&quot;10189-10398&quot;} -->
+<h3 class="sectionedit85" id="nocasematch">nocasematch</h3>
+<div class="level3">
+<div class="table sectionedit86"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>nocasematch</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">3.1-alpha1  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table41&quot;,&quot;secid&quot;:86,&quot;range&quot;:&quot;10421-10510&quot;} -->
+<p>
+If set, Bash matches patterns in a case-insensitive fashion when performing matching while executing <code>case</code> or <code>[[</code> conditional commands.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;nocasematch&quot;,&quot;hid&quot;:&quot;nocasematch&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:85,&quot;range&quot;:&quot;10399-10671&quot;} -->
+<h3 class="sectionedit87" id="nullglob">nullglob</h3>
+<div class="level3">
+<div class="table sectionedit88"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>nullglob</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table42&quot;,&quot;secid&quot;:88,&quot;range&quot;:&quot;10691-10774&quot;} -->
+<p>
+If set, Bash allows patterns which match no files to expand to a null string, rather than themselves.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;nullglob&quot;,&quot;hid&quot;:&quot;nullglob&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:87,&quot;range&quot;:&quot;10672-10878&quot;} -->
+<h3 class="sectionedit89" id="progcomp">progcomp</h3>
+<div class="level3">
+<div class="table sectionedit90"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>progcomp</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.04-alpha1  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive (?)  </td><th class="col2">Default: </th><td class="col3 leftalign">on  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table43&quot;,&quot;secid&quot;:90,&quot;range&quot;:&quot;10898-10996&quot;} -->
+<p>
+If set, the  programmable completion facilities are enabled. This option is enabled by default.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;progcomp&quot;,&quot;hid&quot;:&quot;progcomp&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:89,&quot;range&quot;:&quot;10879-11094&quot;} -->
+<h3 class="sectionedit91" id="promptvars">promptvars</h3>
+<div class="level3">
+<div class="table sectionedit92"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>promptvars</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive      </td><th class="col2">Default: </th><td class="col3 leftalign">on  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table44&quot;,&quot;secid&quot;:92,&quot;range&quot;:&quot;11116-11212&quot;} -->
+<p>
+If set, prompt strings undergo parameter expansion, command substitution, arithmetic expansion, and quote  removal after being expanded using the prompt special sequences. This option is enabled by default.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;promptvars&quot;,&quot;hid&quot;:&quot;promptvars&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:91,&quot;range&quot;:&quot;11095-11421&quot;} -->
+<h3 class="sectionedit93" id="restricted_shell">restricted_shell</h3>
+<div class="level3">
+<div class="table sectionedit94"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>restricted_shell</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.03-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">interactive (?)  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table45&quot;,&quot;secid&quot;:94,&quot;range&quot;:&quot;11449-11555&quot;} -->
+<p>
+The option is set when Bash is a restricted shell. This is a readonly option.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;restricted_shell&quot;,&quot;hid&quot;:&quot;restricted_shell&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:93,&quot;range&quot;:&quot;11422-11635&quot;} -->
+<h3 class="sectionedit95" id="shift_verbose">shift_verbose</h3>
+<div class="level3">
+<div class="table sectionedit96"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign"> Option:      </th><td class="col1 leftalign"> <code>shift_verbose</code>  </td><th class="col2 leftalign"> Since:    </th><td class="col3 leftalign"> unknown                </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign"> Shell mode:  </th><td class="col1 leftalign">all    </td><th class="col2 leftalign"> Default:  </th><td class="col3 leftalign"> off, on in POSIX mode  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table46&quot;,&quot;secid&quot;:96,&quot;range&quot;:&quot;11660-11796&quot;} -->
+<p>
+If set, the shift builtin prints an error message when the shift count exceeds the number of positional parameters.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;shift_verbose&quot;,&quot;hid&quot;:&quot;shift_verbose&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:95,&quot;range&quot;:&quot;11636-11914&quot;} -->
+<h3 class="sectionedit97" id="sourcepath">sourcepath</h3>
+<div class="level3">
+<div class="table sectionedit98"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>sourcepath</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">unknown  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">on  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table47&quot;,&quot;secid&quot;:98,&quot;range&quot;:&quot;11936-12020&quot;} -->
+<p>
+If set, the source builtin command uses the value of PATH to find the directory containing the file supplied as an argument.  This option is enabled by default.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;sourcepath&quot;,&quot;hid&quot;:&quot;sourcepath&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:97,&quot;range&quot;:&quot;11915-12183&quot;} -->
+<h3 class="sectionedit99" id="syslog_history">syslog_history</h3>
+<div class="level3">
+<div class="table sectionedit100"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>syslog_history</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">5.0-alpha  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">unknown  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table48&quot;,&quot;secid&quot;:100,&quot;range&quot;:&quot;12209-12304&quot;} -->
+<p>
+If set, the shell history is sent to syslog.
+</p>
+
+<p>
+This option is undocumented and available only if the shell supports syslog.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;syslog_history&quot;,&quot;hid&quot;:&quot;syslog_history&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:99,&quot;range&quot;:&quot;12184-12430&quot;} -->
+<h3 class="sectionedit101" id="xpg_echo">xpg_echo</h3>
+<div class="level3">
+<div class="table sectionedit102"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign">Option:  </th><td class="col1 leftalign"><code>xpg_echo</code>  </td><th class="col2 leftalign">Since:  </th><td class="col3 leftalign">2.04-beta1  </td>
+	</tr>
+	<tr class="row1">
+		<th class="col0 leftalign">Shell mode:  </th><td class="col1 leftalign">all  </td><th class="col2">Default: </th><td class="col3 leftalign">off  </td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table49&quot;,&quot;secid&quot;:102,&quot;range&quot;:&quot;12450-12536&quot;} -->
+<p>
+If set, the <code>echo</code>-builtin command expands backslash-escape sequences by default (POSIX, SUS, XPG).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;xpg_echo&quot;,&quot;hid&quot;:&quot;xpg_echo&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:101,&quot;range&quot;:&quot;12431-12640&quot;} -->
+<h2 class="sectionedit103" id="parser_configurations">Parser configurations</h2>
+<div class="level2">
+
+<p>
+Parser configurations change the way the Bash parser recognizes the syntax when parsing a line. This, of course, is impossible for a line that already was parsed.
+</p>
+
+<p>
+There are two options that influence the parsing this way:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>extglob</code></div>
+</li>
+<li class="level1"><div class="li"> <code>extquote</code></div>
+</li>
+</ul>
+
+<p>
+Consequence: You <strong>can&#039;t</strong> use the new syntax (e.g. the extended globbing syntax) and the command to enable it <strong>in the same line</strong>.
+<pre class="code">$ shopt -s extglob; echo !(*.txt) # this is the WRONG way!
+-bash: syntax error near unexpected token `(&#039;</pre>
+
+</p>
+
+<p>
+You have to configure the parser <strong>before</strong> a line with new syntax is parsed:
+<pre class="code">$ shopt -s extglob # standalone - CORRECT way!
+$ echo !(*.txt)
+...</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Parser configurations&quot;,&quot;hid&quot;:&quot;parser_configurations&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:103,&quot;range&quot;:&quot;12641-13347&quot;} -->
+<h2 class="sectionedit104" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/commands/builtin/shopt" class="wikilink1" title="commands:builtin:shopt"> shopt builtin command</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> set builtin command</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:104,&quot;range&quot;:&quot;13348-&quot;} --></div>
+</body>
+</html>

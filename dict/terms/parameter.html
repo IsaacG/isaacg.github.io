@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>dict:terms:parameter</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="dict,terms,parameter"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/dict/terms/parameter?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=dict:terms"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/dict/terms/parameter"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/dict/terms/parameter"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/dict/terms/parameter"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='dict:terms';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"dict:terms:parameter","namespace":"dict:terms","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#parameter">Parameter</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#variables">variables</a></div></li>
+<li class="level2"><div class="li"><a href="#positional_parameters">positional parameters</a></div></li>
+<li class="level2"><div class="li"><a href="#special_parameters">special parameters</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="parameter">Parameter</h1>
+<div class="level1">
+
+<p>
+Also the article for: <em class="u">variable</em>, <em class="u">positional parameter</em>, <em class="u">special parameter</em>
+</p>
+
+<p>
+In Bash, a parameter is simply an entity that stores values and can be referenced. Depending on the type, the parameters can be set directly, only indirectly, or only automatically by the shell.
+</p>
+
+<p>
+Bash knows 3 types of parameters:
+</p>
+<ul>
+<li class="level1"><div class="li"> variables</div>
+</li>
+<li class="level1"><div class="li"> positional parameters</div>
+</li>
+<li class="level1"><div class="li"> special parameters</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Parameter&quot;,&quot;hid&quot;:&quot;parameter&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-404&quot;} -->
+<h2 class="sectionedit2" id="variables">variables</h2>
+<div class="level2">
+
+<p>
+A shell variable is a parameter denoted by a <em>variable name</em>:
+</p>
+<ul>
+<li class="level1"><div class="li"> containing only alphanumeric characters and underscores</div>
+</li>
+<li class="level1"><div class="li"> beginning with an alphabetic character or an underscore</div>
+</li>
+</ul>
+
+<p>
+A value can be assigned to a variable, using the variable&#039;s name and an equal-sign:
+<pre class="code">NAME=VALUE</pre>
+
+</p>
+
+<p>
+Once a variable is set, it exists and can only be unset by the <code>unset</code> builtin command.
+</p>
+
+<p>
+The nullstring is a valid value:
+<pre class="code">NAME=
+NAME=&quot;&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;variables&quot;,&quot;hid&quot;:&quot;variables&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;405-876&quot;} -->
+<h2 class="sectionedit3" id="positional_parameters">positional parameters</h2>
+<div class="level2">
+
+<p>
+A positional parameter is denoted by a number other than <code>0</code> (zero).
+</p>
+
+<p>
+Positional parameters reflect the shell&#039;s arguments that are not given to the shell itself (in practise, the script arguments, also the function arguments). You can&#039;t directly assign to the positional parameters, however, <a href="/commands/builtin/set" class="wikilink1" title="commands:builtin:set"> the set builtin command</a> can be used to indirectly set them.
+</p>
+
+<p>
+The first to ninth positional parameter is referenced by <code>$1</code> to <code>$9</code>. All following positional parameters (tenth and above) must be referenced by the number given in curly braces, i.e., <code>${10}</code> or <code>${432}</code>.
+</p>
+
+<p>
+Unlike popular belief, <code>$0</code> is <em>not a positional parameter</em>.
+</p>
+
+<p>
+See also the <a href="/scripting/posparams" class="wikilink1" title="scripting:posparams"> scripting article about handling positional parameters</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;positional parameters&quot;,&quot;hid&quot;:&quot;positional_parameters&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;877-1672&quot;} -->
+<h2 class="sectionedit4" id="special_parameters">special parameters</h2>
+<div class="level2">
+
+<p>
+There are a bunch of special parameters, which are set by the shell. Direct assignment to them is not possible. These parameter names are formed of one character.
+</p>
+
+<p>
+Please see <a href="/syntax/shellvars" class="wikilink1" title="syntax:shellvars">Special parameters and shell variables</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;special parameters&quot;,&quot;hid&quot;:&quot;special_parameters&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:4,&quot;range&quot;:&quot;1673-1904&quot;} -->
+<h2 class="sectionedit5" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Syntax article, internal: <a href="/syntax/pe" class="wikilink1" title="syntax:pe">Parameter expansion</a></div>
+</li>
+<li class="level1"><div class="li"> Syntax article, internal: <a href="/syntax/shellvars" class="wikilink1" title="syntax:shellvars">Special parameters and shell variables</a></div>
+</li>
+<li class="level1"><div class="li"> Scripting article, internal: <a href="/scripting/posparams" class="wikilink1" title="scripting:posparams">Handling positional parameters</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;1905-&quot;} --></div>
+</body>
+</html>

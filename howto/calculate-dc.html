@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>howto:calculate-dc</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="howto,calculate-dc,bash,shell,scripting,arithmetic,calculate"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/howto/calculate-dc?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=howto"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/howto/calculate-dc"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/howto/calculate-dc"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/howto/calculate-dc"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='howto';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"howto:calculate-dc","namespace":"howto","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#calculating_with_dc">Calculating with dc</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#introduction">Introduction</a></div></li>
+<li class="level2"><div class="li"><a href="#simple_calculation">Simple calculation</a></div></li>
+<li class="level2"><div class="li"><a href="#scale_and_base">Scale And Base</a></div></li>
+<li class="level2"><div class="li"><a href="#stack">Stack</a></div></li>
+<li class="level2"><div class="li"><a href="#registers">Registers</a></div></li>
+<li class="level2"><div class="li"><a href="#macros">Macros</a></div></li>
+<li class="level2"><div class="li"><a href="#conditionals_and_loops">Conditionals and Loops</a></div></li>
+<li class="level2"><div class="li"><a href="#next">Next</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="calculating_with_dc">Calculating with dc</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Calculating with dc&quot;,&quot;hid&quot;:&quot;calculating_with_dc&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-91&quot;} -->
+<h2 class="sectionedit2" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+dc(1) is a non standard, but commonly found, reverse-polish Desk
+Calculator. According to Ken Thompson, &quot;dc is the oldest language on
+Unix; it was written on the PDP-7 and ported to the PDP-11 before Unix
+[itself] was ported&quot;.  
+</p>
+
+<p>
+Historically the standard bc(1) has been implemented as a <em>front-end to dc</em>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Introduction&quot;,&quot;hid&quot;:&quot;introduction&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;92-427&quot;} -->
+<h2 class="sectionedit3" id="simple_calculation">Simple calculation</h2>
+<div class="level2">
+
+<p>
+In brief, the <em>reverse polish notation</em> means the numbers are put
+on the stack first, then an operation is applied to them. Instead
+of writing <code>1+1</code>, you write <code>1 1+</code>.
+</p>
+
+<p>
+By default <code>dc</code>, unlike <code>bc</code>, doesn&#039;t print anything, the result is pushed on the stack. 
+You have to use the &quot;p&quot; command to print the element at the top of the stack.
+Thus a simple operation looks like:
+</p>
+
+<p>
+<pre class="code">$ dc &lt;&lt;&lt; &#039;1 1+pq&#039;
+2</pre>
+
+I used a &quot;here string&quot; present in bash 3.x, ksh93 and zsh. if your
+shell doesn&#039;t support this, you can use <code>echo &#039;1 1+p&#039; | dc</code> or if you have GNU <code>dc</code>, you can use <code>dc -e &#039;1 1 +p</code>&#039;.
+</p>
+
+<p>
+Of course, you can also just run <code>dc</code> and enter the commands. 
+</p>
+
+<p>
+The classic operations are:
+</p>
+<ul>
+<li class="level1"><div class="li"> addition: <code>+</code></div>
+</li>
+<li class="level1"><div class="li"> subtraction: <code>-</code></div>
+</li>
+<li class="level1"><div class="li"> division: <code>/</code></div>
+</li>
+<li class="level1"><div class="li"> multiplication: <code>*</code></div>
+</li>
+<li class="level1"><div class="li"> remainder (modulo): <code>%</code></div>
+</li>
+<li class="level1"><div class="li"> exponentiation: <code>^</code></div>
+</li>
+<li class="level1"><div class="li"> square root: <code>v</code></div>
+</li>
+</ul>
+
+<p>
+GNU <code>dc</code> adds a couple more.
+</p>
+
+<p>
+To input a negative number you need to use the <code>_</code> (underscore) character:
+<pre class="code">$ dc &lt;&lt;&lt; &#039;1_1-p&#039; 
+2</pre>
+
+</p>
+
+<p>
+You can use the <em>digits</em> <code>0</code> to <code>9</code> and the <em>letters</em> <code>A</code> to <code>F</code> as numbers, and a dot (<code>.</code>) as a decimal point.
+The <code>A</code> to <code>F</code> <strong>must</strong> be capital letters in order not to be confused with the commands specified with lower case characters.
+A number with a letter is considered hexadecimal:
+<pre class="code">dc &lt;&lt;&lt; &#039;Ap&#039;
+10 </pre>
+
+The <strong>output</strong> is converted to <strong>base 10</strong> by default 
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple calculation&quot;,&quot;hid&quot;:&quot;simple_calculation&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;428-1871&quot;} -->
+<h2 class="sectionedit4" id="scale_and_base">Scale And Base</h2>
+<div class="level2">
+
+<p>
+<code>dc</code> is a calulator with abitrary precision, by default this precision is 0. 
+thus <code>dc &lt;&lt;&lt; &quot;5 4/p&quot;</code> prints &quot;1&quot;.
+</p>
+
+<p>
+We can increase the precision using the <code>k</code> command. It pops the value at the top of the stack
+and uses it as the precision argument:
+<pre class="code">dc &lt;&lt;&lt; &#039;2k5 4/p&#039; # prints 1.25
+dc &lt;&lt;&lt; &#039;4k5 4/p&#039; # prints 1.2500
+dc &lt;&lt;&lt; &#039;100k 2vp&#039; 
+1.4142135623730950488016887242096980785696718753769480731766797379907\
+324784621070388503875343276415727</pre>
+
+dc supports <em>large</em> precision arguments.
+</p>
+
+<p>
+You can change the base used to output (<em>print</em>) the numbers with <code>o</code> and the base used to
+input (<em>type</em>) the numbers with <code>i</code>:
+<pre class="code">dc &lt;&lt; EOF
+20 p# prints 20, output is in base 10
+16o # the output is now in base 2 16
+20p # prints 14,  in hex
+16i # the output is now in hex
+p   # prints 14 this doesn&#039;t modify the number in the stack
+10p # prints 10 the output is done in base 16
+EOF</pre>
+
+</p>
+
+<p>
+Note: when the input value is modified, the base is modified for all commands, including <code>i</code>:
+</p>
+
+<p>
+<pre class="code">dc &lt;&lt; EOF
+16i 16o # base is 16 for input and output
+10p # prints 10
+10i # ! set the base to 10 i.e. to 16 decimal
+17p # prints 17 
+EOF</pre>
+
+</p>
+
+<p>
+This code prints 17 while we might think that <code>10i</code> reverts the base back to 10 and thus the number should be converted to hex and printed as 11.
+The problem is 10 was typed while the input base 16, thus the base was set to 10 hexadecimal, i.e. 16 decimal.
+</p>
+
+<p>
+<pre class="code">dc &lt;&lt; EOF
+16o16o10p #prints 10
+Ai # set the base to A in hex i.e. 10
+17p # prints 11 in base 16
+EOF</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Scale And Base&quot;,&quot;hid&quot;:&quot;scale_and_base&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:4,&quot;range&quot;:&quot;1872-3443&quot;} -->
+<h2 class="sectionedit5" id="stack">Stack</h2>
+<div class="level2">
+
+<p>
+There are two basic commands to manipulate the stack:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>d</code> duplicates the top of the stack</div>
+</li>
+<li class="level1"><div class="li"> <code>c</code> clears the stack</div>
+</li>
+</ul>
+
+<p>
+<pre class="code">$ dc &lt;&lt; EOF
+2   # put 2 on the stack
+d   # duplicate i.e. put another 2 on the stack
+*p  # multiply and print
+c p # clear and print
+EOF
+4
+dc: stack empty</pre>
+
+</p>
+
+<p>
+<code>c p</code> results in an error, as we would expect, as c removes everything
+on the stack. <em>Note: we can use <code>#</code> to put comments in the script.</em>
+</p>
+
+<p>
+If you are lost, you can inspect (i.e. print) the stack using the command
+<code>f</code>. The stack remains unchanged:
+</p>
+
+<p>
+<pre class="code">dc &lt;&lt;&lt; &#039;1 2 d 4+f&#039;
+6
+2
+1</pre>
+
+</p>
+
+<p>
+Note how the first element that will be popped from the stack is printed first, if you are
+used to an HP calculator, it&#039;s the reverse.
+</p>
+
+<p>
+Don&#039;t hesitate to put <code>f</code> in the examples of this tutorial, it doesn&#039;t change the result,
+and it&#039;s a good way to see what&#039;s going on.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Stack&quot;,&quot;hid&quot;:&quot;stack&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:5,&quot;range&quot;:&quot;3444-4327&quot;} -->
+<h2 class="sectionedit6" id="registers">Registers</h2>
+<div class="level2">
+
+<p>
+The GNU <code>dc</code> manual says that dc has at least <strong>256 registers</strong> depending on
+the range of unsigned char.  I&#039;m not sure how you are supposed to use
+the NUL byte.
+Using a register is easy:
+</p>
+
+<p>
+<pre class="code">dc &lt;&lt;EOF
+12 # put 12 on the stack
+sa # remove it from the stack (s), and put it in register &#039;a&#039;
+10 # put 10 on the stack
+la # read (l) the value of register &#039;a&#039; and push it on the stack
++p # add the 2 values and print
+EOF</pre>
+
+</p>
+
+<p>
+The above snippet uses newlines to embed comments, but it doesn&#039;t
+really matter, you can use <code>echo &#039;12sa10la+p&#039;| dc</code>, with the same results.
+</p>
+
+<p>
+The register can contain more than just a value, <strong>each register is a
+stack on its own</strong>.
+</p>
+
+<p>
+<pre class="code">dc &lt;&lt;EOF
+12sa #store 12 in &#039;a&#039;
+6Sa # with a capital S the 6 is removed
+    # from the  main stack and pushed on the &#039;a&#039; stack
+lap # prints 6, the value at the top of the &#039;a&#039; stack
+lap # still prints 6
+Lap # prints 6 also but with a capital L, it pushes the value in &#039;a&#039;
+    # to the main stack and pulls it from the &#039;a&#039; stack
+lap # prints 12, which is now at the top of the stack
+EOF</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Registers&quot;,&quot;hid&quot;:&quot;registers&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:6,&quot;range&quot;:&quot;4328-5413&quot;} -->
+<h2 class="sectionedit7" id="macros">Macros</h2>
+<div class="level2">
+
+<p>
+<code>dc</code> lets you push arbitrary strings on the stack when the strings are enclosed in <code>[]</code>.
+You can print it with <code>p</code>: <code>dc &lt;&lt;&lt; &#039;[Hello World!]p&#039;</code> and you can
+evalute it with x: <code>dc &lt;&lt;&lt; &#039;[1 2+]xp&#039;</code>.
+</p>
+
+<p>
+This is not that interesting until combined with registers.
+First, let&#039;s say we want to calculate the square of a number
+(don&#039;t forget to include <code>f</code> if you get lost!):
+<pre class="code">dc &lt;&lt; EOF
+3 # push our number on the stack
+d # duplicate it i.e. push 3 on the stack again
+d**p # duplicate again and calculate the product and print
+EOF</pre>
+
+</p>
+
+<p>
+Now we have several cubes to calculate, we could use <code>dd**</code> several times, or
+use a macro.
+</p>
+
+<p>
+<pre class="code">dc &lt;&lt; EOF
+[dd**] # push a string
+sa # save it in register a
+3 # push 3 on the stack
+lax # push the string &quot;dd**&quot; on the stack and execute it
+p # print the result
+4laxp # same operation for 4, in one line
+EOF</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Macros&quot;,&quot;hid&quot;:&quot;macros&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:7,&quot;range&quot;:&quot;5414-6349&quot;} -->
+<h2 class="sectionedit8" id="conditionals_and_loops">Conditionals and Loops</h2>
+<div class="level2">
+
+<p>
+<code>dc</code> can execute a macro stored in a register using the <code>lR x</code> combo, but
+it can also execute macros conditionally.  <code>&gt;a</code> will execute the macro
+stored in the register <code>a</code>, if the top of the stack is <em>greater than</em> the second
+element of the stack.  Note: the top of the stack contains the last entry.
+When written, it appears as the reverse of what we are used to reading:
+</p>
+
+<p>
+<pre class="code">dc &lt;&lt; EOF
+[[Hello World]p] sR  # store in &#039;R&#039; a macro that prints Hello World
+2 1 &gt;R   	     # do nothing 1 is at the top 2 is the second element
+1 2 &gt;R    	     # prints Hello World
+EOF</pre>
+
+</p>
+
+<p>
+Some <code>dc</code> have <code>&gt;R &lt;R =R</code>, GNU <code>dc</code> had some more, check your manual. Note
+that the test &quot;consumes&quot; its operands: the 2 first elements are popped
+off the stack (you can verify that <code>dc &lt;&lt;&lt; &quot;[f]sR 2 1 &gt;R 1 2 &gt;R f&quot;</code>
+doesn&#039;t print anything)
+</p>
+
+<p>
+Have you noticed how we can <em>include</em> a macro (string) in a macro? and as <code>dc</code>
+relies on a stack we can, in fact, use the macro recursively (have your
+favorite control-c key combo ready ;)) :
+</p>
+
+<p>
+<pre class="code">dc &lt;&lt; EOF
+[ [Hello World] p   # our macro starts by printing Hello World
+  lRx            ]  # and then executes the macro in R
+sR 		    # we store it in the register R
+lRx                 # and finally executes it.
+EOF</pre>
+
+</p>
+
+<p>
+We have recursivity, we have test, we have loops:
+</p>
+
+<p>
+<pre class="code">dc &lt;&lt; EOF
+[ li       # put our index i on the stack 
+  p 	   # print it, to see what&#039;s going on
+  1 -      # we decrement the index by one
+  si 	   # store decremented index (i=i-1)
+ 0 li &gt;L   # if i &gt; 0 then execute L
+] sL       # store our macro with the name L
+ 
+10 si      # let&#039;s give to our index the value 10
+lLx        # and start our loop
+EOF</pre>
+
+</p>
+
+<p>
+Of course code written this way is far too easy to read! Make sure to
+remove all those extra spaces newlines and comments:
+</p>
+
+<p>
+<pre class="code"> 
+dc &lt;&lt;&lt; &#039;[lip1-si0li&gt;L]sL10silLx&#039; 
+dc &lt;&lt;&lt; &#039;[p1-d0&lt;L]sL10lLx&#039; # use the stack instead of a register</pre>
+
+</p>
+
+<p>
+I&#039;ll let you figure out the second example, it&#039;s not hard, it uses the stack
+instead of a register for the index.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Conditionals and Loops&quot;,&quot;hid&quot;:&quot;conditionals_and_loops&quot;,&quot;codeblockOffset&quot;:13,&quot;secid&quot;:8,&quot;range&quot;:&quot;6350-8442&quot;} -->
+<h2 class="sectionedit9" id="next">Next</h2>
+<div class="level2">
+
+<p>
+Check your dc manual, i haven&#039;t decribed everything, like arrays
+(only documented with  &quot;; :   are used by  bc(1) for array operations&quot; on solaris,
+probably because <em>echo &#039;1  0:a 0Sa 2 0:a La 0;ap&#039; | dc</em> results in 
+<em>Segmentation Fault (core dump) </em>, the latest solaris uses GNU dc)
+</p>
+
+<p>
+You can find more info and dc programs here:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Dc_(Unix)" class="urlextern" title="http://en.wikipedia.org/wiki/Dc_(Unix)" rel="nofollow">http://en.wikipedia.org/wiki/Dc_(Unix)</a></div>
+</li>
+</ul>
+
+<p>
+And more example, as well as a dc implementation in python here:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://en.literateprograms.org/Category:Programming_language:dc" class="urlextern" title="http://en.literateprograms.org/Category:Programming_language:dc" rel="nofollow">http://en.literateprograms.org/Category:Programming_language:dc</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.literateprograms.org/Desk_calculator_%28Python%29" class="urlextern" title="http://en.literateprograms.org/Desk_calculator_%28Python%29" rel="nofollow">http://en.literateprograms.org/Desk_calculator_%28Python%29</a></div>
+</li>
+</ul>
+
+<p>
+The manual for the 1971 dc from Bell Labs:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://cm.bell-labs.com/cm/cs/who/dmr/man12.ps" class="urlextern" title="http://cm.bell-labs.com/cm/cs/who/dmr/man12.ps" rel="nofollow">http://cm.bell-labs.com/cm/cs/who/dmr/man12.ps</a> (dead link)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Next&quot;,&quot;hid&quot;:&quot;next&quot;,&quot;codeblockOffset&quot;:17,&quot;secid&quot;:9,&quot;range&quot;:&quot;8443-&quot;} --></div>
+</body>
+</html>

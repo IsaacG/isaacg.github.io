@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:local</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,local"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/local?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/local"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/local"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/local"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:local","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_local_builtin_command">The local builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div></li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_local_builtin_command">The local builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The local builtin command&quot;,&quot;hid&quot;:&quot;the_local_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-41&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">local [option] name[=value] ...</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;42-110&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+<code>local</code> is identical to <a href="/commands/builtin/declare" class="wikilink1" title="commands:builtin:declare">declare</a> in every way, and takes all the same options, with 3 exceptions:
+</p>
+<ul>
+<li class="level1"><div class="li"> Usage outside of a function is an error. Both <code>declare</code> and <code>local</code> within a function have the same effect on variable scope, including the -g option.</div>
+</li>
+<li class="level1"><div class="li"> <code>local</code> with no options prints variable names and values in the same format as <code>declare</code> with no options, except the variables are filtered to print only locals that were set in the same scope from which <code>local</code> was called. Variables in parent scopes are not printed.</div>
+</li>
+<li class="level1"><div class="li"> If name is ‘-’, the set of shell options is made local to the function in which local is invoked: shell options changed using the set builtin inside the function are restored to their original values when the function returns. The restore is effected as if a series of set commands were executed to restore the values that were in place before the function.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;111-1067&quot;} -->
+<h2 class="sectionedit4" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>local</code> is not specified by POSIX. Most bourne-like shells don&#039;t have a builtin called <code>local</code>, but some such as <code>dash</code> and the busybox shell do.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> The behavior of function scope is not defined by POSIX, however local variables are implemented widely by bourne-like shells, and behavior differs substantially. Even the<code>dash</code> shell has local variables.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> In ksh93, using POSIX-style function definitions, <code>typeset</code> doesn&#039;t set <code>local</code> variables, but rather acts upon variables of the next-outermost scope (e.g. setting attributes). Using <code>typeset</code> within functions defined using ksh <code>function name {</code> syntax, variables follow roughly <a href="http://community.schemewiki.org/?lexical-scope" class="urlextern" title="http://community.schemewiki.org/?lexical-scope" rel="nofollow">lexical-scoping</a>, except that functions themselves don&#039;t have scope, just like Bash. This means that even functions defined within a &quot;function&#039;s scope&quot; don&#039;t have access to non-local variables except through <code>namerefs</code>.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;1068-2039&quot;} -->
+<h2 class="sectionedit5" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://wiki.bash-hackers.org/scripting/basics#variable_scope" class="urlextern" title="http://wiki.bash-hackers.org/scripting/basics#variable_scope" rel="nofollow">http://wiki.bash-hackers.org/scripting/basics#variable_scope</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:5,&quot;range&quot;:&quot;2040-&quot;} --></div>
+</body>
+</html>

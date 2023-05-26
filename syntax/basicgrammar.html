@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:basicgrammar</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,basicgrammar,bash,shell,scripting,grammar,syntax,language"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/basicgrammar?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/basicgrammar"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/basicgrammar"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/basicgrammar"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:basicgrammar","namespace":"syntax","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#basic_grammar_rules_of_bash">Basic grammar rules of Bash</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#simple_commands">Simple Commands</a></div></li>
+<li class="level2"><div class="li"><a href="#pipelines">Pipelines</a></div></li>
+<li class="level2"><div class="li"><a href="#lists">Lists</a></div></li>
+<li class="level2"><div class="li"><a href="#compound_commands">Compound Commands</a></div></li>
+<li class="level2"><div class="li"><a href="#shell_function_definitions">Shell Function Definitions</a></div></li>
+<li class="level2"><div class="li"><a href="#grammar_summary">Grammar summary</a></div></li>
+<li class="level2"><div class="li"><a href="#examples_for_classification">Examples for classification</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="basic_grammar_rules_of_bash">Basic grammar rules of Bash</h1>
+<div class="level1">
+
+<p>
+Bash builds its features on top of a few basic <strong>grammar rules</strong>. The code you see everywhere, the code you use, is based on those rules. However, <strong>this is a very theoretical view</strong>, but if you&#039;re interested, it may help you understand why things look the way they look.
+</p>
+
+<p>
+If you don&#039;t know the commands used in the following examples, just trust the explanation.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Basic grammar rules of Bash&quot;,&quot;hid&quot;:&quot;basic_grammar_rules_of_bash&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-467&quot;} -->
+<h2 class="sectionedit2" id="simple_commands">Simple Commands</h2>
+<div class="level2">
+
+<p>
+Bash manual says:
+<pre class="code">A simple command is a sequence of optional variable assignments followed by blank-separated words and redirections,
+and terminated by a control operator. The first word specifies the command to be executed, and is passed as argument
+zero.  The remaining words are passed as arguments to the invoked command.</pre>
+
+</p>
+
+<p>
+Sounds harder than it actually is. It is what you do daily. You enter simple commands with parameters, and the shell executes them.
+</p>
+
+<p>
+Every complex Bash operation can be split into simple commands:
+<pre class="code">ls
+ls &gt; list.txt
+ls -l
+LC_ALL=C ls</pre>
+
+</p>
+
+<p>
+The last one might not be familiar. That one simply adds &quot;<code>LC_ALL=C</code>&quot; to the environment of the <code>ls</code> program. It doesn&#039;t affect your current shell. This also works while calling functions, unless Bash runs in POSIX® mode (in which case it affects your current shell).
+</p>
+
+<p>
+Every command has an exit code. It&#039;s a type of return status. The shell can catch it and act on it. Exit code range is from 0 to 255, where 0 means success, and the rest mean either something failed, or there is an issue to report back to the calling program.
+</p>
+
+<p>
+<span class="wrap_center wrap_round wrap_info " style="width: 90%;">
+The simple command construct is the <strong>base</strong> for all higher constructs. Everything you execute, from pipelines to functions, finally ends up in (many) simple commands. That&#039;s why Bash only has one method to <a href="/syntax/grammar/parser_exec" class="wikilink1" title="syntax:grammar:parser_exec"> expand and execute a simple command</a>.
+</span>
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Simple Commands&quot;,&quot;hid&quot;:&quot;simple_commands&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;468-1937&quot;} -->
+<h2 class="sectionedit3" id="pipelines">Pipelines</h2>
+<div class="level2">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> Missing an additional article about pipelines and pipelining
+</p>
+
+<p>
+<code>[time [-p]] [ ! ] command [ | command2 … ]</code>
+</p>
+
+<p>
+<strong>Don&#039;t get confused</strong> about the name &quot;pipeline.&quot; It&#039;s a grammatic name for a construct. Such a pipeline isn&#039;t necessarily a pair of commands where stdout/stdin is connected via a real pipe.
+</p>
+
+<p>
+Pipelines are one or more <span class="curid"><a href="/syntax/basicgrammar#simple_commands" class="wikilink1" title="syntax:basicgrammar"> simple commands</a></span> (separated by the <code>|</code> symbol connects their input and output), for example:
+<pre class="code">ls /etc | wc -l</pre>
+
+will execute <code>ls</code> on <code>/etc</code> and <strong>pipe</strong> the output to <code>wc</code>, which will count the lines generated by the ls command. The result is the number of directory entries in /etc.
+</p>
+
+<p>
+The last command in the pipeline will set the exit code for the pipeline. This exit code can be &quot;inverted&quot; by prefixing an exclamation mark to the pipeline: An unsuccessful pipeline will exit &quot;successful&quot; and vice versa.
+In this example, the commands in the if stanza will be executed if the pattern &quot;^root:&quot; is <strong>not</strong> found in <code>/etc/passwd</code>:
+<pre class="code">if ! grep &#039;^root:&#039; /etc/passwd; then
+  echo &quot;No root user defined... eh?&quot;
+fi</pre>
+
+Yes, this is also a pipeline (although there is no pipe!), because the <strong>exclamation mark to invert the exit code</strong> can only be used in a pipeline.
+If <code>grep</code>&#039;s exit code is 1 (FALSE) (the text was not found), the leading <code>!</code> will &quot;invert&quot; the exit code, and the shell sees (and acts on) exit code 0 (TRUE) and the <code>then</code> part of the <code>if</code> stanza is executed. One could say we checked for &quot;<code>not grep &quot;^root&quot; /etc/passwd</code>&quot;.
+</p>
+
+<p>
+The <a href="/commands/builtin/set#attributes" class="wikilink1" title="commands:builtin:set"> set option pipefail</a> determines the behavior of how bash reports the exit code of a pipeline. If it&#039;s set, then the exit code (<code>$?</code>) is the last command that exits with non zero status, if none fail, it&#039;s zero. If it&#039;s not set, then <code>$?</code> always holds the exit code of the last command (as explained above).
+</p>
+
+<p>
+The shell option <code><a href="/internals/shell_options#lastpipe" class="wikilink1" title="internals:shell_options"> lastpipe</a></code> will execute the last element in a pipeline construct in the current shell environment, i.e. not a subshell.
+</p>
+
+<p>
+There&#039;s also an array <code>PIPESTATUS[]</code> that is set after a foreground pipeline is executed. Each element of <code>PIPESTATUS[]</code> reports the exit code of the respective command in the pipeline. Note: (1) it&#039;s only for foreground pipe and (2) for higher level structure that is built up from a pipeline. Like list, <code>PIPESTATUS[]</code> holds the exit status of the last pipeline command executed.
+</p>
+
+<p>
+Another thing you can do with pipelines is log their execution time. Note that <strong><code>time</code> is not a command</strong>, it is part of the pipeline syntax:
+<pre class="code"># time updatedb
+real    3m21.288s
+user    0m3.114s
+sys     0m4.744s</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Pipelines&quot;,&quot;hid&quot;:&quot;pipelines&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:3,&quot;range&quot;:&quot;1938-4654&quot;} -->
+<h2 class="sectionedit4" id="lists">Lists</h2>
+<div class="level2">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> Missing an additional article about list operators
+</p>
+
+<p>
+A list is a sequence of one or more <span class="curid"><a href="/syntax/basicgrammar#pipelines" class="wikilink1" title="syntax:basicgrammar"> pipelines</a></span> separated by one of the operators <code>;</code>, <code>&amp;</code>, <code>&amp;&amp;</code>, or <code>││</code>, and optionally terminated by one of <code>;</code>, <code>&amp;</code>, or <code>&lt;newline&gt;</code>.
+</p>
+
+<p>
+⇒ It&#039;s a group of <strong>pipelines</strong> separated or terminated by <strong>tokens</strong> that all have <strong>different meanings</strong> for Bash.
+</p>
+
+<p>
+Your whole Bash script technically is one big single list!
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Operator</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>&lt;PIPELINE1&gt; <strong>&lt;newline&gt;</strong> &lt;PIPELINE2&gt;</code></td><td class="col1">Newlines completely separate pipelines. The next pipeline is executed without any checks. (You enter a command and press <code>&lt;RETURN&gt;</code>!)</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>&lt;PIPELINE1&gt; <strong>;</strong> &lt;PIPELINE2&gt;</code></td><td class="col1">The semicolon does what <code>&lt;newline&gt;</code> does: It separates the pipelines</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>&lt;PIPELINE&gt; <strong>&amp;</strong> &lt;PIPELINE&gt;</code></td><td class="col1">The pipeline in front of the <code>&amp;</code> is executed <strong>asynchronously</strong> (&quot;in the background&quot;). If a pipeline follows this, it is executed immediately after the async pipeline starts</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>&lt;PIPELINE1&gt; <strong>&amp;&amp;</strong> &lt;PIPELINE2&gt;</code></td><td class="col1"><code>&lt;PIPELINE1&gt;</code> is executed and <strong>only</strong> if its exit code was 0 (TRUE), then <code>&lt;PIPELINE2&gt;</code> is executed (AND-List)</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>&lt;PIPELINE1&gt; <strong>||</strong> &lt;PIPELINE2&gt;</code></td><td class="col1"><code>&lt;PIPELINE1&gt;</code> is executed and <strong>only</strong> if its exit code was <strong>not</strong> 0 (FALSE), then <code>&lt;PIPELINE2&gt;</code> is executed (OR-List)</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;5125-5975&quot;} -->
+<p>
+<strong>Note:</strong> POSIX calls this construct a &quot;compound lists&quot;.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Lists&quot;,&quot;hid&quot;:&quot;lists&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:4,&quot;range&quot;:&quot;4655-6034&quot;} -->
+<h2 class="sectionedit6" id="compound_commands">Compound Commands</h2>
+<div class="level2">
+
+<p>
+See also the <a href="/syntax/ccmd/intro" class="wikilink1" title="syntax:ccmd:intro"> list of compound commands</a>.
+</p>
+
+<p>
+There are two forms of compound commands:
+</p>
+<ul>
+<li class="level1"><div class="li"> form a new syntax element using a list as a &quot;body&quot;</div>
+</li>
+<li class="level1"><div class="li"> completly independant syntax elements</div>
+</li>
+</ul>
+
+<p>
+Essentially, everything else that&#039;s not described in this article. Compound commands have the following characteristics:
+</p>
+<ul>
+<li class="level1"><div class="li"> they <strong>begin</strong> and <strong>end</strong> with a specific keyword or operator (e.g. <code>for … done</code>)</div>
+</li>
+<li class="level1"><div class="li"> they can be redirected as a whole</div>
+</li>
+</ul>
+
+<p>
+See the following table for a short overview (no details - just an overview):
+</p>
+<div class="table sectionedit7"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">Compound command syntax</th><th class="col1">Description</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<td class="col0"><code>( &lt;LIST&gt; )</code></td><td class="col1">Execute <code>&lt;LIST&gt;</code> in an extra subshell ⇒ <a href="/syntax/ccmd/grouping_subshell" class="wikilink1" title="syntax:ccmd:grouping_subshell"> article</a></td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"><code>{ &lt;LIST&gt; ; }</code></td><td class="col1">Execute <code>&lt;LIST&gt;</code> as separate group (but not in a subshell) ⇒ <a href="/syntax/ccmd/grouping_plain" class="wikilink1" title="syntax:ccmd:grouping_plain"> article</a></td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"><code>(( &lt;EXPRESSION&gt; ))</code></td><td class="col1">Evaluate the arithmetic expression <code>&lt;EXPRESSION&gt;</code> ⇒ <a href="/syntax/ccmd/arithmetic_eval" class="wikilink1" title="syntax:ccmd:arithmetic_eval"> article</a></td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"><code>[[ &lt;EXPRESSION&gt; ]]</code></td><td class="col1">Evaluate the conditional expression <code>&lt;EXPRESSION&gt;</code> (aka &quot;the new test command&quot;) ⇒ <a href="/syntax/ccmd/conditional_expression" class="wikilink1" title="syntax:ccmd:conditional_expression"> article</a></td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"><code>for &lt;NAME&gt; in &lt;WORDS&gt; ; do &lt;LIST&gt; ; done</code></td><td class="col1">Executes <code>&lt;LIST&gt;</code> while setting the variable <code>&lt;NAME&gt;</code> to one of <code>&lt;WORDS&gt;</code> on every iteration (classic for-loop) ⇒ <a href="/syntax/ccmd/classic_for" class="wikilink1" title="syntax:ccmd:classic_for"> article</a></td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"><code>for (( &lt;EXPR1&gt; ; &lt;EXPR2&gt; ; &lt;EXPR3&gt; )) ; do &lt;LIST&gt; ; done</code></td><td class="col1">C-style for-loop (driven by arithmetic expressions) ⇒ <a href="/syntax/ccmd/c_for" class="wikilink1" title="syntax:ccmd:c_for"> article</a></td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"><code>select &lt;NAME&gt; in &lt;WORDS&gt; ; do &lt;LIST&gt; ; done</code></td><td class="col1">Provides simple menus ⇒ <a href="/syntax/ccmd/user_select" class="wikilink1" title="syntax:ccmd:user_select"> article</a></td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"><code>case &lt;WORD&gt; in &lt;PATTERN&gt;) &lt;LIST&gt; ;; … esac</code></td><td class="col1">Decisions based on pattern matching - executing <code>&lt;LIST&gt;</code> on match ⇒ <a href="/syntax/ccmd/case" class="wikilink1" title="syntax:ccmd:case"> article</a></td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"><code>if &lt;LIST&gt; ; then &lt;LIST&gt; ; else &lt;LIST&gt; ; fi</code></td><td class="col1">The if clause: makes decisions based on exit codes ⇒ <a href="/syntax/ccmd/if_clause" class="wikilink1" title="syntax:ccmd:if_clause"> article</a></td>
+	</tr>
+	<tr class="row10">
+		<td class="col0"><code>while &lt;LIST1&gt; ; do &lt;LIST2&gt; ; done</code></td><td class="col1">Execute <code>&lt;LIST2&gt;</code> while <code>&lt;LIST1&gt;</code> returns TRUE (exit code) ⇒ <a href="/syntax/ccmd/while_loop" class="wikilink1" title="syntax:ccmd:while_loop"> article</a></td>
+	</tr>
+	<tr class="row11">
+		<td class="col0"><code>until &lt;LIST1&gt; ; do &lt;LIST2&gt; ; done</code></td><td class="col1">Execute <code>&lt;LIST2&gt;</code> until <code>&lt;LIST1&gt;</code> returns TRUE (exit code) ⇒ <a href="/syntax/ccmd/until_loop" class="wikilink1" title="syntax:ccmd:until_loop"> article</a></td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table1&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;6599-8243&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Compound Commands&quot;,&quot;hid&quot;:&quot;compound_commands&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:6,&quot;range&quot;:&quot;6035-8247&quot;} -->
+<h2 class="sectionedit8" id="shell_function_definitions">Shell Function Definitions</h2>
+<div class="level2">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> Missing an additional article about shell functions
+</p>
+
+<p>
+A shell function definition makes a <span class="curid"><a href="/syntax/basicgrammar#compound_commands" class="wikilink1" title="syntax:basicgrammar"> compound command</a></span> available via a new name. When the function runs, it has its own &quot;private&quot; set of positional parameters and I/O descriptors. It acts like a script-within-the-script. Simply stated: <strong>You&#039;ve created a new command.</strong>
+</p>
+
+<p>
+The definition is easy (one of many possibilities):
+</p>
+
+<p>
+<code>&lt;NAME&gt; () &lt;COMPOUND_COMMAND&gt; &lt;REDIRECTIONS&gt;</code>
+</p>
+
+<p>
+which is usually used with the <code>{…; }</code> compound command, and thus looks like:
+<pre class="code">print_help() { echo &quot;Sorry, no help available&quot;; }</pre>
+
+</p>
+
+<p>
+As above, a function definition can have any <span class="curid"><a href="/syntax/basicgrammar#compound_commands" class="wikilink1" title="syntax:basicgrammar"> compound command</a></span> as a body. Structures like
+<pre class="code">countme() for ((x=1;x&lt;=9;x++)); do echo $x; done</pre>
+
+are unusual, but perfectly valid, since the for loop construct is a compound command!
+</p>
+
+<p>
+If <strong>redirection</strong> is specified, the redirection is not performed when the function is defined. It is performed when the function runs:
+<pre class="code"># this will NOT perform the redirection (at definition time)
+f() { echo ok ; } &gt; file
+
+# NOW the redirection will be performed (during EXECUTION of the function)
+f</pre>
+
+</p>
+
+<p>
+Bash allows three equivalent forms of the function definition:
+<pre class="code">NAME ()          &lt;COMPOUND_COMMAND&gt; &lt;REDIRECTIONS&gt;
+function NAME () &lt;COMPOUND_COMMAND&gt; &lt;REDIRECTIONS&gt;
+function NAME    &lt;COMPOUND_COMMAND&gt; &lt;REDIRECTIONS&gt;</pre>
+
+</p>
+
+<p>
+The space between <code>NAME</code> and <code>()</code> is optional, usually you see it without the space.
+</p>
+
+<p>
+I suggest using the first form. It&#039;s specified in POSIX and all Bourne-like shells seem to support it.
+</p>
+
+<p>
+<em class="u"><strong>Note:</strong></em> Before version <code>2.05-alpha1</code>, Bash only recognized the definition using curly braces (<code>name() { … }</code>), other shells allow the definition using <strong>any</strong> command (not just the compound command set).
+</p>
+
+<p>
+To execute a function like a regular shell script you put it together like this:
+</p>
+
+<p>
+<pre class="code">#!/bin/bash
+# Add shebang
+
+mycmd()
+{
+  # this $1 belongs to the function!
+  find / -iname &quot;$1&quot;
+}
+
+# this $1 belongs the script itself!
+mycmd &quot;$1&quot; # Execute command immediately after defining function 
+
+exit 0</pre>
+
+</p>
+
+<p>
+<strong>Just informational(1):</strong>
+</p>
+
+<p>
+Internally, for forking, Bash stores function definitions in environment variables. Variables with the content &quot;<em>() ….</em>&quot;.
+</p>
+
+<p>
+Something similar to the following works without &quot;officially&quot; declaring a function:
+<pre class="code">$ export testfn=&quot;() { echo test; }&quot;
+$ bash -c testfn
+test
+$</pre>
+
+</p>
+
+<p>
+<strong>Just informational(2):</strong>
+</p>
+
+<p>
+It is possible to create function names containing slashes:
+</p>
+
+<p>
+<pre class="code">/bin/ls() {
+  echo LS FAKE
+}</pre>
+
+</p>
+
+<p>
+The elements of this name aren&#039;t subject to a path search.
+</p>
+
+<p>
+Weird function names should not be used. Quote from the maintainer:
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>
+It was a mistake to allow such characters in function names (`unset&#039; doesn&#039;t
+work to unset them without forcing -f, for instance).  We&#039;re stuck with them
+for backwards compatibility, but I don&#039;t have to encourage their use.
+</em></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Shell Function Definitions&quot;,&quot;hid&quot;:&quot;shell_function_definitions&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;8248-11257&quot;} -->
+<h2 class="sectionedit9" id="grammar_summary">Grammar summary</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> a <span class="curid"><a href="/syntax/basicgrammar#simple_commands" class="wikilink1" title="syntax:basicgrammar"> simple command</a></span> is just a command and its arguments</div>
+</li>
+<li class="level1"><div class="li"> a <span class="curid"><a href="/syntax/basicgrammar#pipelines" class="wikilink1" title="syntax:basicgrammar"> pipeline</a></span> is one or more <span class="curid"><a href="/syntax/basicgrammar#simple_commands" class="wikilink1" title="syntax:basicgrammar"> simple command</a></span> probably connected in a pipe</div>
+</li>
+<li class="level1"><div class="li"> a <span class="curid"><a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> list</a></span> is one or more <span class="curid"><a href="/syntax/basicgrammar#pipelines" class="wikilink1" title="syntax:basicgrammar"> pipelines</a></span> connected by special operators</div>
+</li>
+<li class="level1"><div class="li"> a <span class="curid"><a href="/syntax/basicgrammar#compound_commands" class="wikilink1" title="syntax:basicgrammar"> compound command</a></span> is a <span class="curid"><a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> list</a></span> or a special command that forms a new meta-command</div>
+</li>
+<li class="level1"><div class="li"> a <span class="curid"><a href="/syntax/basicgrammar#shell_function_definitions" class="wikilink1" title="syntax:basicgrammar"> function definition</a></span> makes a <span class="curid"><a href="/syntax/basicgrammar#compound_commands" class="wikilink1" title="syntax:basicgrammar"> compound command</a></span> available under a new name, and a separate environment</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Grammar summary&quot;,&quot;hid&quot;:&quot;grammar_summary&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:9,&quot;range&quot;:&quot;11258-11974&quot;} -->
+<h2 class="sectionedit10" id="examples_for_classification">Examples for classification</h2>
+<div class="level2">
+
+<p>
+<img src="/lib/images/smileys/fixme.gif" class="icon" alt="FIXME" /> more…
+</p>
+<hr />
+
+<p>
+<em class="u">A (very) simple command</em>
+<pre class="code">echo &quot;Hello world...&quot;</pre>
+
+</p>
+
+<p>
+<em class="u">All of the following are simple commands</em>
+<pre class="code">x=5</pre>
+
+<pre class="code">&gt;tmpfile</pre>
+
+<pre class="code">{x}&lt;&quot;$x&quot; _=${x=&lt;(echo moo)} &lt;&amp;0$(cat &lt;&amp;&quot;$x&quot; &gt;&amp;2)</pre>
+
+</p>
+<hr />
+
+<p>
+<em class="u">A common compound command</em>
+<pre class="code">if [ -d /data/mp3 ]; then
+  cp mymusic.mp3 /data/mp3
+fi</pre>
+
+</p>
+<ul>
+<li class="level1"><div class="li"> the <span class="curid"><a href="/syntax/basicgrammar#compound_commands" class="wikilink1" title="syntax:basicgrammar"> compound command</a></span> for the <code>if</code> clause</div>
+</li>
+<li class="level1"><div class="li"> the <span class="curid"><a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> list</a></span> that <code>if</code> <strong>checks</strong> actually contains the <span class="curid"><a href="/syntax/basicgrammar#simple_commands" class="wikilink1" title="syntax:basicgrammar"> simple command</a></span> <code>[ -d /data/mp3 ]</code></div>
+</li>
+<li class="level1"><div class="li"> the <span class="curid"><a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> list</a></span> that <code>if</code> <strong>executes</strong> contains a simple command (<code>cp mymusic.mp3 /data/mp3</code>)</div>
+</li>
+</ul>
+
+<p>
+Let&#039;s invert test command exit code, only one thing changes:
+<pre class="code">if ! [ -d /data/mp3 ]; then
+  cp mymusic.mp3 /data/mp3
+fi</pre>
+
+</p>
+<ul>
+<li class="level1"><div class="li"> the <span class="curid"><a href="/syntax/basicgrammar#lists" class="wikilink1" title="syntax:basicgrammar"> list</a></span> that <code>if</code> <strong>checks</strong> contains a <span class="curid"><a href="/syntax/basicgrammar#pipelines" class="wikilink1" title="syntax:basicgrammar"> pipeline</a></span> now (because of the <code>!</code>)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples for classification&quot;,&quot;hid&quot;:&quot;examples_for_classification&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:10,&quot;range&quot;:&quot;11975-12986&quot;} -->
+<h2 class="sectionedit11" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/ccmd/intro" class="wikilink1" title="syntax:ccmd:intro"> List of compound commands</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/grammar/parser_exec" class="wikilink1" title="syntax:grammar:parser_exec"> Parsing and execution of simple commands</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/quoting" class="wikilink1" title="syntax:quoting"> Quoting and escaping</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/expansion/intro" class="wikilink1" title="syntax:expansion:intro"> Introduction to expansions and substitutions</a></div>
+</li>
+<li class="level1"><div class="li"> Internal: <a href="/syntax/words" class="wikilink1" title="syntax:words"> Some words about words...</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:18,&quot;secid&quot;:11,&quot;range&quot;:&quot;12987-&quot;} --></div>
+</body>
+</html>

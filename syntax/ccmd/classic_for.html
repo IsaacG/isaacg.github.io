@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>syntax:ccmd:classic_for</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="syntax,ccmd,classic_for"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/syntax/ccmd/classic_for?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=syntax:ccmd"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/syntax/ccmd/classic_for"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/syntax/ccmd/classic_for"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/syntax/ccmd/classic_for"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='syntax:ccmd';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"syntax:ccmd:classic_for","namespace":"syntax:ccmd","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_classic_for-loop">The classic for-loop</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#return_status">Return status</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#iterate_over_array_elements">Iterate over array elements</a></div></li>
+<li class="level3"><div class="li"><a href="#list_positional_parameters">List positional parameters</a></div></li>
+<li class="level3"><div class="li"><a href="#loop_through_a_directory">Loop through a directory</a></div></li>
+<li class="level3"><div class="li"><a href="#loop_over_lines_of_output">Loop over lines of output</a></div></li>
+<li class="level3"><div class="li"><a href="#nested_for-loops">Nested for-loops</a></div></li>
+<li class="level3"><div class="li"><a href="#loop_over_a_number_range">Loop over a number range</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_classic_for-loop">The classic for-loop</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The classic for-loop&quot;,&quot;hid&quot;:&quot;the_classic_for-loop&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-36&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">for &lt;NAME&gt;; do
+  &lt;LIST&gt;
+done</pre>
+
+</p>
+
+<p>
+<pre class="code">for &lt;NAME&gt; in &lt;WORDS&gt;; do
+  &lt;LIST&gt;
+done</pre>
+
+alternative, historical and undocumented syntax <sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+<pre class="code">for &lt;NAME&gt;; {
+  &lt;LIST&gt;
+}
+
+for &lt;NAME&gt; in &lt;WORDS&gt;; {
+  &lt;LIST&gt;
+}
+</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;37-376&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+For every word in <code>&lt;WORDS&gt;</code>, one iteration of the loop is performed and the variable <code>&lt;NAME&gt;</code> is set to the current word. If no &quot;<code>in &lt;WORDS&gt;</code>&quot; is present to give an own word-list, then the positional parameters (<code>&quot;$@&quot;</code>) are used (the arguments to the script or function). In this case (and only in this case), the semicolon between the variable name and the <code>do</code> is optional.
+</p>
+
+<p>
+If you use the loop-variable inside the for-loop and it can contain spaces, you need to quote it, since normal word-splitting procedures apply.
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Like all loops (both <code>for</code>-loops, <code>while</code> and <code>until</code>), this loop can be
+</p>
+<ul>
+<li class="level1"><div class="li"> terminated (broken) by the <code>break</code> command, optionally as <code>break N</code> to break <code>N</code> levels of nested loops</div>
+</li>
+<li class="level1"><div class="li"> forced to immediately do the next iteration using the <code>continue</code> command, optionally as <code>continue N</code> analog to <code>break N</code></div>
+</li>
+</ul>
+
+<p>
+Bash knows an alternative syntax for the <code>for</code> loop, enclosing the loop body in <code>{...}</code> instead of <code>do ... done</code>:
+<pre class="code bash"><span class="kw1">for</span> x <span class="kw1">in</span> <span class="nu0">1</span> <span class="nu0">2</span> <span class="nu0">3</span>
+<span class="br0">&#123;</span>
+  <span class="kw3">echo</span> <span class="re1">$x</span>
+<span class="br0">&#125;</span></pre>
+
+This syntax is <strong>not documented</strong> and should not be used. I found the parser definitions for it in 1.x code, and in modern 4.x code. My guess is that it&#039;s there for compatiblity reasons. This syntax is not specified by POSIX®.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:3,&quot;range&quot;:&quot;377-1698&quot;} -->
+<h3 class="sectionedit4" id="return_status">Return status</h3>
+<div class="level3">
+
+<p>
+The return status is the one of the last command executed in <code>&lt;LIST&gt;</code> or <code>0</code> (<code>TRUE</code>), if the item list <code>&lt;WORDS&gt;</code> evaluates to nothing (i.e.: &quot;is empty&quot;!).
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Return status&quot;,&quot;hid&quot;:&quot;return_status&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:4,&quot;range&quot;:&quot;1699-1889&quot;} -->
+<h2 class="sectionedit5" id="examples">Examples</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:5,&quot;range&quot;:&quot;1890-1910&quot;} -->
+<h3 class="sectionedit6" id="iterate_over_array_elements">Iterate over array elements</h3>
+<div class="level3">
+
+<p>
+With some array syntax (see <a href="/syntax/arrays" class="wikilink1" title="syntax:arrays">Arrays</a>) you can easily &quot;feed&quot; the for-loop to iterate over all elements in an array (by mass-expanding all elements):
+<pre class="code bash"><span class="kw1">for</span> element <span class="kw1">in</span> <span class="st0">&quot;<span class="es3">${myarray[@]}</span>&quot;</span>; <span class="kw1">do</span>
+  <span class="kw3">echo</span> <span class="st0">&quot;Element: <span class="es2">$element</span>&quot;</span>
+<span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+Another way is to mass-expand all used indexes and access the array by index:
+<pre class="code bash"><span class="kw1">for</span> index <span class="kw1">in</span> <span class="st0">&quot;<span class="es3">${!myarray[@]}</span>&quot;</span>; <span class="kw1">do</span>
+  <span class="kw3">echo</span> <span class="st0">&quot;Element[<span class="es2">$index</span>]: <span class="es3">${myarray[$index]}</span>&quot;</span>
+<span class="kw1">done</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Iterate over array elements&quot;,&quot;hid&quot;:&quot;iterate_over_array_elements&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;1911-2377&quot;} -->
+<h3 class="sectionedit7" id="list_positional_parameters">List positional parameters</h3>
+<div class="level3">
+
+<p>
+You can use this <a href="/syntax/basicgrammar#shell_function_definitions" class="wikilink1" title="syntax:basicgrammar"> function</a> to test how arguments to a command will be interpreted and parsed, and finally used:
+<pre class="code bash">argtest<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="re2">n</span>=<span class="nu0">1</span>
+  <span class="kw1">for</span> arg; <span class="kw1">do</span>
+    <span class="kw3">echo</span> <span class="st0">&quot;Argument <span class="es4">$((n++)</span>): <span class="es1">\&quot;</span><span class="es2">$arg</span><span class="es1">\&quot;</span>&quot;</span>
+  <span class="kw1">done</span>
+<span class="br0">&#125;</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;List positional parameters&quot;,&quot;hid&quot;:&quot;list_positional_parameters&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:7,&quot;range&quot;:&quot;2378-2680&quot;} -->
+<h3 class="sectionedit8" id="loop_through_a_directory">Loop through a directory</h3>
+<div class="level3">
+
+<p>
+Since pathname expansion will expand all filenames to separate words, regardless of spaces, you can use the for-loop to iterate through filenames in a directory:
+<pre class="code bash"><span class="kw1">for</span> fn <span class="kw1">in</span> <span class="sy0">*</span>; <span class="kw1">do</span>
+  <span class="kw1">if</span> <span class="br0">&#91;</span> <span class="re5">-h</span> <span class="st0">&quot;<span class="es2">$fn</span>&quot;</span> <span class="br0">&#93;</span>; <span class="kw1">then</span>
+    <span class="kw3">echo</span> <span class="re5">-n</span> <span class="st0">&quot;Symlink: &quot;</span>
+  <span class="kw1">elif</span> <span class="br0">&#91;</span> <span class="re5">-d</span> <span class="st0">&quot;<span class="es2">$fn</span>&quot;</span> <span class="br0">&#93;</span>; <span class="kw1">then</span>
+    <span class="kw3">echo</span> <span class="re5">-n</span> <span class="st0">&quot;Dir: &quot;</span>
+  <span class="kw1">elif</span> <span class="br0">&#91;</span> <span class="re5">-f</span> <span class="st0">&quot;<span class="es2">$fn</span>&quot;</span> <span class="br0">&#93;</span>; <span class="kw1">then</span>
+    <span class="kw3">echo</span> <span class="re5">-n</span> <span class="st0">&quot;File: &quot;</span>
+  <span class="kw1">else</span>
+    <span class="kw3">echo</span> <span class="re5">-n</span> <span class="st0">&quot;Unknown: &quot;</span>
+  <span class="kw1">fi</span>
+  <span class="kw3">echo</span> <span class="st0">&quot;<span class="es2">$fn</span>&quot;</span>
+<span class="kw1">done</span></pre>
+
+Stupid example, I know <img src="/lib/images/smileys/icon_wink.gif" class="icon" alt=";-)" />
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Loop through a directory&quot;,&quot;hid&quot;:&quot;loop_through_a_directory&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:8,&quot;range&quot;:&quot;2681-3136&quot;} -->
+<h3 class="sectionedit9" id="loop_over_lines_of_output">Loop over lines of output</h3>
+<div class="level3">
+
+<p>
+To be complete: You can change the internal field separator (IFS) to a newline and thus make a for-loop iterating over lines instead of words:
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">IFS</span>=$<span class="st_h">'\n'</span>
+<span class="kw1">for</span> f <span class="kw1">in</span> $<span class="br0">&#40;</span><span class="kw2">ls</span><span class="br0">&#41;</span>; <span class="kw1">do</span>
+  <span class="kw3">echo</span> <span class="re1">$f</span>
+<span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+This is just an example. In <em>general</em>
+</p>
+<ul>
+<li class="level1"><div class="li"> it&#039;s not a good idea to parse <code>ls(1)</code> output</div>
+</li>
+<li class="level1"><div class="li"> the <a href="/syntax/ccmd/while_loop" class="wikilink1" title="syntax:ccmd:while_loop">while loop</a> (using the <code>read</code> command) is a better joice to iterate over lines</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Loop over lines of output&quot;,&quot;hid&quot;:&quot;loop_over_lines_of_output&quot;,&quot;codeblockOffset&quot;:8,&quot;secid&quot;:9,&quot;range&quot;:&quot;3137-3589&quot;} -->
+<h3 class="sectionedit10" id="nested_for-loops">Nested for-loops</h3>
+<div class="level3">
+
+<p>
+It&#039;s of course possible to use another for-loop as <code>&lt;LIST&gt;</code>. Here, counting from 0 to 99 in a weird way:
+</p>
+
+<p>
+<pre class="code bash"><span class="kw1">for</span> x <span class="kw1">in</span> <span class="nu0">0</span> <span class="nu0">1</span> <span class="nu0">2</span> <span class="nu0">3</span> <span class="nu0">4</span> <span class="nu0">5</span> <span class="nu0">6</span> <span class="nu0">7</span> <span class="nu0">8</span> <span class="nu0">9</span>; <span class="kw1">do</span>
+  <span class="kw1">for</span> y <span class="kw1">in</span> <span class="nu0">0</span> <span class="nu0">1</span> <span class="nu0">2</span> <span class="nu0">3</span> <span class="nu0">4</span> <span class="nu0">5</span> <span class="nu0">6</span> <span class="nu0">7</span> <span class="nu0">8</span> <span class="nu0">9</span>; <span class="kw1">do</span>
+    <span class="kw3">echo</span> <span class="re1">$x</span><span class="re1">$y</span>
+  <span class="kw1">done</span>
+<span class="kw1">done</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Nested for-loops&quot;,&quot;hid&quot;:&quot;nested_for-loops&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:10,&quot;range&quot;:&quot;3590-3840&quot;} -->
+<h3 class="sectionedit11" id="loop_over_a_number_range">Loop over a number range</h3>
+<div class="level3">
+
+<p>
+Beginning in Bash 4, you can also use &quot;sequence expression&quot; form of <a href="/syntax/expansion/brace" class="wikilink1" title="syntax:expansion:brace">brace expansion</a> syntax when looping over numbers, and this form does not create leading zeroes unless you ask for them:
+</p>
+
+<p>
+<pre class="code bash"><span class="co0"># 100 numbers, no leading zeroes</span>
+<span class="kw1">for</span> x <span class="kw1">in</span> <span class="br0">&#123;</span><span class="nu0">0</span>..<span class="nu0">99</span><span class="br0">&#125;</span>; <span class="kw1">do</span>
+  <span class="kw3">echo</span> <span class="re1">$x</span>
+<span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+<pre class="code bash"><span class="co0"># Every other number, width 3</span>
+<span class="kw1">for</span> x <span class="kw1">in</span> <span class="br0">&#123;</span>000..<span class="nu0">99</span>..<span class="nu0">2</span><span class="br0">&#125;</span>; <span class="kw1">do</span>
+  <span class="kw3">echo</span> <span class="re1">$x</span>
+<span class="kw1">done</span></pre>
+
+</p>
+
+<p>
+WARNING: the entire list is created before looping starts.  If your list is huge this may be an issue, but no more so than for a glob that expands to a huge list.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Loop over a number range&quot;,&quot;hid&quot;:&quot;loop_over_a_number_range&quot;,&quot;codeblockOffset&quot;:10,&quot;secid&quot;:11,&quot;range&quot;:&quot;3841-4438&quot;} -->
+<h2 class="sectionedit12" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:12,&quot;range&quot;:&quot;4439-4478&quot;} -->
+<h2 class="sectionedit13" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/syntax/ccmd/c_for" class="wikilink1" title="syntax:ccmd:c_for">The C-style for-loop</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:12,&quot;secid&quot;:13,&quot;range&quot;:&quot;4479-&quot;} --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<div class="content"><a href="http://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xcu_chap02.html#tag_23_02_09_12" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xcu_chap02.html#tag_23_02_09_12" rel="nofollow">http://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xcu_chap02.html#tag_23_02_09_12</a></div></div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>commands:builtin:eval</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="commands,builtin,eval"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/commands/builtin/eval?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=commands:builtin"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/commands/builtin/eval"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/commands/builtin/eval"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/commands/builtin/eval"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='commands:builtin';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"commands:builtin:eval","namespace":"commands:builtin","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#the_eval_builtin_command">The eval builtin command</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#synopsis">Synopsis</a></div></li>
+<li class="level2"><div class="li"><a href="#description">Description</a></div></li>
+<li class="level2"><div class="li"><a href="#examples">Examples</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#expansion_side-effects">Expansion side-effects</a></div></li>
+<li class="level3"><div class="li"><a href="#using_printf_q">Using printf %q</a></div></li>
+<li class="level3"><div class="li"><a href="#higher-order_functions">Higher-order functions</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#portability_considerations">Portability considerations</a></div></li>
+<li class="level2"><div class="li"><a href="#see_also">See also</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="the_eval_builtin_command">The eval builtin command</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The eval builtin command&quot;,&quot;hid&quot;:&quot;the_eval_builtin_command&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-39&quot;} -->
+<h2 class="sectionedit2" id="synopsis">Synopsis</h2>
+<div class="level2">
+
+<p>
+<pre class="code">eval: eval [arg ...]</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Synopsis&quot;,&quot;hid&quot;:&quot;synopsis&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;40-95&quot;} -->
+<h2 class="sectionedit3" id="description">Description</h2>
+<div class="level2">
+
+<p>
+<code>eval</code> takes its arguments, concatenates them separated by spaces, and executes the resulting string as Bash code in the current execution environment. <code>eval</code> in Bash works in essentially the same way as most other languages that have an <code>eval</code> function. Perhaps the easiest way to think about <code>eval</code> is that it works in the same way as running <code>bash -c &quot;bash code…&quot; </code>from a script, except in the case of <code>eval</code>, the given code is executed in the current shell environment rather than a child process.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Description&quot;,&quot;hid&quot;:&quot;description&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:3,&quot;range&quot;:&quot;96-637&quot;} -->
+<h2 class="sectionedit4" id="examples">Examples</h2>
+<div class="level2">
+
+<p>
+In this example, the literal text within the <a href="/syntax/redirection#here_documents" class="wikilink1" title="syntax:redirection">here-document</a> is executed as Bash code exactly as though it were to appear within the script in place of the <code>eval</code> command below it.
+</p>
+
+<p>
+<pre class="code">#!/usr/bin/env bash
+{ myCode=$(&lt;/dev/stdin); } &lt;&lt;\EOF
+... arbitrary bash code here ...
+EOF
+
+eval &quot;$myCode&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples&quot;,&quot;hid&quot;:&quot;examples&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;638-1001&quot;} -->
+<h3 class="sectionedit5" id="expansion_side-effects">Expansion side-effects</h3>
+<div class="level3">
+
+<p>
+Frequently, <code>eval</code> is used to cause side-effects by performing a pass of expansion on the code before executing the resulting string. This allows for things that otherwise wouldn&#039;t be possible with ordinary Bash syntax. This also, of course, makes <code>eval</code> the most powerful command in all of shell programming (and in most other languages for that matter).
+</p>
+
+<p>
+This code defines a set of identical functions using the supplied names. <code>eval</code> is the only way to achieve this effect.
+</p>
+
+<p>
+<pre class="code">main() {
+    local fun=&#039;() { echo &quot;$FUNCNAME&quot;; }&#039; x
+
+    for x in {f..n}; do
+        eval &quot;${x}${fun}&quot;
+    done
+
+    &quot;$@&quot;
+}
+
+main &quot;$@&quot;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Expansion side-effects&quot;,&quot;hid&quot;:&quot;expansion_side-effects&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;1002-1669&quot;} -->
+<h3 class="sectionedit6" id="using_printf_q">Using printf %q</h3>
+<div class="level3">
+
+<p>
+The <code><a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf">printf</a> %q</code> format string performs shell escaping on its arguments. This makes <code>printf %q</code> the &quot;anti-eval&quot; - with each pass of a string through printf requiring another <code>eval</code> to peel off the escaping again.
+</p>
+
+<p>
+<pre class="code">while (( ++n &lt;= 5 )) || ! evalBall=&quot;eval $evalBall&quot;; do
+    printf -v evalBall &#039;eval %q&#039; &quot;printf $n;${evalBall-printf &#039;0\n&#039;}&quot;
+done
+$evalBall</pre>
+
+</p>
+
+<p>
+The above example is mostly fun and games but illustrates the <code>printf %q</code> property.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Using printf %q&quot;,&quot;hid&quot;:&quot;using_printf_q&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:6,&quot;range&quot;:&quot;1670-2186&quot;} -->
+<h3 class="sectionedit7" id="higher-order_functions">Higher-order functions</h3>
+<div class="level3">
+
+<p>
+Since all current POSIX-compatible shells lack support for <a href="http://en.wikipedia.org/wiki/First-class_function" class="urlextern" title="http://en.wikipedia.org/wiki/First-class_function" rel="nofollow"> first-class functions</a>, it can be tempting and sometimes useful to simulate some of their effect using <code>eval</code> to evaluate a string containing code.
+</p>
+
+<p>
+This example shows <a href="http://en.wikipedia.org/wiki/Partial_application" class="urlextern" title="http://en.wikipedia.org/wiki/Partial_application" rel="nofollow"> partial application</a> using <code>eval</code>.
+</p>
+
+<p>
+<pre class="code">function partial {
+    eval shift 2 \; function &quot;$1&quot; \{ &quot;$2&quot; &quot;$(printf &#039;%q &#039; &quot;${@:3}&quot;)&quot; &#039;&quot;$@&quot;; }&#039;
+}
+
+function repeat {
+    [[ $1 == +([0-9]) ]] || return
+    typeset n
+    while ((n++ &lt; $1)); do
+        &quot;${@:2}&quot;
+    done
+}
+
+partial print3 repeat 3 printf &#039;%s &#039; # Create a new function named print3
+print3 hi                            # Print &quot;hi&quot; 3 times
+echo</pre>
+
+</p>
+
+<p>
+This is very easy to do incorrectly and not usually considered idiomatic of Bash if used extensively. However abstracting eval behind functions that validate their input and/or make clear which input must be controlled carefully by the caller is a good way to use it.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Higher-order functions&quot;,&quot;hid&quot;:&quot;higher-order_functions&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:7,&quot;range&quot;:&quot;2187-3241&quot;} -->
+<h2 class="sectionedit8" id="portability_considerations">Portability considerations</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Unfortunately, because eval is a <strong>special builtin</strong>, it only gets its own environment in Bash, and only when Bash is not in POSIX mode. In all other shells plus Bash in POSIX mode, the environment of eval will leak out into the surrounding environment. It is possible to work around this limitation by prefixing special builtins with the <code>command</code> regular builtin, but current versions of <del>ksh93</del> and zsh don&#039;t do this properly (<a href="http://article.gmane.org/gmane.comp.programming.tools.ast.devel/686" class="urlextern" title="http://article.gmane.org/gmane.comp.programming.tools.ast.devel/686" rel="nofollow">fixed</a> in ksh 93v- 2012-10-24 alpha).  Earlier versions of zsh work (with <code>setopt POSIX_BUILTINS</code> – looks like a regression). This works correctly in Bash POSIX mode, Dash, and mksh.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <code>eval</code> is another one of the few Bash builtins with keyword-like conditional parsing of arguments that are in the form of compound assignments. </div>
+</li>
+</ul>
+
+<p>
+<pre class="code"> $ ( eval a=( a b\\ c d ); printf &#039;&lt;%s&gt; &#039; &quot;${a[@]}&quot;; echo ) # Only works in Bash.
+&lt;a&gt; &lt;b c&gt; &lt;d&gt;
+ $ ( x=a; eval &quot;$x&quot;=( a b\\ c d ); printf &#039;&lt;%s&gt; &#039; &quot;${a[@]}&quot;; echo ) # Argument is no longer in the form of a valid assignment, therefore ordinary parsing rules apply.
+-bash: syntax error near unexpected token `(&#039;
+ $ ( x=a; eval &quot;$x&quot;&#039;=( a b\ c d )&#039;; printf &#039;&lt;%s&gt; &#039; &quot;${a[@]}&quot;; echo ) # Proper quoting then gives us the expected results.
+&lt;a&gt; &lt;b c&gt; &lt;d&gt;</pre>
+
+</p>
+
+<p>
+We don&#039;t know why Bash does this. Since parentheses are metacharacters, they must ordinary be quoted or escaped when used as arguments. The first example above is the same error as the second in all non-Bash shells, even those with compound assignment.
+</p>
+
+<p>
+In the case of <code>eval</code> it isn&#039;t recommended to use this behavior, because unlike e.g. <a href="/commands/builtin/declare" class="wikilink1" title="commands:builtin:declare"> declare</a>, the initial expansion is still subject to all expansions including <a href="/syntax/expansion/wordsplit" class="wikilink1" title="syntax:expansion:wordsplit"> word-splitting</a> and <a href="/syntax/expansion/glob" class="wikilink2" title="syntax:expansion:glob" rel="nofollow"> pathname expansion</a>.
+</p>
+
+<p>
+<pre class="code"> $ ( set -x; touch &#039;x+=(\[[123]\]=*)&#039; &#039;x+=([3]=yo)&#039;; eval x+=(*); echo &quot;${x[@]}&quot; )
++ touch &#039;x+=(\[[123]\]=*)&#039; &#039;x+=([3]=yo)&#039;
++ eval &#039;x+=(\[[123]\]=*)&#039; &#039;x+=([3]=yo)&#039;
+++ x+=(\[[123]\]=*)
+++ x+=([3]=yo)
++ echo &#039;[[123]]=*&#039; yo
+[[123]]=* yo</pre>
+
+</p>
+
+<p>
+Other commands known to be affected by compound assignment arguments include: <a href="/commands/builtin/let" class="wikilink1" title="commands:builtin:let"> let</a>, <a href="/commands/builtin/declare" class="wikilink1" title="commands:builtin:declare"> declare</a>, <a href="/commands/builtin/typeset" class="wikilink2" title="commands:builtin:typeset" rel="nofollow"> typeset</a>, <a href="/commands/builtin/local" class="wikilink1" title="commands:builtin:local"> local</a>, <a href="/commands/builtin/export" class="wikilink1" title="commands:builtin:export"> export</a>, and <a href="/commands/builtin/readonly" class="wikilink1" title="commands:builtin:readonly"> readonly</a>. More oddities below show both similarities and differences to commands like <a href="/commands/builtin/declare" class="wikilink1" title="commands:builtin:declare"> declare</a>. The rules for <code>eval</code> appear identical to those of <a href="/commands/builtin/let" class="wikilink1" title="commands:builtin:let"> let</a>.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Portability considerations&quot;,&quot;hid&quot;:&quot;portability_considerations&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:8,&quot;range&quot;:&quot;3242-5906&quot;} -->
+<h2 class="sectionedit9" id="see_also">See also</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/048" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/048" rel="nofollow">BashFAQ 48 - eval and security issues</a> – <strong>IMPORTANT</strong></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://fvue.nl/wiki/Bash:_Why_use_eval_with_variable_expansion%3F" class="urlextern" title="http://fvue.nl/wiki/Bash:_Why_use_eval_with_variable_expansion%3F" rel="nofollow">Another eval article</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://mywiki.wooledge.org/BashFAQ/006#Assigning_indirect.2BAC8-reference_variables" class="urlextern" title="http://mywiki.wooledge.org/BashFAQ/006#Assigning_indirect.2BAC8-reference_variables" rel="nofollow">Indirection via eval</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://fvue.nl/wiki/Bash:_Passing_variables_by_reference" class="urlextern" title="http://fvue.nl/wiki/Bash:_Passing_variables_by_reference" rel="nofollow">More indirection via eval</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://github.com/vaeth/push" class="urlextern" title="https://github.com/vaeth/push" rel="nofollow">Martin Väth&#039;s &quot;push&quot;</a> – <code>printf %q</code> work-alike for POSIX.</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.chiark.greenend.org.uk/~sgtatham/aliases.html" class="urlextern" title="http://www.chiark.greenend.org.uk/~sgtatham/aliases.html" rel="nofollow">The &quot;magic alias&quot; hack</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;See also&quot;,&quot;hid&quot;:&quot;see_also&quot;,&quot;codeblockOffset&quot;:7,&quot;secid&quot;:9,&quot;range&quot;:&quot;5907-&quot;} --></div>
+</body>
+</html>

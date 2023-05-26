@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>snipplets:print_horizontal_line</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="snipplets,print_horizontal_line"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/snipplets/print_horizontal_line?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=snipplets"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/snipplets/print_horizontal_line"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/snipplets/print_horizontal_line"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/snipplets/print_horizontal_line"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='snipplets';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"snipplets:print_horizontal_line","namespace":"snipplets","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#print_a_horizontal_line">Print a horizontal line</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#the_simple_wayjust_print_it">The simple way: Just print it</a></div></li>
+<li class="level2"><div class="li"><a href="#the_iterative_way">The iterative way</a></div></li>
+<li class="level2"><div class="li"><a href="#the_simple_printf_way">The simple printf way</a></div></li>
+<li class="level2"><div class="li"><a href="#a_line_across_the_entire_width_of_the_terminal">A line across the entire width of the terminal</a></div></li>
+<li class="level2"><div class="li"><a href="#the_more_advanced_printf_way">The more advanced printf way</a></div></li>
+<li class="level2"><div class="li"><a href="#the_parameter_expansion_way">The parameter expansion way</a></div></li>
+<li class="level2"><div class="li"><a href="#related_articles">Related articles</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="print_a_horizontal_line">Print a horizontal line</h1>
+<div class="level1">
+<div class="inline dataplugin_entry snipplet sectionedit2"><dl><dt class="snipplet">snipplet<span class="sep">: </span></dt><dd class="snipplet"><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dterminal" title="Show pages matching 'terminal'" class="wikilink1">terminal</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dline" title="Show pages matching 'line'" class="wikilink1">line</a></dd><dt class="lastupdate">LastUpdate<span class="sep">: </span></dt><dd class="lastupdate">2010-07-31</dd><dt class="contributor">Contributor<span class="sep">: </span></dt><dd class="contributor">Jan Schampera<span class="sep">, </span>prince_jammys<span class="sep">, </span>ccsalvesen<span class="sep">, </span>others</dd><dt class="type">type<span class="sep">: </span></dt><dd class="type">snipplet</dd></dl></div><!-- EDIT{&quot;target&quot;:&quot;plugin_data&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;40-207&quot;} -->
+<p>
+The purpose of this small code collection is to show some code that draws a horizontal line using as less external tools as possible (it&#039;s not a big deal to do it with AWK or Perl, but with pure or nearly-pure Bash it gets more interesting).
+</p>
+
+<p>
+In general, you should be able to use this code to repeat any character or character sequence.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Print a horizontal line&quot;,&quot;hid&quot;:&quot;print_a_horizontal_line&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-547&quot;} -->
+<h2 class="sectionedit3" id="the_simple_wayjust_print_it">The simple way: Just print it</h2>
+<div class="level2">
+
+<p>
+Not a miracle, just to be complete here.
+</p>
+
+<p>
+<pre class="code bash"><span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="re5">--------------------</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The simple way: Just print it&quot;,&quot;hid&quot;:&quot;the_simple_wayjust_print_it&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;548-687&quot;} -->
+<h2 class="sectionedit4" id="the_iterative_way">The iterative way</h2>
+<div class="level2">
+
+<p>
+This one simply loops 20 times, always draws a dash, finally a newline
+</p>
+
+<p>
+<pre class="code bash"><span class="kw1">for</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>x = <span class="nu0">0</span>; x <span class="sy0">&lt;</span> <span class="nu0">20</span>; x++<span class="br0">&#41;</span><span class="br0">&#41;</span>; <span class="kw1">do</span>
+  <span class="kw3">printf</span> <span class="sy0">%</span>s -
+<span class="kw1">done</span>
+<span class="kw3">echo</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The iterative way&quot;,&quot;hid&quot;:&quot;the_iterative_way&quot;,&quot;codeblockOffset&quot;:1,&quot;secid&quot;:4,&quot;range&quot;:&quot;688-865&quot;} -->
+<h2 class="sectionedit5" id="the_simple_printf_way">The simple printf way</h2>
+<div class="level2">
+
+<p>
+This one uses the <code>printf</code> command to print an <strong>empty</strong> field with a <strong>minimum field width</strong> of 20 characters. The text is padded with spaces, since there is no text, you get 20 spaces. The spaces are then converted to <code>-</code> by the <code>tr</code> command.
+</p>
+
+<p>
+<pre class="code bash"><span class="kw3">printf</span> <span class="st_h">'%20s\n'</span> <span class="sy0">|</span> <span class="kw2">tr</span> <span class="st_h">' '</span> -</pre>
+
+</p>
+
+<p>
+whitout an external command, using the (non-POSIX) substitution expansion and <code>-v</code> option:
+<pre class="code bash"><span class="kw3">printf</span> <span class="re5">-v</span> res <span class="sy0">%</span>20s
+<span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;<span class="es3">${res// /-}</span>&quot;</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The simple printf way&quot;,&quot;hid&quot;:&quot;the_simple_printf_way&quot;,&quot;codeblockOffset&quot;:2,&quot;secid&quot;:5,&quot;range&quot;:&quot;866-1360&quot;} -->
+<h2 class="sectionedit6" id="a_line_across_the_entire_width_of_the_terminal">A line across the entire width of the terminal</h2>
+<div class="level2">
+
+<p>
+This is a variant of the above that uses <code>tput cols</code> to find the width of the terminal and set that number as the minimum field witdh.
+</p>
+
+<p>
+<pre class="code bash"><span class="kw3">printf</span> <span class="st_h">'%*s\n'</span> <span class="st0">&quot;<span class="es3">${COLUMNS:-$(tput cols)}</span>&quot;</span> <span class="st_h">''</span> <span class="sy0">|</span> <span class="kw2">tr</span> <span class="st_h">' '</span> -</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;A line across the entire width of the terminal&quot;,&quot;hid&quot;:&quot;a_line_across_the_entire_width_of_the_terminal&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:6,&quot;range&quot;:&quot;1361-1634&quot;} -->
+<h2 class="sectionedit7" id="the_more_advanced_printf_way">The more advanced printf way</h2>
+<div class="level2">
+
+<p>
+This one is a bit tricky. The format for the <code>printf</code> command is <code>%.0s</code>, which specified a field with the <strong>maximum</strong> length of <strong>zero</strong>. After this field, <code>printf</code> is told to print a dash. You might remember that it&#039;s the nature of <code>printf</code> to repeat, if the number of conversion specifications is less than the number of given arguments. With brace expansion <code>{1..20}</code>, 20 arguments are given (you could easily write <code>1 2 3 4 … 20</code>, of course!). Following happens: The <strong>zero-length field</strong> plus the dash is repeated 20 times. A zero length field is, naturally, invisible. What you see is the dash, repeated 20 times.
+</p>
+
+<p>
+<pre class="code bash"><span class="co0"># Note: you might see that as ''%.s'', which is a (less documented) shorthand for ''%.0s''</span>
+<span class="kw3">printf</span> <span class="st_h">'%.0s-'</span> <span class="br0">&#123;</span><span class="nu0">1</span>..<span class="nu0">20</span><span class="br0">&#125;</span>; <span class="kw3">echo</span></pre>
+
+</p>
+
+<p>
+If the 20 is variable, you can use <a href="/commands/builtin/eval" class="wikilink1" title="commands:builtin:eval"> eval</a> to insert the expansion (take care that using <code>eval</code> is potentially dangerous if you evaluate external data):
+</p>
+
+<p>
+<pre class="code bash"><span class="kw3">eval</span> <span class="kw3">printf</span> <span class="sy0">%</span>.0s- <span class="st_h">'{1..'</span><span class="st0">&quot;<span class="es3">${COLUMNS:-$(tput cols)}</span>&quot;</span>\<span class="br0">&#125;</span>; <span class="kw3">echo</span></pre>
+
+</p>
+
+<p>
+Or restrict the length to 1 and prefix the arguments with the desired character.
+</p>
+
+<p>
+<pre class="code bash"><span class="kw3">eval</span> <span class="kw3">printf</span> <span class="sy0">%</span>.1s <span class="st_h">'-{1..'</span><span class="st0">&quot;<span class="es3">${COLUMNS:-$(tput cols)}</span>&quot;</span>\<span class="br0">&#125;</span>; <span class="kw3">echo</span></pre>
+
+</p>
+
+<p>
+You can also do it the crazy ormaaj way™ following basically the same principle as this <a href="/commands/builtin/eval#expansion_side-effects" class="wikilink1" title="commands:builtin:eval"> string reverse example</a>. It completely depends on Bash due to its brace expansion evaluation order and array parameter parsing details. As above, the eval only inserts the COLUMNS expansion into the expression and isn&#039;t involved in the rest, other than to put the <code>_</code> value into the environment of the <code>_[0]</code> expansion. This works well since we&#039;re not creating one set of arguments and then editing or deleting them to create another as in the previous examples.
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">_</span>=- <span class="kw3">command</span> <span class="kw3">eval</span> <span class="kw3">printf</span> <span class="sy0">%</span>s <span class="st_h">'&quot;${_[0]&quot;{0..'</span><span class="st0">&quot;<span class="es3">${COLUMNS:-$(tput cols)}</span>&quot;</span><span class="st_h">'}&quot;}&quot;'</span>; <span class="kw3">echo</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The more advanced printf way&quot;,&quot;hid&quot;:&quot;the_more_advanced_printf_way&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:7,&quot;range&quot;:&quot;1635-3583&quot;} -->
+<h2 class="sectionedit8" id="the_parameter_expansion_way">The parameter expansion way</h2>
+<div class="level2">
+
+<p>
+Preparing enough dashes in advance, we can then use a non-POSIX subscript expansion:
+</p>
+
+<p>
+<pre class="code bash"><span class="re2">hr</span>=---------------------------------------------------------------\
+<span class="re5">----------------------------------------------------------------</span>
+<span class="kw3">printf</span> <span class="st_h">'%s\n'</span> <span class="st0">&quot;<span class="es3">${hr:0:${COLUMNS:-$(tput cols)}</span>}&quot;</span></pre>
+
+</p>
+
+<p>
+A more flexible approach, and also using modal terminal line-drawing characters instead of hyphens:
+</p>
+
+<p>
+<pre class="code bash">hr<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw3">local</span> <span class="re2">start</span>=$<span class="st_h">'\e(0'</span> <span class="re2">end</span>=$<span class="st_h">'\e(B'</span> <span class="re2">line</span>=<span class="st_h">'qqqqqqqqqqqqqqqq'</span>
+  <span class="kw3">local</span> <span class="re2">cols</span>=<span class="co1">${COLUMNS:-$(tput cols)}</span>
+  <span class="kw1">while</span> <span class="br0">&#40;</span><span class="br0">&#40;</span><span class="co1">${#line}</span> <span class="sy0">&lt;</span> cols<span class="br0">&#41;</span><span class="br0">&#41;</span>; <span class="kw1">do</span> line+=<span class="st0">&quot;<span class="es2">$line</span>&quot;</span>; <span class="kw1">done</span>
+  <span class="kw3">printf</span> <span class="st_h">'%s%s%s\n'</span> <span class="st0">&quot;<span class="es2">$start</span>&quot;</span> <span class="st0">&quot;<span class="es3">${line:0:cols}</span>&quot;</span> <span class="st0">&quot;<span class="es2">$end</span>&quot;</span>
+<span class="br0">&#125;</span></pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;The parameter expansion way&quot;,&quot;hid&quot;:&quot;the_parameter_expansion_way&quot;,&quot;codeblockOffset&quot;:9,&quot;secid&quot;:8,&quot;range&quot;:&quot;3584-4245&quot;} -->
+<h2 class="sectionedit9" id="related_articles">Related articles</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="/commands/builtin/printf" class="wikilink1" title="commands:builtin:printf">The printf command</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Related articles&quot;,&quot;hid&quot;:&quot;related_articles&quot;,&quot;codeblockOffset&quot;:11,&quot;secid&quot;:9,&quot;range&quot;:&quot;4246-&quot;} --></div>
+</body>
+</html>

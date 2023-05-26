@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>sandbox3</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="sandbox3"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/sandbox3?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns="/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/sandbox3"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/sandbox3"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/sandbox3"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"sandbox3","namespace":"","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc" class="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="#examples_for_the_wrap_plugin_test">Examples for the Wrap Plugin (test)</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="#basic_syntax">Basic syntax</a></div></li>
+<li class="level2"><div class="li"><a href="#classes_and_styles">Classes and Styles</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="#columns_and_floats">Columns and Floats</a></div></li>
+<li class="level3"><div class="li"><a href="#alignments">Alignments</a></div></li>
+<li class="level3"><div class="li"><a href="#boxes_and_notes">Boxes and Notes</a></div></li>
+<li class="level3"><div class="li"><a href="#marks">Marks</a></div></li>
+<li class="level3"><div class="li"><a href="#miscellaneous">Miscellaneous</a></div></li>
+<li class="level3"><div class="li"><a href="#typography">Typography</a></div></li>
+<li class="level3"><div class="li"><a href="#combining_and_nesting">Combining and Nesting</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="#language_and_text_direction">Language and Text Direction</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="#discussion__section">Discussion</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="examples_for_the_wrap_plugin_test">Examples for the Wrap Plugin (test)</h1>
+<div class="level1">
+
+<p>
+dsadsada
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Examples for the Wrap Plugin (test)&quot;,&quot;hid&quot;:&quot;examples_for_the_wrap_plugin_test&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:1,&quot;range&quot;:&quot;1-59&quot;} -->
+<h2 class="sectionedit2" id="basic_syntax">Basic syntax</h2>
+<div class="level2">
+
+<p>
+An uppercase <strong>&lt;WRAP&gt;</strong> (or alternatively <strong>&lt;block&gt;</strong> or <strong>&lt;div&gt;</strong>) creates a <strong><code>div</code></strong> and should be used for <strong>&quot;big&quot;</strong> containers, <strong>surrounding</strong> paragraphs, lists, tables, etc.
+</p>
+<pre class="code">&lt;WRAP classes width :language&gt;
+&quot;big&quot; content
+&lt;/WRAP&gt;
+
+or
+&lt;block classes width :language&gt;
+&quot;big&quot; content
+&lt;/block&gt;
+
+or
+&lt;div classes width :language&gt;
+&quot;big&quot; content
+&lt;/div&gt;</pre>
+
+<p>
+A lowercase <strong>&lt;wrap&gt;</strong> (or alternatively <strong>&lt;inline&gt;</strong> or <strong>&lt;span&gt;</strong>) creates a <strong><code>span</code></strong> and should be used for <strong>&quot;small&quot;</strong> containers, <strong>inside</strong> paragraphs, lists, tables, etc.
+</p>
+<pre class="code">&lt;wrap classes width :language&gt;&quot;small&quot; content&lt;/wrap&gt;
+
+or
+&lt;inline classes width :language&gt;&quot;small&quot; content&lt;/inline&gt;
+
+or
+&lt;span classes width :language&gt;&quot;small&quot; content&lt;/span&gt;</pre>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Please note, some things <strong>won&#039;t work with lowercase spans</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>alignments</strong> (including alignments generated by changing the text direction)</div>
+</li>
+<li class="level1"><div class="li"> <strong>multi-columns</strong></div>
+</li>
+<li class="level1"><div class="li"> and <strong>widths</strong></div>
+</li>
+</ul>
+
+<p>
+if the according wrap isn&#039;t floated as well.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Basic syntax&quot;,&quot;hid&quot;:&quot;basic_syntax&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:2,&quot;range&quot;:&quot;60-1093&quot;} -->
+<h2 class="sectionedit3" id="classes_and_styles">Classes and Styles</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Classes and Styles&quot;,&quot;hid&quot;:&quot;classes_and_styles&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:3,&quot;range&quot;:&quot;1094-1126&quot;} -->
+<h3 class="sectionedit4" id="columns_and_floats">Columns and Floats</h3>
+<div class="level3">
+
+<p>
+You can have columns easily by adding the class <code>column</code> and a width, e.g.
+</p>
+<pre class="code">&lt;WRAP column 30%&gt;...content...&lt;/WRAP&gt;</pre>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:5,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_column plugin_wrap" style="width: 30%;">
+<p>
+<em><strong><em class="u">Emulated Big Headline</em></strong></em>
+</p>
+
+<p>
+You can emulate a big headline with italic, bold and underlined text, e.g.
+<pre class="code">//**__Emulated Big Headline__**//</pre>
+
+</p>
+
+<p>
+<em><strong>Emulated Small Headline</strong></em>
+</p>
+
+<p>
+A smaller headline uses no underlining, e.g.
+<pre class="code">//**Emulated Small Headline**//</pre>
+
+</p>
+
+<p>
+If you need text that is bold and italic, simply use it the other way around:
+<pre class="code">**//No Headline//**</pre>
+
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:6,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:7,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_column plugin_wrap" style="width: 30%;">
+<p>
+<em><strong><em class="u">Different Floating Options</em></strong></em>
+</p>
+
+<p>
+Normally you would only need the class <code>column</code>, but for more sophisticated uses (not only for columns, but for any other classes, like <a href="#boxes_and_notes" title="sandbox3 ↵" class="wikilink1">boxes and notes</a> as well) you can have several kinds of &quot;floats&quot;:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong><code>column</code></strong> is the same as <code>left</code> in LTR languages and the same as <code>right</code> in RTL languages</div>
+</li>
+<li class="level1"><div class="li"> <strong><code>left</code></strong> will let you float your wrap on the left</div>
+</li>
+<li class="level1"><div class="li"> <strong><code>right</code></strong> will let the wrap float right</div>
+</li>
+<li class="level1"><div class="li"> <strong><code>center</code></strong> will position the wrap in the horizontal center of the page</div>
+</li>
+</ul>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:8,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:9,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_column plugin_wrap" style="width: 30%;">
+<p>
+<em><strong><em class="u">Widths</em></strong></em>
+</p>
+
+<p>
+You can set any valid widths (but only on divs): <code>%, px, em, ex, pt, pc, cm, mm, in</code>, but most of the time you&#039;d only want either
+</p>
+<div class="table sectionedit11"><table class="inline">
+	<thead>
+	<tr class="row0">
+		<th class="col0">type</th><th class="col1">e.g.</th><th class="col2">note</th>
+	</tr>
+	</thead>
+	<tr class="row1">
+		<th class="col0"><code>%</code></th><td class="col1"><code>30%</code></td><td class="col2">makes sense in a liquid layout</td>
+	</tr>
+	<tr class="row2">
+		<th class="col0"><code>px</code></th><td class="col1"><code>420px</code></td><td class="col2">makes sense if your layout has a fixed pixel width or if your container contains images with a certain width</td>
+	</tr>
+	<tr class="row3">
+		<th class="col0"><code>em</code></th><td class="col1"><code>20em</code></td><td class="col2">makes sense if you like your wrap container to grow and shrink with the font size or if your layout is em-based</td>
+	</tr>
+</table></div>
+<!-- EDIT{&quot;target&quot;:&quot;table&quot;,&quot;name&quot;:&quot;&quot;,&quot;hid&quot;:&quot;table&quot;,&quot;secid&quot;:11,&quot;range&quot;:&quot;2431-2752&quot;} -->
+<p>
+A <strong>table</strong> inside a column or box will always be <strong>100% wide</strong>. This makes positioning and sizing tables possible.
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:10,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+<span class="wrap_em ">After using any of the float classes, you might come across something like this, where the following text protrudes into the space where only the floating containers should be …</span>
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:12,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_clear plugin_wrap"></div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:13,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+… to prevent that, you should simply add
+</p>
+<pre class="code">&lt;WRAP clear&gt;&lt;/WRAP&gt;</pre>
+
+<p>
+after your last column.
+</p>
+
+<p>
+You <strong>can</strong> use the same options with spans (as each element that floats is automatically a block level element), but it probably doesn&#039;t make too much sense. <img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Widths on spans normally do not work (by design), but can make sense, when it is floating.
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Attention: Widths can cause problems and will often look different and break in some browsers. If you&#039;re not a web developer, you might not understand any problems regarding the <a href="http://en.wikipedia.org/wiki/Internet_Explorer_box_model_bug" class="urlextern" title="http://en.wikipedia.org/wiki/Internet_Explorer_box_model_bug" rel="nofollow">box model</a>. Just try to test your columns in all major browsers and make your widths smaller than you initially think they should be.
+</p>
+
+<p>
+All of those options will also work in the <a href="#boxes_and_notes" title="sandbox3 ↵" class="wikilink1">boxes and notes</a> wraps (see below).
+</p>
+
+</div>
+
+<h4 id="multi-columns">Multi-columns</h4>
+<div class="level4">
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:14,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_col3 plugin_wrap">
+<p>
+For modern browsers (Firefox, Chrome and Safari) you can use multi-columns. Just use <strong><code>col2</code></strong> for 2 columns, <strong><code>col3</code></strong> for 3 columns, <strong><code>col4</code></strong> for 4 columns and <strong><code>col5</code></strong> for 5 columns.
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Note: Multi-columns don&#039;t make sense for spans.
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:15,&quot;range&quot;:&quot;0-&quot;} -->
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Columns and Floats&quot;,&quot;hid&quot;:&quot;columns_and_floats&quot;,&quot;codeblockOffset&quot;:0,&quot;secid&quot;:4,&quot;range&quot;:&quot;1127-4221&quot;} -->
+<h3 class="sectionedit16" id="alignments">Alignments</h3>
+<div class="level3">
+
+<p>
+You can use these different text alignments:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>leftalign</code></div>
+</li>
+<li class="level1"><div class="li"> <code>rightalign</code></div>
+</li>
+<li class="level1"><div class="li"> <code>centeralign</code></div>
+</li>
+<li class="level1"><div class="li"> <code>justify</code></div>
+</li>
+</ul>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:17,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_centeralign plugin_wrap">
+<p>
+Center aligned text …
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:18,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:19,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_rightalign plugin_wrap">
+<p>
+… and right aligned.
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:20,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+<pre class="code">&lt;WRAP centeralign&gt;
+Center aligned text ...
+&lt;/WRAP&gt;
+
+&lt;WRAP rightalign&gt;
+... and right aligned.
+&lt;/WRAP&gt;</pre>
+
+</p>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> You cannot add alignments to spans.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Alignments&quot;,&quot;hid&quot;:&quot;alignments&quot;,&quot;codeblockOffset&quot;:3,&quot;secid&quot;:16,&quot;range&quot;:&quot;4222-4624&quot;} -->
+<h3 class="sectionedit21" id="boxes_and_notes">Boxes and Notes</h3>
+<div class="level3">
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:22,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_round wrap_box wrap_center plugin_wrap" style="width: 570px; max-width: 100%;">
+<p>
+<em><strong><em class="u">round box 570px center</em></strong></em>
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>box</code> creates a box around the container and uses the colours from the template&#039;s <code>style.ini</code> as default colours (<code>__background_alt__</code> and <code>__text__</code>)</div>
+</li>
+<li class="level1"><div class="li"> any of the classes <code>info</code>, <code>tip</code>, <code>important</code>, <code>alert</code>, <code>help</code>, <code>download</code>, <code>todo</code> will add a special note container with a corresponding icon</div>
+</li>
+<li class="level1"><div class="li"> the classes <code>danger</code>, <code>warning</code>, <code>caution</code>, <code>notice</code>, <code>safety</code> use safety colours (and no icons)</div>
+</li>
+<li class="level1"><div class="li"> <code>round</code> can be added to anything with a background colour or a border and will only work in modern browsers (no Internet Explorer)</div>
+</li>
+</ul>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:23,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:24,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_info wrap_left plugin_wrap" style="width: 220px; max-width: 100%;">
+<p>
+<em><strong>Info</strong></em>
+</p>
+<pre class="code">&lt;WRAP info&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:25,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:26,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_tip wrap_left plugin_wrap" style="width: 220px; max-width: 100%;">
+<p>
+<em><strong>Tip</strong></em>
+</p>
+<pre class="code">&lt;WRAP tip&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:27,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:28,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_important wrap_left plugin_wrap" style="width: 220px; max-width: 100%;">
+<p>
+<em><strong>Important</strong></em>
+</p>
+<pre class="code">&lt;WRAP important&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:29,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:30,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_alert wrap_left plugin_wrap" style="width: 220px; max-width: 100%;">
+<p>
+<em><strong>Alert</strong></em>
+</p>
+<pre class="code">&lt;WRAP alert&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:31,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:32,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_round wrap_help wrap_left plugin_wrap" style="width: 220px; max-width: 100%;">
+<p>
+<em><strong>Help</strong></em>
+</p>
+<pre class="code">&lt;WRAP round help&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:33,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:34,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_download wrap_left plugin_wrap" style="width: 220px; max-width: 100%;">
+<p>
+<em><strong>Download</strong></em>
+</p>
+<pre class="code">&lt;WRAP download&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:35,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:36,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_todo wrap_left plugin_wrap" style="width: 220px; max-width: 100%;">
+<p>
+<em><strong>Todo</strong></em>
+</p>
+<pre class="code">&lt;WRAP todo&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:37,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:38,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_clear plugin_wrap"></div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:39,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+<strong>Safety Notes:</strong>
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:40,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_danger wrap_left plugin_wrap" style="width: 27%;">
+<p>
+<em><strong>Danger</strong></em>
+</p>
+<pre class="code">&lt;WRAP danger&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:41,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:42,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_warning wrap_left plugin_wrap" style="width: 27%;">
+<p>
+<em><strong>Warning</strong></em>
+</p>
+<pre class="code">&lt;WRAP warning&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:43,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:44,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_caution wrap_left plugin_wrap" style="width: 27%;">
+<p>
+<em><strong>Caution</strong></em>
+</p>
+<pre class="code">&lt;WRAP caution&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:45,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:46,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_round wrap_notice wrap_left plugin_wrap" style="width: 27%;">
+<p>
+<em><strong>Notice</strong></em>
+</p>
+<pre class="code">&lt;WRAP round notice&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:47,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:48,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_round wrap_safety wrap_left plugin_wrap" style="width: 27%;">
+<p>
+<em><strong>Safety</strong></em>
+</p>
+<pre class="code">&lt;WRAP round safety&gt;&lt;/WRAP&gt;</pre>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:49,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:50,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_clear plugin_wrap"></div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:51,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+You can use notes and boxes also inside text with spans like this:
+<span class="wrap_info ">info</span>, <span class="wrap_help ">help</span>, <span class="wrap_alert ">alert</span>, <span class="wrap_important ">important</span>, <span class="wrap_tip ">tip</span>, <span class="wrap_download ">download</span>, <span class="wrap_todo ">todo</span> and <span class="wrap_round wrap_box ">round box</span> and <span class="wrap_danger ">danger</span>, <span class="wrap_warning ">warning</span>, <span class="wrap_caution ">caution</span>, <span class="wrap_notice ">notice</span>, <span class="wrap_safety ">safety</span>.
+</p>
+<pre class="code">&lt;wrap info&gt;info&lt;/wrap&gt;, &lt;wrap help&gt;help&lt;/wrap&gt;, ...</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Boxes and Notes&quot;,&quot;hid&quot;:&quot;boxes_and_notes&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:21,&quot;range&quot;:&quot;4625-6750&quot;} -->
+<h3 class="sectionedit52" id="marks">Marks</h3>
+<div class="level3">
+
+<p>
+You can mark text as <span class="wrap_hi ">highlighted</span>, <span class="wrap_lo ">less significant</span> and <span class="wrap_em ">especially emphasised</span>.
+</p>
+<pre class="code">You can mark text as &lt;wrap hi&gt;highlighted&lt;/wrap&gt;, &lt;wrap lo&gt;less significant&lt;/wrap&gt; and &lt;wrap em&gt;especially emphasised&lt;/wrap&gt;.</pre>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> This might look ugly in some templates and should be adjusted accordingly.
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Marks&quot;,&quot;hid&quot;:&quot;marks&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:52,&quot;range&quot;:&quot;6751-7103&quot;} -->
+<h3 class="sectionedit53" id="miscellaneous">Miscellaneous</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="indent">Indent</h4>
+<div class="level4">
+
+<p>
+<span class="wrap_indent ">This text will appear indented.</span>
+</p>
+<pre class="code">&lt;wrap indent&gt;This text will appear indented.&lt;/wrap&gt;</pre>
+
+</div>
+
+<h4 id="outdent">Outdent</h4>
+<div class="level4">
+
+<p>
+<span class="wrap_outdent ">This text will appear &quot;outdented&quot;.</span>
+</p>
+<pre class="code">&lt;wrap outdent&gt;This text will appear &quot;outdented&quot;.&lt;/wrap&gt;</pre>
+
+</div>
+
+<h4 id="prewrap">Prewrap</h4>
+<div class="level4">
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:54,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_prewrap plugin_wrap" style="width: 250px; max-width: 100%;">
+<p>
+<pre class="code">Inside this code block the words will wrap to a new line although they are all in one line.</pre>
+
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:55,&quot;range&quot;:&quot;0-&quot;} --><pre class="code">&lt;WRAP prewrap 250px&gt;
+&lt;code&gt;
+Inside this code block the words will wrap to a new line although they are all in one line.
+&lt;/code&gt;
+&lt;/WRAP&gt;</pre>
+
+</div>
+
+<h4 id="spoiler">Spoiler</h4>
+<div class="level4">
+
+<p>
+Here follows a spoiler: <span class="wrap_spoiler ">Darth Vader is Luke&#039;s father.</span>
+</p>
+<pre class="code">Here follows a spoiler: &lt;wrap spoiler&gt;Darth Vader is Luke&#039;s father.&lt;/wrap&gt;</pre>
+
+<p>
+Just select the text in the spoiler box to be able to read its content.
+</p>
+
+</div>
+
+<h4 id="hide">Hide</h4>
+<div class="level4">
+
+<p>
+The following text is hidden: <span class="wrap_hide ">John, please revise that sentence.</span>
+</p>
+<pre class="code">The following text is hidden: &lt;wrap hide&gt;John, please revise that sentence.&lt;/wrap&gt;</pre>
+
+<p>
+<img src="/lib/images/smileys/icon_exclaim.gif" class="icon" alt=":!:" /> Warning: The text will still appear in the source code, in non-modern browsers and is searchable. Do not hide any security risky secrets with it!
+</p>
+
+</div>
+
+<h4 id="pagebreak">Pagebreak</h4>
+<div class="level4">
+
+<p>
+The following will add a pagebreak: 
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:56,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_pagebreak plugin_wrap"></div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:57,&quot;range&quot;:&quot;0-&quot;} --><pre class="code">The following will add a pagebreak: &lt;WRAP pagebreak&gt;&lt;/WRAP&gt;</pre>
+
+<p>
+This has no effect on the browser screen. A <a href="http://reference.sitepoint.com/css/page-break-after" class="urlextern" title="http://reference.sitepoint.com/css/page-break-after" rel="nofollow">pagebreak</a> will force a new page in printouts.
+</p>
+
+</div>
+
+<h4 id="nopagebreak">Nopagebreak</h4>
+<div class="level4">
+
+<p>
+The following will try to avoid a pagebreak: 
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:58,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_nopagebreak plugin_wrap">
+<p>
+much content, belonging together (like a long table)
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:59,&quot;range&quot;:&quot;0-&quot;} --><pre class="code">The following will try to avoid a pagebreak: &lt;WRAP nopagebreak&gt;much content, belonging together (like a long table)&lt;/WRAP&gt;</pre>
+
+<p>
+This also has no effect on the browser screen. It will try to <a href="http://reference.sitepoint.com/css/page-break-inside" class="urlextern" title="http://reference.sitepoint.com/css/page-break-inside" rel="nofollow">avoid a page break</a> in printouts.
+</p>
+
+</div>
+
+<h4 id="noprint">Noprint</h4>
+<div class="level4">
+
+<p>
+<span class="wrap_noprint ">This text appears on the screen, but not in print.</span>
+</p>
+<pre class="code">&lt;wrap noprint&gt;This text appears on the screen, but not in print.&lt;/wrap&gt;</pre>
+
+</div>
+
+<h4 id="onlyprint">Onlyprint</h4>
+<div class="level4">
+
+<p>
+<span class="wrap_onlyprint ">This text does not appear on the screen, but only in print.</span>
+</p>
+<pre class="code">&lt;wrap onlyprint&gt;This text does not appear on the screen, but only in print.&lt;/wrap&gt;</pre>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Miscellaneous&quot;,&quot;hid&quot;:&quot;miscellaneous&quot;,&quot;codeblockOffset&quot;:4,&quot;secid&quot;:53,&quot;range&quot;:&quot;7104-9333&quot;} -->
+<h3 class="sectionedit60" id="typography">Typography</h3>
+<div class="level3">
+
+<p>
+I advice against using the following typography classes. It&#039;s better to create semantic classes that reflect their meaning instead.
+</p>
+<ul>
+<li class="level1"><div class="li"> font family: <code>sansserif</code>, <code>serif</code>, <code>monospace</code></div>
+</li>
+<li class="level1"><div class="li"> font size: <code>bigger</code>, <code>muchbigger</code>, <code>smaller</code></div>
+</li>
+<li class="level1"><div class="li"> font colour: <code>fgred</code>, <code>fggreen</code>, <code>fgblue</code>, <code>fgcyan</code>, <code>fgviolet</code>, <code>fgyellow</code>, <code>fggrey</code>, <code>fgwhite</code>, <code>fgblack</code></div>
+</li>
+<li class="level1"><div class="li"> background colour: <code>bgred</code>, <code>bggreen</code>, <code>bgblue</code>, <code>bgcyan</code>, <code>bgviolet</code>, <code>bgyellow</code>, <code>bggrey</code>, <code>bgwhite</code>, <code>bgblack</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Typography&quot;,&quot;hid&quot;:&quot;typography&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:60,&quot;range&quot;:&quot;9334-9868&quot;} -->
+<h3 class="sectionedit61" id="combining_and_nesting">Combining and Nesting</h3>
+<div class="level3">
+
+<p>
+You can combine and nest all classes and types of boxes, e.g.
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:62,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_box wrap_bggreen wrap_fgblack wrap_right plugin_wrap" style="width: 350px; max-width: 100%;" lang="en" xml:lang="en" dir="ltr">
+<p>
+<em><strong><em class="u">Outer green box floats right</em></strong></em>
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:64,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_left plugin_wrap" style="width: 165px; max-width: 100%;">
+<p>
+Inner nested box floats left and is partly <span class="wrap_em wrap_hi "><em class="u">em</em>phasized and <em class="u">hi</em>ghlighted with nested <span class="wrap_bigger "><em class="u">bigger</em> text</span> inside</span>.
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:65,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+Text inside outer right box, but beneath inner left box.
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:66,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_clear plugin_wrap"></div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:67,&quot;range&quot;:&quot;0-&quot;} --><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:68,&quot;range&quot;:&quot;0-&quot;} --><div class="wrap_round wrap_tip plugin_wrap">
+<p>
+Round tip box underneath, after a <code>clear</code>.
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:69,&quot;range&quot;:&quot;0-&quot;} --></div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:63,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+<pre class="code">&lt;WRAP box bggreen fgblack 350px right :en&gt;
+//**__Outer green box floats right__**//
+
+&lt;WRAP 165px left&gt;
+Inner nested box floats left and is partly &lt;wrap em hi&gt;__em__phasized and __hi__ghlighted with nested &lt;wrap bigger&gt;__bigger__ text&lt;/wrap&gt; inside&lt;/wrap&gt;.
+&lt;/WRAP&gt;
+
+Text inside outer right box, but beneath inner left box.
+
+&lt;WRAP clear&gt;&lt;/WRAP&gt;
+
+&lt;WRAP round tip&gt;
+Round tip box underneath, after a &#039;&#039;clear&#039;&#039;.
+&lt;/WRAP&gt;
+
+&lt;/WRAP&gt;</pre>
+
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Combining and Nesting&quot;,&quot;hid&quot;:&quot;combining_and_nesting&quot;,&quot;codeblockOffset&quot;:5,&quot;secid&quot;:61,&quot;range&quot;:&quot;9869-10829&quot;} -->
+<h2 class="sectionedit70" id="language_and_text_direction">Language and Text Direction</h2>
+<div class="level2">
+
+<p>
+You can change the language and the reading direction of a wrap container by simply adding a colon followed by the language code, like this:
+</p>
+
+<p>
+<pre class="code">&lt;WRAP :he&gt;
+זה עברית. ((&lt;wrap :en&gt;This means &quot;This is Hebrew.&quot;, at least according to [[http://translate.google.com/|Google Translate]].&lt;/wrap&gt;))
+&lt;/WRAP&gt;</pre>
+
+</p>
+<!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_start&quot;,&quot;secid&quot;:71,&quot;range&quot;:&quot;0-&quot;} --><div class="plugin_wrap" lang="he" xml:lang="he" dir="rtl">
+<p>
+זה עברית. <sup><a href="#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+</div><!-- EDIT{&quot;target&quot;:&quot;plugin_wrap_end&quot;,&quot;secid&quot;:72,&quot;range&quot;:&quot;0-&quot;} -->
+<p>
+The text direction (<code>rtl</code>, right to left or <code>ltr</code>, left to right) will get inserted automatically and is solely dependent on the language. The list of currently supported languages is taken from: <a href="http://meta.wikimedia.org/wiki/Template:List_of_language_names_ordered_by_code" class="urlextern" title="http://meta.wikimedia.org/wiki/Template:List_of_language_names_ordered_by_code" rel="nofollow">http://meta.wikimedia.org/wiki/Template:List_of_language_names_ordered_by_code</a>
+(If you specify a language not listed there, it simply won&#039;t do anything.)
+</p>
+
+</div>
+<!-- EDIT{&quot;target&quot;:&quot;section&quot;,&quot;name&quot;:&quot;Language and Text Direction&quot;,&quot;hid&quot;:&quot;language_and_text_direction&quot;,&quot;codeblockOffset&quot;:6,&quot;secid&quot;:70,&quot;range&quot;:&quot;10830-&quot;} --><div class="footnotes">
+<div class="fn"><sup><a href="#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<div class="content"><span lang="en" xml:lang="en" dir="ltr">This means &quot;This is Hebrew.&quot;, at least according to <a href="http://translate.google.com/" class="urlextern" title="http://translate.google.com/" rel="nofollow">Google Translate</a>.</span></div></div>
+</div>
+</div>
+</body>
+</html>

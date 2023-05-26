@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>snipplets:xclip</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="keywords" content="snipplets,xclip"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/lib/exe/opensearch.php" title="Bash Hackers Wiki"/>
+<link rel="start" href="/"/>
+<link rel="contents" href="/snipplets/xclip?do=index" title="Sitemap"/>
+<link rel="manifest" href="/lib/exe/manifest.php"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="/feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current namespace" href="/feed.php?mode=list&amp;ns=snipplets"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="/_export/xhtml/snipplets/xclip"/>
+<link rel="alternate" type="text/plain" title="Wiki Markup" href="/_export/raw/snipplets/xclip"/>
+<link rel="canonical" href="https://wiki.bash-hackers.org/snipplets/xclip"/>
+<link rel="stylesheet" type="text/css" href="/lib/exe/css.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"/>
+<!--[if gte IE 9]><!-->
+<script type="text/javascript">/*<![CDATA[*/var NS='snipplets';var JSINFO = {"updatable":1,"userreplace":1,"default_macro_string":"","plugins":{"edittable":{"default columnwidth":""}},"move_renameokay":false,"isadmin":0,"isauth":0,"id":"snipplets:xclip","namespace":"snipplets","ACT":"export_xhtml","useHeadingNavigation":1,"useHeadingContent":1};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/jquery.php?tseed=23f888679b4f1dc26eef34902aca964f"></script>
+<script type="text/javascript" charset="utf-8" src="/lib/exe/js.php?t=bootstrap3&amp;tseed=54923c3deda180f2db5bd755cd8fbf1a"></script>
+<!--<![endif]-->
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="x-clipboard_on_commandline">X-Clipboard on Commandline</h1>
+<div class="level1">
+<div class="inline dataplugin_entry snipplet sectionedit2"><dl><dt class="snipplet">snipplet<span class="sep">: </span></dt><dd class="snipplet"><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dclipboard" title="Show pages matching 'clipboard'" class="wikilink1">clipboard</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dx11" title="Show pages matching 'x11'" class="wikilink1">x11</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dxclip" title="Show pages matching 'xclip'" class="wikilink1">xclip</a><span class="sep">, </span><a href="/snipplet?dataflt%5B0%5D=snipplet_%3Dreadline" title="Show pages matching 'readline'" class="wikilink1">readline</a></dd><dt class="lastupdate">LastUpdate<span class="sep">: </span></dt><dd class="lastupdate">2010-07-31</dd><dt class="contributor">Contributor<span class="sep">: </span></dt><dd class="contributor">Josh Triplett</dd><dt class="type">type<span class="sep">: </span></dt><dd class="type">snipplet</dd></dl></div><!-- EDIT{&quot;target&quot;:&quot;plugin_data&quot;,&quot;secid&quot;:2,&quot;range&quot;:&quot;43-192&quot;} -->
+<p>
+<pre class="code"># Make Control-v paste, if in X and if xclip available - Josh Triplett
+if [ -n &quot;$DISPLAY&quot; ] &amp;&amp; [ -x /usr/bin/xclip ] ; then
+    # Work around a bash bug: \C-@ does not work in a key binding
+    bind &#039;&quot;\C-x\C-m&quot;: set-mark&#039;
+    # The &#039;#&#039; characters ensure that kill commands have text to work on; if
+    # not, this binding would malfunction at the start or end of a line.
+    bind &#039;Control-v: &quot;#\C-b\C-k#\C-x\C-?\&quot;$(xclip -o -selection c)\&quot;\e\C-e\C-x\C-m\C-a\C-y\C-?\C-e\C-y\ey\C-x\C-x\C-d&quot;&#039;
+fi</pre>
+
+</p>
+
+<p>
+The behaviour is a bit tricky to explain:
+</p>
+<ul>
+<li class="level1 node"><div class="li"> kill text after the cursor</div>
+<ul>
+<li class="level2"><div class="li"> since the kill command <strong>wants</strong> text, it blindly adds a fake text &quot;#&quot; here</div>
+</li>
+</ul>
+</li>
+<li class="level1 node"><div class="li"> kill text before the cursor</div>
+<ul>
+<li class="level2"><div class="li"> since the kill command <strong>wants</strong> text, it blindly adds a fake text &quot;#&quot; here, too</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> write out <code>&quot;$(xclip -o -selection c)&quot;</code></div>
+</li>
+<li class="level1"><div class="li"> run Control-Meta-e (shell-expand-line) to expand the <code>&quot;$(xclip -o -selection c)&quot;</code></div>
+</li>
+<li class="level1"><div class="li"> yank the previously killed text back where it belongs</div>
+</li>
+</ul>
+
+<p>
+Of course you can use any other command, you&#039;re not limited to <code>xclip</code> here.
+</p>
+
+<p>
+Note: C-@ as well as M-SPC both works and set the mark for me – pgas
+</p>
+
+</div>
+</div>
+</body>
+</html>
